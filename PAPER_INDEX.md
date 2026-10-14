@@ -10,7 +10,7 @@ This is an engineering-oriented shortlist from the [official AdaptFM accepted-pa
 - [Learning Adaptive Reasoning Budgets via Constraint-Rectified Training](https://openreview.net/forum?id=1inovdFo6Z) — budget policy/training.
 - [DIPA: Difficulty-Informed Probabilistic Allocation of Test-Time Compute via Training-Free Proxies](https://openreview.net/forum?id=9Joja0tx5c) — input-dependent compute allocation.
 - [Block-Level Recursion: Adaptive Test-Time Routing in Large Language Models](https://openreview.net/forum?id=hLFRcxXKxY) — dynamic depth/recursion.
-- [Fixed-Point Reasoning: Stable and Adaptive Deep Looped Models](https://openreview.net/forum?id=s66nL9PEw1) — adaptive depth/looped computation, not necessarily early exit.
+- [Fixed-Point Reasoners: Stable and Adaptive Deep Looped Models](https://openreview.net/forum?id=s66nL9PEw1) — adaptive depth/looped computation, not necessarily early exit.
 - [Learning Adaptive LLM Decoding](https://openreview.net/forum?id=14yhYy9m7S) — adaptive decoding policy.
 - [Resource-Adaptive Foundation Model Reasoning via Semantic Coverage](https://openreview.net/forum?id=suD1tqogTd) — input-adaptive reasoning budget.
 
@@ -23,15 +23,14 @@ This is an engineering-oriented shortlist from the [official AdaptFM accepted-pa
 - [Reducing Attention Distribution Error with Unified Tail Aggregation for Sparse Attention](https://openreview.net/forum?id=mEpi4pgzpI) — sparse attention approximation.
 - [Hybrid Linear Attention Done Right: Efficient Distillation and Effective Architectures for Extremely Long Contexts](https://openreview.net/forum?id=llfDaQar98) — hybrid linear attention.
 - [On State Reduction in Linear Attention](https://openreview.net/forum?id=KkN6enKAlU) — state-memory reduction.
-- [LongAttnComp: Cross-Family Context Compression for Long-Context Reasoning](https://openreview.net/forum?id=oqacjavnry) — context compression.
-- [Decoupling Spatial and Semantic Token Compression for Vision-Language Model Acceleration](https://openreview.net/forum?id=4ylINNNS6y) — multimodal token compression.
-- [Vision Token Pruning via Query–Vision Interaction Decomposition](https://openreview.net/forum?id=UgbjqumIWe) — VLM visual-token pruning.
+- [LongAttnComp: Cross-Family Context Compression for Long-Context Reasoning](https://openreview.net/forum?id=sGzXExjoIf) — context compression.
 - [StreamAttention: Energy-Efficient and High-Utilization Attention on Systolic Hardware](https://openreview.net/forum?id=SRQuPOMzkX) — hardware mapping and attention kernels.
 
 ## Mixture-of-Experts, routing and elastic capacity
 
 - [A Recipe for an Elastic Mixture: One Mixture-of-Experts for Every Resource Budget](https://openreview.net/forum?id=0stDFvtMGN) — elastic MoE capacity.
 - [TEAM: Temporal–Spatial Consistency Guided Expert Activation for MoE Diffusion Language Model Acceleration](https://openreview.net/forum?id=Zfgv1Sa7Ot) — dynamic expert activation.
+- [Structural Outlier aware post-training Quantization](https://openreview.net/forum?id=oqacjavnry) — outlier aware-quantization
 - [LExI: Layer-Adaptive Active Experts for Efficient MoE Inference](https://openreview.net/forum?id=oYiauQToKN) — layer-specific expert activation.
 - [MoSE: Mixture of Slimmable Experts for Efficient and Adaptive Language Models](https://openreview.net/forum?id=0yK6aZLoEF) — elastic expert capacity.
 - [DECO: Sparse Mixture-of-Experts with Dense-Comparable Performance on End-Side Devices](https://openreview.net/forum?id=YYycBS8yxj) — sparse MoE for edge devices.
@@ -58,6 +57,8 @@ This is an engineering-oriented shortlist from the [official AdaptFM accepted-pa
 - [Rethinking Layer Redundancy in Large Language Models: Calibration Objectives and Search for Depth Pruning](https://openreview.net/forum?id=QuWWYol2nP) — layer/depth pruning.
 - [Weight Concentration Regularization for Improving Pruning Robustness Under High Sparsity](https://openreview.net/forum?id=sRdWDNWenw) — robust pruning.
 - [Ghosted Layers: Unconstrained Activation Alignment for Recovering Layer-Pruned LLMs](https://openreview.net/forum?id=U37zxXMEE0) — recovery after layer pruning.
+- [Vision Token Pruning via Query–Vision Interaction Decomposition](https://openreview.net/forum?id=UgbjqumIWe) — VLM visual-token pruning.
+- [Decoupling Spatial and Semantic Token Compression for Vision-Language Model Acceleration](https://openreview.net/forum?id=4ylINNNS6y) — multimodal token compression.
 - [SparseSAM: Structured Sparsification of Activations in Segment Anything Models](https://openreview.net/forum?id=RzsvMA4pyG) — structured activation sparsity.
 - [SFPruner: Single-Forward Visual Token Subset Selection for Resource-Efficient Multimodal Foundation Model Inference](https://openreview.net/forum?id=d9H5uBnHeL) — visual token pruning.
 - [Modality-Aware Block Rotation for Vision-Language-Action Model Quantization](https://openreview.net/forum?id=07e99XvHxF) — VLA quantization.
