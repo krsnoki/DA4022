@@ -1,0 +1,3 @@
+[submodule "Speculative_Decoding/BASTION/upstream"]
+	path = Speculative_Decoding/BASTION/upstream
+	url = https://github.com/kaist-ai-osi-lab/BASTION
