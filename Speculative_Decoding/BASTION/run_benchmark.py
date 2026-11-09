@@ -393,6 +393,104 @@ def _gen_stats(resp, num_input_tokens: int) -> dict:
     return stats
 
 
+def run_loop(*, datasets, selected, plan, generate, tokenizer, device, writer, recorder, history_records,
+             base_fields, enable_thinking, max_new_tokens, eos, block_size, mem_reset, mem_peak_mib, attn_impl) -> int:
+    """Per-turn generation loop: AR -> DFlash -> BASTION budgets, one JSONL record each.
+
+    ``generate(mode, input_ids, budget, max_new_tokens)`` returns upstream's
+    stats namespace. Separated from ``run`` so it can be tested on CPU.
+    """
+    n_new = 0
+    for ds_name in datasets:
+        info = selected[ds_name]
+        rows = info["rows"]
+        print(f"\n=== {ds_name}: {len(rows)} samples (cap={info['cap']}, dataset size={info['dataset_size']})")
+        for sample_idx, instance in enumerate(rows):
+            messages: list[dict] = []
+            history_sources: list[str] = []
+            for turn, user_content in enumerate(instance["turns"]):
+                messages.append({"role": "user", "content": user_content})
+                input_text = ub._apply_chat_template(tokenizer, messages, enable_thinking)
+                input_ids = tokenizer.encode(input_text, return_tensors="pt").to(device)
+                ihash = rl.input_hash(input_ids[0].tolist())
+                outputs: dict[tuple, list[int]] = {}
+                for mode, budget in plan:
+                    key = (ds_name, sample_idx, turn, mode, budget)
+                    existing = writer.get(key)
+                    if existing is not None:
+                        if existing.get("input_hash") != ihash:
+                            print(f"[warn] resumed record {key} has a different input hash "
+                                  f"({existing.get('input_hash')} vs {ihash})", file=sys.stderr)
+                        outputs[(mode, budget)] = existing["output_ids"]
+                        continue
+                    mem_reset()
+                    t0 = time.perf_counter()
+                    if mode == "bastion":
+                        with recorder.recording():
+                            resp = generate(mode, input_ids, budget, max_new_tokens)
+                        sizes, contexts = list(recorder.sizes), list(recorder.contexts)
+                    else:
+                        resp = generate(mode, input_ids, budget, max_new_tokens)
+                        sizes, contexts = None, None
+                    wall = time.perf_counter() - t0
+                    stats = _gen_stats(resp, int(input_ids.shape[1]))
+                    rec = {
+                        **base_fields,
+                        "dataset": ds_name,
+                        "sample_idx": sample_idx,
+                        "orig_idx": info["orig_indices"][sample_idx],
+                        "turn": turn,
+                        "num_turns": len(instance["turns"]),
+                        "mode": mode,
+                        "fixed_budget": budget,
+                        "block_size": 1 if mode == "ar" else block_size,
+                        "target_attn_impl": attn_impl(),
+                        "input_hash": ihash,
+                        "history_sources": list(history_sources),
+                        **stats,
+                        "hit_eos": bool(stats["output_ids"]) and stats["output_ids"][-1] == eos,
+                        "wall_time_s": wall,
+                        "peak_mem_allocated_mib": mem_peak_mib(),
+                        "timestamp": _now(),
+                    }
+                    if mode == "bastion":
+                        rec["tree_sizes"] = sizes
+                        rec["tree_contexts"] = contexts
+                        rec["mean_tree_size"] = float(np.mean(sizes)) if sizes else None
+                        rec["tree_size_mismatch_steps"] = (
+                            None if budget is None else int(sum(1 for x in sizes if x != budget))
+                        )
+                        if budget is not None and rec["tree_size_mismatch_steps"]:
+                            print(f"[warn] {key}: {rec['tree_size_mismatch_steps']} steps with tree size != {budget}",
+                                  file=sys.stderr)
+                    writer.write(rec)
+                    n_new += 1
+                    outputs[(mode, budget)] = stats["output_ids"]
+                    tag = mode if budget is None else f"{mode}[N={budget}]"
+                    print(f"  {ds_name} #{sample_idx} t{turn} {tag:<16} out={stats['num_output_tokens']:5d} "
+                          f"tpot={stats['time_per_output_token'] * 1e3:7.2f}ms "
+                          f"aal={np.mean(stats['acceptance_lengths']):5.2f}", flush=True)
+
+                if turn + 1 >= len(instance["turns"]):
+                    continue
+                # Multi-turn history: AR output (upstream); else external AR run; else first mode in plan.
+                if ("ar", None) in outputs:
+                    hist_ids, hist_src = outputs[("ar", None)], "ar"
+                elif (ds_name, sample_idx, turn) in history_records:
+                    hrec = history_records[(ds_name, sample_idx, turn)]
+                    if hrec.get("input_hash") != ihash:
+                        print(f"[warn] history AR record for {(ds_name, sample_idx, turn)} has a different "
+                              "input hash; its output is still used as history", file=sys.stderr)
+                    hist_ids, hist_src = hrec["output_ids"], f"external-ar:{hrec.get('run_name')}"
+                else:
+                    m, b = plan[0]
+                    hist_ids, hist_src = outputs[(m, b)], (m if b is None else f"{m}[N={b}]")
+                output_text = tokenizer.decode(hist_ids, skip_special_tokens=True)
+                messages.append({"role": "assistant", "content": output_text})
+                history_sources.append(hist_src)
+    return n_new
+
+
 def run(args: argparse.Namespace) -> None:
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -538,103 +636,22 @@ def run(args: argparse.Namespace) -> None:
                 history_records[(rec["dataset"], int(rec["sample_idx"]), int(rec["turn"]))] = rec
         print(f"[history] {len(history_records)} AR records loaded from {args.history_jsonl}")
 
-    n_new = 0
     t_session = time.time()
+    base_fields = {
+        "run_name": args.run_name, "model": args.model, "draft_model": args.draft_model,
+        "model_key": model_key, "gpu_key": gpu_key, "temperature": args.temperature,
+        "max_new_tokens": args.max_new_tokens, "seed": args.seed,
+    }
     try:
-        for ds_name in datasets:
-            info = selected[ds_name]
-            rows = info["rows"]
-            print(f"\n=== {ds_name}: {len(rows)} samples (cap={info['cap']}, dataset size={info['dataset_size']})")
-            for sample_idx, instance in enumerate(rows):
-                messages: list[dict] = []
-                history_sources: list[str] = []
-                for turn, user_content in enumerate(instance["turns"]):
-                    messages.append({"role": "user", "content": user_content})
-                    input_text = ub._apply_chat_template(tokenizer, messages, args.enable_thinking)
-                    input_ids = tokenizer.encode(input_text, return_tensors="pt").to(device)
-                    ihash = rl.input_hash(input_ids[0].tolist())
-                    outputs: dict[tuple, list[int]] = {}
-                    for mode, budget in plan:
-                        key = (ds_name, sample_idx, turn, mode, budget)
-                        existing = writer.get(key)
-                        if existing is not None:
-                            if existing.get("input_hash") != ihash:
-                                print(f"[warn] resumed record {key} has a different input hash "
-                                      f"({existing.get('input_hash')} vs {ihash})", file=sys.stderr)
-                            outputs[(mode, budget)] = existing["output_ids"]
-                            continue
-                        torch.cuda.reset_peak_memory_stats(device)
-                        t0 = time.perf_counter()
-                        if mode == "bastion":
-                            with recorder.recording():
-                                resp = generate(mode, input_ids, budget, args.max_new_tokens)
-                            sizes, contexts = list(recorder.sizes), list(recorder.contexts)
-                        else:
-                            resp = generate(mode, input_ids, budget, args.max_new_tokens)
-                            sizes, contexts = None, None
-                        wall = time.perf_counter() - t0
-                        stats = _gen_stats(resp, int(input_ids.shape[1]))
-                        rec = {
-                            "run_name": args.run_name,
-                            "model": args.model,
-                            "draft_model": args.draft_model,
-                            "model_key": model_key,
-                            "gpu_key": gpu_key,
-                            "dataset": ds_name,
-                            "sample_idx": sample_idx,
-                            "orig_idx": info["orig_indices"][sample_idx],
-                            "turn": turn,
-                            "num_turns": len(instance["turns"]),
-                            "mode": mode,
-                            "fixed_budget": budget,
-                            "block_size": 1 if mode == "ar" else block_size,
-                            "temperature": args.temperature,
-                            "max_new_tokens": args.max_new_tokens,
-                            "seed": args.seed,
-                            "target_attn_impl": target.config._attn_implementation,
-                            "input_hash": ihash,
-                            "history_sources": list(history_sources),
-                            **stats,
-                            "hit_eos": bool(stats["output_ids"]) and stats["output_ids"][-1] == eos,
-                            "wall_time_s": wall,
-                            "peak_mem_allocated_mib": torch.cuda.max_memory_allocated(device) / 2**20,
-                            "timestamp": _now(),
-                        }
-                        if mode == "bastion":
-                            rec["tree_sizes"] = sizes
-                            rec["tree_contexts"] = contexts
-                            rec["mean_tree_size"] = float(np.mean(sizes)) if sizes else None
-                            rec["tree_size_mismatch_steps"] = (
-                                None if budget is None else int(sum(1 for s in sizes if s != budget))
-                            )
-                            if budget is not None and rec["tree_size_mismatch_steps"]:
-                                print(f"[warn] {key}: {rec['tree_size_mismatch_steps']} steps with tree size != {budget}",
-                                      file=sys.stderr)
-                        writer.write(rec)
-                        n_new += 1
-                        outputs[(mode, budget)] = stats["output_ids"]
-                        tag = mode if budget is None else f"{mode}[N={budget}]"
-                        print(f"  {ds_name} #{sample_idx} t{turn} {tag:<16} out={stats['num_output_tokens']:5d} "
-                              f"tpot={stats['time_per_output_token'] * 1e3:7.2f}ms "
-                              f"aal={np.mean(stats['acceptance_lengths']):5.2f}", flush=True)
-
-                    # Multi-turn history: AR output (upstream); else external AR run; else first mode run.
-                    hist_ids, hist_src = None, None
-                    if ("ar", None) in outputs:
-                        hist_ids, hist_src = outputs[("ar", None)], "ar"
-                    elif (ds_name, sample_idx, turn) in history_records:
-                        hrec = history_records[(ds_name, sample_idx, turn)]
-                        if hrec.get("input_hash") != ihash:
-                            print(f"[warn] history AR record for {(ds_name, sample_idx, turn)} has a different "
-                                  "input hash; its output is still used as history", file=sys.stderr)
-                        hist_ids, hist_src = hrec["output_ids"], f"external-ar:{hrec.get('run_name')}"
-                    elif plan:
-                        m, b = plan[0]
-                        hist_ids, hist_src = outputs[(m, b)], (m if b is None else f"{m}[N={b}]")
-                    if turn + 1 < len(instance["turns"]):
-                        output_text = tokenizer.decode(hist_ids, skip_special_tokens=True)
-                        messages.append({"role": "assistant", "content": output_text})
-                        history_sources.append(hist_src)
+        run_loop(
+            datasets=datasets, selected=selected, plan=plan, generate=generate, tokenizer=tokenizer,
+            device=device, writer=writer, recorder=recorder, history_records=history_records,
+            base_fields=base_fields, enable_thinking=args.enable_thinking, max_new_tokens=args.max_new_tokens,
+            eos=eos, block_size=block_size,
+            mem_reset=lambda: torch.cuda.reset_peak_memory_stats(device),
+            mem_peak_mib=lambda: torch.cuda.max_memory_allocated(device) / 2**20,
+            attn_impl=lambda: target.config._attn_implementation,
+        )
         meta.update(status="completed")
     except BaseException as exc:
         meta.update(status=f"aborted: {exc!r}")
@@ -642,7 +659,8 @@ def run(args: argparse.Namespace) -> None:
     finally:
         recorder.uninstall()
         writer.close()
-        meta.update(end=_now(), new_records=n_new, session_seconds=time.time() - t_session)
+        meta.update(end=_now(), new_records=len(writer.records) - n_existing,
+                    session_seconds=time.time() - t_session)
 
     print_summary(list(writer.records.values()), block_size, datasets)
 
