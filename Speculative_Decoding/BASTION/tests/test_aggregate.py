@@ -97,6 +97,14 @@ def test_external_ar_reference():
     assert r["method"] == "BASTION-Fixed-64"
 
 
+def test_match_on_orig_idx_not_sample_idx():
+    """Different caps can order the same problems differently (aime25: cap 30 unshuffled, cap 16 shuffled)."""
+    e1 = [dict(rec("aime25", 0, "ar", 0.02, run="e1"), orig_idx=0), dict(rec("aime25", 1, "ar", 0.04, run="e1"), orig_idx=1)]
+    sw = [dict(rec("aime25", 0, "bastion", 0.01, budget=32, run="sw", h="aime25-1-0"), orig_idx=1)]
+    r = _row(summarize(sw, ARIndex(sw, e1)), "aime25", "bastion", 32)
+    assert r["n_matched_ar"] == 1 and r["speedup"] == pytest.approx(4.0)
+
+
 def test_same_run_ar_preferred_over_external():
     own = [rec("gsm8k", 0, "ar", 0.02, run="a"), rec("gsm8k", 0, "dflash", 0.01, run="a", acc=(2,))]
     ext = [rec("gsm8k", 0, "ar", 0.04, run="b")]

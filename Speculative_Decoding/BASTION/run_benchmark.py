@@ -476,8 +476,8 @@ def run_loop(*, datasets, selected, plan, generate, tokenizer, device, writer, r
                 # Multi-turn history: AR output (upstream); else external AR run; else first mode in plan.
                 if ("ar", None) in outputs:
                     hist_ids, hist_src = outputs[("ar", None)], "ar"
-                elif (ds_name, sample_idx, turn) in history_records:
-                    hrec = history_records[(ds_name, sample_idx, turn)]
+                elif (ds_name, info["orig_indices"][sample_idx], turn) in history_records:
+                    hrec = history_records[(ds_name, info["orig_indices"][sample_idx], turn)]
                     if hrec.get("input_hash") != ihash:
                         print(f"[warn] history AR record for {(ds_name, sample_idx, turn)} has a different "
                               "input hash; its output is still used as history", file=sys.stderr)
@@ -633,7 +633,7 @@ def run(args: argparse.Namespace) -> None:
     if args.history_jsonl:
         for rec in rl.load_jsonl(args.history_jsonl):
             if rec.get("mode") == "ar" and rec.get("model") == args.model:
-                history_records[(rec["dataset"], int(rec["sample_idx"]), int(rec["turn"]))] = rec
+                history_records[(rec["dataset"], int(rec["orig_idx"]), int(rec["turn"]))] = rec
         print(f"[history] {len(history_records)} AR records loaded from {args.history_jsonl}")
 
     t_session = time.time()
@@ -678,7 +678,8 @@ def build_parser() -> argparse.ArgumentParser:
                    help="BASTION budgets: 'adaptive' and/or integers N (fixed tree of N nodes)")
     p.add_argument("--fixed-budget", type=int, default=None, help="shorthand for --budgets N")
     p.add_argument("--history-jsonl", default=None,
-                   help="AR records of another run used as multi-turn history when AR is not run here")
+                   help="AR records of another run (matched on dataset, orig_idx, turn) used as multi-turn "
+                        "history when AR is not run here")
     p.add_argument("--max-new-tokens", type=int, default=2048)
     p.add_argument("--temperature", type=float, default=0.0)
     p.add_argument("--block-size", type=int, default=None)

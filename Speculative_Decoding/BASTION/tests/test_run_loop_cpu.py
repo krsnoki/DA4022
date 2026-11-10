@@ -117,7 +117,7 @@ def test_records_history_and_resume(tmp_path, tiny_models, calib_env, cpu_timing
 def test_sweep_without_ar_uses_external_history(tmp_path, tiny_models, calib_env, cpu_timing):
     calib_env()
     _, e1 = _run(tmp_path, tiny_models, [("ar", None)], name="e1")
-    history = {(r["dataset"], r["sample_idx"], r["turn"]): r for r in e1}
+    history = {(r["dataset"], r["orig_idx"], r["turn"]): r for r in e1}
     _, sw = _run(tmp_path, tiny_models, [("bastion", 64), ("bastion", None)], history=history, name="sweep")
     t2 = [r for r in sw if r["turn"] == 1]
     assert t2 and all(r["history_sources"] == ["external-ar:e1"] for r in t2)

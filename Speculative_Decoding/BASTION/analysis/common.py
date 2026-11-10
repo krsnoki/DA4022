@@ -90,8 +90,16 @@ def method_label(mode: str, budget) -> str:
 
 
 def turn_key(rec: dict) -> tuple:
-    """(model, dataset, sample_idx, turn): the unit upstream averages over."""
-    return (rec["model"], rec["dataset"], int(rec["sample_idx"]), int(rec["turn"]))
+    """(model, dataset, problem, turn): the unit upstream averages over.
+
+    The problem is identified by ``orig_idx`` (index in upstream's dataset
+    order), not ``sample_idx``: runs with different caps can order the same
+    problems differently (e.g. aime25 is not shuffled at cap 30 but is at cap 16).
+    """
+    prob = rec.get("orig_idx")
+    if prob is None:
+        prob = ("sample", rec["sample_idx"])
+    return (rec["model"], rec["dataset"], prob, int(rec["turn"]))
 
 
 def dataset_sort_key(name: str) -> tuple:

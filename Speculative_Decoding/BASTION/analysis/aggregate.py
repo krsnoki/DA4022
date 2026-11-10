@@ -231,7 +231,7 @@ def table1_markdown(rows: list[dict], datasets: list[str] | None = None) -> str:
         lines.append(f"| {model_short(model)} | {method_label(mode, budget)} | " + " | ".join(cells) + " |")
     lines.append("")
     lines.append("Speedup = mean TPOT(AR) / mean TPOT(method) over records with a matching AR record "
-                 "(same dataset, sample, turn and prompt hash). τ = AAL pooled over steps. "
+                 "(same model, dataset, problem (orig_idx), turn and prompt hash). τ = AAL pooled over steps. "
                  "Average = unweighted mean over the datasets shown (paper convention); "
                  "Pooled = all records pooled (upstream group-alias convention).")
     return "\n".join(lines)
