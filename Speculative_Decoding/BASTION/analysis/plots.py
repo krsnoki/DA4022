@@ -88,7 +88,10 @@ def plot_speedup_bars(rows: list[dict], out_dir: Path, paper: bool = True, devic
                 ax.bar(pos, vals, width * 0.92, facecolor="white", edgecolor=color, hatch="////", linewidth=1.0,
                        label=f"{name} (paper-reported, A100)")
         ax.axhline(1.0, color=INK2, linewidth=0.8, linestyle=":")
-        ax.set_xticks(x, [DATASET_LABELS.get(d, d) for d in cats])
+        labels = [DATASET_LABELS.get(d, d) for d in cats]
+        if "Average" in cats and have_paper and len(datasets) != 8:
+            labels[-1] = f"Average\n(measured {len(datasets)} ds,\npaper 8 ds)"
+        ax.set_xticks(x, labels)
         ax.set_ylabel("Speedup over AR decoding (×)")
         ax.set_title(f"{model_short(model)}: decode speedup at T=0, batch 1", loc="left", fontsize=11, color=INK)
         ax.legend(ncol=2, fontsize=8, loc="upper right")
@@ -100,6 +103,14 @@ def plot_speedup_bars(rows: list[dict], out_dir: Path, paper: bool = True, devic
         plt.close(fig)
         out.append(p)
     return out
+
+
+def _int_ticks(ax):
+    from matplotlib.ticker import FixedLocator, FuncFormatter, NullLocator
+
+    ax.xaxis.set_major_locator(FixedLocator([2 ** k for k in range(3, 14)]))
+    ax.xaxis.set_minor_locator(NullLocator())
+    ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{int(v)}"))
 
 
 # ---------------------------------------------------------------------------
@@ -130,6 +141,7 @@ def plot_budget_sweep(rows: list[dict], out_dir: Path) -> list[Path]:
                         markeredgecolor="white", linestyle="none",
                         label=f"BASTION adaptive (mean N̄={r['mean_tree_size']:.0f})")
         ax.set_xscale("log", base=2)
+        _int_ticks(ax)
         ax.set_xlabel("Mean realized verification tree size (nodes, log scale)")
         ax.set_ylabel("Speedup over AR (×), mean over datasets")
         n_ds = max((len(r.get("datasets_included", [])) for r in avg), default=0)
@@ -159,6 +171,7 @@ def plot_budget_sweep(rows: list[dict], out_dir: Path) -> list[Path]:
                     ax.plot([r["mean_tree_size"]], [r["speedup"]], marker="*", markersize=12, color=ORANGE,
                             markeredgecolor="white", linestyle="none")
             ax.set_xscale("log", base=2)
+            _int_ticks(ax)
             ax.set_title(DATASET_LABELS.get(d, d), fontsize=9, loc="left")
         for ax in list(axes.flat)[len(datasets):]:
             ax.axis("off")
@@ -202,8 +215,9 @@ def plot_latency_model(latency_dir: Path, out_dir: Path, contexts=(64, 256, 1024
             ax.plot(s, [p["uncal_s"] * 1e3 for p in sel], "--", color=color, linewidth=1.5)
             ax.plot(s, [p["cal_s"] * 1e3 for p in sel], "-", color=color, linewidth=2)
         a = res.get("rmse_paper_contexts") or res.get("rmse_all")
-        ax.plot([], [], "--", color=INK2, label=f"uncalibrated roofline (RMSE {a['rmse_uncal_ms']:.1f} ms)")
-        ax.plot([], [], "-", color=INK2, label=f"calibrated fit (RMSE {a['rmse_cal_ms']:.1f} ms, in-sample)")
+        scope = "c∈{64,256,1024}" if res.get("rmse_paper_contexts") else "all c"
+        ax.plot([], [], "--", color=INK2, label=f"uncalibrated roofline (RMSE {a['rmse_uncal_ms']:.1f} ms, {scope})")
+        ax.plot([], [], "-", color=INK2, label=f"calibrated fit (RMSE {a['rmse_cal_ms']:.1f} ms, {scope}, in-sample)")
         ax.set_xlabel("Verified sequence length s (tokens)")
         ax.set_ylabel("Verification latency (ms)")
         ax.set_title(f"{res['model_key']} on {res['gpu_key']}: latency model", loc="left", fontsize=11, color=INK)
