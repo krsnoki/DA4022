@@ -62,7 +62,7 @@ MODES = ("ar", "dflash", "bastion")
 _FALLBACK_GPU_KEY = "b4500"
 _FALLBACK_GPU_SPEC = {
     "display_name": "NVIDIA RTX PRO 4500 Blackwell",
-    "peak_throughput_bf16": 100 * 1e12,
+    "peak_throughput_bf16": 202 * 1e12,
     "memory_bandwidth": 896 * 1e9,
 }
 _FALLBACK_GPU_ALIASES = ("b4500", "rtxpro4500", "nvidiartxpro4500", "nvidiartxpro4500blackwell")

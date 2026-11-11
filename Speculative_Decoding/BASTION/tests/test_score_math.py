@@ -23,6 +23,7 @@ def test_last_boxed(text, expected):
     ("90^\\circ", "90"), ("10\\%", "10"), ("\\dfrac{1}{2}", "\\frac{1}{2}"), ("\\frac{1}{2}", "0.5"),
     ("1/2", "\\frac12".replace("12", "{1}{2}")), ("3.0", "3"), ("18.", "18"), ("\\left(1,2\\right)", "(1,2)"),
     ("-\\frac{3}{4}", "-0.75"), ("\\textbf{204}", "204"), (" 7 ", "7"),
+    ("\\$18", "18"), ("\\$18.00", "18"), ("\\$1,250", "1250"), ("\\$\\frac{1}{2}", "\\frac{1}{2}"),
 ])
 def test_answers_match(pred, gold):
     assert answers_match(pred, gold), (normalize_answer(pred), normalize_answer(gold))

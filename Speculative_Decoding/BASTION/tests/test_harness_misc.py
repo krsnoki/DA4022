@@ -66,3 +66,23 @@ def test_plots_smoke(tmp_path):
     plots.main(["--summary", str(s), "--sweep-summary", str(s), "--out-dir", str(tmp_path / "fig")])
     names = {p.name for p in (tmp_path / "fig").iterdir()}
     assert {"speedup_bars_Qwen3-8B.png", "budget_sweep_Qwen3-8B.png", "budget_sweep_Qwen3-8B_per_dataset.png"} <= names
+
+
+def test_fallback_gpu_spec_matches_launcher(monkeypatch):
+    """repro_lib's fallback must equal tools/bastion_local.py (same key -> same cache files, same roofline)."""
+    import importlib.util
+
+    from bastion import cost_model
+
+    launcher = rl.ROOT / "tools" / "bastion_local.py"
+    if not launcher.exists():
+        pytest.skip("tools/bastion_local.py not present")
+    monkeypatch.setattr(cost_model, "GPU_SPECS", {k: v for k, v in cost_model.GPU_SPECS.items() if k != rl._FALLBACK_GPU_KEY})
+    monkeypatch.setattr(cost_model, "GPU_ALIASES", {k: v for k, v in cost_model.GPU_ALIASES.items()
+                                                    if v != rl._FALLBACK_GPU_KEY})
+    spec = importlib.util.spec_from_file_location("_launcher_for_test", launcher)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    assert module.LOCAL_GPU_KEY == rl._FALLBACK_GPU_KEY
+    assert cost_model.GPU_SPECS[rl._FALLBACK_GPU_KEY] == rl._FALLBACK_GPU_SPEC
+    assert {a for a, k in cost_model.GPU_ALIASES.items() if k == rl._FALLBACK_GPU_KEY} == set(rl._FALLBACK_GPU_ALIASES)

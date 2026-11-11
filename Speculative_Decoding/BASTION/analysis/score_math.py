@@ -17,7 +17,7 @@ Answer extraction: content of the LAST ``\\boxed{...}`` (or ``\\fbox{...}``)
 with balanced braces. Outputs without a box count as wrong (reported
 separately as n_no_boxed). Normalization: strip whitespace, ``$``,
 ``\\text{}``/``\\mathrm{}``/``\\textbf{}`` wrappers, ``\\left``/``\\right``,
-spacing commands, degree signs, ``\\%``, trailing period, thousands separators
+spacing commands, degree signs, ``\\%``, ``\\$``, trailing period, thousands separators
 in numbers, a leading ``x =``; ``\\dfrac``/``\\tfrac`` -> ``\\frac``. Strings
 compare equal after normalization, or numerically (|a-b| <= 1e-6 max(1,|b|))
 when both parse as numbers / simple fractions. Limitations: no symbolic
@@ -96,7 +96,7 @@ def normalize_answer(s: str | None) -> str | None:
     s = s.replace("\\dfrac", "\\frac").replace("\\tfrac", "\\frac")
     s = s.replace("^\\circ", "").replace("^{\\circ}", "").replace("°", "")
     s = s.replace("\\%", "").replace("%", "")
-    s = s.replace("$", "")
+    s = s.replace("\\$", "").replace("$", "")  # escaped dollar sign first, else a stray backslash remains
     s = s.strip()
     s = re.sub(r"\.$", "", s)
     s = re.sub(r"\s+", "", s)
