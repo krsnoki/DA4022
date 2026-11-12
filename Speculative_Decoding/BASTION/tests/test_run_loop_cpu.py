@@ -2,6 +2,7 @@
 with tiny random models, a fake tokenizer and upstream's generate functions."""
 from __future__ import annotations
 
+import sys
 import time
 
 import pytest
@@ -126,3 +127,14 @@ def test_sweep_without_ar_uses_external_history(tmp_path, tiny_models, calib_env
     # Without history and without AR, the first mode in the plan supplies the history.
     _, sw2 = _run(tmp_path, tiny_models, [("bastion", 64)], name="sweep2")
     assert all(r["history_sources"] == ["bastion[N=64]"] for r in sw2 if r["turn"] == 1)
+
+
+def test_resume_refuses_changed_selection(tmp_path, tiny_models, calib_env, cpu_timing, monkeypatch):
+    """Resuming with a selection that maps sample_idx to a different problem must fail, not mix records."""
+    calib_env()
+    _run(tmp_path, tiny_models, [("ar", None)], name="sel")
+    changed = _selected()
+    changed["gsm8k"] = dict(changed["gsm8k"], rows=changed["gsm8k"]["rows"][::-1], orig_indices=[3, 7])
+    monkeypatch.setattr(sys.modules[__name__], "_selected", lambda: changed)
+    with pytest.raises(RuntimeError, match="orig_idx"):
+        _run(tmp_path, tiny_models, [("ar", None)], name="sel")

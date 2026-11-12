@@ -418,6 +418,15 @@ def run_loop(*, datasets, selected, plan, generate, tokenizer, device, writer, r
                     key = (ds_name, sample_idx, turn, mode, budget)
                     existing = writer.get(key)
                     if existing is not None:
+                        # Resume keys on sample_idx (position in the selection). A different cap can map the
+                        # same sample_idx to another problem (e.g. aime25 is unshuffled at cap>=30, shuffled
+                        # below), which would silently mix problems into this run: refuse.
+                        if (existing.get("orig_idx") is not None
+                                and int(existing["orig_idx"]) != int(info["orig_indices"][sample_idx])):
+                            raise RuntimeError(
+                                f"resumed record {key} is for orig_idx={existing['orig_idx']} but the current "
+                                f"selection has orig_idx={info['orig_indices'][sample_idx]} at this position "
+                                "(cap/selection changed); use a new --run-name")
                         if existing.get("input_hash") != ihash:
                             print(f"[warn] resumed record {key} has a different input hash "
                                   f"({existing.get('input_hash')} vs {ihash})", file=sys.stderr)
