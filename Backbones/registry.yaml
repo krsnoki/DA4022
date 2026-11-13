@@ -1,0 +1,126 @@
+# Backbone registry (source of truth for model metadata; see README_backbones.md).
+# Fields follow "Minimum model registry fields". Values were checked against the
+# Hugging Face model cards, config.json and safetensors headers of the pinned
+# revisions. Anything not stated by an official source is "unknown".
+#
+# num_parameters: exact count from the safetensors headers of the pinned
+# revision (also confirmed by loading the model and summing parameter sizes).
+
+models:
+  - id: text.qwen3-4b.post_trained.mixed
+    name: Qwen3-4B
+    modality: text
+    architecture: Qwen3ForCausalLM (decoder-only transformer, 36 layers, hidden 2560, GQA 32 Q / 8 KV heads, tied embeddings)
+    pretraining_regime: mixed
+    objective: >-
+      Causal language model. Model card: "Training Stage: Pretraining & Post-training"
+      (base model Qwen/Qwen3-4B-Base). Post-training details are in the Qwen3 Technical
+      Report (arXiv:2505.09388) and were not re-verified here.
+    weights_source: huggingface
+    weights_uri: https://huggingface.co/Qwen/Qwen3-4B
+    revision: 1cfa9a7208912126459214e8b04321603b3df60c
+    license: apache-2.0
+    num_parameters: 4022468096
+    weight_size_bytes: 8044936192      # bf16 safetensors, 3 shards (index total_size)
+    input_spec:
+      tokenizer: Qwen/Qwen3-4B (same revision)
+      dtype: bfloat16
+      max_position_embeddings: 40960   # config.json; model card: 32,768 native context
+    preprocessing: >-
+      tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True,
+      enable_thinking=False); EOS <|im_end|> (id 151645)
+    parent_backbone: null
+    fine_tuning_dataset: null
+    card: Generative_Pretrained/qwen3-4b.md
+    notes: >-
+      Used in non-thinking mode (enable_thinking=False) as the BASTION/DFlash target.
+      The DFlash drafters were trained for non-thinking mode, and upstream BASTION
+      refuses --enable-thinking for Qwen3-4B/8B.
+
+  - id: text.qwen3-8b.post_trained.mixed
+    name: Qwen3-8B
+    modality: text
+    architecture: Qwen3ForCausalLM (decoder-only transformer, 36 layers, hidden 4096, GQA 32 Q / 8 KV heads, untied LM head)
+    pretraining_regime: mixed
+    objective: >-
+      Causal language model. Model card: "Training Stage: Pretraining & Post-training"
+      (base model Qwen/Qwen3-8B-Base). Post-training details are in the Qwen3 Technical
+      Report (arXiv:2505.09388) and were not re-verified here.
+    weights_source: huggingface
+    weights_uri: https://huggingface.co/Qwen/Qwen3-8B
+    revision: b968826d9c46dd6066d109eabc6255188de91218
+    license: apache-2.0
+    num_parameters: 8190735360
+    weight_size_bytes: 16381470720     # bf16 safetensors, 5 shards (index total_size)
+    input_spec:
+      tokenizer: Qwen/Qwen3-8B (same revision)
+      dtype: bfloat16
+      max_position_embeddings: 40960   # config.json; model card: 32,768 native context
+    preprocessing: >-
+      tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True,
+      enable_thinking=False); EOS <|im_end|> (id 151645)
+    parent_backbone: null
+    fine_tuning_dataset: null
+    card: Generative_Pretrained/qwen3-8b.md
+    notes: Used in non-thinking mode (enable_thinking=False) as the BASTION/DFlash target.
+
+  - id: text.qwen3-4b-dflash-b16.drafter.unknown
+    name: Qwen3-4B-DFlash-b16 (DFlash block-diffusion drafter)
+    modality: text
+    architecture: >-
+      DFlashDraftModel (5 Qwen3-style layers, hidden 2560, block_size 16, mask_token_id 151669).
+      Conditions on target hidden states from target layers [1, 9, 17, 25, 33]. The checkpoint
+      has no embedding or LM head: at run time it uses the target's embed_tokens and lm_head.
+    pretraining_regime: unknown
+    objective: >-
+      Block-diffusion draft model for speculative decoding, trained by z-lab (DFlash,
+      arXiv:2602.06036). In one parallel forward pass it predicts distributions for the 15
+      masked positions of a 16-token block (the first position is the last verified token). The model card does not state the training objective or data; the card notes
+      the drafter is for thinking-mode-disabled use.
+    weights_source: huggingface
+    weights_uri: https://huggingface.co/z-lab/Qwen3-4B-DFlash-b16
+    revision: b74e3a329c4d963783143b1e970d95b002be72bd
+    license: mit
+    num_parameters: 537427200          # excludes the borrowed target embedding / LM head
+    weight_size_bytes: 1074860568      # model.safetensors, bf16
+    input_spec:
+      tokenizer: Qwen/Qwen3-4B (the target's tokenizer)
+      dtype: bfloat16
+      block_size: 16
+    preprocessing: same prompt/tokenization as the parent target
+    parent_backbone: text.qwen3-4b.post_trained.mixed
+    fine_tuning_dataset: unknown
+    notes: >-
+      Loaded with the upstream BASTION vendored dflash/model.py (DFlashDraftModel.from_pretrained),
+      so trust_remote_code is not needed. The repo also ships its own remote code (dflash.py,
+      modeling_dflash.py), which is not used here.
+
+  - id: text.qwen3-8b-dflash-b16.drafter.unknown
+    name: Qwen3-8B-DFlash-b16 (DFlash block-diffusion drafter)
+    modality: text
+    architecture: >-
+      DFlashDraftModel (5 Qwen3-style layers, hidden 4096, block_size 16, mask_token_id 151669).
+      Conditions on target hidden states from target layers [1, 9, 17, 25, 33]. The checkpoint
+      has no embedding or LM head: at run time it uses the target's embed_tokens and lm_head.
+    pretraining_regime: unknown
+    objective: >-
+      Block-diffusion draft model for speculative decoding, trained by z-lab (DFlash,
+      arXiv:2602.06036). In one parallel forward pass it predicts distributions for the 15
+      masked positions of a 16-token block (the first position is the last verified token). The model card does not state the training objective or data; the card notes
+      the drafter is for thinking-mode-disabled use.
+    weights_source: huggingface
+    weights_uri: https://huggingface.co/z-lab/Qwen3-8B-DFlash-b16
+    revision: 9b41424b7109f9c5413454f481b09a82b85333f4
+    license: mit
+    num_parameters: 1048626432         # excludes the borrowed target embedding / LM head
+    weight_size_bytes: 2097259104      # model.safetensors, bf16
+    input_spec:
+      tokenizer: Qwen/Qwen3-8B (the target's tokenizer)
+      dtype: bfloat16
+      block_size: 16
+    preprocessing: same prompt/tokenization as the parent target
+    parent_backbone: text.qwen3-8b.post_trained.mixed
+    fine_tuning_dataset: unknown
+    notes: >-
+      Loaded with the upstream BASTION vendored dflash/model.py (DFlashDraftModel.from_pretrained),
+      so trust_remote_code is not needed.
