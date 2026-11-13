@@ -1,0 +1,7 @@
+extends: eval_siglip_base_224.yaml
+experiment: {name: smoke_siglip, output_dir: outputs/smoke/eval, device: cpu, status: smoke-test}
+model: {backbone_id: test.tiny_siglip.random}
+data: {dataset: synthetic.images, num_classes: 4, image_size: 32}
+quant: {tags: [FP16, W8A8, W4A4, W4A4QK4], calib_samples: 16}
+eval: {siglip: {num_eval: 32, batch_size: 8}}
+latency: {batch_size: 4, warmup: 1, iters: 3}

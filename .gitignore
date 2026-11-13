@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# experiment outputs, checkpoints and caches (never commit weights or datasets)
+outputs/
+.hf_cache/
+*.safetensors
+*.bin
+*.pt
+wandb/
+kaggle_jobs/
+results/

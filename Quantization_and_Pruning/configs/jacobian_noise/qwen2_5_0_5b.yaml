@@ -1,0 +1,43 @@
+# Noise fine-tuning of Qwen2.5-0.5B on Alpaca (stand-in for the paper's Qwen2.5-3B).
+# Sized for one free 16 GB GPU (Kaggle T4/P100). Run once per noise.mode and seed.
+experiment:
+  name: qwen05
+  output_dir: outputs/jacobian_noise
+  seed: 0
+  device: auto
+
+backbone:
+  id: text.qwen2_5_0_5b.base
+
+data:
+  dataset: text.alpaca.train
+  max_length: 512          # paper: 2048 (memory); deviation documented
+  num_train: null          # all remaining examples after the held-out split
+  num_val: 500
+  seed: 42
+
+train:
+  max_steps: 1000          # paper: 5-10 epochs on 8xA100; deviation documented
+  batch_size: 4
+  grad_accum: 2            # effective batch 8 (paper: 8 per GPU)
+  lr: 1.0e-5               # paper: 5e-7 for much longer training; keep identical across modes
+  weight_decay: 0.01
+  warmup_steps: 100        # paper: 500 (with far more steps)
+  grad_clip: 1.0
+  precision: bf16          # falls back to fp16 + GradScaler on T4/P100
+  gradient_checkpointing: true
+  log_every: 20
+  eval_every: 250
+  eval_examples: 200
+  save: true
+  lora: null               # e.g. {r: 16, alpha: 32} if full fine-tuning does not fit
+
+noise:                     # Pandey et al. App. B.2 defaults
+  mode: jacobian           # none | jacobian | jacobian_layer | uniform_matched | constant
+  alpha: 0.5
+  sigma_min: 0.005
+  sigma_max: 10.0
+  warmup_steps: 100
+  warmup_sigma: 0.1
+  update_interval: 100
+  collect: last_step

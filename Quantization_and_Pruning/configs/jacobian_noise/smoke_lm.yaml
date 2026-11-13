@@ -1,0 +1,7 @@
+extends: qwen2_5_0_5b.yaml
+experiment: {name: smoke_lm, output_dir: outputs/smoke, device: cpu}
+backbone: {id: test.tiny_qwen2.random}
+data: {dataset: synthetic.lm, max_length: 32, num_train: 64, num_val: 8}
+train: {max_steps: 12, batch_size: 4, grad_accum: 2, lr: 1.0e-3, warmup_steps: 2, precision: fp32,
+        gradient_checkpointing: false, log_every: 4, eval_every: 6, eval_examples: 8}
+noise: {warmup_steps: 4, update_interval: 4}

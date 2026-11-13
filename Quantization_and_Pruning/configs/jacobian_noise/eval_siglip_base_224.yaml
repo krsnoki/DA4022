@@ -1,0 +1,36 @@
+task: siglip
+experiment:
+  name: siglip224
+  output_dir: outputs/jacobian_noise/eval
+  seed: 0
+  device: auto
+  status: approximate
+model:
+  backbone_id: multimodal.siglip_base_p16_224
+  path: null
+  label: null
+data:
+  dataset: vision.imagenet1k_256
+  seed: 0
+  prompt: "a photo of a {}."
+  image_size: 224
+quant:
+  tags: [FP16, W8A8, W6A6, W5A5, W4A4, W4A4QK4]   # the paper's SigLIP bit-widths (+ Q/K quant)
+  weight_method: rtn
+  calib_samples: 256       # GPTQ only: train-stream images [0, 256), disjoint from fine-tuning images
+  percdamp: 0.01
+  fake_quant:
+    include: 'vision_model\.encoder\.layers\.\d+\.'
+    w_symmetric: true
+    a_symmetric: false
+eval:
+  dtype: auto
+  jacobian_diagnostics: true
+  siglip:
+    num_eval: 10000        # seeded subset of the 50k validation images
+    batch_size: 64
+latency:
+  enabled: true
+  batch_size: 32
+  warmup: 3
+  iters: 10

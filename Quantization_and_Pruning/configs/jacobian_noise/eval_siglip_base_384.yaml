@@ -1,0 +1,10 @@
+extends: eval_siglip_base_224.yaml
+experiment:
+  name: siglip384
+model:
+  backbone_id: multimodal.siglip_base_p16_384
+data:
+  image_size: 384
+eval:
+  siglip:
+    batch_size: 32

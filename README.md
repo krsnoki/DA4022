@@ -46,6 +46,12 @@ python -m pip install --upgrade pip
 
 Install PyTorch using the command recommended by the [official PyTorch selector](https://pytorch.org/get-started/locally/) for your OS, Python version, and CPU/CUDA setup. Then install module-specific dependencies as documented by that module. Do not assume a CUDA implementation will run on CPU or on a different GPU architecture.
 
+Run the existing CPU test-suite (needs `pip install -r Quantization_and_Pruning/requirements-jacobian-noise.txt`):
+
+```bash
+python -m pytest Quantization_and_Pruning/tests -q
+```
+
 Check local hardware before a benchmark:
 
 ```bash

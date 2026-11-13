@@ -47,7 +47,7 @@ This is an engineering-oriented shortlist from the [official AdaptFM accepted-pa
 - [AAAC: Activation-Aware Adaptive Codebooks for 4-bit LLM Weight Quantization](https://openreview.net/forum?id=ddOlFn6d0B) — weight quantization.
 - [CafeQ: Calibration-free Quantization via Learned Transformations and Adaptive Rounding](https://openreview.net/forum?id=CBtx52vftl) — PTQ.
 - [COAT: COrrelation-Aware Orthogonal Transform for LLM Quantization](https://openreview.net/forum?id=6JGbm48VoG) — transform-based quantization.
-- [Jacobian-guided Noise Injection for Quantization Robustness in Large Language Models](https://openreview.net/forum?id=wxKn35RAhW) — quantization robustness.
+- [Jacobian-guided Noise Injection for Quantization Robustness in Large Language Models](https://openreview.net/forum?id=wxKn35RAhW) — quantization robustness. Status: `tested` → [`Quantization_and_Pruning/quantization/qat/jacobian_noise/`](Quantization_and_Pruning/quantization/qat/jacobian_noise/README.md); cross-listed with Attention (modifies pre-softmax logits).
 - [Leech Lattice Vector Quantization for Efficient LLM Compression](https://openreview.net/forum?id=HFk5TQ2ILj) — vector quantization.
 - [What Matters for NVFP4 Training? A Scaling Study of Low-Precision Pre-Training Recipes](https://openreview.net/forum?id=jlkIyaG32w) — low-precision training recipes.
 - [Activation Quantization of Vision Encoders Needs Prefixing Registers](https://openreview.net/forum?id=p6y2soVAlT) — vision encoder quantization.
