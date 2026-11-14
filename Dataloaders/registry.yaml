@@ -1,0 +1,151 @@
+# Dataset registry (see README_dataloader.md, "Suggested dataset registry entry").
+# Cards: evaluation/bastion_short_benchmarks.md
+#
+# version = Hugging Face dataset revision (commit sha) that was cached on 2026-11-21.
+# The BASTION upstream loader calls load_dataset() without a revision, so a later
+# download can resolve a different revision. Check prompt_jsonl_sha256 (sha256 of
+# the formatted prompt file upstream writes to
+# Speculative_Decoding/BASTION/upstream/cache/<name>.jsonl) before comparing runs.
+#
+# seed / num_samples describe the selection used by the BASTION reproduction:
+# upstream _limit_dataset = random.seed(0), shuffle, keep the first k. There is no
+# shuffle when k >= dataset size. num_examples is the full split size, verified.
+
+datasets:
+  - id: text.gsm8k.main.test
+    name: GSM8K (main, test)
+    modality: text
+    task: math_word_problems
+    source_url: https://huggingface.co/datasets/openai/gsm8k
+    license: mit
+    version: 740312add88f781978c0658806c59bc2815b9866
+    role: benchmark
+    split: test
+    preprocessing_id: bastion.upstream.gsm8k.v1989b80
+    seed: 0
+    num_examples: 1319
+    num_samples: {e1: 64, sweep: 16}
+    labels_available: true
+    prompt_jsonl_sha256: 63330a20a17f416fdfca978ebcd5124f8da5546affb3a079b65a6e8daf42b41f
+    notes: Prompt = question + boxed-answer instruction. Answers are used only by the math accuracy check.
+
+  - id: text.math500.test
+    name: MATH-500
+    modality: text
+    task: competition_math
+    source_url: https://huggingface.co/datasets/HuggingFaceH4/MATH-500
+    license: unknown  # not stated on the HF dataset card; see card for source-repo licences
+    version: 6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be
+    role: benchmark
+    split: test
+    preprocessing_id: bastion.upstream.math500.v1989b80
+    seed: 0
+    num_examples: 500
+    num_samples: {e1: 64, sweep: 16}
+    labels_available: true
+    prompt_jsonl_sha256: 4f530d9d3126dca41c12a96e78ec0dd460b7202052ba86101c4da159cea33aac
+    notes: 500-problem MATH subset from OpenAI "Let's Verify Step by Step" (prm800k).
+
+  - id: text.aime25.test
+    name: AIME 2025
+    modality: text
+    task: competition_math
+    source_url: https://huggingface.co/datasets/math-ai/aime25
+    license: apache-2.0
+    version: 563bb8404243c5f09de6ec262f2db674fe5bce9b
+    role: benchmark
+    split: test
+    preprocessing_id: bastion.upstream.aime25.v1989b80
+    seed: 0
+    num_examples: 30
+    num_samples: {e1: 30, sweep: 16}
+    labels_available: true
+    prompt_jsonl_sha256: 470ffc31d0f1e91f148116fdfbcf089f19815f33ff1e34291a4833ec1001c9ec
+    notes: E1 uses all 30 in original order (no shuffle). The sweep's 16 are shuffled.
+
+  - id: text.humaneval.test
+    name: HumanEval
+    modality: text
+    task: code_generation
+    source_url: https://huggingface.co/datasets/openai/openai_humaneval
+    license: mit
+    version: 7dce6050a7d6d172f3cc5c32aa97f52fa1a2e544
+    role: benchmark
+    split: test
+    preprocessing_id: bastion.upstream.humaneval.v1989b80
+    seed: 0
+    num_examples: 164
+    num_samples: {e1: 64, sweep: 16}
+    labels_available: true
+    prompt_jsonl_sha256: 7aaed6a3987007ecee4851ee4572fde214aa2a36ae83fa21be9c5f443aa71675
+    notes: Generated code is not executed; only speed and losslessness are measured.
+
+  - id: text.mbpp.sanitized.test
+    name: MBPP (sanitized, test)
+    modality: text
+    task: code_generation
+    source_url: https://huggingface.co/datasets/google-research-datasets/mbpp
+    license: cc-by-4.0
+    version: 4bb6404fdc6cacfda99d4ac4205087b89d32030c
+    role: benchmark
+    split: test
+    preprocessing_id: bastion.upstream.mbpp.v1989b80
+    seed: 0
+    num_examples: 257
+    num_samples: {e1: 64, sweep: 16}
+    labels_available: true
+    prompt_jsonl_sha256: 019b981f7122e39ce58866cf93f4206511c72532cb537bbaf298753a0f128ba7
+    notes: Prompt is the raw "prompt" field. Generated code is not executed.
+
+  - id: text.livecodebench.release_v2.test
+    name: LiveCodeBench code_generation_lite (release_v2)
+    modality: text
+    task: code_generation
+    source_url: https://huggingface.co/datasets/livecodebench/code_generation_lite
+    license: unknown  # dataset card front matter says only "cc" (variant not specified)
+    version: 0fe84c3912ea0c4d4a78037083943e8f0c4dd505
+    role: benchmark
+    split: test
+    preprocessing_id: bastion.upstream.lcb.v1989b80+tools/prepare_lcb.py
+    seed: 0
+    num_examples: 511  # 400 lines of test.jsonl + 111 lines of test2.jsonl
+    num_samples: {e1: 64, sweep: 16}
+    labels_available: true
+    prompt_jsonl_sha256: d79b048df5f3048d46800d06eeb956fc0196e1ddc44b751848be5eb5f1a1be8a
+    notes: >-
+      Script-only HF repo, which datasets>=4 refuses to load. The prompt cache is rebuilt
+      by Speculative_Decoding/BASTION/tools/prepare_lcb.py from the pinned revision.
+
+  - id: text.mt_bench_prompts.train
+    name: MT-Bench prompts
+    modality: text
+    task: multi_turn_chat
+    source_url: https://huggingface.co/datasets/HuggingFaceH4/mt_bench_prompts
+    license: apache-2.0
+    version: e3a795c5e9a82ee40611c416b8a7786c73198991
+    role: benchmark
+    split: train  # the only split; used as benchmark prompts
+    preprocessing_id: bastion.upstream.mt-bench.v1989b80
+    seed: 0
+    num_examples: 80  # 2 turns each
+    num_samples: {e1: 40, sweep: 16}  # items; each has 2 turns
+    labels_available: false
+    prompt_jsonl_sha256: df05defbcea350dff39f7d2996a7cba8a029e6e06069dfcdab11ceb998d743b0
+    notes: Turn-2 history is the AR baseline's turn-1 output (upstream behaviour). Not judged.
+
+  - id: text.alpaca.train
+    name: Stanford Alpaca
+    modality: text
+    task: instruction_following
+    source_url: https://huggingface.co/datasets/tatsu-lab/alpaca
+    license: cc-by-nc-4.0
+    version: dce01c9b08f87459cf36a430d809084718273017
+    role: benchmark
+    split: train  # the only split; used as benchmark prompts
+    preprocessing_id: bastion.upstream.alpaca.v1989b80
+    seed: 0
+    num_examples: 52002
+    num_samples: {e1: 64, sweep: 16}
+    labels_available: false
+    prompt_jsonl_sha256: 29121bc0bf6360894922ce2d0e03977d6525171c2c8c22a6a109e3c3ad2a78ad
+    notes: Non-commercial licence. Reference outputs are not used.
