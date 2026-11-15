@@ -127,7 +127,8 @@ def test_cli_outputs_and_da4022_schema(records, tmp_path):
         rows = list(reader)
     assert rows and all(r["energy_j"] == "" for r in rows)
     assert all("energy=not_measured" in r["notes"] for r in rows)
-    g = next(r for r in rows if r["dataset_id"].startswith("openai/gsm8k") and r["method"] == "BASTION")
+    g = next(r for r in rows if r["dataset_id"].startswith("openai/gsm8k")
+             and r["method"] == "BASTION (adaptive, upstream cold profile)")  # legacy records: no profile_mode
     assert g["device"] == "TestGPU" and g["backbone_revision"] == "rev123" and g["commit"] == "abc"
     assert g["quality_value"] == "" and "quality=not_scored" in g["notes"]
     assert float(g["throughput"]) == pytest.approx(200.0)

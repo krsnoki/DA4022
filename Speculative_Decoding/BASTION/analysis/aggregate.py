@@ -36,8 +36,8 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import (  # noqa: E402
-    DATASET_LABELS, DATASET_SOURCES, PAPER_DATASET_ORDER, PAPER_ID, dataset_sort_key, load_meta,
-    load_records, method_label, model_short, turn_key,
+    DATASET_LABELS, DATASET_SOURCES, PAPER_DATASET_ORDER, PAPER_ID, VARIANT_ORDER, dataset_sort_key, load_meta,
+    load_records, method_label, model_short, rec_profile_variant, turn_key,
 )
 
 DA4022_COLUMNS = [
@@ -52,6 +52,10 @@ MODE_ORDER = {"ar": 0, "dflash": 1, "bastion": 2}
 
 def _budget_sort(b):
     return -1 if b is None else int(b)
+
+
+def _cfg_sort(mode, budget, variant):
+    return (MODE_ORDER.get(mode, 9), _budget_sort(budget), VARIANT_ORDER.get(variant, 9))
 
 
 class ARIndex:
@@ -114,7 +118,9 @@ def _summ_group(recs: list[dict], ar_index: ARIndex, hash_check: bool) -> dict:
         "dataset": recs[0]["dataset"],
         "mode": mode,
         "fixed_budget": recs[0].get("fixed_budget"),
-        "method": method_label(mode, recs[0].get("fixed_budget")),
+        "profile_variant": rec_profile_variant(recs[0]),
+        "method": method_label(mode, recs[0].get("fixed_budget"), rec_profile_variant(recs[0])),
+        "profile_modes_recorded": sorted({str(r.get("profile_mode")) for r in recs}),
         "run_names": sorted({r.get("run_name") for r in recs}),
         "n_records": len(recs),
         "n_samples": len({r["sample_idx"] for r in recs}),
@@ -154,21 +160,23 @@ def summarize(records: list[dict], ar_index: ARIndex | None = None, hash_check: 
         ar_index = ARIndex(records)
     groups: dict[tuple, list[dict]] = defaultdict(list)
     for r in records:
-        groups[(r["model"], r["dataset"], r["mode"], r.get("fixed_budget"))].append(r)
+        groups[(r["model"], r["dataset"], r["mode"], r.get("fixed_budget"), rec_profile_variant(r))].append(r)
     rows = [_summ_group(v, ar_index, hash_check) for v in groups.values()]
-    rows.sort(key=lambda x: (x["model"], MODE_ORDER.get(x["mode"], 9), _budget_sort(x["fixed_budget"]), dataset_sort_key(x["dataset"])))
+    rows.sort(key=lambda x: (x["model"], _cfg_sort(x["mode"], x["fixed_budget"], x["profile_variant"]),
+                             dataset_sort_key(x["dataset"])))
 
     by_method: dict[tuple, list[dict]] = defaultdict(list)
     for row in rows:
-        by_method[(row["model"], row["mode"], row["fixed_budget"])].append(row)
+        by_method[(row["model"], row["mode"], row["fixed_budget"], row["profile_variant"])].append(row)
     extra = []
-    for (model, mode, budget), mrows in by_method.items():
+    for (model, mode, budget, variant), mrows in by_method.items():
         datasets = sorted((r["dataset"] for r in mrows), key=dataset_sort_key)
         sp = [r["speedup"] for r in mrows if r["speedup"] is not None]
         aal = [r["aal"] for r in mrows if r["aal"] is not None]
         sizes = [r["mean_tree_size"] for r in mrows if r["mean_tree_size"] is not None]
         base = {
-            "model": model, "mode": mode, "fixed_budget": budget, "method": method_label(mode, budget),
+            "model": model, "mode": mode, "fixed_budget": budget, "profile_variant": variant,
+            "method": method_label(mode, budget, variant),
             "run_names": sorted({n for r in mrows for n in r["run_names"]}),
             "n_records": sum(r["n_records"] for r in mrows),
             "n_samples": sum(r["n_samples"] for r in mrows),
@@ -197,7 +205,7 @@ def summarize(records: list[dict], ar_index: ARIndex | None = None, hash_check: 
                       tokens_per_s=float(1e3 / np.mean(tp_all)) if tp_all else None,
                       average_kind="all records of all datasets pooled (upstream formulas)")
         extra += [avg, pooled]
-    extra.sort(key=lambda x: (x["model"], MODE_ORDER.get(x["mode"], 9), _budget_sort(x["fixed_budget"]), x["dataset"]))
+    extra.sort(key=lambda x: (x["model"], _cfg_sort(x["mode"], x["fixed_budget"], x["profile_variant"]), x["dataset"]))
     return rows + extra
 
 
@@ -217,18 +225,18 @@ def table1_markdown(rows: list[dict], datasets: list[str] | None = None) -> str:
     per = [r for r in rows if r["dataset"] not in ("Average", "Pooled")]
     if datasets is None:
         datasets = sorted({r["dataset"] for r in per}, key=dataset_sort_key)
-    lut = {(r["model"], r["mode"], r["fixed_budget"], r["dataset"]): r for r in rows}
-    methods = sorted({(r["model"], r["mode"], r["fixed_budget"]) for r in rows if r["mode"] != "ar"},
-                     key=lambda m: (m[0], MODE_ORDER.get(m[1], 9), _budget_sort(m[2])))
+    lut = {(r["model"], r["mode"], r["fixed_budget"], r["profile_variant"], r["dataset"]): r for r in rows}
+    methods = sorted({(r["model"], r["mode"], r["fixed_budget"], r["profile_variant"]) for r in rows if r["mode"] != "ar"},
+                     key=lambda m: (m[0], _cfg_sort(m[1], m[2], m[3])))
     head = "| Model | Method | " + " | ".join(f"{DATASET_LABELS.get(d, d)} Speedup | τ" for d in datasets) + " | Average Speedup | τ | Pooled Speedup | τ |"
     sep = "|---|---|" + "---:|---:|" * (len(datasets) + 2)
     lines = [head, sep]
-    for model, mode, budget in methods:
+    for model, mode, budget, variant in methods:
         cells = []
         for d in datasets + ["Average", "Pooled"]:
-            r = lut.get((model, mode, budget, d))
+            r = lut.get((model, mode, budget, variant, d))
             cells += [_fmt(r and r["speedup"], 2, "×"), _fmt(r and r["aal"])]
-        lines.append(f"| {model_short(model)} | {method_label(mode, budget)} | " + " | ".join(cells) + " |")
+        lines.append(f"| {model_short(model)} | {method_label(mode, budget, variant)} | " + " | ".join(cells) + " |")
     lines.append("")
     lines.append("Speedup = mean TPOT(AR) / mean TPOT(method) over records with a matching AR record "
                  "(same model, dataset, problem (orig_idx), turn and prompt hash). τ = AAL pooled over steps. "
@@ -253,14 +261,17 @@ def details_markdown(rows: list[dict]) -> str:
 
 
 def load_quality(path: str | None) -> dict:
-    """score_math.py CSV -> {(model, dataset, mode, budget): (accuracy, n)}."""
+    """score_math.py CSV -> {(model, dataset, mode, budget, profile variant): (accuracy, n)}."""
     if not path:
         return {}
     out = {}
     with open(path, newline="") as fh:
         for row in csv.DictReader(fh):
             budget = None if row["fixed_budget"] in ("", "None") else int(row["fixed_budget"])
-            out[(row["model"], row["dataset"], row["mode"], budget)] = (float(row["accuracy"]), int(row["n"]))
+            variant = row.get("profile_variant") or None
+            if variant is None and row["mode"] == "bastion" and budget is None:
+                variant = "upstream"  # score CSVs written before profile modes existed
+            out[(row["model"], row["dataset"], row["mode"], budget, variant)] = (float(row["accuracy"]), int(row["n"]))
     return out
 
 
@@ -281,7 +292,7 @@ def da4022_rows(rows: list[dict], metas: dict[str, dict], quality: dict, status:
             split = ""
         else:
             dataset_id, split = DATASET_SOURCES.get(ds, (ds, ""))
-        q = quality.get((r["model"], ds, r["mode"], r["fixed_budget"]))
+        q = quality.get((r["model"], ds, r["mode"], r["fixed_budget"], r["profile_variant"]))
         notes = [
             f"run={'+'.join(r['run_names'])}",
             f"upstream={str(meta.get('upstream_commit', ''))[:7]}",
@@ -295,6 +306,8 @@ def da4022_rows(rows: list[dict], metas: dict[str, dict], quality: dict, status:
         ]
         if r.get("mean_tree_size") is not None:
             notes.append(f"mean_tree_size={r['mean_tree_size']:.1f}")
+        if r.get("profile_variant"):
+            notes.append(f"controller_profile_mode={r['profile_variant']}")
         if r.get("average_kind"):
             notes.append(f"aggregate={r['average_kind']}")
         if q is None:
@@ -303,7 +316,8 @@ def da4022_rows(rows: list[dict], metas: dict[str, dict], quality: dict, status:
             notes.append("cost-model GPU spec registered at runtime (not in upstream table)")
         per_dataset = ds not in ("Average", "Pooled")
         out.append({
-            "experiment_id": f"{r['run_names'][0] if r['run_names'] else 'run'}:{model_short(r['model'])}:{ds}:{r['method']}",
+            "experiment_id": (f"{r['run_names'][0] if r['run_names'] else 'run'}:{model_short(r['model'])}:{ds}:"
+                              f"{r['method'].replace(' ', '')}"),
             "paper_id": PAPER_ID,
             "method": r["method"],
             "commit": meta.get("da4022_commit", ""),

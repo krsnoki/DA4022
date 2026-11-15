@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from repro_lib import PAPER_SHORT_DATASETS, load_jsonl  # noqa: E402
+from repro_lib import PAPER_SHORT_DATASETS, load_jsonl, rec_profile_variant  # noqa: E402,F401
 
 PAPER_ID = "bastion-arxiv-2605.29727"
 PAPER_DATASET_ORDER = PAPER_SHORT_DATASETS
@@ -79,14 +79,34 @@ def load_meta(jsonl_path: str | Path) -> dict:
     return merged
 
 
-def method_label(mode: str, budget) -> str:
+ADAPTIVE_LABELS = {
+    "warm": "BASTION (adaptive)",
+    "upstream": "BASTION (adaptive, upstream cold profile)",
+}
+
+
+def method_label(mode: str, budget, variant: str | None = None) -> str:
+    """Display name of a configuration. ``variant`` is the profile variant of adaptive
+    BASTION (``repro_lib.rec_profile_variant``): 'warm' or 'upstream'."""
     if mode == "ar":
         return "AR"
     if mode == "dflash":
         return "DFlash"
     if mode == "bastion":
-        return "BASTION" if budget is None else f"BASTION-Fixed-{int(budget)}"
+        if budget is not None:
+            return f"BASTION-Fixed-{int(budget)}"
+        if variant not in ADAPTIVE_LABELS:
+            raise ValueError(f"adaptive BASTION needs a profile variant, got {variant!r}")
+        return ADAPTIVE_LABELS[variant]
     return mode
+
+
+def config_of(rec: dict) -> tuple:
+    """(mode, fixed_budget, profile variant): one method configuration."""
+    return (rec["mode"], rec.get("fixed_budget"), rec_profile_variant(rec))
+
+
+VARIANT_ORDER = {None: 0, "warm": 0, "upstream": 1}
 
 
 def turn_key(rec: dict) -> tuple:

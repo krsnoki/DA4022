@@ -37,7 +37,7 @@ from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import ROOT, dataset_sort_key, load_records, method_label, model_short  # noqa: E402
+from common import ROOT, dataset_sort_key, load_records, method_label, model_short, rec_profile_variant  # noqa: E402
 
 MATH_DATASETS = ("gsm8k", "math500", "aime25")
 
@@ -189,26 +189,29 @@ def score(records: list[dict], golds: dict[str, list[str]], decode) -> tuple[lis
         per.append({
             "model": rec["model"], "dataset": ds, "sample_idx": rec["sample_idx"], "orig_idx": rec["orig_idx"],
             "turn": rec["turn"], "mode": rec["mode"], "fixed_budget": rec.get("fixed_budget"),
-            "method": method_label(rec["mode"], rec.get("fixed_budget")),
+            "profile_variant": rec_profile_variant(rec),
+            "method": method_label(rec["mode"], rec.get("fixed_budget"), rec_profile_variant(rec)),
             "pred": boxed, "gold": gold, "has_box": boxed is not None,
             "correct": answers_match(boxed, gold),
             "hit_max_new_tokens": rec["num_output_tokens"] >= rec.get("max_new_tokens", 10**9),
         })
     groups = defaultdict(list)
     for p in per:
-        groups[(p["model"], p["dataset"], p["mode"], p["fixed_budget"])].append(p)
+        groups[(p["model"], p["dataset"], p["mode"], p["fixed_budget"], p["profile_variant"])].append(p)
     summary = []
-    for (model, ds, mode, budget), rows in groups.items():
+    for (model, ds, mode, budget, variant), rows in groups.items():
         summary.append({
             "model": model, "dataset": ds, "mode": mode,
             "fixed_budget": "" if budget is None else budget,
-            "method": method_label(mode, budget),
+            "profile_variant": variant or "",
+            "method": method_label(mode, budget, variant),
             "n": len(rows), "correct": sum(r["correct"] for r in rows),
             "accuracy": sum(r["correct"] for r in rows) / len(rows),
             "n_no_boxed": sum(not r["has_box"] for r in rows),
             "n_hit_max_new_tokens": sum(r["hit_max_new_tokens"] for r in rows),
         })
-    summary.sort(key=lambda s: (s["model"], dataset_sort_key(s["dataset"]), s["mode"], str(s["fixed_budget"])))
+    summary.sort(key=lambda s: (s["model"], dataset_sort_key(s["dataset"]), s["mode"], str(s["fixed_budget"]),
+                                s["profile_variant"]))
     return summary, per
 
 

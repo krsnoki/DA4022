@@ -237,16 +237,47 @@ def check_method_env(allow_overrides: bool = False) -> dict[str, str | None]:
 # JSONL records
 # ---------------------------------------------------------------------------
 
-def record_key(rec: dict) -> tuple:
-    """Unique key of one generation inside a run file."""
-    budget = rec.get("fixed_budget")
+PROFILE_MODES = ("upstream", "warm")
+# Records written before --profile-mode existed used upstream's profile cache.
+LEGACY_PROFILE_MODE = "upstream"
+
+
+def profile_variant(mode: str, budget, profile_mode: str | None) -> str | None:
+    """Profile mode that distinguishes configurations, or None where it does not matter.
+
+    Only adaptive BASTION uses the profiled draft / non-verify latencies (in the
+    controller's stopping rule), so only (bastion, fixed_budget=None) records are
+    split by profile mode. Fixed-budget trees have exactly N nodes regardless of
+    the constants; AR / DFlash never read them.
+    """
+    if mode == "bastion" and budget is None:
+        return profile_mode or LEGACY_PROFILE_MODE
+    return None
+
+
+def rec_profile_variant(rec: dict) -> str | None:
+    return profile_variant(rec["mode"], rec.get("fixed_budget"), rec.get("profile_mode"))
+
+
+def make_key(dataset: str, sample_idx: int, turn: int, mode: str, budget, profile_mode: str | None = None) -> tuple:
     return (
-        rec["dataset"],
-        int(rec["sample_idx"]),
-        int(rec["turn"]),
-        rec["mode"],
+        dataset,
+        int(sample_idx),
+        int(turn),
+        mode,
         None if budget is None else int(budget),
+        profile_variant(mode, budget, profile_mode),
     )
+
+
+def record_key(rec: dict) -> tuple:
+    """Unique key of one generation inside a run file.
+
+    (dataset, sample_idx, turn, mode, fixed_budget, profile variant); the last
+    element is "warm"/"upstream" for adaptive BASTION and None otherwise.
+    """
+    return make_key(rec["dataset"], rec["sample_idx"], rec["turn"], rec["mode"], rec.get("fixed_budget"),
+                    rec.get("profile_mode"))
 
 
 def load_jsonl(path: str | Path) -> list[dict]:

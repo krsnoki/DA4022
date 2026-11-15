@@ -22,10 +22,11 @@ def test_write_resume_and_duplicates(tmp_path):
         w.write(r(0))
     w.close()
     w2 = rl.JsonlWriter(p)
-    assert w2.has(("gsm8k", 0, 0, "ar", None))
-    assert w2.has(("gsm8k", 0, 0, "bastion", 64)) and w2.has(("gsm8k", 0, 0, "bastion", None))
-    assert not w2.has(("gsm8k", 1, 0, "ar", None))
-    assert w2.get(("gsm8k", 0, 0, "bastion", 64))["x"] == 0
+    assert w2.has(("gsm8k", 0, 0, "ar", None, None))
+    # legacy adaptive record (no profile_mode) counts as the upstream profile variant
+    assert w2.has(("gsm8k", 0, 0, "bastion", 64, None)) and w2.has(("gsm8k", 0, 0, "bastion", None, "upstream"))
+    assert not w2.has(("gsm8k", 1, 0, "ar", None, None))
+    assert w2.get(("gsm8k", 0, 0, "bastion", 64, None))["x"] == 0
     w2.write(r(1))
     w2.close()
     assert len(rl.load_jsonl(p)) == 4
@@ -36,7 +37,7 @@ def test_truncated_tail_is_repaired(tmp_path):
     p.write_text(json.dumps(r(0)) + "\n" + json.dumps(r(1))[:15])  # crash mid-write
     assert len(rl.load_jsonl(p)) == 1
     w = rl.JsonlWriter(p)
-    assert w.has(("gsm8k", 0, 0, "ar", None)) and not w.has(("gsm8k", 1, 0, "ar", None))
+    assert w.has(("gsm8k", 0, 0, "ar", None, None)) and not w.has(("gsm8k", 1, 0, "ar", None, None))
     w.write(r(1))
     w.close()
     recs = rl.load_jsonl(p)
@@ -57,3 +58,19 @@ def test_parse_caps_and_budgets():
     assert rl.parse_budgets(["adaptive", "32,64", "64", "1024"]) == [None, 32, 64, 1024]
     with pytest.raises(ValueError):
         rl.parse_budgets(["1"])
+
+
+def test_profile_mode_in_key_only_for_adaptive_bastion(tmp_path):
+    k = rl.make_key
+    assert k("gsm8k", 0, 0, "bastion", None, "warm") != k("gsm8k", 0, 0, "bastion", None, "upstream")
+    assert k("gsm8k", 0, 0, "bastion", None, None) == k("gsm8k", 0, 0, "bastion", None, "upstream")  # legacy
+    assert k("gsm8k", 0, 0, "bastion", 64, "warm") == k("gsm8k", 0, 0, "bastion", 64, "upstream")
+    assert k("gsm8k", 0, 0, "ar", None, "warm") == k("gsm8k", 0, 0, "ar", None, "upstream")
+    w = rl.JsonlWriter(tmp_path / "r.jsonl")
+    w.write(dict(r(0, "bastion", None), profile_mode="warm"))
+    w.write(dict(r(0, "bastion", None), profile_mode="upstream"))  # distinct config: allowed
+    w.write(dict(r(0, "bastion", 64), profile_mode="warm"))
+    with pytest.raises(KeyError):  # fixed budget does not depend on the profile: duplicate
+        w.write(dict(r(0, "bastion", 64), profile_mode="upstream"))
+    w.close()
+    assert len(rl.load_jsonl(tmp_path / "r.jsonl")) == 3

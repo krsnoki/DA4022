@@ -28,12 +28,21 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import DATASET_LABELS, PAPER_TABLE1_T0, dataset_sort_key, model_short  # noqa: E402
+from common import ADAPTIVE_LABELS, DATASET_LABELS, PAPER_TABLE1_T0, dataset_sort_key, model_short  # noqa: E402
 
 # Validated categorical palette (dataviz reference instance, light mode), fixed order.
 BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
 INK, INK2, GRID = "#0b0b0b", "#52514e", "#e4e3df"
 METHOD_COLORS = {"dflash": BLUE, "bastion": ORANGE}
+# Adaptive BASTION variants (controller profile constants): colour and marker.
+VARIANT_STYLE = {"warm": (ORANGE, "*", 15), "upstream": (AQUA, "P", 10)}
+
+
+def _variant(r: dict):
+    """Profile variant of a summary row; rows from before profile modes count as 'upstream'."""
+    if r.get("mode") == "bastion" and r.get("fixed_budget") is None:
+        return r.get("profile_variant") or "upstream"
+    return None
 
 plt.rcParams.update({
     "font.size": 10, "axes.edgecolor": INK2, "axes.labelcolor": INK, "xtick.color": INK2, "ytick.color": INK2,
@@ -54,39 +63,42 @@ def plot_speedup_bars(rows: list[dict], out_dir: Path, paper: bool = True, devic
     out = []
     models = sorted({r["model"] for r in rows})
     for model in models:
-        mrows = {(r["mode"], r["dataset"]): r for r in rows
+        mrows = {(r["mode"], _variant(r), r["dataset"]): r for r in rows
                  if r["model"] == model and r.get("fixed_budget") is None and r["mode"] in ("dflash", "bastion")}
         if not mrows:
             continue
-        datasets = sorted({d for (_, d) in mrows if d not in ("Average", "Pooled")}, key=dataset_sort_key)
-        cats = datasets + (["Average"] if any(d == "Average" for (_, d) in mrows) else [])
-        series = [("dflash", "measured"), ("bastion", "measured")]
+        datasets = sorted({d for (_, _, d) in mrows if d not in ("Average", "Pooled")}, key=dataset_sort_key)
+        cats = datasets + (["Average"] if any(d == "Average" for (_, _, d) in mrows) else [])
+        variants = [v for v in ("warm", "upstream") if any(k[0] == "bastion" and k[1] == v for k in mrows)]
         have_paper = paper and any((model, m) in PAPER_TABLE1_T0 for m in ("dflash", "bastion"))
-        if have_paper:
-            series = [("dflash", "measured"), ("dflash", "paper"), ("bastion", "measured"), ("bastion", "paper")]
+        series = [("dflash", None, "measured")] + ([("dflash", None, "paper")] if have_paper else [])
+        series += [("bastion", v, "measured") for v in variants]
+        series += [("bastion", None, "paper")] if have_paper else []
         width = 0.8 / len(series)
-        fig, ax = plt.subplots(figsize=(max(7, 1.0 * len(cats) + 2), 3.8))
+        fig, ax = plt.subplots(figsize=(max(7, 1.1 * len(cats) + 2), 3.9))
         x = np.arange(len(cats))
-        for i, (mode, src) in enumerate(series):
+        for i, (mode, variant, src) in enumerate(series):
             vals = []
             for d in cats:
                 if src == "measured":
-                    r = mrows.get((mode, d))
+                    r = mrows.get((mode, variant, d))
                     vals.append(np.nan if r is None or r.get("speedup") is None else r["speedup"])
                 else:
                     vals.append(PAPER_TABLE1_T0.get((model, mode), {}).get(d, (np.nan,))[0])
             pos = x - 0.4 + width * (i + 0.5)
-            color = METHOD_COLORS[mode]
-            name = {"dflash": "DFlash", "bastion": "BASTION"}[mode]
             if src == "measured":
-                bars = ax.bar(pos, vals, width * 0.92, color=color, label=f"{name} (measured{', ' + device_label if device_label else ''})")
+                color = VARIANT_STYLE[variant][0] if variant else METHOD_COLORS[mode]
+                name = ADAPTIVE_LABELS[variant] if variant else "DFlash"
+                bars = ax.bar(pos, vals, width * 0.92, color=color,
+                              label=f"{name} (measured{', ' + device_label if device_label else ''})")
                 for b, v in zip(bars, vals):
                     if np.isfinite(v):
                         ax.text(b.get_x() + b.get_width() / 2, v + 0.05, f"{v:.2f}", ha="center", va="bottom",
                                 fontsize=6.5, color=INK2, rotation=90)
             else:
-                ax.bar(pos, vals, width * 0.92, facecolor="white", edgecolor=color, hatch="////", linewidth=1.0,
-                       label=f"{name} (paper-reported, A100)")
+                name = {"dflash": "DFlash", "bastion": "BASTION"}[mode]
+                ax.bar(pos, vals, width * 0.92, facecolor="white", edgecolor=METHOD_COLORS[mode], hatch="////",
+                       linewidth=1.0, label=f"{name} (paper-reported, A100)")
         ax.axhline(1.0, color=INK2, linewidth=0.8, linestyle=":")
         labels = [DATASET_LABELS.get(d, d) for d in cats]
         if "Average" in cats and have_paper and len(datasets) != 8:
@@ -94,9 +106,9 @@ def plot_speedup_bars(rows: list[dict], out_dir: Path, paper: bool = True, devic
         ax.set_xticks(x, labels)
         ax.set_ylabel("Speedup over AR decoding (×)")
         ax.set_title(f"{model_short(model)}: decode speedup at T=0, batch 1", loc="left", fontsize=11, color=INK)
-        ax.legend(ncol=2, fontsize=8, loc="upper right")
+        ax.legend(ncol=2, fontsize=7.5, loc="upper right")
         ymax = np.nanmax([b.get_height() for b in ax.patches if np.isfinite(b.get_height())] + [1.0])
-        ax.set_ylim(0, ymax * 1.25)
+        ax.set_ylim(0, ymax * 1.35)
         fig.tight_layout()
         p = out_dir / f"speedup_bars_{model_short(model)}.png"
         fig.savefig(p)
@@ -123,7 +135,7 @@ def plot_budget_sweep(rows: list[dict], out_dir: Path) -> list[Path]:
         b_rows = [r for r in rows if r["model"] == model and r["mode"] == "bastion"]
         avg = [r for r in b_rows if r["dataset"] == "Average"]
         fixed = sorted([r for r in avg if r.get("fixed_budget") is not None], key=lambda r: r["fixed_budget"])
-        adaptive = [r for r in avg if r.get("fixed_budget") is None]
+        adaptive = sorted([r for r in avg if r.get("fixed_budget") is None], key=lambda r: _variant(r) != "warm")
         if not fixed and not adaptive:
             continue
         fig, ax = plt.subplots(figsize=(5.2, 3.6))
@@ -137,16 +149,17 @@ def plot_budget_sweep(rows: list[dict], out_dir: Path) -> list[Path]:
                                 ha="center", fontsize=7, color=INK2)
         for r in adaptive:
             if r.get("speedup") is not None and r.get("mean_tree_size") is not None:
-                ax.plot([r["mean_tree_size"]], [r["speedup"]], marker="*", markersize=15, color=ORANGE,
+                color, marker, size = VARIANT_STYLE[_variant(r)]
+                ax.plot([r["mean_tree_size"]], [r["speedup"]], marker=marker, markersize=size, color=color,
                         markeredgecolor="white", linestyle="none",
-                        label=f"BASTION adaptive (mean N̄={r['mean_tree_size']:.0f})")
+                        label=f"{ADAPTIVE_LABELS[_variant(r)]} (mean N̄={r['mean_tree_size']:.0f})")
         ax.set_xscale("log", base=2)
         _int_ticks(ax)
         ax.set_xlabel("Mean realized verification tree size (nodes, log scale)")
         ax.set_ylabel("Speedup over AR (×), mean over datasets")
         n_ds = max((len(r.get("datasets_included", [])) for r in avg), default=0)
         ax.set_title(f"{model_short(model)}: budget sweep ({n_ds} datasets)", loc="left", fontsize=11, color=INK)
-        ax.legend(fontsize=8, loc="lower center")
+        ax.legend(fontsize=7.5, loc="best")
         fig.tight_layout()
         p = out_dir / f"budget_sweep_{model_short(model)}.png"
         fig.savefig(p)
@@ -168,7 +181,8 @@ def plot_budget_sweep(rows: list[dict], out_dir: Path) -> list[Path]:
                         color=BLUE, linewidth=2, markersize=4)
             for r in ad:
                 if r.get("speedup") is not None and r.get("mean_tree_size"):
-                    ax.plot([r["mean_tree_size"]], [r["speedup"]], marker="*", markersize=12, color=ORANGE,
+                    color, marker, size = VARIANT_STYLE[_variant(r)]
+                    ax.plot([r["mean_tree_size"]], [r["speedup"]], marker=marker, markersize=size * 0.8, color=color,
                             markeredgecolor="white", linestyle="none")
             ax.set_xscale("log", base=2)
             _int_ticks(ax)
@@ -177,7 +191,8 @@ def plot_budget_sweep(rows: list[dict], out_dir: Path) -> list[Path]:
             ax.axis("off")
         fig.supxlabel("Mean realized tree size (nodes, log scale)", fontsize=9)
         fig.supylabel("Speedup over AR (×)", fontsize=9)
-        fig.suptitle(f"{model_short(model)}: per-dataset budget sweep (line: fixed N, star: adaptive)", fontsize=10)
+        fig.suptitle(f"{model_short(model)}: per-dataset budget sweep (line: fixed N; star: adaptive, warm profile; "
+                     "plus: adaptive, upstream cold profile)", fontsize=9)
         fig.tight_layout()
         p = out_dir / f"budget_sweep_{model_short(model)}_per_dataset.png"
         fig.savefig(p)

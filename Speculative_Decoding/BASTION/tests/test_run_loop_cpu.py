@@ -83,7 +83,8 @@ def test_records_history_and_resume(tmp_path, tiny_models, calib_env, cpu_timing
     n, recs = _run(tmp_path, tiny_models, PLAN)
     assert n == len(recs) == (2 + 2) * 4
     keys = {rl.record_key(r) for r in recs}
-    assert ("mt-bench", 0, 1, "bastion", 32) in keys and ("gsm8k", 1, 0, "dflash", None) in keys
+    assert ("mt-bench", 0, 1, "bastion", 32, None) in keys and ("gsm8k", 1, 0, "dflash", None, None) in keys
+    assert ("gsm8k", 0, 0, "bastion", None, "upstream") in keys  # run_loop default profile_mode
     for r in recs:
         assert r["time_per_output_token"] > 0 and r["num_output_tokens"] == len(r["output_ids"])
         assert sum(r["acceptance_lengths"]) >= r["num_output_tokens"] - 1
@@ -138,3 +139,31 @@ def test_resume_refuses_changed_selection(tmp_path, tiny_models, calib_env, cpu_
     monkeypatch.setattr(sys.modules[__name__], "_selected", lambda: changed)
     with pytest.raises(RuntimeError, match="orig_idx"):
         _run(tmp_path, tiny_models, [("ar", None)], name="sel")
+
+
+def test_two_profile_modes_into_one_jsonl(tmp_path, tiny_models, calib_env, cpu_timing):
+    """run_sweep.sh pattern: warm invocation (fixed + adaptive), then an upstream invocation into the same file."""
+    calib_env()
+    plan = [("bastion", 32), ("bastion", None)]
+    n1, _ = _run_pm(tmp_path, tiny_models, plan, "warm")
+    n2, recs = _run_pm(tmp_path, tiny_models, plan, "upstream")
+    turns = 2 + 2
+    assert n1 == 2 * turns and n2 == turns  # fixed-budget records are not regenerated for the second mode
+    adaptive = [r for r in recs if r["fixed_budget"] is None]
+    assert sorted(r["profile_mode"] for r in adaptive) == ["upstream"] * turns + ["warm"] * turns
+    assert all(r["profile_mode"] == "warm" for r in recs if r["fixed_budget"] == 32)
+    assert len({rl.record_key(r) for r in recs}) == len(recs) == 3 * turns
+    n3, _ = _run_pm(tmp_path, tiny_models, plan, "warm")
+    assert n3 == 0
+
+
+def _run_pm(tmp_path, tiny_models, plan, profile_mode, name="pm"):
+    import functools
+
+    orig = rb.run_loop
+    rb_run_loop = functools.partial(orig, profile_mode=profile_mode)
+    try:
+        rb.run_loop = rb_run_loop
+        return _run(tmp_path, tiny_models, plan, name=name)
+    finally:
+        rb.run_loop = orig

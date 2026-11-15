@@ -28,7 +28,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from aggregate import ARIndex  # noqa: E402
-from common import dataset_sort_key, load_records, method_label, model_short  # noqa: E402
+from common import VARIANT_ORDER, dataset_sort_key, load_records, method_label, model_short, rec_profile_variant  # noqa: E402
 
 
 def first_divergence(a: list[int], b: list[int]) -> int | None:
@@ -50,8 +50,8 @@ def compare(records: list[dict], ar_index: ARIndex | None = None) -> tuple[list[
         ar = ar_index.lookup(rec)
         row = {
             "model": rec["model"], "dataset": rec["dataset"], "sample_idx": rec["sample_idx"], "turn": rec["turn"],
-            "mode": rec["mode"], "fixed_budget": rec.get("fixed_budget"),
-            "method": method_label(rec["mode"], rec.get("fixed_budget")),
+            "mode": rec["mode"], "fixed_budget": rec.get("fixed_budget"), "profile_variant": rec_profile_variant(rec),
+            "method": method_label(rec["mode"], rec.get("fixed_budget"), rec_profile_variant(rec)),
         }
         if ar is None:
             row["status"] = "no_ar"
@@ -73,14 +73,14 @@ def compare(records: list[dict], ar_index: ARIndex | None = None) -> tuple[list[
 
     groups: dict[tuple, list[dict]] = defaultdict(list)
     for row in per_record:
-        groups[(row["model"], row["dataset"], row["mode"], row["fixed_budget"])].append(row)
+        groups[(row["model"], row["dataset"], row["mode"], row["fixed_budget"], row["profile_variant"])].append(row)
     summary = []
-    for (model, dataset, mode, budget), rows in groups.items():
+    for (model, dataset, mode, budget, variant), rows in groups.items():
         comp = [r for r in rows if r["status"] == "compared"]
         divs = [r["first_divergence"] for r in comp if not r["exact"]]
         summary.append({
-            "model": model, "dataset": dataset, "mode": mode, "fixed_budget": budget,
-            "method": method_label(mode, budget),
+            "model": model, "dataset": dataset, "mode": mode, "fixed_budget": budget, "profile_variant": variant,
+            "method": method_label(mode, budget, variant),
             "n_records": len(rows),
             "n_compared": len(comp),
             "n_no_ar": sum(r["status"] == "no_ar" for r in rows),
@@ -97,17 +97,18 @@ def compare(records: list[dict], ar_index: ARIndex | None = None) -> tuple[list[
             "mean_prefix_agreement_diverged": float(np.mean([r["prefix_agreement"] for r in comp if not r["exact"]])) if divs else None,
             "n_length_only_diff": sum(1 for r in comp if not r["exact"] and r["first_divergence"] == min(r["ar_len"], r["method_len"])),
         })
-    summary.sort(key=lambda s: (s["model"], s["mode"], -1 if s["fixed_budget"] is None else s["fixed_budget"], dataset_sort_key(s["dataset"])))
+    summary.sort(key=lambda s: (s["model"], s["mode"], -1 if s["fixed_budget"] is None else s["fixed_budget"],
+                                VARIANT_ORDER.get(s["profile_variant"], 9), dataset_sort_key(s["dataset"])))
     # Overall rows per (model, method)
     overall = defaultdict(list)
     for row in per_record:
         if row["status"] == "compared":
-            overall[(row["model"], row["mode"], row["fixed_budget"])].append(row)
-    for (model, mode, budget), comp in overall.items():
+            overall[(row["model"], row["mode"], row["fixed_budget"], row["profile_variant"])].append(row)
+    for (model, mode, budget, variant), comp in overall.items():
         divs = [r["first_divergence"] for r in comp if not r["exact"]]
         summary.append({
-            "model": model, "dataset": "ALL", "mode": mode, "fixed_budget": budget,
-            "method": method_label(mode, budget), "n_records": None, "n_compared": len(comp),
+            "model": model, "dataset": "ALL", "mode": mode, "fixed_budget": budget, "profile_variant": variant,
+            "method": method_label(mode, budget, variant), "n_records": None, "n_compared": len(comp),
             "n_no_ar": None, "n_prompt_mismatch": None,
             "n_exact": sum(r["exact"] for r in comp), "exact_rate": sum(r["exact"] for r in comp) / len(comp),
             "n_diverged": len(divs), "div_pos_min": int(min(divs)) if divs else None,

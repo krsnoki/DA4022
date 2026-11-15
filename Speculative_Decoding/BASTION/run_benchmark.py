@@ -152,21 +152,34 @@ class RunMeta:
 # ---------------------------------------------------------------------------
 
 def ensure_calibration_and_profile(*, args, target, draft_model, tokenizer, device, block_size,
-                                   model_key, gpu_key, probe_turn: str, bastion_attn_impl: str) -> dict:
+                                   model_key, gpu_key, probe_turn: str, bastion_attn_impl: str,
+                                   profile_mode: str = "upstream") -> dict:
     """Upstream lines 429-619 (commit 1989b80) with the torch.distributed branches removed.
 
     Cache paths, cache-validity rules, probe collection, fit, and profiling
     are unchanged, so caches written by ``python -m bastion.benchmark`` (or
     ``tools/bastion_local.py``) are reused and vice versa.
+
+    ``profile_mode``:
+      * ``upstream``: upstream behaviour, reads/writes
+        ``calibration_<gpu>_<model>.profile.json`` (3 trials, no warm-up).
+      * ``warm``: upstream's ``profile_tree_adaptive_constants`` is run once as a
+        discarded warm-up and then again with identical arguments; the second
+        result is used and cached in ``calibration_<gpu>_<model>.profile.warm.json``.
+        Upstream's profile file is neither read for the constants nor written.
+    The roofline calibration is identical in both modes.
     """
+    if profile_mode not in rl.PROFILE_MODES:
+        raise ValueError(f"profile_mode must be one of {rl.PROFILE_MODES}")
     CACHE_DIR.mkdir(exist_ok=True)
     calib_cache = CACHE_DIR / f"calibration_{gpu_key}_{model_key}.json"
     profile_cache = CACHE_DIR / f"calibration_{gpu_key}_{model_key}.profile.json"
+    warm_profile_cache = CACHE_DIR / f"calibration_{gpu_key}_{model_key}.profile.warm.json"
 
     sigma_scale = float(os.environ.get("BASTION_SIGMA_SCALE", "30.0"))
     fit_version = "sigma_sequence_v1"
     probe_path = CACHE_DIR / f"calib_probe_{gpu_key}_{model_key}.{fit_version}.jsonl"
-    created = {"calibration_probe": False, "calibration_fit": False, "profile": False}
+    created = {"calibration_probe": False, "calibration_fit": False, "profile": False, "profile_warm": False}
 
     def _probe_cache_attn_impl(path: Path) -> str | None:
         if not path.exists():
@@ -235,14 +248,14 @@ def ensure_calibration_and_profile(*, args, target, draft_model, tokenizer, devi
         raise RuntimeError(f"Calibration cache was not created or is stale: {calib_cache}")
     os.environ["CALIBRATION_JSON_PATH"] = str(calib_cache)
 
-    if not profile_cache.exists():
-        print(f"[profile] profiling draft/non-verify latency -> {profile_cache}")
+    def _profile_once() -> tuple[float, float]:
+        # Same probe input and arguments as upstream (first sample of the first dataset, 3 trials).
         probe_messages = [{"role": "user", "content": probe_turn}]
         probe_text = tokenizer.apply_chat_template(
             probe_messages, tokenize=False, add_generation_prompt=True, enable_thinking=False,
         )
         probe_input_ids = tokenizer.encode(probe_text, return_tensors="pt").to(device)
-        dl_s, nv_s = ub.profile_tree_adaptive_constants(
+        dl, nv = ub.profile_tree_adaptive_constants(
             draft_model=draft_model,
             target=target,
             input_ids=probe_input_ids,
@@ -252,29 +265,68 @@ def ensure_calibration_and_profile(*, args, target, draft_model, tokenizer, devi
             gpu_type=gpu_key,
             num_trials=3,
         )
-        profile_cache.write_text(
-            json.dumps({"draft_latency_s": dl_s, "non_verify_latency_s": nv_s, "attn_impl": bastion_attn_impl}),
-            encoding="utf-8",
-        )
-        created["profile"] = True
+        return float(dl), float(nv)
 
-    prof = json.loads(profile_cache.read_text(encoding="utf-8"))
-    if "draft_latency_s" not in prof or "non_verify_latency_s" not in prof:
-        raise ValueError(f"Invalid profile cache: {profile_cache}")
-    if prof.get("attn_impl") is None:
-        prof_attn_impl = _probe_cache_attn_impl(probe_path)
-        if prof_attn_impl == bastion_attn_impl:
-            prof["attn_impl"] = prof_attn_impl
-            profile_cache.write_text(json.dumps(prof), encoding="utf-8")
-    if prof.get("attn_impl") != bastion_attn_impl:
-        raise ValueError(
-            f"Invalid profile cache attention backend in {profile_cache}: "
-            f"expected {bastion_attn_impl}, got {prof.get('attn_impl')}"
-        )
+    def _upstream_profile() -> tuple[dict, Path]:
+        if not profile_cache.exists():
+            print(f"[profile] profiling draft/non-verify latency -> {profile_cache}")
+            dl_s, nv_s = _profile_once()
+            profile_cache.write_text(
+                json.dumps({"draft_latency_s": dl_s, "non_verify_latency_s": nv_s, "attn_impl": bastion_attn_impl}),
+                encoding="utf-8",
+            )
+            created["profile"] = True
+
+        prof = json.loads(profile_cache.read_text(encoding="utf-8"))
+        if "draft_latency_s" not in prof or "non_verify_latency_s" not in prof:
+            raise ValueError(f"Invalid profile cache: {profile_cache}")
+        if prof.get("attn_impl") is None:
+            prof_attn_impl = _probe_cache_attn_impl(probe_path)
+            if prof_attn_impl == bastion_attn_impl:
+                prof["attn_impl"] = prof_attn_impl
+                profile_cache.write_text(json.dumps(prof), encoding="utf-8")
+        if prof.get("attn_impl") != bastion_attn_impl:
+            raise ValueError(
+                f"Invalid profile cache attention backend in {profile_cache}: "
+                f"expected {bastion_attn_impl}, got {prof.get('attn_impl')}"
+            )
+        draft_latency_s = float(prof["draft_latency_s"])
+        non_verify_latency_s = float(prof["non_verify_latency_s"])
+        if draft_latency_s <= 0 or non_verify_latency_s <= 0:
+            raise ValueError(f"Invalid profiling constants in {profile_cache}")
+
+        return prof, profile_cache
+
+    def _warm_profile() -> tuple[dict, Path]:
+        if not warm_profile_cache.exists():
+            print(f"[profile] warm profiling (1 discarded + 1 kept call) -> {warm_profile_cache}")
+            d0, n0 = _profile_once()  # discarded: absorbs one-time CUDA/kernel initialisation
+            d1, n1 = _profile_once()
+            warm_profile_cache.write_text(json.dumps({
+                "draft_latency_s": d1, "non_verify_latency_s": n1, "attn_impl": bastion_attn_impl,
+                "profile_mode": "warm", "num_trials": 3,
+                "discarded_warmup": {"draft_latency_s": d0, "non_verify_latency_s": n0},
+                "created": _now(),
+            }), encoding="utf-8")
+            created["profile_warm"] = True
+        prof = json.loads(warm_profile_cache.read_text(encoding="utf-8"))
+        if prof.get("profile_mode") != "warm" or "draft_latency_s" not in prof or "non_verify_latency_s" not in prof:
+            raise ValueError(f"Invalid warm profile cache: {warm_profile_cache} (delete it to re-profile)")
+        if prof.get("attn_impl") != bastion_attn_impl:
+            raise ValueError(f"Warm profile cache {warm_profile_cache} was made with attn_impl={prof.get('attn_impl')}, "
+                             f"expected {bastion_attn_impl} (delete it to re-profile)")
+        return prof, warm_profile_cache
+
+    if profile_mode == "upstream":
+        prof, used_cache = _upstream_profile()
+        upstream_prof = prof
+    else:
+        prof, used_cache = _warm_profile()
+        upstream_prof = _read_json(profile_cache) if profile_cache.exists() else None  # read-only, for metadata
     draft_latency_s = float(prof["draft_latency_s"])
     non_verify_latency_s = float(prof["non_verify_latency_s"])
     if draft_latency_s <= 0 or non_verify_latency_s <= 0:
-        raise ValueError(f"Invalid profiling constants in {profile_cache}")
+        raise ValueError(f"Invalid profiling constants in {used_cache}")
 
     probe_lines = None
     if probe_path.exists():
@@ -285,8 +337,12 @@ def ensure_calibration_and_profile(*, args, target, draft_model, tokenizer, devi
         "non_verify_latency_s": non_verify_latency_s,
         "calibration_cache": str(calib_cache),
         "calibration_cache_contents": _read_json(calib_cache),
-        "profile_cache": str(profile_cache),
+        "profile_mode": profile_mode,
+        "profile_cache": str(used_cache),
         "profile_cache_contents": prof,
+        "profile_discarded_warmup": prof.get("discarded_warmup"),
+        "upstream_profile_cache": str(profile_cache),
+        "upstream_profile_cache_contents": upstream_prof,
         "probe_path": str(probe_path),
         "probe_sha256": rl.sha256_file(probe_path),
         "probe_num_records": probe_lines,
@@ -333,25 +389,30 @@ def print_summary(records: list[dict], block_size: int, datasets: list[str]) -> 
             acceptance_lengths=rec.get("acceptance_lengths") or [],
         )
 
-    by_key: dict[tuple, dict] = {}
-    for rec in records:
-        key = (rec["dataset"], rec["sample_idx"], rec["turn"])
-        slot = by_key.setdefault(key, {})
-        if rec["mode"] == "ar":
-            slot[1] = ns(rec)
-        elif rec["mode"] == "dflash":
-            slot[block_size] = ns(rec)
-        elif rec["mode"] == "bastion" and rec.get("fixed_budget") is None:
-            slot[block_size * 10] = ns(rec)
+    variants = sorted({rl.rec_profile_variant(r) for r in records
+                       if r["mode"] == "bastion" and r.get("fixed_budget") is None}) or [None]
+    for variant in variants:
+        by_key: dict[tuple, dict] = {}
+        for rec in records:
+            key = (rec["dataset"], rec["sample_idx"], rec["turn"])
+            slot = by_key.setdefault(key, {})
+            if rec["mode"] == "ar":
+                slot[1] = ns(rec)
+            elif rec["mode"] == "dflash":
+                slot[block_size] = ns(rec)
+            elif (rec["mode"] == "bastion" and rec.get("fixed_budget") is None
+                  and rl.rec_profile_variant(rec) == variant):
+                slot[block_size * 10] = ns(rec)
 
-    groups = [(ds, [k for k in by_key if k[0] == ds]) for ds in datasets]
-    if len(datasets) > 1:
-        groups.append(("ALL (pooled over records, as upstream's group alias would)", list(by_key)))
-    for label, keys in groups:
-        responses = [by_key[k] for k in keys if {1, block_size, block_size * 10} <= set(by_key[k])]
-        print(f"\n### {label}: {len(responses)} responses with AR, DFlash and adaptive BASTION")
-        if responses:
-            ub._print_decode_summary(responses, block_size)
+        groups = [(ds, [k for k in by_key if k[0] == ds]) for ds in datasets]
+        if len(datasets) > 1:
+            groups.append(("ALL (pooled over records, as upstream's group alias would)", list(by_key)))
+        for label, keys in groups:
+            responses = [by_key[k] for k in keys if {1, block_size, block_size * 10} <= set(by_key[k])]
+            print(f"\n### {label} [BASTION profile mode: {variant}]: {len(responses)} responses with AR, "
+                  "DFlash and adaptive BASTION")
+            if responses:
+                ub._print_decode_summary(responses, block_size)
 
     # Fixed-budget runs (not part of the upstream table).
     fixed = sorted({r["fixed_budget"] for r in records if r["mode"] == "bastion" and r.get("fixed_budget") is not None})
@@ -400,11 +461,14 @@ def _gen_stats(resp, num_input_tokens: int) -> dict:
 
 
 def run_loop(*, datasets, selected, plan, generate, tokenizer, device, writer, recorder, history_records,
-             base_fields, enable_thinking, max_new_tokens, eos, block_size, mem_reset, mem_peak_mib, attn_impl) -> int:
+             base_fields, enable_thinking, max_new_tokens, eos, block_size, mem_reset, mem_peak_mib, attn_impl,
+             profile_mode: str = "upstream") -> int:
     """Per-turn generation loop: AR -> DFlash -> BASTION budgets, one JSONL record each.
 
     ``generate(mode, input_ids, budget, max_new_tokens)`` returns upstream's
     stats namespace. Separated from ``run`` so it can be tested on CPU.
+    ``profile_mode`` is stored in every record and is part of the resume key
+    for adaptive BASTION (see ``repro_lib.profile_variant``).
     """
     n_new = 0
     for ds_name in datasets:
@@ -421,7 +485,7 @@ def run_loop(*, datasets, selected, plan, generate, tokenizer, device, writer, r
                 ihash = rl.input_hash(input_ids[0].tolist())
                 outputs: dict[tuple, list[int]] = {}
                 for mode, budget in plan:
-                    key = (ds_name, sample_idx, turn, mode, budget)
+                    key = rl.make_key(ds_name, sample_idx, turn, mode, budget, profile_mode)
                     existing = writer.get(key)
                     if existing is not None:
                         # Resume keys on sample_idx (position in the selection). A different cap can map the
@@ -458,6 +522,7 @@ def run_loop(*, datasets, selected, plan, generate, tokenizer, device, writer, r
                         "num_turns": len(instance["turns"]),
                         "mode": mode,
                         "fixed_budget": budget,
+                        "profile_mode": profile_mode,
                         "block_size": 1 if mode == "ar" else block_size,
                         "target_attn_impl": attn_impl(),
                         "input_hash": ihash,
@@ -580,6 +645,7 @@ def run(args: argparse.Namespace) -> None:
         args=args, target=bastion_target, draft_model=draft_model, tokenizer=tokenizer, device=device,
         block_size=block_size, model_key=model_key, gpu_key=gpu_key,
         probe_turn=first_ds[0]["turns"][0], bastion_attn_impl=bastion_attn_impl,
+        profile_mode=args.profile_mode,
     )
     draft_latency_s = calib["draft_latency_s"]
     non_verify_latency_s = calib["non_verify_latency_s"]
@@ -596,6 +662,12 @@ def run(args: argparse.Namespace) -> None:
             "bastion": {"target": bastion_attn_impl, "draft": baseline_attn_impl},
         },
         calibration=calib,
+        profile={
+            "mode": args.profile_mode,
+            "kept": {"draft_latency_s": draft_latency_s, "non_verify_latency_s": non_verify_latency_s},
+            "discarded_warmup": calib.get("profile_discarded_warmup"),
+            "cache": calib.get("profile_cache"),
+        },
         eos_token_id=eos,
         status="running",
     )
@@ -656,6 +728,7 @@ def run(args: argparse.Namespace) -> None:
         "run_name": args.run_name, "model": args.model, "draft_model": args.draft_model,
         "model_key": model_key, "gpu_key": gpu_key, "temperature": args.temperature,
         "max_new_tokens": args.max_new_tokens, "seed": args.seed,
+        "profile_draft_latency_s": draft_latency_s, "profile_non_verify_latency_s": non_verify_latency_s,
     }
     try:
         run_loop(
@@ -666,6 +739,7 @@ def run(args: argparse.Namespace) -> None:
             mem_reset=lambda: torch.cuda.reset_peak_memory_stats(device),
             mem_peak_mib=lambda: torch.cuda.max_memory_allocated(device) / 2**20,
             attn_impl=lambda: target.config._attn_implementation,
+            profile_mode=args.profile_mode,
         )
         meta.update(status="completed")
     except BaseException as exc:
@@ -692,6 +766,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--budgets", nargs="+", default=["adaptive"],
                    help="BASTION budgets: 'adaptive' and/or integers N (fixed tree of N nodes)")
     p.add_argument("--fixed-budget", type=int, default=None, help="shorthand for --budgets N")
+    p.add_argument("--profile-mode", choices=list(rl.PROFILE_MODES), default="upstream",
+                   help="draft/non-verify latency constants for the adaptive controller: 'upstream' = upstream's "
+                        "profile cache (3 trials, no warm-up); 'warm' = discard one profiling call, keep the second, "
+                        "cache in calibration_<gpu>_<model>.profile.warm.json")
     p.add_argument("--history-jsonl", default=None,
                    help="AR records of another run (matched on dataset, orig_idx, turn) used as multi-turn "
                         "history when AR is not run here")
