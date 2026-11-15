@@ -208,15 +208,21 @@ def ensure_calibration_and_profile(*, args, target, draft_model, tokenizer, devi
     if not _calibration_cache_current(calib_cache):
         if not probe_path.exists():
             print(f"[calibration] collecting probe data -> {probe_path} (several minutes)")
-            cost_model.collect_calibration_data(
-                target=target,
-                tokenizer=tokenizer,
-                device=device,
-                model_name_or_path=args.model,
-                gpu_type=gpu_key,
-                output_path=probe_path,
-                attn_implementation=bastion_attn_impl,
-            )
+            # inference_mode: upstream's untimed context prefill otherwise keeps
+            # autograd activations alive and OOMs Qwen3-8B on 32 GB (timed
+            # forwards are already in inference mode upstream). See tools/bastion_local.py.
+            import torch
+
+            with torch.inference_mode():
+                cost_model.collect_calibration_data(
+                    target=target,
+                    tokenizer=tokenizer,
+                    device=device,
+                    model_name_or_path=args.model,
+                    gpu_type=gpu_key,
+                    output_path=probe_path,
+                    attn_implementation=bastion_attn_impl,
+                )
             created["calibration_probe"] = True
         params = cost_model.fit_linear_calibration(probe_path, sigma_scale=sigma_scale)
         calib_cache.write_text(

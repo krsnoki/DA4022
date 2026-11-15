@@ -43,6 +43,26 @@ for alias in (
 ):
     cost_model.GPU_ALIASES.setdefault(alias, LOCAL_GPU_KEY)
 
+# Memory fix for 32 GB GPUs (does not change any timed measurement).
+# Upstream collect_calibration_data decorates its timed helpers (_warmup_forward,
+# _measure_single_point) with @torch.inference_mode(), but the untimed context
+# prefill in its main loop runs with autograd enabled, so every prefill keeps its
+# activations alive (~9 GB extra for a 1024-token prefill on Qwen3-8B), which OOMs
+# a 32 GB card. Running the whole routine under inference_mode only drops that
+# autograd bookkeeping; the timed forwards were already in inference mode.
+import torch  # noqa: E402
+
+if not getattr(cost_model.collect_calibration_data, "_bastion_local_inference_mode", False):
+    _orig_collect = cost_model.collect_calibration_data
+
+    def _collect_calibration_data_no_grad(*args, **kwargs):
+        with torch.inference_mode():
+            return _orig_collect(*args, **kwargs)
+
+    _collect_calibration_data_no_grad._bastion_local_inference_mode = True
+    _collect_calibration_data_no_grad.__wrapped__ = _orig_collect
+    cost_model.collect_calibration_data = _collect_calibration_data_no_grad
+
 from bastion import benchmark  # noqa: E402
 
 if __name__ == "__main__":
