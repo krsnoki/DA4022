@@ -1,0 +1,20 @@
+# Same setup as qwen2_5_0_5b.yaml but with much smaller cache budgets, to see
+# where the eviction methods start to differ.
+backbone_id: text.qwen2_5_0_5b_instruct.self_supervised
+model_id: Qwen/Qwen2.5-0.5B-Instruct
+model_revision: 7ae557604adf67be50417f59c2c2f167def9a775
+
+dataset_id: text.passkey_retrieval.synthetic
+calibration_dataset: null
+seed: 0
+num_samples: 20
+context_tokens: [4000]
+
+methods: [dropkv, snapkv, random]
+budgets: [0.05, 0.02, 0.01]
+window: 8
+kernel_size: 11
+
+max_new_tokens: 12
+warmup: 1
+output_dir: Attention/experiments/dropkv/results_low_budget
