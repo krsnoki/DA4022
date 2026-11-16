@@ -1,0 +1,19 @@
+# DropKV benchmark on Qwen2.5-0.5B-Instruct, passkey retrieval.
+backbone_id: text.qwen2_5_0_5b_instruct.self_supervised
+model_id: Qwen/Qwen2.5-0.5B-Instruct
+model_revision: 7ae557604adf67be50417f59c2c2f167def9a775
+
+dataset_id: text.passkey_retrieval.synthetic
+calibration_dataset: null        # the method needs no calibration data
+seed: 0
+num_samples: 20
+context_tokens: [2000, 4000]     # approximate prompt length in tokens
+
+methods: [dropkv, snapkv, random]
+budgets: [0.3, 0.1]              # fraction of cache positions kept per head
+window: 8                        # observation window (paper default)
+kernel_size: 11                  # max-pool kernel (paper default)
+
+max_new_tokens: 12
+warmup: 1                        # warm-up requests per configuration, not recorded
+output_dir: Attention/experiments/dropkv/results
