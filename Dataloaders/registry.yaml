@@ -1,0 +1,26 @@
+# Dataset registry. Experiment configs point to these IDs instead of
+# re-implementing loaders. See README_dataloader.md for the field meanings.
+# Values are verified; anything not verified is written as `unknown`.
+
+text.gsm8k.test:
+  id: text.gsm8k.test
+  name: GSM8K test split
+  modality: text
+  task: grade-school math word problems with a numeric final answer
+  source_url: https://huggingface.co/datasets/openai/gsm8k
+  hf_path: openai/gsm8k
+  hf_config: main
+  license: mit
+  version: 740312add88f781978c0658806c59bc2815b9866  # Hugging Face dataset revision
+  role: evaluation
+  split: test
+  num_examples: 1319
+  sampling: >-
+    one permutation of the test indices from random.Random(seed).shuffle,
+    cut into consecutive blocks of num_samples; block k is "subset k"
+  seed: 42
+  preprocessing_id: gsm8k.build_prompt.v1
+  labels_available: true
+  loader: Dataloaders.evaluation.gsm8k.load_gsm8k_subset
+  card: Dataloaders/evaluation/gsm8k_test.md
+  notes: Used for evaluation only. Never used for training or calibration.

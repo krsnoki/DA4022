@@ -1,0 +1,43 @@
+# Backbone registry. Experiments refer to these IDs; the loading code reads
+# hf_path, revision and dtype from here. Field meanings: README_backbones.md.
+# Values are verified; anything not verified is written as `unknown`.
+
+text.olmoe-1b-7b-0125-instruct:
+  id: text.olmoe-1b-7b-0125-instruct
+  name: OLMoE-1B-7B-0125-Instruct
+  modality: text
+  architecture: >-
+    OlmoeForCausalLM, decoder-only Mixture-of-Experts transformer, 16 layers,
+    hidden size 2048, 64 experts per MoE layer, 8 active per token
+  router: softmax over all 64 experts, then top-8; top-8 weights not renormalised (norm_topk_prob false)
+  pretraining_regime: self_supervised
+  objective: next-token prediction, then instruction tuning (see the model card)
+  weights_source: huggingface
+  weights_uri: https://huggingface.co/allenai/OLMoE-1B-7B-0125-Instruct
+  hf_path: allenai/OLMoE-1B-7B-0125-Instruct
+  revision: b89a7c4bc24fb9e55ce2543c9458ce0ca5c4650e
+  license: apache-2.0
+  num_parameters: 6919161856
+  dtype: bfloat16
+  input_spec:
+    max_position_embeddings: 4096
+    chat_template: true
+  preprocessing: tokenizer and chat template from the same repository and revision
+  parent_backbone: see card
+  fine_tuning_dataset: see card
+  loader: Backbones.Generative_Pretrained.hf_causal_lm.HFCausalLMBackbone
+  card: Backbones/Generative_Pretrained/olmoe_1b_7b_0125_instruct.md
+
+text.gpt-oss-20b.mxfp4:
+  id: text.gpt-oss-20b.mxfp4
+  name: gpt-oss-20b
+  status: not_used  # could not be served on our hardware; see the card
+  modality: text
+  architecture: GptOssForCausalLM, decoder-only Mixture-of-Experts, 24 layers, 32 experts, 4 active per token
+  pretraining_regime: self_supervised
+  weights_uri: https://huggingface.co/openai/gpt-oss-20b
+  hf_path: openai/gpt-oss-20b
+  revision: 6cee5e81ee83917806bbde320786a8fb61efebee
+  license: apache-2.0
+  dtype: mxfp4 MoE weights, bfloat16 elsewhere
+  card: Backbones/Generative_Pretrained/gpt_oss_20b.md
