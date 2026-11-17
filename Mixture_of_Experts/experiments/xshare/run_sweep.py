@@ -181,6 +181,12 @@ class PowerSampler:
 # --------------------------------------------------------------------------
 
 
+def _synchronize(device) -> None:
+    """Wait for queued GPU work before reading the clock; a no-op on the CPU."""
+    if torch.device(device).type == "cuda":
+        torch.cuda.synchronize(device)
+
+
 @torch.inference_mode()
 def generate_batch(backbone, controller: XShareController, prompts, max_new_tokens, eos_ids):
     """Greedy decoding of one batch with timings per step and per request."""
@@ -192,11 +198,11 @@ def generate_batch(backbone, controller: XShareController, prompts, max_new_toke
     pad = tokenizer.pad_token_id
 
     controller.valid_rows = None
-    torch.cuda.synchronize()
+    _synchronize(device)
     t_start = time.perf_counter()
     out = model(input_ids=enc["input_ids"], attention_mask=enc["attention_mask"], use_cache=True)
     next_token = out.logits[:, -1].argmax(dim=-1)
-    torch.cuda.synchronize()
+    _synchronize(device)
     t_prefill_end = time.perf_counter()
 
     past = out.past_key_values
@@ -229,7 +235,7 @@ def generate_batch(backbone, controller: XShareController, prompts, max_new_toke
         )
         past = out.past_key_values
         next_token = out.logits[:, -1].argmax(dim=-1)
-        torch.cuda.synchronize()
+        _synchronize(device)
         produced_at = time.perf_counter()
         step_ms.append((produced_at - t_step) * 1000.0)
     t_end = time.perf_counter()
