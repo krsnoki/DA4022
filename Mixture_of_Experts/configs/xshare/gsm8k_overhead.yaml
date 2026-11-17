@@ -20,6 +20,7 @@ dataset:
   num_samples: 200
   subsets: [0, 1, 2]
   seed: 42
+  preprocessing_id: gsm8k.build_prompt.v1   # Dataloaders/registry.yaml; prompt built by gsm8k.build_prompt
 calibration_dataset: null
 
 generation:

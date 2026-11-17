@@ -348,6 +348,12 @@ What the measurements support:
   runs of minutes is coarse but adequate for per-run totals.
 - **Peak memory** is `torch.cuda.max_memory_allocated`. It does not change with
   pruning because all expert weights stay loaded.
+- **Cost** (a metric the metrics README asks for when applicable): not
+  applicable. The runs used one owned workstation GPU, not a billed cloud
+  instance, so there is no price per unit to report. Energy per token is
+  reported instead.
+- **Robustness** (also "include only when evaluated"): not evaluated beyond
+  the three question subsets; no other seeds, data distributions or hardware.
 - **Communication cost** (required by the MoE README for distributed variants):
   not applicable. There is one GPU; the expert-parallel variant is only
   simulated.
