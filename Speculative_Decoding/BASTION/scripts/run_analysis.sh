@@ -17,6 +17,7 @@ if [ ${#E1[@]} -gt 0 ]; then
   QUAL=(); [ -f "$RESULTS/e1_math_scores.csv" ] && QUAL=(--quality "$RESULTS/e1_math_scores.csv")
   "$PY" analysis/aggregate.py --runs "${E1[@]}" --out-dir "$RESULTS" --prefix e1_ --status "${STATUS:-partial}" "${QUAL[@]}"
   "$PY" analysis/check_lossless.py --runs "${E1[@]}" --out-dir "$RESULTS" --prefix e1_
+  "$PY" analysis/e1_extras.py --runs "${E1[@]}" --summary "$RESULTS/e1_summary.json" --out-dir "$RESULTS" --prefix e1_
   SUMMARIES+=("$RESULTS/e1_summary.json")
 fi
 SWEEP_SUMMARIES=()

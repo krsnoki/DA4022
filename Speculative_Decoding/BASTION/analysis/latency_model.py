@@ -247,8 +247,10 @@ def main(argv=None) -> None:
     md = ("# Verification-latency model accuracy (E5)\n\n" + "\n".join(lines) +
           "\n\nPaper (A100, App. H.4): 29.2→2.3 ms (Qwen3-4B), 30.6→3.1 ms (Qwen3-8B), 26.4→3.5 ms (Llama-3.1-8B). "
           "Calibrated RMSE here is in-sample unless stated (LOCO column).\n")
+    noted = set()  # one note per registered GPU, not one per model
     for r in slim:
-        if r["gpu_key"] not in {"a5000", "a6000", "a100", "h100", "h200", "b6000"}:
+        if r["gpu_key"] not in {"a5000", "a6000", "a100", "h100", "h200", "b6000"} and r["gpu_key"] not in noted:
+            noted.add(r["gpu_key"])
             md += (f"\nNote: GPU '{r['gpu_key']}' is not in upstream's GPU table; its spec {r['gpu_spec']} was registered at "
                    "runtime (tools/bastion_local.py). The uncalibrated roofline RMSE depends directly on these assumed "
                    "peak-throughput/bandwidth values; the calibrated fit absorbs a constant scale error.\n")

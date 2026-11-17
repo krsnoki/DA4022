@@ -36,6 +36,7 @@ INK, INK2, GRID = "#0b0b0b", "#52514e", "#e4e3df"
 METHOD_COLORS = {"dflash": BLUE, "bastion": ORANGE}
 # Adaptive BASTION variants (controller profile constants): colour and marker.
 VARIANT_STYLE = {"warm": (ORANGE, "*", 15), "upstream": (AQUA, "P", 10)}
+MODEL_KEY_LABELS = {"qwen3-4b": "Qwen3-4B", "qwen3-8b": "Qwen3-8B", "llama3.1-8b": "Llama-3.1-8B-Instruct"}
 
 
 def _variant(r: dict):
@@ -235,11 +236,14 @@ def plot_latency_model(latency_dir: Path, out_dir: Path, contexts=(64, 256, 1024
         ax.plot([], [], "-", color=INK2, label=f"calibrated fit (RMSE {a['rmse_cal_ms']:.1f} ms, {scope}, in-sample)")
         ax.set_xlabel("Verified sequence length s (tokens)")
         ax.set_ylabel("Verification latency (ms)")
-        ax.set_title(f"{res['model_key']} on {res['gpu_key']}: latency model", loc="left", fontsize=11, color=INK)
-        ax.legend(fontsize=7.5, loc="upper left")
+        model_label = MODEL_KEY_LABELS.get(res["model_key"], res["model_key"])
+        gpu_label = (res.get("gpu_spec") or {}).get("display_name", res["gpu_key"])
+        ax.set_title(f"{model_label} on {gpu_label}: latency model", loc="left", fontsize=10, color=INK)
+        # Legend below the axes: inside, it covered the calibrated-fit lines.
+        ax.legend(fontsize=7.5, loc="upper center", bbox_to_anchor=(0.5, -0.17), ncol=2)
         fig.tight_layout()
         p = out_dir / f"latency_model_{res['gpu_key']}_{res['model_key']}.png"
-        fig.savefig(p)
+        fig.savefig(p, bbox_inches="tight")
         plt.close(fig)
         out.append(p)
     return out

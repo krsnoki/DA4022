@@ -1,0 +1,1977 @@
+ar_hit_max,ar_len,dataset,exact,first_divergence,fixed_budget,method,method_len,mode,model,prefix_agreement,profile_variant,sample_idx,status,turn
+False,251,gsm8k,True,,,DFlash,251,dflash,Qwen/Qwen3-4B,1.0,,0,compared,0
+False,251,gsm8k,True,,,BASTION (adaptive),251,bastion,Qwen/Qwen3-4B,1.0,warm,0,compared,0
+False,213,gsm8k,False,33,,DFlash,213,dflash,Qwen/Qwen3-4B,0.15492957746478872,,1,compared,0
+False,213,gsm8k,False,144,,BASTION (adaptive),224,bastion,Qwen/Qwen3-4B,0.676056338028169,warm,1,compared,0
+False,230,gsm8k,False,150,,DFlash,231,dflash,Qwen/Qwen3-4B,0.6521739130434783,,2,compared,0
+False,230,gsm8k,False,64,,BASTION (adaptive),225,bastion,Qwen/Qwen3-4B,0.2782608695652174,warm,2,compared,0
+False,615,gsm8k,True,,,DFlash,615,dflash,Qwen/Qwen3-4B,1.0,,3,compared,0
+False,615,gsm8k,False,199,,BASTION (adaptive),1461,bastion,Qwen/Qwen3-4B,0.3235772357723577,warm,3,compared,0
+False,279,gsm8k,True,,,DFlash,279,dflash,Qwen/Qwen3-4B,1.0,,4,compared,0
+False,279,gsm8k,True,,,BASTION (adaptive),279,bastion,Qwen/Qwen3-4B,1.0,warm,4,compared,0
+False,229,gsm8k,False,21,,DFlash,230,dflash,Qwen/Qwen3-4B,0.09170305676855896,,5,compared,0
+False,229,gsm8k,True,,,BASTION (adaptive),229,bastion,Qwen/Qwen3-4B,1.0,warm,5,compared,0
+False,312,gsm8k,True,,,DFlash,312,dflash,Qwen/Qwen3-4B,1.0,,6,compared,0
+False,312,gsm8k,True,,,BASTION (adaptive),312,bastion,Qwen/Qwen3-4B,1.0,warm,6,compared,0
+False,264,gsm8k,False,23,,DFlash,268,dflash,Qwen/Qwen3-4B,0.08712121212121213,,7,compared,0
+False,264,gsm8k,False,23,,BASTION (adaptive),268,bastion,Qwen/Qwen3-4B,0.08712121212121213,warm,7,compared,0
+False,266,gsm8k,False,21,,DFlash,245,dflash,Qwen/Qwen3-4B,0.07894736842105263,,8,compared,0
+False,266,gsm8k,False,21,,BASTION (adaptive),266,bastion,Qwen/Qwen3-4B,0.07894736842105263,warm,8,compared,0
+False,315,gsm8k,False,32,,DFlash,326,dflash,Qwen/Qwen3-4B,0.10158730158730159,,9,compared,0
+False,315,gsm8k,False,32,,BASTION (adaptive),280,bastion,Qwen/Qwen3-4B,0.10158730158730159,warm,9,compared,0
+False,241,gsm8k,False,31,,DFlash,243,dflash,Qwen/Qwen3-4B,0.12863070539419086,,10,compared,0
+False,241,gsm8k,False,90,,BASTION (adaptive),226,bastion,Qwen/Qwen3-4B,0.37344398340248963,warm,10,compared,0
+False,166,gsm8k,True,,,DFlash,166,dflash,Qwen/Qwen3-4B,1.0,,11,compared,0
+False,166,gsm8k,True,,,BASTION (adaptive),166,bastion,Qwen/Qwen3-4B,1.0,warm,11,compared,0
+False,488,gsm8k,False,155,,DFlash,561,dflash,Qwen/Qwen3-4B,0.3176229508196721,,12,compared,0
+False,488,gsm8k,False,42,,BASTION (adaptive),356,bastion,Qwen/Qwen3-4B,0.0860655737704918,warm,12,compared,0
+False,151,gsm8k,True,,,DFlash,151,dflash,Qwen/Qwen3-4B,1.0,,13,compared,0
+False,151,gsm8k,True,,,BASTION (adaptive),151,bastion,Qwen/Qwen3-4B,1.0,warm,13,compared,0
+False,369,gsm8k,False,281,,DFlash,367,dflash,Qwen/Qwen3-4B,0.7615176151761518,,14,compared,0
+False,369,gsm8k,True,,,BASTION (adaptive),369,bastion,Qwen/Qwen3-4B,1.0,warm,14,compared,0
+False,243,gsm8k,True,,,DFlash,243,dflash,Qwen/Qwen3-4B,1.0,,15,compared,0
+False,243,gsm8k,False,79,,BASTION (adaptive),232,bastion,Qwen/Qwen3-4B,0.32510288065843623,warm,15,compared,0
+False,278,gsm8k,False,35,,DFlash,277,dflash,Qwen/Qwen3-4B,0.12589928057553956,,16,compared,0
+False,278,gsm8k,False,35,,BASTION (adaptive),277,bastion,Qwen/Qwen3-4B,0.12589928057553956,warm,16,compared,0
+False,356,gsm8k,False,173,,DFlash,354,dflash,Qwen/Qwen3-4B,0.4859550561797753,,17,compared,0
+False,356,gsm8k,False,173,,BASTION (adaptive),354,bastion,Qwen/Qwen3-4B,0.4859550561797753,warm,17,compared,0
+False,256,gsm8k,False,141,,DFlash,276,dflash,Qwen/Qwen3-4B,0.55078125,,18,compared,0
+False,256,gsm8k,False,141,,BASTION (adaptive),275,bastion,Qwen/Qwen3-4B,0.55078125,warm,18,compared,0
+False,361,gsm8k,False,3,,DFlash,314,dflash,Qwen/Qwen3-4B,0.008310249307479225,,19,compared,0
+False,361,gsm8k,True,,,BASTION (adaptive),361,bastion,Qwen/Qwen3-4B,1.0,warm,19,compared,0
+False,371,gsm8k,False,39,,DFlash,371,dflash,Qwen/Qwen3-4B,0.10512129380053908,,20,compared,0
+False,371,gsm8k,False,39,,BASTION (adaptive),371,bastion,Qwen/Qwen3-4B,0.10512129380053908,warm,20,compared,0
+False,205,gsm8k,True,,,DFlash,205,dflash,Qwen/Qwen3-4B,1.0,,21,compared,0
+False,205,gsm8k,True,,,BASTION (adaptive),205,bastion,Qwen/Qwen3-4B,1.0,warm,21,compared,0
+False,344,gsm8k,True,,,DFlash,344,dflash,Qwen/Qwen3-4B,1.0,,22,compared,0
+False,344,gsm8k,True,,,BASTION (adaptive),344,bastion,Qwen/Qwen3-4B,1.0,warm,22,compared,0
+False,346,gsm8k,False,17,,DFlash,343,dflash,Qwen/Qwen3-4B,0.049132947976878616,,23,compared,0
+False,346,gsm8k,False,17,,BASTION (adaptive),357,bastion,Qwen/Qwen3-4B,0.049132947976878616,warm,23,compared,0
+False,227,gsm8k,True,,,DFlash,227,dflash,Qwen/Qwen3-4B,1.0,,24,compared,0
+False,227,gsm8k,True,,,BASTION (adaptive),227,bastion,Qwen/Qwen3-4B,1.0,warm,24,compared,0
+False,243,gsm8k,False,214,,DFlash,245,dflash,Qwen/Qwen3-4B,0.8806584362139918,,25,compared,0
+False,243,gsm8k,True,,,BASTION (adaptive),243,bastion,Qwen/Qwen3-4B,1.0,warm,25,compared,0
+False,199,gsm8k,False,110,,DFlash,200,dflash,Qwen/Qwen3-4B,0.5527638190954773,,26,compared,0
+False,199,gsm8k,True,,,BASTION (adaptive),199,bastion,Qwen/Qwen3-4B,1.0,warm,26,compared,0
+False,227,gsm8k,False,93,,DFlash,232,dflash,Qwen/Qwen3-4B,0.40969162995594716,,27,compared,0
+False,227,gsm8k,True,,,BASTION (adaptive),227,bastion,Qwen/Qwen3-4B,1.0,warm,27,compared,0
+False,203,gsm8k,True,,,DFlash,203,dflash,Qwen/Qwen3-4B,1.0,,28,compared,0
+False,203,gsm8k,True,,,BASTION (adaptive),203,bastion,Qwen/Qwen3-4B,1.0,warm,28,compared,0
+False,455,gsm8k,False,54,,DFlash,552,dflash,Qwen/Qwen3-4B,0.11868131868131868,,29,compared,0
+False,455,gsm8k,False,5,,BASTION (adaptive),450,bastion,Qwen/Qwen3-4B,0.01098901098901099,warm,29,compared,0
+False,348,gsm8k,False,115,,DFlash,363,dflash,Qwen/Qwen3-4B,0.33045977011494254,,30,compared,0
+False,348,gsm8k,False,5,,BASTION (adaptive),349,bastion,Qwen/Qwen3-4B,0.014367816091954023,warm,30,compared,0
+False,271,gsm8k,False,103,,DFlash,295,dflash,Qwen/Qwen3-4B,0.3800738007380074,,31,compared,0
+False,271,gsm8k,False,129,,BASTION (adaptive),288,bastion,Qwen/Qwen3-4B,0.47601476014760147,warm,31,compared,0
+False,333,gsm8k,True,,,DFlash,333,dflash,Qwen/Qwen3-4B,1.0,,32,compared,0
+False,333,gsm8k,True,,,BASTION (adaptive),333,bastion,Qwen/Qwen3-4B,1.0,warm,32,compared,0
+False,202,gsm8k,True,,,DFlash,202,dflash,Qwen/Qwen3-4B,1.0,,33,compared,0
+False,202,gsm8k,True,,,BASTION (adaptive),202,bastion,Qwen/Qwen3-4B,1.0,warm,33,compared,0
+False,337,gsm8k,True,,,DFlash,337,dflash,Qwen/Qwen3-4B,1.0,,34,compared,0
+False,337,gsm8k,True,,,BASTION (adaptive),337,bastion,Qwen/Qwen3-4B,1.0,warm,34,compared,0
+False,452,gsm8k,False,117,,DFlash,401,dflash,Qwen/Qwen3-4B,0.2588495575221239,,35,compared,0
+False,452,gsm8k,False,313,,BASTION (adaptive),398,bastion,Qwen/Qwen3-4B,0.6924778761061947,warm,35,compared,0
+False,242,gsm8k,False,32,,DFlash,245,dflash,Qwen/Qwen3-4B,0.1322314049586777,,36,compared,0
+False,242,gsm8k,False,32,,BASTION (adaptive),245,bastion,Qwen/Qwen3-4B,0.1322314049586777,warm,36,compared,0
+False,214,gsm8k,True,,,DFlash,214,dflash,Qwen/Qwen3-4B,1.0,,37,compared,0
+False,214,gsm8k,True,,,BASTION (adaptive),214,bastion,Qwen/Qwen3-4B,1.0,warm,37,compared,0
+False,290,gsm8k,True,,,DFlash,290,dflash,Qwen/Qwen3-4B,1.0,,38,compared,0
+False,290,gsm8k,True,,,BASTION (adaptive),290,bastion,Qwen/Qwen3-4B,1.0,warm,38,compared,0
+False,295,gsm8k,True,,,DFlash,295,dflash,Qwen/Qwen3-4B,1.0,,39,compared,0
+False,295,gsm8k,True,,,BASTION (adaptive),295,bastion,Qwen/Qwen3-4B,1.0,warm,39,compared,0
+False,276,gsm8k,True,,,DFlash,276,dflash,Qwen/Qwen3-4B,1.0,,40,compared,0
+False,276,gsm8k,False,77,,BASTION (adaptive),276,bastion,Qwen/Qwen3-4B,0.27898550724637683,warm,40,compared,0
+False,401,gsm8k,True,,,DFlash,401,dflash,Qwen/Qwen3-4B,1.0,,41,compared,0
+False,401,gsm8k,False,172,,BASTION (adaptive),400,bastion,Qwen/Qwen3-4B,0.428927680798005,warm,41,compared,0
+False,203,gsm8k,False,97,,DFlash,209,dflash,Qwen/Qwen3-4B,0.47783251231527096,,42,compared,0
+False,203,gsm8k,True,,,BASTION (adaptive),203,bastion,Qwen/Qwen3-4B,1.0,warm,42,compared,0
+False,235,gsm8k,False,58,,DFlash,228,dflash,Qwen/Qwen3-4B,0.24680851063829787,,43,compared,0
+False,235,gsm8k,False,12,,BASTION (adaptive),223,bastion,Qwen/Qwen3-4B,0.05106382978723404,warm,43,compared,0
+False,339,gsm8k,False,153,,DFlash,279,dflash,Qwen/Qwen3-4B,0.45132743362831856,,44,compared,0
+False,339,gsm8k,False,153,,BASTION (adaptive),279,bastion,Qwen/Qwen3-4B,0.45132743362831856,warm,44,compared,0
+False,161,gsm8k,False,20,,DFlash,167,dflash,Qwen/Qwen3-4B,0.12422360248447205,,45,compared,0
+False,161,gsm8k,False,85,,BASTION (adaptive),180,bastion,Qwen/Qwen3-4B,0.5279503105590062,warm,45,compared,0
+False,480,gsm8k,False,124,,DFlash,450,dflash,Qwen/Qwen3-4B,0.25833333333333336,,46,compared,0
+False,480,gsm8k,False,339,,BASTION (adaptive),481,bastion,Qwen/Qwen3-4B,0.70625,warm,46,compared,0
+False,213,gsm8k,True,,,DFlash,213,dflash,Qwen/Qwen3-4B,1.0,,47,compared,0
+False,213,gsm8k,True,,,BASTION (adaptive),213,bastion,Qwen/Qwen3-4B,1.0,warm,47,compared,0
+False,256,gsm8k,False,198,,DFlash,256,dflash,Qwen/Qwen3-4B,0.7734375,,48,compared,0
+False,256,gsm8k,False,198,,BASTION (adaptive),256,bastion,Qwen/Qwen3-4B,0.7734375,warm,48,compared,0
+False,272,gsm8k,True,,,DFlash,272,dflash,Qwen/Qwen3-4B,1.0,,49,compared,0
+False,272,gsm8k,False,168,,BASTION (adaptive),291,bastion,Qwen/Qwen3-4B,0.6176470588235294,warm,49,compared,0
+False,441,gsm8k,False,66,,DFlash,386,dflash,Qwen/Qwen3-4B,0.14965986394557823,,50,compared,0
+False,441,gsm8k,False,66,,BASTION (adaptive),386,bastion,Qwen/Qwen3-4B,0.14965986394557823,warm,50,compared,0
+False,482,gsm8k,False,21,,DFlash,484,dflash,Qwen/Qwen3-4B,0.043568464730290454,,51,compared,0
+False,482,gsm8k,False,270,,BASTION (adaptive),466,bastion,Qwen/Qwen3-4B,0.5601659751037344,warm,51,compared,0
+False,429,gsm8k,False,43,,DFlash,423,dflash,Qwen/Qwen3-4B,0.10023310023310024,,52,compared,0
+False,429,gsm8k,True,,,BASTION (adaptive),429,bastion,Qwen/Qwen3-4B,1.0,warm,52,compared,0
+False,351,gsm8k,True,,,DFlash,351,dflash,Qwen/Qwen3-4B,1.0,,53,compared,0
+False,351,gsm8k,False,93,,BASTION (adaptive),333,bastion,Qwen/Qwen3-4B,0.26495726495726496,warm,53,compared,0
+False,299,gsm8k,False,222,,DFlash,313,dflash,Qwen/Qwen3-4B,0.7424749163879598,,54,compared,0
+False,299,gsm8k,False,222,,BASTION (adaptive),313,bastion,Qwen/Qwen3-4B,0.7424749163879598,warm,54,compared,0
+False,163,gsm8k,True,,,DFlash,163,dflash,Qwen/Qwen3-4B,1.0,,55,compared,0
+False,163,gsm8k,True,,,BASTION (adaptive),163,bastion,Qwen/Qwen3-4B,1.0,warm,55,compared,0
+False,290,gsm8k,True,,,DFlash,290,dflash,Qwen/Qwen3-4B,1.0,,56,compared,0
+False,290,gsm8k,True,,,BASTION (adaptive),290,bastion,Qwen/Qwen3-4B,1.0,warm,56,compared,0
+False,177,gsm8k,True,,,DFlash,177,dflash,Qwen/Qwen3-4B,1.0,,57,compared,0
+False,177,gsm8k,True,,,BASTION (adaptive),177,bastion,Qwen/Qwen3-4B,1.0,warm,57,compared,0
+False,246,gsm8k,True,,,DFlash,246,dflash,Qwen/Qwen3-4B,1.0,,58,compared,0
+False,246,gsm8k,True,,,BASTION (adaptive),246,bastion,Qwen/Qwen3-4B,1.0,warm,58,compared,0
+False,244,gsm8k,False,40,,DFlash,243,dflash,Qwen/Qwen3-4B,0.16393442622950818,,59,compared,0
+False,244,gsm8k,False,223,,BASTION (adaptive),246,bastion,Qwen/Qwen3-4B,0.9139344262295082,warm,59,compared,0
+False,182,gsm8k,False,8,,DFlash,179,dflash,Qwen/Qwen3-4B,0.04395604395604396,,60,compared,0
+False,182,gsm8k,True,,,BASTION (adaptive),182,bastion,Qwen/Qwen3-4B,1.0,warm,60,compared,0
+False,408,gsm8k,False,265,,DFlash,435,dflash,Qwen/Qwen3-4B,0.6495098039215687,,61,compared,0
+False,408,gsm8k,False,265,,BASTION (adaptive),435,bastion,Qwen/Qwen3-4B,0.6495098039215687,warm,61,compared,0
+False,267,gsm8k,True,,,DFlash,267,dflash,Qwen/Qwen3-4B,1.0,,62,compared,0
+False,267,gsm8k,True,,,BASTION (adaptive),267,bastion,Qwen/Qwen3-4B,1.0,warm,62,compared,0
+False,241,gsm8k,True,,,DFlash,241,dflash,Qwen/Qwen3-4B,1.0,,63,compared,0
+False,241,gsm8k,True,,,BASTION (adaptive),241,bastion,Qwen/Qwen3-4B,1.0,warm,63,compared,0
+True,2048,math500,False,925,,DFlash,1926,dflash,Qwen/Qwen3-4B,0.45166015625,,0,compared,0
+True,2048,math500,False,443,,BASTION (adaptive),1856,bastion,Qwen/Qwen3-4B,0.21630859375,warm,0,compared,0
+False,913,math500,False,165,,DFlash,864,dflash,Qwen/Qwen3-4B,0.18072289156626506,,1,compared,0
+False,913,math500,False,80,,BASTION (adaptive),914,bastion,Qwen/Qwen3-4B,0.08762322015334063,warm,1,compared,0
+False,649,math500,False,310,,DFlash,649,dflash,Qwen/Qwen3-4B,0.4776579352850539,,2,compared,0
+False,649,math500,False,162,,BASTION (adaptive),554,bastion,Qwen/Qwen3-4B,0.24961479198767333,warm,2,compared,0
+False,1279,math500,False,93,,DFlash,1311,dflash,Qwen/Qwen3-4B,0.0727130570758405,,3,compared,0
+False,1279,math500,False,124,,BASTION (adaptive),1097,bastion,Qwen/Qwen3-4B,0.09695074276778734,warm,3,compared,0
+False,342,math500,False,4,,DFlash,352,dflash,Qwen/Qwen3-4B,0.011695906432748537,,4,compared,0
+False,342,math500,False,94,,BASTION (adaptive),347,bastion,Qwen/Qwen3-4B,0.27485380116959063,warm,4,compared,0
+False,1132,math500,False,12,,DFlash,1125,dflash,Qwen/Qwen3-4B,0.01060070671378092,,5,compared,0
+False,1132,math500,False,12,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.01060070671378092,warm,5,compared,0
+False,742,math500,False,230,,DFlash,721,dflash,Qwen/Qwen3-4B,0.30997304582210244,,6,compared,0
+False,742,math500,False,3,,BASTION (adaptive),750,bastion,Qwen/Qwen3-4B,0.004043126684636119,warm,6,compared,0
+False,195,math500,True,,,DFlash,195,dflash,Qwen/Qwen3-4B,1.0,,7,compared,0
+False,195,math500,True,,,BASTION (adaptive),195,bastion,Qwen/Qwen3-4B,1.0,warm,7,compared,0
+False,524,math500,False,233,,DFlash,360,dflash,Qwen/Qwen3-4B,0.4446564885496183,,8,compared,0
+False,524,math500,False,233,,BASTION (adaptive),360,bastion,Qwen/Qwen3-4B,0.4446564885496183,warm,8,compared,0
+True,2048,math500,False,184,,DFlash,1622,dflash,Qwen/Qwen3-4B,0.08984375,,9,compared,0
+True,2048,math500,False,433,,BASTION (adaptive),1733,bastion,Qwen/Qwen3-4B,0.21142578125,warm,9,compared,0
+False,868,math500,False,91,,DFlash,868,dflash,Qwen/Qwen3-4B,0.10483870967741936,,10,compared,0
+False,868,math500,True,,,BASTION (adaptive),868,bastion,Qwen/Qwen3-4B,1.0,warm,10,compared,0
+False,1036,math500,False,125,,DFlash,1083,dflash,Qwen/Qwen3-4B,0.12065637065637065,,11,compared,0
+False,1036,math500,False,125,,BASTION (adaptive),642,bastion,Qwen/Qwen3-4B,0.12065637065637065,warm,11,compared,0
+False,1403,math500,False,203,,DFlash,1223,dflash,Qwen/Qwen3-4B,0.14468995010691377,,12,compared,0
+False,1403,math500,False,185,,BASTION (adaptive),1300,bastion,Qwen/Qwen3-4B,0.13186029935851745,warm,12,compared,0
+False,410,math500,False,176,,DFlash,408,dflash,Qwen/Qwen3-4B,0.4292682926829268,,13,compared,0
+False,410,math500,False,176,,BASTION (adaptive),408,bastion,Qwen/Qwen3-4B,0.4292682926829268,warm,13,compared,0
+True,2048,math500,False,602,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.2939453125,,14,compared,0
+True,2048,math500,False,255,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.12451171875,warm,14,compared,0
+False,671,math500,False,473,,DFlash,670,dflash,Qwen/Qwen3-4B,0.7049180327868853,,15,compared,0
+False,671,math500,False,473,,BASTION (adaptive),670,bastion,Qwen/Qwen3-4B,0.7049180327868853,warm,15,compared,0
+False,681,math500,False,177,,DFlash,848,dflash,Qwen/Qwen3-4B,0.2599118942731278,,16,compared,0
+False,681,math500,False,177,,BASTION (adaptive),1055,bastion,Qwen/Qwen3-4B,0.2599118942731278,warm,16,compared,0
+False,1031,math500,False,151,,DFlash,1039,dflash,Qwen/Qwen3-4B,0.14645974781765275,,17,compared,0
+False,1031,math500,False,386,,BASTION (adaptive),1027,bastion,Qwen/Qwen3-4B,0.3743937924345296,warm,17,compared,0
+False,298,math500,True,,,DFlash,298,dflash,Qwen/Qwen3-4B,1.0,,18,compared,0
+False,298,math500,False,70,,BASTION (adaptive),340,bastion,Qwen/Qwen3-4B,0.2348993288590604,warm,18,compared,0
+False,518,math500,False,439,,DFlash,521,dflash,Qwen/Qwen3-4B,0.8474903474903475,,19,compared,0
+False,518,math500,False,438,,BASTION (adaptive),531,bastion,Qwen/Qwen3-4B,0.8455598455598455,warm,19,compared,0
+False,1779,math500,False,1652,,DFlash,1800,dflash,Qwen/Qwen3-4B,0.9286115795390669,,20,compared,0
+False,1779,math500,False,1639,,BASTION (adaptive),1778,bastion,Qwen/Qwen3-4B,0.9213041034288927,warm,20,compared,0
+False,1452,math500,False,457,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.31473829201101927,,21,compared,0
+False,1452,math500,False,457,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.31473829201101927,warm,21,compared,0
+False,718,math500,False,81,,DFlash,810,dflash,Qwen/Qwen3-4B,0.11281337047353761,,22,compared,0
+False,718,math500,False,81,,BASTION (adaptive),810,bastion,Qwen/Qwen3-4B,0.11281337047353761,warm,22,compared,0
+False,601,math500,False,109,,DFlash,684,dflash,Qwen/Qwen3-4B,0.18136439267886856,,23,compared,0
+False,601,math500,False,268,,BASTION (adaptive),572,bastion,Qwen/Qwen3-4B,0.4459234608985025,warm,23,compared,0
+False,1318,math500,False,468,,DFlash,1750,dflash,Qwen/Qwen3-4B,0.3550834597875569,,24,compared,0
+False,1318,math500,False,344,,BASTION (adaptive),1126,bastion,Qwen/Qwen3-4B,0.26100151745068284,warm,24,compared,0
+False,1435,math500,False,96,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.06689895470383275,,25,compared,0
+False,1435,math500,False,269,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.18745644599303135,warm,25,compared,0
+True,2048,math500,False,401,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.19580078125,,26,compared,0
+True,2048,math500,False,640,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.3125,warm,26,compared,0
+False,489,math500,True,,,DFlash,489,dflash,Qwen/Qwen3-4B,1.0,,27,compared,0
+False,489,math500,False,360,,BASTION (adaptive),410,bastion,Qwen/Qwen3-4B,0.7361963190184049,warm,27,compared,0
+False,634,math500,False,205,,DFlash,595,dflash,Qwen/Qwen3-4B,0.32334384858044163,,28,compared,0
+False,634,math500,False,108,,BASTION (adaptive),550,bastion,Qwen/Qwen3-4B,0.17034700315457413,warm,28,compared,0
+True,2048,math500,False,78,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.0380859375,,29,compared,0
+True,2048,math500,False,91,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.04443359375,warm,29,compared,0
+False,252,math500,False,68,,DFlash,259,dflash,Qwen/Qwen3-4B,0.2698412698412698,,30,compared,0
+False,252,math500,False,188,,BASTION (adaptive),249,bastion,Qwen/Qwen3-4B,0.746031746031746,warm,30,compared,0
+False,235,math500,False,46,,DFlash,259,dflash,Qwen/Qwen3-4B,0.19574468085106383,,31,compared,0
+False,235,math500,True,,,BASTION (adaptive),235,bastion,Qwen/Qwen3-4B,1.0,warm,31,compared,0
+False,434,math500,False,174,,DFlash,357,dflash,Qwen/Qwen3-4B,0.4009216589861751,,32,compared,0
+False,434,math500,False,174,,BASTION (adaptive),357,bastion,Qwen/Qwen3-4B,0.4009216589861751,warm,32,compared,0
+False,2003,math500,False,394,,DFlash,1569,dflash,Qwen/Qwen3-4B,0.1967049425861208,,33,compared,0
+False,2003,math500,False,48,,BASTION (adaptive),1583,bastion,Qwen/Qwen3-4B,0.023964053919121316,warm,33,compared,0
+False,516,math500,False,110,,DFlash,520,dflash,Qwen/Qwen3-4B,0.2131782945736434,,34,compared,0
+False,516,math500,False,110,,BASTION (adaptive),520,bastion,Qwen/Qwen3-4B,0.2131782945736434,warm,34,compared,0
+False,877,math500,False,163,,DFlash,860,dflash,Qwen/Qwen3-4B,0.18586088939566706,,35,compared,0
+False,877,math500,False,209,,BASTION (adaptive),1087,bastion,Qwen/Qwen3-4B,0.23831242873432154,warm,35,compared,0
+False,1030,math500,False,262,,DFlash,771,dflash,Qwen/Qwen3-4B,0.2543689320388349,,36,compared,0
+False,1030,math500,False,429,,BASTION (adaptive),1005,bastion,Qwen/Qwen3-4B,0.41650485436893203,warm,36,compared,0
+False,210,math500,True,,,DFlash,210,dflash,Qwen/Qwen3-4B,1.0,,37,compared,0
+False,210,math500,True,,,BASTION (adaptive),210,bastion,Qwen/Qwen3-4B,1.0,warm,37,compared,0
+False,435,math500,False,58,,DFlash,402,dflash,Qwen/Qwen3-4B,0.13333333333333333,,38,compared,0
+False,435,math500,False,49,,BASTION (adaptive),401,bastion,Qwen/Qwen3-4B,0.11264367816091954,warm,38,compared,0
+False,1774,math500,False,55,,DFlash,1989,dflash,Qwen/Qwen3-4B,0.03100338218714769,,39,compared,0
+False,1774,math500,False,236,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.133032694475761,warm,39,compared,0
+False,514,math500,False,236,,DFlash,516,dflash,Qwen/Qwen3-4B,0.4591439688715953,,40,compared,0
+False,514,math500,False,96,,BASTION (adaptive),512,bastion,Qwen/Qwen3-4B,0.1867704280155642,warm,40,compared,0
+False,167,math500,True,,,DFlash,167,dflash,Qwen/Qwen3-4B,1.0,,41,compared,0
+False,167,math500,True,,,BASTION (adaptive),167,bastion,Qwen/Qwen3-4B,1.0,warm,41,compared,0
+False,1257,math500,False,242,,DFlash,1343,dflash,Qwen/Qwen3-4B,0.19252187748607796,,42,compared,0
+False,1257,math500,False,242,,BASTION (adaptive),1138,bastion,Qwen/Qwen3-4B,0.19252187748607796,warm,42,compared,0
+False,271,math500,True,,,DFlash,271,dflash,Qwen/Qwen3-4B,1.0,,43,compared,0
+False,271,math500,False,132,,BASTION (adaptive),272,bastion,Qwen/Qwen3-4B,0.4870848708487085,warm,43,compared,0
+False,814,math500,False,164,,DFlash,814,dflash,Qwen/Qwen3-4B,0.20147420147420148,,44,compared,0
+False,814,math500,False,14,,BASTION (adaptive),761,bastion,Qwen/Qwen3-4B,0.0171990171990172,warm,44,compared,0
+False,569,math500,False,206,,DFlash,569,dflash,Qwen/Qwen3-4B,0.36203866432337434,,45,compared,0
+False,569,math500,False,147,,BASTION (adaptive),528,bastion,Qwen/Qwen3-4B,0.2583479789103691,warm,45,compared,0
+False,331,math500,True,,,DFlash,331,dflash,Qwen/Qwen3-4B,1.0,,46,compared,0
+False,331,math500,True,,,BASTION (adaptive),331,bastion,Qwen/Qwen3-4B,1.0,warm,46,compared,0
+False,562,math500,False,56,,DFlash,425,dflash,Qwen/Qwen3-4B,0.099644128113879,,47,compared,0
+False,562,math500,False,82,,BASTION (adaptive),496,bastion,Qwen/Qwen3-4B,0.14590747330960854,warm,47,compared,0
+False,286,math500,False,73,,DFlash,278,dflash,Qwen/Qwen3-4B,0.25524475524475526,,48,compared,0
+False,286,math500,False,93,,BASTION (adaptive),270,bastion,Qwen/Qwen3-4B,0.32517482517482516,warm,48,compared,0
+False,422,math500,False,44,,DFlash,529,dflash,Qwen/Qwen3-4B,0.10426540284360189,,49,compared,0
+False,422,math500,False,43,,BASTION (adaptive),368,bastion,Qwen/Qwen3-4B,0.1018957345971564,warm,49,compared,0
+False,213,math500,True,,,DFlash,213,dflash,Qwen/Qwen3-4B,1.0,,50,compared,0
+False,213,math500,True,,,BASTION (adaptive),213,bastion,Qwen/Qwen3-4B,1.0,warm,50,compared,0
+False,384,math500,True,,,DFlash,384,dflash,Qwen/Qwen3-4B,1.0,,51,compared,0
+False,384,math500,True,,,BASTION (adaptive),384,bastion,Qwen/Qwen3-4B,1.0,warm,51,compared,0
+False,348,math500,True,,,DFlash,348,dflash,Qwen/Qwen3-4B,1.0,,52,compared,0
+False,348,math500,True,,,BASTION (adaptive),348,bastion,Qwen/Qwen3-4B,1.0,warm,52,compared,0
+False,875,math500,False,645,,DFlash,880,dflash,Qwen/Qwen3-4B,0.7371428571428571,,53,compared,0
+False,875,math500,False,444,,BASTION (adaptive),866,bastion,Qwen/Qwen3-4B,0.5074285714285715,warm,53,compared,0
+False,932,math500,False,326,,DFlash,864,dflash,Qwen/Qwen3-4B,0.3497854077253219,,54,compared,0
+False,932,math500,False,454,,BASTION (adaptive),966,bastion,Qwen/Qwen3-4B,0.4871244635193133,warm,54,compared,0
+False,868,math500,False,179,,DFlash,974,dflash,Qwen/Qwen3-4B,0.20622119815668202,,55,compared,0
+False,868,math500,False,117,,BASTION (adaptive),626,bastion,Qwen/Qwen3-4B,0.1347926267281106,warm,55,compared,0
+False,1521,math500,False,349,,DFlash,1357,dflash,Qwen/Qwen3-4B,0.2294543063773833,,56,compared,0
+False,1521,math500,False,874,,BASTION (adaptive),1533,bastion,Qwen/Qwen3-4B,0.5746219592373438,warm,56,compared,0
+False,269,math500,True,,,DFlash,269,dflash,Qwen/Qwen3-4B,1.0,,57,compared,0
+False,269,math500,True,,,BASTION (adaptive),269,bastion,Qwen/Qwen3-4B,1.0,warm,57,compared,0
+False,422,math500,False,421,,DFlash,436,dflash,Qwen/Qwen3-4B,0.9976303317535545,,58,compared,0
+False,422,math500,False,294,,BASTION (adaptive),422,bastion,Qwen/Qwen3-4B,0.6966824644549763,warm,58,compared,0
+False,1540,math500,False,156,,DFlash,1470,dflash,Qwen/Qwen3-4B,0.1012987012987013,,59,compared,0
+False,1540,math500,False,156,,BASTION (adaptive),1892,bastion,Qwen/Qwen3-4B,0.1012987012987013,warm,59,compared,0
+False,1059,math500,False,343,,DFlash,1538,dflash,Qwen/Qwen3-4B,0.323890462700661,,60,compared,0
+False,1059,math500,False,581,,BASTION (adaptive),2016,bastion,Qwen/Qwen3-4B,0.5486307837582625,warm,60,compared,0
+False,1758,math500,False,496,,DFlash,1651,dflash,Qwen/Qwen3-4B,0.2821387940841866,,61,compared,0
+False,1758,math500,False,153,,BASTION (adaptive),1656,bastion,Qwen/Qwen3-4B,0.08703071672354949,warm,61,compared,0
+True,2048,math500,False,64,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.03125,,62,compared,0
+True,2048,math500,False,64,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.03125,warm,62,compared,0
+False,377,math500,True,,,DFlash,377,dflash,Qwen/Qwen3-4B,1.0,,63,compared,0
+False,377,math500,True,,,BASTION (adaptive),377,bastion,Qwen/Qwen3-4B,1.0,warm,63,compared,0
+False,663,aime25,False,448,,DFlash,664,dflash,Qwen/Qwen3-4B,0.6757164404223228,,0,compared,0
+False,663,aime25,False,282,,BASTION (adaptive),908,bastion,Qwen/Qwen3-4B,0.4253393665158371,warm,0,compared,0
+True,2048,aime25,False,548,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.267578125,,1,compared,0
+True,2048,aime25,False,232,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.11328125,warm,1,compared,0
+False,1325,aime25,False,3,,DFlash,1395,dflash,Qwen/Qwen3-4B,0.0022641509433962265,,2,compared,0
+False,1325,aime25,False,3,,BASTION (adaptive),1293,bastion,Qwen/Qwen3-4B,0.0022641509433962265,warm,2,compared,0
+False,1447,aime25,False,1373,,DFlash,1445,dflash,Qwen/Qwen3-4B,0.9488597097442986,,3,compared,0
+False,1447,aime25,False,1373,,BASTION (adaptive),1445,bastion,Qwen/Qwen3-4B,0.9488597097442986,warm,3,compared,0
+False,1660,aime25,False,216,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.13012048192771083,,4,compared,0
+False,1660,aime25,False,399,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.24036144578313254,warm,4,compared,0
+False,1791,aime25,False,460,,DFlash,1924,dflash,Qwen/Qwen3-4B,0.2568397543271915,,5,compared,0
+False,1791,aime25,False,460,,BASTION (adaptive),1849,bastion,Qwen/Qwen3-4B,0.2568397543271915,warm,5,compared,0
+True,2048,aime25,False,146,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.0712890625,,6,compared,0
+True,2048,aime25,False,115,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.05615234375,warm,6,compared,0
+True,2048,aime25,False,591,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.28857421875,,7,compared,0
+True,2048,aime25,False,325,,BASTION (adaptive),1860,bastion,Qwen/Qwen3-4B,0.15869140625,warm,7,compared,0
+True,2048,aime25,False,939,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.45849609375,,8,compared,0
+True,2048,aime25,False,1409,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.68798828125,warm,8,compared,0
+False,1410,aime25,False,4,,DFlash,1918,dflash,Qwen/Qwen3-4B,0.0028368794326241137,,9,compared,0
+False,1410,aime25,False,4,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.0028368794326241137,warm,9,compared,0
+True,2048,aime25,False,306,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.1494140625,,10,compared,0
+True,2048,aime25,False,237,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.11572265625,warm,10,compared,0
+True,2048,aime25,False,308,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.150390625,,11,compared,0
+True,2048,aime25,False,308,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.150390625,warm,11,compared,0
+True,2048,aime25,False,181,,DFlash,1317,dflash,Qwen/Qwen3-4B,0.08837890625,,12,compared,0
+True,2048,aime25,False,53,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.02587890625,warm,12,compared,0
+True,2048,aime25,False,153,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.07470703125,,13,compared,0
+True,2048,aime25,False,219,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.10693359375,warm,13,compared,0
+True,2048,aime25,False,202,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.0986328125,,14,compared,0
+True,2048,aime25,False,125,,BASTION (adaptive),1894,bastion,Qwen/Qwen3-4B,0.06103515625,warm,14,compared,0
+False,1574,aime25,False,330,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.2096569250317662,,15,compared,0
+False,1574,aime25,False,229,,BASTION (adaptive),1849,bastion,Qwen/Qwen3-4B,0.1454891994917408,warm,15,compared,0
+False,846,aime25,True,,,DFlash,846,dflash,Qwen/Qwen3-4B,1.0,,16,compared,0
+False,846,aime25,False,799,,BASTION (adaptive),849,bastion,Qwen/Qwen3-4B,0.9444444444444444,warm,16,compared,0
+False,921,aime25,False,133,,DFlash,860,dflash,Qwen/Qwen3-4B,0.1444082519001086,,17,compared,0
+False,921,aime25,False,118,,BASTION (adaptive),1110,bastion,Qwen/Qwen3-4B,0.1281216069489685,warm,17,compared,0
+False,1442,aime25,False,414,,DFlash,1474,dflash,Qwen/Qwen3-4B,0.2871012482662968,,18,compared,0
+False,1442,aime25,False,181,,BASTION (adaptive),1685,bastion,Qwen/Qwen3-4B,0.12552011095700416,warm,18,compared,0
+False,1763,aime25,False,426,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.24163357912648895,,19,compared,0
+False,1763,aime25,False,503,,BASTION (adaptive),1693,bastion,Qwen/Qwen3-4B,0.28530913216108905,warm,19,compared,0
+False,1926,aime25,False,142,,DFlash,1375,dflash,Qwen/Qwen3-4B,0.07372793354101766,,20,compared,0
+False,1926,aime25,False,142,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.07372793354101766,warm,20,compared,0
+True,2048,aime25,False,163,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.07958984375,,21,compared,0
+True,2048,aime25,False,95,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.04638671875,warm,21,compared,0
+False,1821,aime25,False,104,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.057111477210323995,,22,compared,0
+False,1821,aime25,False,104,,BASTION (adaptive),1779,bastion,Qwen/Qwen3-4B,0.057111477210323995,warm,22,compared,0
+True,2048,aime25,False,56,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.02734375,,23,compared,0
+True,2048,aime25,False,126,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.0615234375,warm,23,compared,0
+False,1113,aime25,False,173,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.1554357592093441,,24,compared,0
+False,1113,aime25,False,237,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.21293800539083557,warm,24,compared,0
+False,1536,aime25,False,141,,DFlash,1562,dflash,Qwen/Qwen3-4B,0.091796875,,25,compared,0
+False,1536,aime25,False,180,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.1171875,warm,25,compared,0
+True,2048,aime25,False,386,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.1884765625,,26,compared,0
+True,2048,aime25,False,189,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.09228515625,warm,26,compared,0
+True,2048,aime25,False,255,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.12451171875,,27,compared,0
+True,2048,aime25,False,324,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.158203125,warm,27,compared,0
+True,2048,aime25,False,241,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.11767578125,,28,compared,0
+True,2048,aime25,False,571,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.27880859375,warm,28,compared,0
+True,2048,aime25,False,78,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.0380859375,,29,compared,0
+True,2048,aime25,False,249,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.12158203125,warm,29,compared,0
+False,399,humaneval,False,22,,DFlash,329,dflash,Qwen/Qwen3-4B,0.05513784461152882,,0,compared,0
+False,399,humaneval,False,22,,BASTION (adaptive),329,bastion,Qwen/Qwen3-4B,0.05513784461152882,warm,0,compared,0
+False,470,humaneval,False,184,,DFlash,469,dflash,Qwen/Qwen3-4B,0.39148936170212767,,1,compared,0
+False,470,humaneval,False,13,,BASTION (adaptive),426,bastion,Qwen/Qwen3-4B,0.027659574468085105,warm,1,compared,0
+False,584,humaneval,False,323,,DFlash,600,dflash,Qwen/Qwen3-4B,0.553082191780822,,2,compared,0
+False,584,humaneval,False,323,,BASTION (adaptive),592,bastion,Qwen/Qwen3-4B,0.553082191780822,warm,2,compared,0
+False,649,humaneval,False,22,,DFlash,638,dflash,Qwen/Qwen3-4B,0.03389830508474576,,3,compared,0
+False,649,humaneval,True,,,BASTION (adaptive),649,bastion,Qwen/Qwen3-4B,1.0,warm,3,compared,0
+False,374,humaneval,False,44,,DFlash,317,dflash,Qwen/Qwen3-4B,0.11764705882352941,,4,compared,0
+False,374,humaneval,False,44,,BASTION (adaptive),317,bastion,Qwen/Qwen3-4B,0.11764705882352941,warm,4,compared,0
+False,349,humaneval,False,74,,DFlash,404,dflash,Qwen/Qwen3-4B,0.21203438395415472,,5,compared,0
+False,349,humaneval,False,19,,BASTION (adaptive),406,bastion,Qwen/Qwen3-4B,0.054441260744985676,warm,5,compared,0
+False,386,humaneval,True,,,DFlash,386,dflash,Qwen/Qwen3-4B,1.0,,6,compared,0
+False,386,humaneval,False,380,,BASTION (adaptive),385,bastion,Qwen/Qwen3-4B,0.9844559585492227,warm,6,compared,0
+False,473,humaneval,False,374,,DFlash,461,dflash,Qwen/Qwen3-4B,0.7906976744186046,,7,compared,0
+False,473,humaneval,False,24,,BASTION (adaptive),533,bastion,Qwen/Qwen3-4B,0.0507399577167019,warm,7,compared,0
+False,352,humaneval,True,,,DFlash,352,dflash,Qwen/Qwen3-4B,1.0,,8,compared,0
+False,352,humaneval,True,,,BASTION (adaptive),352,bastion,Qwen/Qwen3-4B,1.0,warm,8,compared,0
+False,290,humaneval,False,168,,DFlash,281,dflash,Qwen/Qwen3-4B,0.5793103448275863,,9,compared,0
+False,290,humaneval,False,170,,BASTION (adaptive),273,bastion,Qwen/Qwen3-4B,0.5862068965517241,warm,9,compared,0
+False,191,humaneval,True,,,DFlash,191,dflash,Qwen/Qwen3-4B,1.0,,10,compared,0
+False,191,humaneval,True,,,BASTION (adaptive),191,bastion,Qwen/Qwen3-4B,1.0,warm,10,compared,0
+False,370,humaneval,False,56,,DFlash,372,dflash,Qwen/Qwen3-4B,0.15135135135135136,,11,compared,0
+False,370,humaneval,False,56,,BASTION (adaptive),372,bastion,Qwen/Qwen3-4B,0.15135135135135136,warm,11,compared,0
+False,444,humaneval,False,89,,DFlash,513,dflash,Qwen/Qwen3-4B,0.20045045045045046,,12,compared,0
+False,444,humaneval,False,89,,BASTION (adaptive),513,bastion,Qwen/Qwen3-4B,0.20045045045045046,warm,12,compared,0
+False,454,humaneval,False,4,,DFlash,446,dflash,Qwen/Qwen3-4B,0.00881057268722467,,13,compared,0
+False,454,humaneval,False,4,,BASTION (adaptive),533,bastion,Qwen/Qwen3-4B,0.00881057268722467,warm,13,compared,0
+False,326,humaneval,False,4,,DFlash,281,dflash,Qwen/Qwen3-4B,0.012269938650306749,,14,compared,0
+False,326,humaneval,False,202,,BASTION (adaptive),321,bastion,Qwen/Qwen3-4B,0.6196319018404908,warm,14,compared,0
+False,431,humaneval,False,53,,DFlash,999,dflash,Qwen/Qwen3-4B,0.12296983758700696,,15,compared,0
+False,431,humaneval,False,53,,BASTION (adaptive),1062,bastion,Qwen/Qwen3-4B,0.12296983758700696,warm,15,compared,0
+False,287,humaneval,False,208,,DFlash,287,dflash,Qwen/Qwen3-4B,0.7247386759581882,,16,compared,0
+False,287,humaneval,False,213,,BASTION (adaptive),249,bastion,Qwen/Qwen3-4B,0.7421602787456446,warm,16,compared,0
+False,354,humaneval,False,327,,DFlash,347,dflash,Qwen/Qwen3-4B,0.923728813559322,,17,compared,0
+False,354,humaneval,True,,,BASTION (adaptive),354,bastion,Qwen/Qwen3-4B,1.0,warm,17,compared,0
+False,262,humaneval,True,,,DFlash,262,dflash,Qwen/Qwen3-4B,1.0,,18,compared,0
+False,262,humaneval,False,249,,BASTION (adaptive),261,bastion,Qwen/Qwen3-4B,0.950381679389313,warm,18,compared,0
+False,582,humaneval,False,460,,DFlash,582,dflash,Qwen/Qwen3-4B,0.7903780068728522,,19,compared,0
+False,582,humaneval,False,352,,BASTION (adaptive),453,bastion,Qwen/Qwen3-4B,0.6048109965635738,warm,19,compared,0
+True,2048,humaneval,False,64,,DFlash,425,dflash,Qwen/Qwen3-4B,0.03125,,20,compared,0
+True,2048,humaneval,False,464,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.2265625,warm,20,compared,0
+False,594,humaneval,False,11,,DFlash,764,dflash,Qwen/Qwen3-4B,0.018518518518518517,,21,compared,0
+False,594,humaneval,False,254,,BASTION (adaptive),561,bastion,Qwen/Qwen3-4B,0.4276094276094276,warm,21,compared,0
+False,817,humaneval,False,195,,DFlash,908,dflash,Qwen/Qwen3-4B,0.2386780905752754,,22,compared,0
+False,817,humaneval,False,195,,BASTION (adaptive),832,bastion,Qwen/Qwen3-4B,0.2386780905752754,warm,22,compared,0
+False,258,humaneval,True,,,DFlash,258,dflash,Qwen/Qwen3-4B,1.0,,23,compared,0
+False,258,humaneval,False,10,,BASTION (adaptive),265,bastion,Qwen/Qwen3-4B,0.03875968992248062,warm,23,compared,0
+False,551,humaneval,True,,,DFlash,551,dflash,Qwen/Qwen3-4B,1.0,,24,compared,0
+False,551,humaneval,True,,,BASTION (adaptive),551,bastion,Qwen/Qwen3-4B,1.0,warm,24,compared,0
+False,556,humaneval,False,11,,DFlash,560,dflash,Qwen/Qwen3-4B,0.019784172661870502,,25,compared,0
+False,556,humaneval,False,11,,BASTION (adaptive),573,bastion,Qwen/Qwen3-4B,0.019784172661870502,warm,25,compared,0
+False,271,humaneval,True,,,DFlash,271,dflash,Qwen/Qwen3-4B,1.0,,26,compared,0
+False,271,humaneval,False,13,,BASTION (adaptive),311,bastion,Qwen/Qwen3-4B,0.04797047970479705,warm,26,compared,0
+False,322,humaneval,True,,,DFlash,322,dflash,Qwen/Qwen3-4B,1.0,,27,compared,0
+False,322,humaneval,True,,,BASTION (adaptive),322,bastion,Qwen/Qwen3-4B,1.0,warm,27,compared,0
+False,432,humaneval,False,6,,DFlash,428,dflash,Qwen/Qwen3-4B,0.013888888888888888,,28,compared,0
+False,432,humaneval,False,130,,BASTION (adaptive),459,bastion,Qwen/Qwen3-4B,0.30092592592592593,warm,28,compared,0
+False,474,humaneval,False,151,,DFlash,487,dflash,Qwen/Qwen3-4B,0.31856540084388185,,29,compared,0
+False,474,humaneval,False,9,,BASTION (adaptive),454,bastion,Qwen/Qwen3-4B,0.0189873417721519,warm,29,compared,0
+False,326,humaneval,True,,,DFlash,326,dflash,Qwen/Qwen3-4B,1.0,,30,compared,0
+False,326,humaneval,False,5,,BASTION (adaptive),316,bastion,Qwen/Qwen3-4B,0.015337423312883436,warm,30,compared,0
+False,344,humaneval,False,5,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.014534883720930232,,31,compared,0
+False,344,humaneval,False,5,,BASTION (adaptive),965,bastion,Qwen/Qwen3-4B,0.014534883720930232,warm,31,compared,0
+False,509,humaneval,False,10,,DFlash,434,dflash,Qwen/Qwen3-4B,0.019646365422396856,,32,compared,0
+False,509,humaneval,False,147,,BASTION (adaptive),500,bastion,Qwen/Qwen3-4B,0.2888015717092338,warm,32,compared,0
+False,510,humaneval,False,21,,DFlash,506,dflash,Qwen/Qwen3-4B,0.041176470588235294,,33,compared,0
+False,510,humaneval,False,21,,BASTION (adaptive),514,bastion,Qwen/Qwen3-4B,0.041176470588235294,warm,33,compared,0
+False,412,humaneval,False,3,,DFlash,396,dflash,Qwen/Qwen3-4B,0.007281553398058253,,34,compared,0
+False,412,humaneval,False,3,,BASTION (adaptive),353,bastion,Qwen/Qwen3-4B,0.007281553398058253,warm,34,compared,0
+False,461,humaneval,True,,,DFlash,461,dflash,Qwen/Qwen3-4B,1.0,,35,compared,0
+False,461,humaneval,True,,,BASTION (adaptive),461,bastion,Qwen/Qwen3-4B,1.0,warm,35,compared,0
+False,549,humaneval,False,141,,DFlash,499,dflash,Qwen/Qwen3-4B,0.2568306010928962,,36,compared,0
+False,549,humaneval,False,77,,BASTION (adaptive),629,bastion,Qwen/Qwen3-4B,0.14025500910746813,warm,36,compared,0
+False,248,humaneval,False,41,,DFlash,322,dflash,Qwen/Qwen3-4B,0.16532258064516128,,37,compared,0
+False,248,humaneval,False,34,,BASTION (adaptive),262,bastion,Qwen/Qwen3-4B,0.13709677419354838,warm,37,compared,0
+False,523,humaneval,False,32,,DFlash,485,dflash,Qwen/Qwen3-4B,0.06118546845124283,,38,compared,0
+False,523,humaneval,False,32,,BASTION (adaptive),478,bastion,Qwen/Qwen3-4B,0.06118546845124283,warm,38,compared,0
+False,309,humaneval,False,128,,DFlash,320,dflash,Qwen/Qwen3-4B,0.41423948220064727,,39,compared,0
+False,309,humaneval,True,,,BASTION (adaptive),309,bastion,Qwen/Qwen3-4B,1.0,warm,39,compared,0
+False,254,humaneval,False,58,,DFlash,254,dflash,Qwen/Qwen3-4B,0.2283464566929134,,40,compared,0
+False,254,humaneval,True,,,BASTION (adaptive),254,bastion,Qwen/Qwen3-4B,1.0,warm,40,compared,0
+False,378,humaneval,True,,,DFlash,378,dflash,Qwen/Qwen3-4B,1.0,,41,compared,0
+False,378,humaneval,False,3,,BASTION (adaptive),349,bastion,Qwen/Qwen3-4B,0.007936507936507936,warm,41,compared,0
+False,316,humaneval,True,,,DFlash,316,dflash,Qwen/Qwen3-4B,1.0,,42,compared,0
+False,316,humaneval,True,,,BASTION (adaptive),316,bastion,Qwen/Qwen3-4B,1.0,warm,42,compared,0
+False,310,humaneval,False,203,,DFlash,300,dflash,Qwen/Qwen3-4B,0.6548387096774193,,43,compared,0
+False,310,humaneval,True,,,BASTION (adaptive),310,bastion,Qwen/Qwen3-4B,1.0,warm,43,compared,0
+False,561,humaneval,True,,,DFlash,561,dflash,Qwen/Qwen3-4B,1.0,,44,compared,0
+False,561,humaneval,True,,,BASTION (adaptive),561,bastion,Qwen/Qwen3-4B,1.0,warm,44,compared,0
+False,271,humaneval,False,69,,DFlash,254,dflash,Qwen/Qwen3-4B,0.25461254612546125,,45,compared,0
+False,271,humaneval,False,5,,BASTION (adaptive),258,bastion,Qwen/Qwen3-4B,0.01845018450184502,warm,45,compared,0
+False,506,humaneval,True,,,DFlash,506,dflash,Qwen/Qwen3-4B,1.0,,46,compared,0
+False,506,humaneval,True,,,BASTION (adaptive),506,bastion,Qwen/Qwen3-4B,1.0,warm,46,compared,0
+False,495,humaneval,False,492,,DFlash,501,dflash,Qwen/Qwen3-4B,0.9939393939393939,,47,compared,0
+False,495,humaneval,False,2,,BASTION (adaptive),713,bastion,Qwen/Qwen3-4B,0.00404040404040404,warm,47,compared,0
+False,381,humaneval,False,15,,DFlash,408,dflash,Qwen/Qwen3-4B,0.03937007874015748,,48,compared,0
+False,381,humaneval,False,15,,BASTION (adaptive),408,bastion,Qwen/Qwen3-4B,0.03937007874015748,warm,48,compared,0
+False,316,humaneval,True,,,DFlash,316,dflash,Qwen/Qwen3-4B,1.0,,49,compared,0
+False,316,humaneval,True,,,BASTION (adaptive),316,bastion,Qwen/Qwen3-4B,1.0,warm,49,compared,0
+False,439,humaneval,False,217,,DFlash,442,dflash,Qwen/Qwen3-4B,0.49430523917995445,,50,compared,0
+False,439,humaneval,False,8,,BASTION (adaptive),442,bastion,Qwen/Qwen3-4B,0.018223234624145785,warm,50,compared,0
+False,586,humaneval,False,17,,DFlash,490,dflash,Qwen/Qwen3-4B,0.02901023890784983,,51,compared,0
+False,586,humaneval,False,17,,BASTION (adaptive),586,bastion,Qwen/Qwen3-4B,0.02901023890784983,warm,51,compared,0
+False,471,humaneval,True,,,DFlash,471,dflash,Qwen/Qwen3-4B,1.0,,52,compared,0
+False,471,humaneval,True,,,BASTION (adaptive),471,bastion,Qwen/Qwen3-4B,1.0,warm,52,compared,0
+False,241,humaneval,False,6,,DFlash,273,dflash,Qwen/Qwen3-4B,0.024896265560165973,,53,compared,0
+False,241,humaneval,False,6,,BASTION (adaptive),268,bastion,Qwen/Qwen3-4B,0.024896265560165973,warm,53,compared,0
+False,274,humaneval,True,,,DFlash,274,dflash,Qwen/Qwen3-4B,1.0,,54,compared,0
+False,274,humaneval,True,,,BASTION (adaptive),274,bastion,Qwen/Qwen3-4B,1.0,warm,54,compared,0
+False,467,humaneval,False,47,,DFlash,407,dflash,Qwen/Qwen3-4B,0.1006423982869379,,55,compared,0
+False,467,humaneval,False,141,,BASTION (adaptive),398,bastion,Qwen/Qwen3-4B,0.3019271948608137,warm,55,compared,0
+False,427,humaneval,False,90,,DFlash,435,dflash,Qwen/Qwen3-4B,0.2107728337236534,,56,compared,0
+False,427,humaneval,True,,,BASTION (adaptive),427,bastion,Qwen/Qwen3-4B,1.0,warm,56,compared,0
+False,254,humaneval,True,,,DFlash,254,dflash,Qwen/Qwen3-4B,1.0,,57,compared,0
+False,254,humaneval,False,184,,BASTION (adaptive),258,bastion,Qwen/Qwen3-4B,0.7244094488188977,warm,57,compared,0
+False,525,humaneval,True,,,DFlash,525,dflash,Qwen/Qwen3-4B,1.0,,58,compared,0
+False,525,humaneval,False,50,,BASTION (adaptive),527,bastion,Qwen/Qwen3-4B,0.09523809523809523,warm,58,compared,0
+False,352,humaneval,False,344,,DFlash,367,dflash,Qwen/Qwen3-4B,0.9772727272727273,,59,compared,0
+False,352,humaneval,True,,,BASTION (adaptive),352,bastion,Qwen/Qwen3-4B,1.0,warm,59,compared,0
+False,318,humaneval,True,,,DFlash,318,dflash,Qwen/Qwen3-4B,1.0,,60,compared,0
+False,318,humaneval,True,,,BASTION (adaptive),318,bastion,Qwen/Qwen3-4B,1.0,warm,60,compared,0
+False,337,humaneval,True,,,DFlash,337,dflash,Qwen/Qwen3-4B,1.0,,61,compared,0
+False,337,humaneval,False,16,,BASTION (adaptive),289,bastion,Qwen/Qwen3-4B,0.04747774480712166,warm,61,compared,0
+False,204,humaneval,False,144,,DFlash,207,dflash,Qwen/Qwen3-4B,0.7058823529411765,,62,compared,0
+False,204,humaneval,False,144,,BASTION (adaptive),207,bastion,Qwen/Qwen3-4B,0.7058823529411765,warm,62,compared,0
+False,333,humaneval,True,,,DFlash,333,dflash,Qwen/Qwen3-4B,1.0,,63,compared,0
+False,333,humaneval,True,,,BASTION (adaptive),333,bastion,Qwen/Qwen3-4B,1.0,warm,63,compared,0
+False,235,mbpp,True,,,DFlash,235,dflash,Qwen/Qwen3-4B,1.0,,0,compared,0
+False,235,mbpp,False,190,,BASTION (adaptive),213,bastion,Qwen/Qwen3-4B,0.8085106382978723,warm,0,compared,0
+False,239,mbpp,False,27,,DFlash,345,dflash,Qwen/Qwen3-4B,0.11297071129707113,,1,compared,0
+False,239,mbpp,False,27,,BASTION (adaptive),249,bastion,Qwen/Qwen3-4B,0.11297071129707113,warm,1,compared,0
+False,314,mbpp,False,106,,DFlash,351,dflash,Qwen/Qwen3-4B,0.3375796178343949,,2,compared,0
+False,314,mbpp,False,104,,BASTION (adaptive),331,bastion,Qwen/Qwen3-4B,0.33121019108280253,warm,2,compared,0
+False,288,mbpp,False,222,,DFlash,321,dflash,Qwen/Qwen3-4B,0.7708333333333334,,3,compared,0
+False,288,mbpp,False,39,,BASTION (adaptive),230,bastion,Qwen/Qwen3-4B,0.13541666666666666,warm,3,compared,0
+False,365,mbpp,False,34,,DFlash,324,dflash,Qwen/Qwen3-4B,0.09315068493150686,,4,compared,0
+False,365,mbpp,False,121,,BASTION (adaptive),344,bastion,Qwen/Qwen3-4B,0.3315068493150685,warm,4,compared,0
+False,320,mbpp,False,47,,DFlash,370,dflash,Qwen/Qwen3-4B,0.146875,,5,compared,0
+False,320,mbpp,True,,,BASTION (adaptive),320,bastion,Qwen/Qwen3-4B,1.0,warm,5,compared,0
+False,374,mbpp,False,12,,DFlash,371,dflash,Qwen/Qwen3-4B,0.03208556149732621,,6,compared,0
+False,374,mbpp,False,12,,BASTION (adaptive),355,bastion,Qwen/Qwen3-4B,0.03208556149732621,warm,6,compared,0
+False,144,mbpp,True,,,DFlash,144,dflash,Qwen/Qwen3-4B,1.0,,7,compared,0
+False,144,mbpp,False,51,,BASTION (adaptive),199,bastion,Qwen/Qwen3-4B,0.3541666666666667,warm,7,compared,0
+False,826,mbpp,False,723,,DFlash,816,dflash,Qwen/Qwen3-4B,0.8753026634382567,,8,compared,0
+False,826,mbpp,False,723,,BASTION (adaptive),817,bastion,Qwen/Qwen3-4B,0.8753026634382567,warm,8,compared,0
+False,151,mbpp,True,,,DFlash,151,dflash,Qwen/Qwen3-4B,1.0,,9,compared,0
+False,151,mbpp,False,120,,BASTION (adaptive),159,bastion,Qwen/Qwen3-4B,0.7947019867549668,warm,9,compared,0
+False,194,mbpp,False,36,,DFlash,202,dflash,Qwen/Qwen3-4B,0.18556701030927836,,10,compared,0
+False,194,mbpp,True,,,BASTION (adaptive),194,bastion,Qwen/Qwen3-4B,1.0,warm,10,compared,0
+False,206,mbpp,True,,,DFlash,206,dflash,Qwen/Qwen3-4B,1.0,,11,compared,0
+False,206,mbpp,False,91,,BASTION (adaptive),208,bastion,Qwen/Qwen3-4B,0.441747572815534,warm,11,compared,0
+False,425,mbpp,False,19,,DFlash,464,dflash,Qwen/Qwen3-4B,0.04470588235294118,,12,compared,0
+False,425,mbpp,False,19,,BASTION (adaptive),425,bastion,Qwen/Qwen3-4B,0.04470588235294118,warm,12,compared,0
+False,222,mbpp,True,,,DFlash,222,dflash,Qwen/Qwen3-4B,1.0,,13,compared,0
+False,222,mbpp,False,101,,BASTION (adaptive),223,bastion,Qwen/Qwen3-4B,0.45495495495495497,warm,13,compared,0
+False,335,mbpp,True,,,DFlash,335,dflash,Qwen/Qwen3-4B,1.0,,14,compared,0
+False,335,mbpp,True,,,BASTION (adaptive),335,bastion,Qwen/Qwen3-4B,1.0,warm,14,compared,0
+False,173,mbpp,True,,,DFlash,173,dflash,Qwen/Qwen3-4B,1.0,,15,compared,0
+False,173,mbpp,True,,,BASTION (adaptive),173,bastion,Qwen/Qwen3-4B,1.0,warm,15,compared,0
+False,432,mbpp,False,130,,DFlash,348,dflash,Qwen/Qwen3-4B,0.30092592592592593,,16,compared,0
+False,432,mbpp,False,264,,BASTION (adaptive),432,bastion,Qwen/Qwen3-4B,0.6111111111111112,warm,16,compared,0
+False,196,mbpp,True,,,DFlash,196,dflash,Qwen/Qwen3-4B,1.0,,17,compared,0
+False,196,mbpp,True,,,BASTION (adaptive),196,bastion,Qwen/Qwen3-4B,1.0,warm,17,compared,0
+False,243,mbpp,False,167,,DFlash,224,dflash,Qwen/Qwen3-4B,0.6872427983539094,,18,compared,0
+False,243,mbpp,False,167,,BASTION (adaptive),224,bastion,Qwen/Qwen3-4B,0.6872427983539094,warm,18,compared,0
+False,168,mbpp,False,159,,DFlash,166,dflash,Qwen/Qwen3-4B,0.9464285714285714,,19,compared,0
+False,168,mbpp,True,,,BASTION (adaptive),168,bastion,Qwen/Qwen3-4B,1.0,warm,19,compared,0
+False,197,mbpp,True,,,DFlash,197,dflash,Qwen/Qwen3-4B,1.0,,20,compared,0
+False,197,mbpp,True,,,BASTION (adaptive),197,bastion,Qwen/Qwen3-4B,1.0,warm,20,compared,0
+False,342,mbpp,False,124,,DFlash,328,dflash,Qwen/Qwen3-4B,0.36257309941520466,,21,compared,0
+False,342,mbpp,False,124,,BASTION (adaptive),328,bastion,Qwen/Qwen3-4B,0.36257309941520466,warm,21,compared,0
+False,373,mbpp,True,,,DFlash,373,dflash,Qwen/Qwen3-4B,1.0,,22,compared,0
+False,373,mbpp,False,288,,BASTION (adaptive),373,bastion,Qwen/Qwen3-4B,0.7721179624664879,warm,22,compared,0
+False,227,mbpp,True,,,DFlash,227,dflash,Qwen/Qwen3-4B,1.0,,23,compared,0
+False,227,mbpp,True,,,BASTION (adaptive),227,bastion,Qwen/Qwen3-4B,1.0,warm,23,compared,0
+False,257,mbpp,False,18,,DFlash,336,dflash,Qwen/Qwen3-4B,0.07003891050583658,,24,compared,0
+False,257,mbpp,False,18,,BASTION (adaptive),336,bastion,Qwen/Qwen3-4B,0.07003891050583658,warm,24,compared,0
+False,279,mbpp,False,264,,DFlash,289,dflash,Qwen/Qwen3-4B,0.946236559139785,,25,compared,0
+False,279,mbpp,True,,,BASTION (adaptive),279,bastion,Qwen/Qwen3-4B,1.0,warm,25,compared,0
+False,295,mbpp,False,130,,DFlash,295,dflash,Qwen/Qwen3-4B,0.4406779661016949,,26,compared,0
+False,295,mbpp,False,130,,BASTION (adaptive),277,bastion,Qwen/Qwen3-4B,0.4406779661016949,warm,26,compared,0
+False,290,mbpp,False,53,,DFlash,302,dflash,Qwen/Qwen3-4B,0.18275862068965518,,27,compared,0
+False,290,mbpp,True,,,BASTION (adaptive),290,bastion,Qwen/Qwen3-4B,1.0,warm,27,compared,0
+False,312,mbpp,False,123,,DFlash,367,dflash,Qwen/Qwen3-4B,0.3942307692307692,,28,compared,0
+False,312,mbpp,False,50,,BASTION (adaptive),309,bastion,Qwen/Qwen3-4B,0.16025641025641027,warm,28,compared,0
+False,516,mbpp,False,24,,DFlash,375,dflash,Qwen/Qwen3-4B,0.046511627906976744,,29,compared,0
+False,516,mbpp,False,58,,BASTION (adaptive),350,bastion,Qwen/Qwen3-4B,0.1124031007751938,warm,29,compared,0
+False,279,mbpp,False,8,,DFlash,279,dflash,Qwen/Qwen3-4B,0.02867383512544803,,30,compared,0
+False,279,mbpp,False,8,,BASTION (adaptive),236,bastion,Qwen/Qwen3-4B,0.02867383512544803,warm,30,compared,0
+False,278,mbpp,True,,,DFlash,278,dflash,Qwen/Qwen3-4B,1.0,,31,compared,0
+False,278,mbpp,False,228,,BASTION (adaptive),274,bastion,Qwen/Qwen3-4B,0.8201438848920863,warm,31,compared,0
+False,1133,mbpp,False,61,,DFlash,1149,dflash,Qwen/Qwen3-4B,0.05383936451897617,,32,compared,0
+False,1133,mbpp,False,61,,BASTION (adaptive),925,bastion,Qwen/Qwen3-4B,0.05383936451897617,warm,32,compared,0
+False,223,mbpp,False,45,,DFlash,210,dflash,Qwen/Qwen3-4B,0.20179372197309417,,33,compared,0
+False,223,mbpp,True,,,BASTION (adaptive),223,bastion,Qwen/Qwen3-4B,1.0,warm,33,compared,0
+False,285,mbpp,True,,,DFlash,285,dflash,Qwen/Qwen3-4B,1.0,,34,compared,0
+False,285,mbpp,True,,,BASTION (adaptive),285,bastion,Qwen/Qwen3-4B,1.0,warm,34,compared,0
+False,531,mbpp,False,194,,DFlash,443,dflash,Qwen/Qwen3-4B,0.3653483992467043,,35,compared,0
+False,531,mbpp,False,518,,BASTION (adaptive),534,bastion,Qwen/Qwen3-4B,0.975517890772128,warm,35,compared,0
+False,141,mbpp,False,8,,DFlash,164,dflash,Qwen/Qwen3-4B,0.05673758865248227,,36,compared,0
+False,141,mbpp,False,8,,BASTION (adaptive),164,bastion,Qwen/Qwen3-4B,0.05673758865248227,warm,36,compared,0
+False,215,mbpp,True,,,DFlash,215,dflash,Qwen/Qwen3-4B,1.0,,37,compared,0
+False,215,mbpp,True,,,BASTION (adaptive),215,bastion,Qwen/Qwen3-4B,1.0,warm,37,compared,0
+False,305,mbpp,False,302,,DFlash,305,dflash,Qwen/Qwen3-4B,0.9901639344262295,,38,compared,0
+False,305,mbpp,False,159,,BASTION (adaptive),304,bastion,Qwen/Qwen3-4B,0.521311475409836,warm,38,compared,0
+False,280,mbpp,True,,,DFlash,280,dflash,Qwen/Qwen3-4B,1.0,,39,compared,0
+False,280,mbpp,True,,,BASTION (adaptive),280,bastion,Qwen/Qwen3-4B,1.0,warm,39,compared,0
+False,236,mbpp,True,,,DFlash,236,dflash,Qwen/Qwen3-4B,1.0,,40,compared,0
+False,236,mbpp,True,,,BASTION (adaptive),236,bastion,Qwen/Qwen3-4B,1.0,warm,40,compared,0
+False,243,mbpp,False,210,,DFlash,242,dflash,Qwen/Qwen3-4B,0.8641975308641975,,41,compared,0
+False,243,mbpp,False,25,,BASTION (adaptive),221,bastion,Qwen/Qwen3-4B,0.102880658436214,warm,41,compared,0
+False,193,mbpp,True,,,DFlash,193,dflash,Qwen/Qwen3-4B,1.0,,42,compared,0
+False,193,mbpp,False,150,,BASTION (adaptive),200,bastion,Qwen/Qwen3-4B,0.7772020725388601,warm,42,compared,0
+False,202,mbpp,True,,,DFlash,202,dflash,Qwen/Qwen3-4B,1.0,,43,compared,0
+False,202,mbpp,False,118,,BASTION (adaptive),204,bastion,Qwen/Qwen3-4B,0.5841584158415841,warm,43,compared,0
+False,286,mbpp,True,,,DFlash,286,dflash,Qwen/Qwen3-4B,1.0,,44,compared,0
+False,286,mbpp,True,,,BASTION (adaptive),286,bastion,Qwen/Qwen3-4B,1.0,warm,44,compared,0
+False,232,mbpp,True,,,DFlash,232,dflash,Qwen/Qwen3-4B,1.0,,45,compared,0
+False,232,mbpp,False,196,,BASTION (adaptive),233,bastion,Qwen/Qwen3-4B,0.8448275862068966,warm,45,compared,0
+False,91,mbpp,True,,,DFlash,91,dflash,Qwen/Qwen3-4B,1.0,,46,compared,0
+False,91,mbpp,True,,,BASTION (adaptive),91,bastion,Qwen/Qwen3-4B,1.0,warm,46,compared,0
+False,196,mbpp,True,,,DFlash,196,dflash,Qwen/Qwen3-4B,1.0,,47,compared,0
+False,196,mbpp,False,5,,BASTION (adaptive),198,bastion,Qwen/Qwen3-4B,0.025510204081632654,warm,47,compared,0
+False,306,mbpp,False,78,,DFlash,306,dflash,Qwen/Qwen3-4B,0.2549019607843137,,48,compared,0
+False,306,mbpp,False,78,,BASTION (adaptive),306,bastion,Qwen/Qwen3-4B,0.2549019607843137,warm,48,compared,0
+False,248,mbpp,False,216,,DFlash,245,dflash,Qwen/Qwen3-4B,0.8709677419354839,,49,compared,0
+False,248,mbpp,False,225,,BASTION (adaptive),248,bastion,Qwen/Qwen3-4B,0.907258064516129,warm,49,compared,0
+False,328,mbpp,False,32,,DFlash,409,dflash,Qwen/Qwen3-4B,0.0975609756097561,,50,compared,0
+False,328,mbpp,False,21,,BASTION (adaptive),264,bastion,Qwen/Qwen3-4B,0.06402439024390244,warm,50,compared,0
+False,153,mbpp,True,,,DFlash,153,dflash,Qwen/Qwen3-4B,1.0,,51,compared,0
+False,153,mbpp,True,,,BASTION (adaptive),153,bastion,Qwen/Qwen3-4B,1.0,warm,51,compared,0
+False,263,mbpp,False,218,,DFlash,262,dflash,Qwen/Qwen3-4B,0.8288973384030418,,52,compared,0
+False,263,mbpp,False,54,,BASTION (adaptive),271,bastion,Qwen/Qwen3-4B,0.20532319391634982,warm,52,compared,0
+False,251,mbpp,False,185,,DFlash,282,dflash,Qwen/Qwen3-4B,0.7370517928286853,,53,compared,0
+False,251,mbpp,False,185,,BASTION (adaptive),282,bastion,Qwen/Qwen3-4B,0.7370517928286853,warm,53,compared,0
+False,335,mbpp,True,,,DFlash,335,dflash,Qwen/Qwen3-4B,1.0,,54,compared,0
+False,335,mbpp,True,,,BASTION (adaptive),335,bastion,Qwen/Qwen3-4B,1.0,warm,54,compared,0
+False,229,mbpp,True,,,DFlash,229,dflash,Qwen/Qwen3-4B,1.0,,55,compared,0
+False,229,mbpp,True,,,BASTION (adaptive),229,bastion,Qwen/Qwen3-4B,1.0,warm,55,compared,0
+False,288,mbpp,True,,,DFlash,288,dflash,Qwen/Qwen3-4B,1.0,,56,compared,0
+False,288,mbpp,True,,,BASTION (adaptive),288,bastion,Qwen/Qwen3-4B,1.0,warm,56,compared,0
+False,158,mbpp,False,50,,DFlash,156,dflash,Qwen/Qwen3-4B,0.31645569620253167,,57,compared,0
+False,158,mbpp,False,50,,BASTION (adaptive),156,bastion,Qwen/Qwen3-4B,0.31645569620253167,warm,57,compared,0
+False,225,mbpp,True,,,DFlash,225,dflash,Qwen/Qwen3-4B,1.0,,58,compared,0
+False,225,mbpp,True,,,BASTION (adaptive),225,bastion,Qwen/Qwen3-4B,1.0,warm,58,compared,0
+False,189,mbpp,True,,,DFlash,189,dflash,Qwen/Qwen3-4B,1.0,,59,compared,0
+False,189,mbpp,True,,,BASTION (adaptive),189,bastion,Qwen/Qwen3-4B,1.0,warm,59,compared,0
+False,193,mbpp,True,,,DFlash,193,dflash,Qwen/Qwen3-4B,1.0,,60,compared,0
+False,193,mbpp,True,,,BASTION (adaptive),193,bastion,Qwen/Qwen3-4B,1.0,warm,60,compared,0
+False,217,mbpp,False,49,,DFlash,254,dflash,Qwen/Qwen3-4B,0.22580645161290322,,61,compared,0
+False,217,mbpp,False,29,,BASTION (adaptive),209,bastion,Qwen/Qwen3-4B,0.1336405529953917,warm,61,compared,0
+False,244,mbpp,False,49,,DFlash,250,dflash,Qwen/Qwen3-4B,0.20081967213114754,,62,compared,0
+False,244,mbpp,False,79,,BASTION (adaptive),234,bastion,Qwen/Qwen3-4B,0.3237704918032787,warm,62,compared,0
+False,257,mbpp,True,,,DFlash,257,dflash,Qwen/Qwen3-4B,1.0,,63,compared,0
+False,257,mbpp,True,,,BASTION (adaptive),257,bastion,Qwen/Qwen3-4B,1.0,warm,63,compared,0
+False,82,lcb,True,,,DFlash,82,dflash,Qwen/Qwen3-4B,1.0,,0,compared,0
+False,82,lcb,True,,,BASTION (adaptive),82,bastion,Qwen/Qwen3-4B,1.0,warm,0,compared,0
+False,282,lcb,False,113,,DFlash,183,dflash,Qwen/Qwen3-4B,0.40070921985815605,,1,compared,0
+False,282,lcb,False,94,,BASTION (adaptive),204,bastion,Qwen/Qwen3-4B,0.3333333333333333,warm,1,compared,0
+False,447,lcb,False,28,,DFlash,451,dflash,Qwen/Qwen3-4B,0.06263982102908278,,2,compared,0
+False,447,lcb,False,356,,BASTION (adaptive),445,bastion,Qwen/Qwen3-4B,0.796420581655481,warm,2,compared,0
+False,66,lcb,True,,,DFlash,66,dflash,Qwen/Qwen3-4B,1.0,,3,compared,0
+False,66,lcb,True,,,BASTION (adaptive),66,bastion,Qwen/Qwen3-4B,1.0,warm,3,compared,0
+False,104,lcb,True,,,DFlash,104,dflash,Qwen/Qwen3-4B,1.0,,4,compared,0
+False,104,lcb,True,,,BASTION (adaptive),104,bastion,Qwen/Qwen3-4B,1.0,warm,4,compared,0
+False,308,lcb,False,19,,DFlash,347,dflash,Qwen/Qwen3-4B,0.06168831168831169,,5,compared,0
+False,308,lcb,False,19,,BASTION (adaptive),347,bastion,Qwen/Qwen3-4B,0.06168831168831169,warm,5,compared,0
+False,44,lcb,True,,,DFlash,44,dflash,Qwen/Qwen3-4B,1.0,,6,compared,0
+False,44,lcb,True,,,BASTION (adaptive),44,bastion,Qwen/Qwen3-4B,1.0,warm,6,compared,0
+False,46,lcb,True,,,DFlash,46,dflash,Qwen/Qwen3-4B,1.0,,7,compared,0
+False,46,lcb,True,,,BASTION (adaptive),46,bastion,Qwen/Qwen3-4B,1.0,warm,7,compared,0
+False,158,lcb,False,48,,DFlash,151,dflash,Qwen/Qwen3-4B,0.3037974683544304,,8,compared,0
+False,158,lcb,True,,,BASTION (adaptive),158,bastion,Qwen/Qwen3-4B,1.0,warm,8,compared,0
+True,2048,lcb,False,135,,DFlash,2048,dflash,Qwen/Qwen3-4B,0.06591796875,,9,compared,0
+True,2048,lcb,False,135,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.06591796875,warm,9,compared,0
+False,86,lcb,False,28,,DFlash,76,dflash,Qwen/Qwen3-4B,0.32558139534883723,,10,compared,0
+False,86,lcb,False,28,,BASTION (adaptive),76,bastion,Qwen/Qwen3-4B,0.32558139534883723,warm,10,compared,0
+False,104,lcb,False,26,,DFlash,74,dflash,Qwen/Qwen3-4B,0.25,,11,compared,0
+False,104,lcb,False,26,,BASTION (adaptive),74,bastion,Qwen/Qwen3-4B,0.25,warm,11,compared,0
+False,393,lcb,True,,,DFlash,393,dflash,Qwen/Qwen3-4B,1.0,,12,compared,0
+False,393,lcb,True,,,BASTION (adaptive),393,bastion,Qwen/Qwen3-4B,1.0,warm,12,compared,0
+False,107,lcb,False,14,,DFlash,53,dflash,Qwen/Qwen3-4B,0.1308411214953271,,13,compared,0
+False,107,lcb,False,38,,BASTION (adaptive),101,bastion,Qwen/Qwen3-4B,0.35514018691588783,warm,13,compared,0
+False,527,lcb,False,207,,DFlash,1298,dflash,Qwen/Qwen3-4B,0.3927893738140417,,14,compared,0
+False,527,lcb,False,207,,BASTION (adaptive),641,bastion,Qwen/Qwen3-4B,0.3927893738140417,warm,14,compared,0
+False,528,lcb,True,,,DFlash,528,dflash,Qwen/Qwen3-4B,1.0,,15,compared,0
+False,528,lcb,True,,,BASTION (adaptive),528,bastion,Qwen/Qwen3-4B,1.0,warm,15,compared,0
+False,156,lcb,True,,,DFlash,156,dflash,Qwen/Qwen3-4B,1.0,,16,compared,0
+False,156,lcb,True,,,BASTION (adaptive),156,bastion,Qwen/Qwen3-4B,1.0,warm,16,compared,0
+False,429,lcb,True,,,DFlash,429,dflash,Qwen/Qwen3-4B,1.0,,17,compared,0
+False,429,lcb,False,149,,BASTION (adaptive),429,bastion,Qwen/Qwen3-4B,0.3473193473193473,warm,17,compared,0
+False,67,lcb,True,,,DFlash,67,dflash,Qwen/Qwen3-4B,1.0,,18,compared,0
+False,67,lcb,True,,,BASTION (adaptive),67,bastion,Qwen/Qwen3-4B,1.0,warm,18,compared,0
+True,2048,lcb,False,641,,DFlash,1537,dflash,Qwen/Qwen3-4B,0.31298828125,,19,compared,0
+True,2048,lcb,False,650,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.3173828125,warm,19,compared,0
+False,129,lcb,True,,,DFlash,129,dflash,Qwen/Qwen3-4B,1.0,,20,compared,0
+False,129,lcb,True,,,BASTION (adaptive),129,bastion,Qwen/Qwen3-4B,1.0,warm,20,compared,0
+False,70,lcb,True,,,DFlash,70,dflash,Qwen/Qwen3-4B,1.0,,21,compared,0
+False,70,lcb,True,,,BASTION (adaptive),70,bastion,Qwen/Qwen3-4B,1.0,warm,21,compared,0
+False,247,lcb,False,132,,DFlash,256,dflash,Qwen/Qwen3-4B,0.5344129554655871,,22,compared,0
+False,247,lcb,False,31,,BASTION (adaptive),452,bastion,Qwen/Qwen3-4B,0.12550607287449392,warm,22,compared,0
+False,74,lcb,True,,,DFlash,74,dflash,Qwen/Qwen3-4B,1.0,,23,compared,0
+False,74,lcb,True,,,BASTION (adaptive),74,bastion,Qwen/Qwen3-4B,1.0,warm,23,compared,0
+False,145,lcb,False,90,,DFlash,151,dflash,Qwen/Qwen3-4B,0.6206896551724138,,24,compared,0
+False,145,lcb,False,90,,BASTION (adaptive),151,bastion,Qwen/Qwen3-4B,0.6206896551724138,warm,24,compared,0
+False,225,lcb,False,32,,DFlash,225,dflash,Qwen/Qwen3-4B,0.14222222222222222,,25,compared,0
+False,225,lcb,False,42,,BASTION (adaptive),222,bastion,Qwen/Qwen3-4B,0.18666666666666668,warm,25,compared,0
+False,109,lcb,True,,,DFlash,109,dflash,Qwen/Qwen3-4B,1.0,,26,compared,0
+False,109,lcb,True,,,BASTION (adaptive),109,bastion,Qwen/Qwen3-4B,1.0,warm,26,compared,0
+False,67,lcb,False,5,,DFlash,67,dflash,Qwen/Qwen3-4B,0.07462686567164178,,27,compared,0
+False,67,lcb,False,5,,BASTION (adaptive),67,bastion,Qwen/Qwen3-4B,0.07462686567164178,warm,27,compared,0
+False,384,lcb,False,29,,DFlash,483,dflash,Qwen/Qwen3-4B,0.07552083333333333,,28,compared,0
+False,384,lcb,True,,,BASTION (adaptive),384,bastion,Qwen/Qwen3-4B,1.0,warm,28,compared,0
+False,63,lcb,True,,,DFlash,63,dflash,Qwen/Qwen3-4B,1.0,,29,compared,0
+False,63,lcb,True,,,BASTION (adaptive),63,bastion,Qwen/Qwen3-4B,1.0,warm,29,compared,0
+False,182,lcb,True,,,DFlash,182,dflash,Qwen/Qwen3-4B,1.0,,30,compared,0
+False,182,lcb,True,,,BASTION (adaptive),182,bastion,Qwen/Qwen3-4B,1.0,warm,30,compared,0
+False,77,lcb,True,,,DFlash,77,dflash,Qwen/Qwen3-4B,1.0,,31,compared,0
+False,77,lcb,True,,,BASTION (adaptive),77,bastion,Qwen/Qwen3-4B,1.0,warm,31,compared,0
+False,207,lcb,False,154,,DFlash,206,dflash,Qwen/Qwen3-4B,0.7439613526570048,,32,compared,0
+False,207,lcb,True,,,BASTION (adaptive),207,bastion,Qwen/Qwen3-4B,1.0,warm,32,compared,0
+False,92,lcb,True,,,DFlash,92,dflash,Qwen/Qwen3-4B,1.0,,33,compared,0
+False,92,lcb,False,43,,BASTION (adaptive),86,bastion,Qwen/Qwen3-4B,0.4673913043478261,warm,33,compared,0
+False,45,lcb,True,,,DFlash,45,dflash,Qwen/Qwen3-4B,1.0,,34,compared,0
+False,45,lcb,True,,,BASTION (adaptive),45,bastion,Qwen/Qwen3-4B,1.0,warm,34,compared,0
+False,183,lcb,False,9,,DFlash,83,dflash,Qwen/Qwen3-4B,0.04918032786885246,,35,compared,0
+False,183,lcb,False,122,,BASTION (adaptive),187,bastion,Qwen/Qwen3-4B,0.6666666666666666,warm,35,compared,0
+False,203,lcb,True,,,DFlash,203,dflash,Qwen/Qwen3-4B,1.0,,36,compared,0
+False,203,lcb,True,,,BASTION (adaptive),203,bastion,Qwen/Qwen3-4B,1.0,warm,36,compared,0
+False,137,lcb,True,,,DFlash,137,dflash,Qwen/Qwen3-4B,1.0,,37,compared,0
+False,137,lcb,True,,,BASTION (adaptive),137,bastion,Qwen/Qwen3-4B,1.0,warm,37,compared,0
+False,72,lcb,True,,,DFlash,72,dflash,Qwen/Qwen3-4B,1.0,,38,compared,0
+False,72,lcb,True,,,BASTION (adaptive),72,bastion,Qwen/Qwen3-4B,1.0,warm,38,compared,0
+False,197,lcb,True,,,DFlash,197,dflash,Qwen/Qwen3-4B,1.0,,39,compared,0
+False,197,lcb,False,5,,BASTION (adaptive),187,bastion,Qwen/Qwen3-4B,0.025380710659898477,warm,39,compared,0
+False,675,lcb,True,,,DFlash,675,dflash,Qwen/Qwen3-4B,1.0,,40,compared,0
+False,675,lcb,False,91,,BASTION (adaptive),726,bastion,Qwen/Qwen3-4B,0.1348148148148148,warm,40,compared,0
+False,181,lcb,True,,,DFlash,181,dflash,Qwen/Qwen3-4B,1.0,,41,compared,0
+False,181,lcb,True,,,BASTION (adaptive),181,bastion,Qwen/Qwen3-4B,1.0,warm,41,compared,0
+False,346,lcb,True,,,DFlash,346,dflash,Qwen/Qwen3-4B,1.0,,42,compared,0
+False,346,lcb,False,6,,BASTION (adaptive),359,bastion,Qwen/Qwen3-4B,0.017341040462427744,warm,42,compared,0
+False,204,lcb,True,,,DFlash,204,dflash,Qwen/Qwen3-4B,1.0,,43,compared,0
+False,204,lcb,True,,,BASTION (adaptive),204,bastion,Qwen/Qwen3-4B,1.0,warm,43,compared,0
+False,129,lcb,True,,,DFlash,129,dflash,Qwen/Qwen3-4B,1.0,,44,compared,0
+False,129,lcb,True,,,BASTION (adaptive),129,bastion,Qwen/Qwen3-4B,1.0,warm,44,compared,0
+False,324,lcb,False,14,,DFlash,318,dflash,Qwen/Qwen3-4B,0.043209876543209874,,45,compared,0
+False,324,lcb,True,,,BASTION (adaptive),324,bastion,Qwen/Qwen3-4B,1.0,warm,45,compared,0
+False,287,lcb,False,204,,DFlash,293,dflash,Qwen/Qwen3-4B,0.710801393728223,,46,compared,0
+False,287,lcb,False,1,,BASTION (adaptive),223,bastion,Qwen/Qwen3-4B,0.003484320557491289,warm,46,compared,0
+False,45,lcb,False,24,,DFlash,47,dflash,Qwen/Qwen3-4B,0.5333333333333333,,47,compared,0
+False,45,lcb,False,24,,BASTION (adaptive),47,bastion,Qwen/Qwen3-4B,0.5333333333333333,warm,47,compared,0
+False,158,lcb,True,,,DFlash,158,dflash,Qwen/Qwen3-4B,1.0,,48,compared,0
+False,158,lcb,True,,,BASTION (adaptive),158,bastion,Qwen/Qwen3-4B,1.0,warm,48,compared,0
+False,53,lcb,True,,,DFlash,53,dflash,Qwen/Qwen3-4B,1.0,,49,compared,0
+False,53,lcb,True,,,BASTION (adaptive),53,bastion,Qwen/Qwen3-4B,1.0,warm,49,compared,0
+False,208,lcb,False,173,,DFlash,216,dflash,Qwen/Qwen3-4B,0.8317307692307693,,50,compared,0
+False,208,lcb,False,30,,BASTION (adaptive),200,bastion,Qwen/Qwen3-4B,0.14423076923076922,warm,50,compared,0
+False,439,lcb,False,252,,DFlash,435,dflash,Qwen/Qwen3-4B,0.5740318906605922,,51,compared,0
+False,439,lcb,False,252,,BASTION (adaptive),435,bastion,Qwen/Qwen3-4B,0.5740318906605922,warm,51,compared,0
+False,175,lcb,False,23,,DFlash,209,dflash,Qwen/Qwen3-4B,0.13142857142857142,,52,compared,0
+False,175,lcb,True,,,BASTION (adaptive),175,bastion,Qwen/Qwen3-4B,1.0,warm,52,compared,0
+False,319,lcb,False,143,,DFlash,363,dflash,Qwen/Qwen3-4B,0.4482758620689655,,53,compared,0
+False,319,lcb,False,56,,BASTION (adaptive),192,bastion,Qwen/Qwen3-4B,0.1755485893416928,warm,53,compared,0
+False,66,lcb,True,,,DFlash,66,dflash,Qwen/Qwen3-4B,1.0,,54,compared,0
+False,66,lcb,True,,,BASTION (adaptive),66,bastion,Qwen/Qwen3-4B,1.0,warm,54,compared,0
+False,114,lcb,False,73,,DFlash,122,dflash,Qwen/Qwen3-4B,0.6403508771929824,,55,compared,0
+False,114,lcb,False,73,,BASTION (adaptive),122,bastion,Qwen/Qwen3-4B,0.6403508771929824,warm,55,compared,0
+False,621,lcb,False,346,,DFlash,647,dflash,Qwen/Qwen3-4B,0.5571658615136876,,56,compared,0
+False,621,lcb,False,108,,BASTION (adaptive),528,bastion,Qwen/Qwen3-4B,0.17391304347826086,warm,56,compared,0
+False,273,lcb,False,192,,DFlash,272,dflash,Qwen/Qwen3-4B,0.7032967032967034,,57,compared,0
+False,273,lcb,True,,,BASTION (adaptive),273,bastion,Qwen/Qwen3-4B,1.0,warm,57,compared,0
+False,398,lcb,False,309,,DFlash,406,dflash,Qwen/Qwen3-4B,0.7763819095477387,,58,compared,0
+False,398,lcb,False,195,,BASTION (adaptive),388,bastion,Qwen/Qwen3-4B,0.4899497487437186,warm,58,compared,0
+False,187,lcb,True,,,DFlash,187,dflash,Qwen/Qwen3-4B,1.0,,59,compared,0
+False,187,lcb,True,,,BASTION (adaptive),187,bastion,Qwen/Qwen3-4B,1.0,warm,59,compared,0
+False,138,lcb,True,,,DFlash,138,dflash,Qwen/Qwen3-4B,1.0,,60,compared,0
+False,138,lcb,True,,,BASTION (adaptive),138,bastion,Qwen/Qwen3-4B,1.0,warm,60,compared,0
+False,121,lcb,True,,,DFlash,121,dflash,Qwen/Qwen3-4B,1.0,,61,compared,0
+False,121,lcb,True,,,BASTION (adaptive),121,bastion,Qwen/Qwen3-4B,1.0,warm,61,compared,0
+False,42,lcb,True,,,DFlash,42,dflash,Qwen/Qwen3-4B,1.0,,62,compared,0
+False,42,lcb,True,,,BASTION (adaptive),42,bastion,Qwen/Qwen3-4B,1.0,warm,62,compared,0
+False,66,lcb,True,,,DFlash,66,dflash,Qwen/Qwen3-4B,1.0,,63,compared,0
+False,66,lcb,False,47,,BASTION (adaptive),71,bastion,Qwen/Qwen3-4B,0.7121212121212122,warm,63,compared,0
+False,73,mt-bench,True,,,DFlash,73,dflash,Qwen/Qwen3-4B,1.0,,0,compared,0
+False,73,mt-bench,True,,,BASTION (adaptive),73,bastion,Qwen/Qwen3-4B,1.0,warm,0,compared,0
+False,33,mt-bench,True,,,DFlash,33,dflash,Qwen/Qwen3-4B,1.0,,0,compared,1
+False,33,mt-bench,True,,,BASTION (adaptive),33,bastion,Qwen/Qwen3-4B,1.0,warm,0,compared,1
+False,815,mt-bench,False,69,,DFlash,639,dflash,Qwen/Qwen3-4B,0.08466257668711656,,1,compared,0
+False,815,mt-bench,False,69,,BASTION (adaptive),638,bastion,Qwen/Qwen3-4B,0.08466257668711656,warm,1,compared,0
+False,938,mt-bench,False,168,,DFlash,930,dflash,Qwen/Qwen3-4B,0.1791044776119403,,1,compared,1
+False,938,mt-bench,False,168,,BASTION (adaptive),924,bastion,Qwen/Qwen3-4B,0.1791044776119403,warm,1,compared,1
+False,499,mt-bench,True,,,DFlash,499,dflash,Qwen/Qwen3-4B,1.0,,2,compared,0
+False,499,mt-bench,False,490,,BASTION (adaptive),498,bastion,Qwen/Qwen3-4B,0.9819639278557114,warm,2,compared,0
+False,310,mt-bench,False,277,,DFlash,312,dflash,Qwen/Qwen3-4B,0.8935483870967742,,2,compared,1
+False,310,mt-bench,False,277,,BASTION (adaptive),319,bastion,Qwen/Qwen3-4B,0.8935483870967742,warm,2,compared,1
+False,14,mt-bench,True,,,DFlash,14,dflash,Qwen/Qwen3-4B,1.0,,3,compared,0
+False,14,mt-bench,True,,,BASTION (adaptive),14,bastion,Qwen/Qwen3-4B,1.0,warm,3,compared,0
+False,218,mt-bench,True,,,DFlash,218,dflash,Qwen/Qwen3-4B,1.0,,3,compared,1
+False,218,mt-bench,True,,,BASTION (adaptive),218,bastion,Qwen/Qwen3-4B,1.0,warm,3,compared,1
+False,802,mt-bench,False,26,,DFlash,956,dflash,Qwen/Qwen3-4B,0.032418952618453865,,4,compared,0
+False,802,mt-bench,False,18,,BASTION (adaptive),942,bastion,Qwen/Qwen3-4B,0.022443890274314215,warm,4,compared,0
+False,110,mt-bench,True,,,DFlash,110,dflash,Qwen/Qwen3-4B,1.0,,4,compared,1
+False,110,mt-bench,True,,,BASTION (adaptive),110,bastion,Qwen/Qwen3-4B,1.0,warm,4,compared,1
+False,74,mt-bench,True,,,DFlash,74,dflash,Qwen/Qwen3-4B,1.0,,5,compared,0
+False,74,mt-bench,True,,,BASTION (adaptive),74,bastion,Qwen/Qwen3-4B,1.0,warm,5,compared,0
+False,75,mt-bench,True,,,DFlash,75,dflash,Qwen/Qwen3-4B,1.0,,5,compared,1
+False,75,mt-bench,True,,,BASTION (adaptive),75,bastion,Qwen/Qwen3-4B,1.0,warm,5,compared,1
+False,966,mt-bench,False,54,,DFlash,915,dflash,Qwen/Qwen3-4B,0.055900621118012424,,6,compared,0
+False,966,mt-bench,False,54,,BASTION (adaptive),916,bastion,Qwen/Qwen3-4B,0.055900621118012424,warm,6,compared,0
+False,770,mt-bench,False,208,,DFlash,839,dflash,Qwen/Qwen3-4B,0.2701298701298701,,6,compared,1
+False,770,mt-bench,False,620,,BASTION (adaptive),769,bastion,Qwen/Qwen3-4B,0.8051948051948052,warm,6,compared,1
+False,176,mt-bench,False,90,,DFlash,177,dflash,Qwen/Qwen3-4B,0.5113636363636364,,7,compared,0
+False,176,mt-bench,False,90,,BASTION (adaptive),177,bastion,Qwen/Qwen3-4B,0.5113636363636364,warm,7,compared,0
+False,187,mt-bench,False,62,,DFlash,218,dflash,Qwen/Qwen3-4B,0.3315508021390374,,7,compared,1
+False,187,mt-bench,False,181,,BASTION (adaptive),187,bastion,Qwen/Qwen3-4B,0.9679144385026738,warm,7,compared,1
+False,889,mt-bench,False,50,,DFlash,876,dflash,Qwen/Qwen3-4B,0.0562429696287964,,8,compared,0
+False,889,mt-bench,False,127,,BASTION (adaptive),975,bastion,Qwen/Qwen3-4B,0.14285714285714285,warm,8,compared,0
+False,1699,mt-bench,False,80,,DFlash,1503,dflash,Qwen/Qwen3-4B,0.047086521483225424,,8,compared,1
+False,1699,mt-bench,False,80,,BASTION (adaptive),1553,bastion,Qwen/Qwen3-4B,0.047086521483225424,warm,8,compared,1
+False,374,mt-bench,False,233,,DFlash,374,dflash,Qwen/Qwen3-4B,0.6229946524064172,,9,compared,0
+False,374,mt-bench,False,233,,BASTION (adaptive),374,bastion,Qwen/Qwen3-4B,0.6229946524064172,warm,9,compared,0
+False,556,mt-bench,True,,,DFlash,556,dflash,Qwen/Qwen3-4B,1.0,,9,compared,1
+False,556,mt-bench,False,8,,BASTION (adaptive),594,bastion,Qwen/Qwen3-4B,0.014388489208633094,warm,9,compared,1
+False,740,mt-bench,False,55,,DFlash,656,dflash,Qwen/Qwen3-4B,0.07432432432432433,,10,compared,0
+False,740,mt-bench,False,55,,BASTION (adaptive),595,bastion,Qwen/Qwen3-4B,0.07432432432432433,warm,10,compared,0
+False,1216,mt-bench,False,41,,DFlash,1211,dflash,Qwen/Qwen3-4B,0.033717105263157895,,10,compared,1
+False,1216,mt-bench,False,171,,BASTION (adaptive),998,bastion,Qwen/Qwen3-4B,0.140625,warm,10,compared,1
+False,245,mt-bench,False,70,,DFlash,262,dflash,Qwen/Qwen3-4B,0.2857142857142857,,11,compared,0
+False,245,mt-bench,False,50,,BASTION (adaptive),265,bastion,Qwen/Qwen3-4B,0.20408163265306123,warm,11,compared,0
+False,58,mt-bench,True,,,DFlash,58,dflash,Qwen/Qwen3-4B,1.0,,11,compared,1
+False,58,mt-bench,True,,,BASTION (adaptive),58,bastion,Qwen/Qwen3-4B,1.0,warm,11,compared,1
+False,291,mt-bench,False,3,,DFlash,298,dflash,Qwen/Qwen3-4B,0.010309278350515464,,12,compared,0
+False,291,mt-bench,False,3,,BASTION (adaptive),298,bastion,Qwen/Qwen3-4B,0.010309278350515464,warm,12,compared,0
+False,290,mt-bench,False,76,,DFlash,291,dflash,Qwen/Qwen3-4B,0.2620689655172414,,12,compared,1
+False,290,mt-bench,False,76,,BASTION (adaptive),291,bastion,Qwen/Qwen3-4B,0.2620689655172414,warm,12,compared,1
+False,253,mt-bench,False,223,,DFlash,234,dflash,Qwen/Qwen3-4B,0.8814229249011858,,13,compared,0
+False,253,mt-bench,False,223,,BASTION (adaptive),234,bastion,Qwen/Qwen3-4B,0.8814229249011858,warm,13,compared,0
+False,726,mt-bench,False,73,,DFlash,699,dflash,Qwen/Qwen3-4B,0.10055096418732783,,13,compared,1
+False,726,mt-bench,False,73,,BASTION (adaptive),759,bastion,Qwen/Qwen3-4B,0.10055096418732783,warm,13,compared,1
+False,84,mt-bench,True,,,DFlash,84,dflash,Qwen/Qwen3-4B,1.0,,14,compared,0
+False,84,mt-bench,True,,,BASTION (adaptive),84,bastion,Qwen/Qwen3-4B,1.0,warm,14,compared,0
+False,355,mt-bench,False,98,,DFlash,355,dflash,Qwen/Qwen3-4B,0.27605633802816903,,14,compared,1
+False,355,mt-bench,False,98,,BASTION (adaptive),356,bastion,Qwen/Qwen3-4B,0.27605633802816903,warm,14,compared,1
+False,226,mt-bench,False,192,,DFlash,223,dflash,Qwen/Qwen3-4B,0.8495575221238938,,15,compared,0
+False,226,mt-bench,False,75,,BASTION (adaptive),228,bastion,Qwen/Qwen3-4B,0.33185840707964603,warm,15,compared,0
+False,111,mt-bench,True,,,DFlash,111,dflash,Qwen/Qwen3-4B,1.0,,15,compared,1
+False,111,mt-bench,True,,,BASTION (adaptive),111,bastion,Qwen/Qwen3-4B,1.0,warm,15,compared,1
+False,80,mt-bench,True,,,DFlash,80,dflash,Qwen/Qwen3-4B,1.0,,16,compared,0
+False,80,mt-bench,True,,,BASTION (adaptive),80,bastion,Qwen/Qwen3-4B,1.0,warm,16,compared,0
+False,173,mt-bench,True,,,DFlash,173,dflash,Qwen/Qwen3-4B,1.0,,16,compared,1
+False,173,mt-bench,True,,,BASTION (adaptive),173,bastion,Qwen/Qwen3-4B,1.0,warm,16,compared,1
+False,75,mt-bench,True,,,DFlash,75,dflash,Qwen/Qwen3-4B,1.0,,17,compared,0
+False,75,mt-bench,True,,,BASTION (adaptive),75,bastion,Qwen/Qwen3-4B,1.0,warm,17,compared,0
+False,123,mt-bench,True,,,DFlash,123,dflash,Qwen/Qwen3-4B,1.0,,17,compared,1
+False,123,mt-bench,False,36,,BASTION (adaptive),123,bastion,Qwen/Qwen3-4B,0.2926829268292683,warm,17,compared,1
+False,453,mt-bench,False,92,,DFlash,577,dflash,Qwen/Qwen3-4B,0.20309050772626933,,18,compared,0
+False,453,mt-bench,False,92,,BASTION (adaptive),600,bastion,Qwen/Qwen3-4B,0.20309050772626933,warm,18,compared,0
+False,634,mt-bench,True,,,DFlash,634,dflash,Qwen/Qwen3-4B,1.0,,18,compared,1
+False,634,mt-bench,False,313,,BASTION (adaptive),498,bastion,Qwen/Qwen3-4B,0.49369085173501576,warm,18,compared,1
+False,79,mt-bench,False,10,,DFlash,84,dflash,Qwen/Qwen3-4B,0.12658227848101267,,19,compared,0
+False,79,mt-bench,False,72,,BASTION (adaptive),77,bastion,Qwen/Qwen3-4B,0.9113924050632911,warm,19,compared,0
+False,87,mt-bench,False,61,,DFlash,86,dflash,Qwen/Qwen3-4B,0.7011494252873564,,19,compared,1
+False,87,mt-bench,False,3,,BASTION (adaptive),86,bastion,Qwen/Qwen3-4B,0.034482758620689655,warm,19,compared,1
+False,1259,mt-bench,False,104,,DFlash,991,dflash,Qwen/Qwen3-4B,0.08260524225575853,,20,compared,0
+False,1259,mt-bench,False,104,,BASTION (adaptive),1242,bastion,Qwen/Qwen3-4B,0.08260524225575853,warm,20,compared,0
+False,1095,mt-bench,False,256,,DFlash,1163,dflash,Qwen/Qwen3-4B,0.23378995433789954,,20,compared,1
+False,1095,mt-bench,False,694,,BASTION (adaptive),977,bastion,Qwen/Qwen3-4B,0.6337899543378995,warm,20,compared,1
+False,223,mt-bench,False,55,,DFlash,219,dflash,Qwen/Qwen3-4B,0.24663677130044842,,21,compared,0
+False,223,mt-bench,False,55,,BASTION (adaptive),219,bastion,Qwen/Qwen3-4B,0.24663677130044842,warm,21,compared,0
+False,44,mt-bench,True,,,DFlash,44,dflash,Qwen/Qwen3-4B,1.0,,21,compared,1
+False,44,mt-bench,False,6,,BASTION (adaptive),49,bastion,Qwen/Qwen3-4B,0.13636363636363635,warm,21,compared,1
+False,1148,mt-bench,False,222,,DFlash,1149,dflash,Qwen/Qwen3-4B,0.19337979094076654,,22,compared,0
+False,1148,mt-bench,False,100,,BASTION (adaptive),1074,bastion,Qwen/Qwen3-4B,0.08710801393728224,warm,22,compared,0
+False,1040,mt-bench,False,76,,DFlash,1200,dflash,Qwen/Qwen3-4B,0.07307692307692308,,22,compared,1
+False,1040,mt-bench,False,92,,BASTION (adaptive),1015,bastion,Qwen/Qwen3-4B,0.08846153846153847,warm,22,compared,1
+False,549,mt-bench,False,220,,DFlash,550,dflash,Qwen/Qwen3-4B,0.4007285974499089,,23,compared,0
+False,549,mt-bench,False,198,,BASTION (adaptive),546,bastion,Qwen/Qwen3-4B,0.36065573770491804,warm,23,compared,0
+False,1160,mt-bench,False,44,,DFlash,1051,dflash,Qwen/Qwen3-4B,0.03793103448275862,,23,compared,1
+False,1160,mt-bench,False,44,,BASTION (adaptive),984,bastion,Qwen/Qwen3-4B,0.03793103448275862,warm,23,compared,1
+False,241,mt-bench,False,177,,DFlash,247,dflash,Qwen/Qwen3-4B,0.7344398340248963,,24,compared,0
+False,241,mt-bench,False,201,,BASTION (adaptive),247,bastion,Qwen/Qwen3-4B,0.8340248962655602,warm,24,compared,0
+False,205,mt-bench,False,169,,DFlash,211,dflash,Qwen/Qwen3-4B,0.824390243902439,,24,compared,1
+False,205,mt-bench,False,169,,BASTION (adaptive),211,bastion,Qwen/Qwen3-4B,0.824390243902439,warm,24,compared,1
+False,117,mt-bench,False,52,,DFlash,127,dflash,Qwen/Qwen3-4B,0.4444444444444444,,25,compared,0
+False,117,mt-bench,False,112,,BASTION (adaptive),115,bastion,Qwen/Qwen3-4B,0.9572649572649573,warm,25,compared,0
+False,12,mt-bench,True,,,DFlash,12,dflash,Qwen/Qwen3-4B,1.0,,25,compared,1
+False,12,mt-bench,True,,,BASTION (adaptive),12,bastion,Qwen/Qwen3-4B,1.0,warm,25,compared,1
+False,295,mt-bench,False,21,,DFlash,327,dflash,Qwen/Qwen3-4B,0.0711864406779661,,26,compared,0
+False,295,mt-bench,False,85,,BASTION (adaptive),322,bastion,Qwen/Qwen3-4B,0.288135593220339,warm,26,compared,0
+False,284,mt-bench,False,73,,DFlash,257,dflash,Qwen/Qwen3-4B,0.25704225352112675,,26,compared,1
+False,284,mt-bench,False,73,,BASTION (adaptive),283,bastion,Qwen/Qwen3-4B,0.25704225352112675,warm,26,compared,1
+False,671,mt-bench,False,215,,DFlash,666,dflash,Qwen/Qwen3-4B,0.3204172876304024,,27,compared,0
+False,671,mt-bench,False,215,,BASTION (adaptive),690,bastion,Qwen/Qwen3-4B,0.3204172876304024,warm,27,compared,0
+False,1154,mt-bench,False,16,,DFlash,1132,dflash,Qwen/Qwen3-4B,0.01386481802426343,,27,compared,1
+False,1154,mt-bench,False,81,,BASTION (adaptive),1066,bastion,Qwen/Qwen3-4B,0.07019064124783363,warm,27,compared,1
+False,62,mt-bench,True,,,DFlash,62,dflash,Qwen/Qwen3-4B,1.0,,28,compared,0
+False,62,mt-bench,True,,,BASTION (adaptive),62,bastion,Qwen/Qwen3-4B,1.0,warm,28,compared,0
+False,458,mt-bench,False,101,,DFlash,383,dflash,Qwen/Qwen3-4B,0.2205240174672489,,28,compared,1
+False,458,mt-bench,True,,,BASTION (adaptive),458,bastion,Qwen/Qwen3-4B,1.0,warm,28,compared,1
+False,366,mt-bench,False,287,,DFlash,363,dflash,Qwen/Qwen3-4B,0.7841530054644809,,29,compared,0
+False,366,mt-bench,True,,,BASTION (adaptive),366,bastion,Qwen/Qwen3-4B,1.0,warm,29,compared,0
+False,821,mt-bench,False,108,,DFlash,687,dflash,Qwen/Qwen3-4B,0.1315468940316687,,29,compared,1
+False,821,mt-bench,False,108,,BASTION (adaptive),688,bastion,Qwen/Qwen3-4B,0.1315468940316687,warm,29,compared,1
+False,15,mt-bench,True,,,DFlash,15,dflash,Qwen/Qwen3-4B,1.0,,30,compared,0
+False,15,mt-bench,True,,,BASTION (adaptive),15,bastion,Qwen/Qwen3-4B,1.0,warm,30,compared,0
+False,18,mt-bench,True,,,DFlash,18,dflash,Qwen/Qwen3-4B,1.0,,30,compared,1
+False,18,mt-bench,True,,,BASTION (adaptive),18,bastion,Qwen/Qwen3-4B,1.0,warm,30,compared,1
+False,985,mt-bench,False,154,,DFlash,1033,dflash,Qwen/Qwen3-4B,0.15634517766497463,,31,compared,0
+False,985,mt-bench,False,67,,BASTION (adaptive),834,bastion,Qwen/Qwen3-4B,0.06802030456852792,warm,31,compared,0
+False,394,mt-bench,False,102,,DFlash,417,dflash,Qwen/Qwen3-4B,0.25888324873096447,,31,compared,1
+False,394,mt-bench,False,176,,BASTION (adaptive),413,bastion,Qwen/Qwen3-4B,0.4467005076142132,warm,31,compared,1
+False,318,mt-bench,False,49,,DFlash,319,dflash,Qwen/Qwen3-4B,0.1540880503144654,,32,compared,0
+False,318,mt-bench,False,49,,BASTION (adaptive),349,bastion,Qwen/Qwen3-4B,0.1540880503144654,warm,32,compared,0
+False,421,mt-bench,False,3,,DFlash,397,dflash,Qwen/Qwen3-4B,0.007125890736342043,,32,compared,1
+False,421,mt-bench,False,3,,BASTION (adaptive),397,bastion,Qwen/Qwen3-4B,0.007125890736342043,warm,32,compared,1
+False,733,mt-bench,False,61,,DFlash,817,dflash,Qwen/Qwen3-4B,0.08321964529331514,,33,compared,0
+False,733,mt-bench,False,79,,BASTION (adaptive),856,bastion,Qwen/Qwen3-4B,0.1077762619372442,warm,33,compared,0
+False,799,mt-bench,False,268,,DFlash,712,dflash,Qwen/Qwen3-4B,0.3354192740926158,,33,compared,1
+False,799,mt-bench,False,22,,BASTION (adaptive),816,bastion,Qwen/Qwen3-4B,0.02753441802252816,warm,33,compared,1
+False,863,mt-bench,False,17,,DFlash,926,dflash,Qwen/Qwen3-4B,0.019698725376593278,,34,compared,0
+False,863,mt-bench,False,17,,BASTION (adaptive),831,bastion,Qwen/Qwen3-4B,0.019698725376593278,warm,34,compared,0
+False,487,mt-bench,False,82,,DFlash,503,dflash,Qwen/Qwen3-4B,0.16837782340862423,,34,compared,1
+False,487,mt-bench,False,20,,BASTION (adaptive),440,bastion,Qwen/Qwen3-4B,0.04106776180698152,warm,34,compared,1
+False,204,mt-bench,False,20,,DFlash,236,dflash,Qwen/Qwen3-4B,0.09803921568627451,,35,compared,0
+False,204,mt-bench,False,77,,BASTION (adaptive),215,bastion,Qwen/Qwen3-4B,0.37745098039215685,warm,35,compared,0
+False,304,mt-bench,False,191,,DFlash,304,dflash,Qwen/Qwen3-4B,0.6282894736842105,,35,compared,1
+False,304,mt-bench,True,,,BASTION (adaptive),304,bastion,Qwen/Qwen3-4B,1.0,warm,35,compared,1
+False,1091,mt-bench,False,50,,DFlash,1177,dflash,Qwen/Qwen3-4B,0.045829514207149404,,36,compared,0
+False,1091,mt-bench,False,50,,BASTION (adaptive),1161,bastion,Qwen/Qwen3-4B,0.045829514207149404,warm,36,compared,0
+False,853,mt-bench,False,34,,DFlash,869,dflash,Qwen/Qwen3-4B,0.03985932004689332,,36,compared,1
+False,853,mt-bench,False,34,,BASTION (adaptive),864,bastion,Qwen/Qwen3-4B,0.03985932004689332,warm,36,compared,1
+False,285,mt-bench,False,59,,DFlash,325,dflash,Qwen/Qwen3-4B,0.20701754385964913,,37,compared,0
+False,285,mt-bench,False,104,,BASTION (adaptive),314,bastion,Qwen/Qwen3-4B,0.3649122807017544,warm,37,compared,0
+False,1258,mt-bench,False,202,,DFlash,1331,dflash,Qwen/Qwen3-4B,0.16057233704292528,,37,compared,1
+False,1258,mt-bench,False,66,,BASTION (adaptive),974,bastion,Qwen/Qwen3-4B,0.05246422893481717,warm,37,compared,1
+False,1416,mt-bench,False,160,,DFlash,961,dflash,Qwen/Qwen3-4B,0.11299435028248588,,38,compared,0
+False,1416,mt-bench,False,121,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-4B,0.08545197740112995,warm,38,compared,0
+False,631,mt-bench,False,18,,DFlash,831,dflash,Qwen/Qwen3-4B,0.028526148969889066,,38,compared,1
+False,631,mt-bench,False,12,,BASTION (adaptive),562,bastion,Qwen/Qwen3-4B,0.01901743264659271,warm,38,compared,1
+False,605,mt-bench,False,81,,DFlash,663,dflash,Qwen/Qwen3-4B,0.13388429752066117,,39,compared,0
+False,605,mt-bench,False,87,,BASTION (adaptive),707,bastion,Qwen/Qwen3-4B,0.14380165289256197,warm,39,compared,0
+False,217,mt-bench,False,144,,DFlash,229,dflash,Qwen/Qwen3-4B,0.663594470046083,,39,compared,1
+False,217,mt-bench,False,80,,BASTION (adaptive),216,bastion,Qwen/Qwen3-4B,0.3686635944700461,warm,39,compared,1
+False,228,alpaca,False,49,,DFlash,226,dflash,Qwen/Qwen3-4B,0.2149122807017544,,0,compared,0
+False,228,alpaca,True,,,BASTION (adaptive),228,bastion,Qwen/Qwen3-4B,1.0,warm,0,compared,0
+False,461,alpaca,False,115,,DFlash,451,dflash,Qwen/Qwen3-4B,0.24945770065075923,,1,compared,0
+False,461,alpaca,False,115,,BASTION (adaptive),445,bastion,Qwen/Qwen3-4B,0.24945770065075923,warm,1,compared,0
+False,33,alpaca,True,,,DFlash,33,dflash,Qwen/Qwen3-4B,1.0,,2,compared,0
+False,33,alpaca,True,,,BASTION (adaptive),33,bastion,Qwen/Qwen3-4B,1.0,warm,2,compared,0
+False,31,alpaca,True,,,DFlash,31,dflash,Qwen/Qwen3-4B,1.0,,3,compared,0
+False,31,alpaca,True,,,BASTION (adaptive),31,bastion,Qwen/Qwen3-4B,1.0,warm,3,compared,0
+False,998,alpaca,True,,,DFlash,998,dflash,Qwen/Qwen3-4B,1.0,,4,compared,0
+False,998,alpaca,False,54,,BASTION (adaptive),914,bastion,Qwen/Qwen3-4B,0.05410821643286573,warm,4,compared,0
+False,108,alpaca,True,,,DFlash,108,dflash,Qwen/Qwen3-4B,1.0,,5,compared,0
+False,108,alpaca,True,,,BASTION (adaptive),108,bastion,Qwen/Qwen3-4B,1.0,warm,5,compared,0
+False,724,alpaca,False,140,,DFlash,777,dflash,Qwen/Qwen3-4B,0.19337016574585636,,6,compared,0
+False,724,alpaca,False,38,,BASTION (adaptive),791,bastion,Qwen/Qwen3-4B,0.052486187845303865,warm,6,compared,0
+False,371,alpaca,False,63,,DFlash,326,dflash,Qwen/Qwen3-4B,0.16981132075471697,,7,compared,0
+False,371,alpaca,False,63,,BASTION (adaptive),377,bastion,Qwen/Qwen3-4B,0.16981132075471697,warm,7,compared,0
+False,38,alpaca,True,,,DFlash,38,dflash,Qwen/Qwen3-4B,1.0,,8,compared,0
+False,38,alpaca,True,,,BASTION (adaptive),38,bastion,Qwen/Qwen3-4B,1.0,warm,8,compared,0
+False,122,alpaca,True,,,DFlash,122,dflash,Qwen/Qwen3-4B,1.0,,9,compared,0
+False,122,alpaca,True,,,BASTION (adaptive),122,bastion,Qwen/Qwen3-4B,1.0,warm,9,compared,0
+False,893,alpaca,False,18,,DFlash,709,dflash,Qwen/Qwen3-4B,0.020156774916013438,,10,compared,0
+False,893,alpaca,False,95,,BASTION (adaptive),890,bastion,Qwen/Qwen3-4B,0.10638297872340426,warm,10,compared,0
+False,137,alpaca,False,23,,DFlash,142,dflash,Qwen/Qwen3-4B,0.1678832116788321,,11,compared,0
+False,137,alpaca,False,23,,BASTION (adaptive),142,bastion,Qwen/Qwen3-4B,0.1678832116788321,warm,11,compared,0
+False,770,alpaca,False,65,,DFlash,726,dflash,Qwen/Qwen3-4B,0.08441558441558442,,12,compared,0
+False,770,alpaca,False,39,,BASTION (adaptive),743,bastion,Qwen/Qwen3-4B,0.05064935064935065,warm,12,compared,0
+False,110,alpaca,False,6,,DFlash,47,dflash,Qwen/Qwen3-4B,0.05454545454545454,,13,compared,0
+False,110,alpaca,False,6,,BASTION (adaptive),47,bastion,Qwen/Qwen3-4B,0.05454545454545454,warm,13,compared,0
+False,63,alpaca,True,,,DFlash,63,dflash,Qwen/Qwen3-4B,1.0,,14,compared,0
+False,63,alpaca,True,,,BASTION (adaptive),63,bastion,Qwen/Qwen3-4B,1.0,warm,14,compared,0
+False,64,alpaca,False,28,,DFlash,77,dflash,Qwen/Qwen3-4B,0.4375,,15,compared,0
+False,64,alpaca,False,28,,BASTION (adaptive),71,bastion,Qwen/Qwen3-4B,0.4375,warm,15,compared,0
+False,461,alpaca,False,143,,DFlash,455,dflash,Qwen/Qwen3-4B,0.31019522776572667,,16,compared,0
+False,461,alpaca,False,143,,BASTION (adaptive),457,bastion,Qwen/Qwen3-4B,0.31019522776572667,warm,16,compared,0
+False,129,alpaca,True,,,DFlash,129,dflash,Qwen/Qwen3-4B,1.0,,17,compared,0
+False,129,alpaca,True,,,BASTION (adaptive),129,bastion,Qwen/Qwen3-4B,1.0,warm,17,compared,0
+False,927,alpaca,False,52,,DFlash,873,dflash,Qwen/Qwen3-4B,0.05609492988133765,,18,compared,0
+False,927,alpaca,False,44,,BASTION (adaptive),932,bastion,Qwen/Qwen3-4B,0.04746494066882417,warm,18,compared,0
+False,58,alpaca,True,,,DFlash,58,dflash,Qwen/Qwen3-4B,1.0,,19,compared,0
+False,58,alpaca,True,,,BASTION (adaptive),58,bastion,Qwen/Qwen3-4B,1.0,warm,19,compared,0
+False,133,alpaca,False,37,,DFlash,145,dflash,Qwen/Qwen3-4B,0.2781954887218045,,20,compared,0
+False,133,alpaca,False,33,,BASTION (adaptive),155,bastion,Qwen/Qwen3-4B,0.24812030075187969,warm,20,compared,0
+False,138,alpaca,False,45,,DFlash,134,dflash,Qwen/Qwen3-4B,0.32608695652173914,,21,compared,0
+False,138,alpaca,False,33,,BASTION (adaptive),124,bastion,Qwen/Qwen3-4B,0.2391304347826087,warm,21,compared,0
+False,277,alpaca,True,,,DFlash,277,dflash,Qwen/Qwen3-4B,1.0,,22,compared,0
+False,277,alpaca,False,5,,BASTION (adaptive),318,bastion,Qwen/Qwen3-4B,0.018050541516245487,warm,22,compared,0
+False,142,alpaca,False,76,,DFlash,157,dflash,Qwen/Qwen3-4B,0.5352112676056338,,23,compared,0
+False,142,alpaca,True,,,BASTION (adaptive),142,bastion,Qwen/Qwen3-4B,1.0,warm,23,compared,0
+False,871,alpaca,False,20,,DFlash,890,dflash,Qwen/Qwen3-4B,0.022962112514351322,,24,compared,0
+False,871,alpaca,False,52,,BASTION (adaptive),942,bastion,Qwen/Qwen3-4B,0.05970149253731343,warm,24,compared,0
+False,275,alpaca,False,236,,DFlash,275,dflash,Qwen/Qwen3-4B,0.8581818181818182,,25,compared,0
+False,275,alpaca,False,35,,BASTION (adaptive),273,bastion,Qwen/Qwen3-4B,0.12727272727272726,warm,25,compared,0
+False,766,alpaca,False,93,,DFlash,775,dflash,Qwen/Qwen3-4B,0.12140992167101827,,26,compared,0
+False,766,alpaca,False,142,,BASTION (adaptive),805,bastion,Qwen/Qwen3-4B,0.185378590078329,warm,26,compared,0
+False,876,alpaca,False,30,,DFlash,1130,dflash,Qwen/Qwen3-4B,0.03424657534246575,,27,compared,0
+False,876,alpaca,False,399,,BASTION (adaptive),828,bastion,Qwen/Qwen3-4B,0.4554794520547945,warm,27,compared,0
+False,43,alpaca,True,,,DFlash,43,dflash,Qwen/Qwen3-4B,1.0,,28,compared,0
+False,43,alpaca,False,13,,BASTION (adaptive),44,bastion,Qwen/Qwen3-4B,0.3023255813953488,warm,28,compared,0
+False,420,alpaca,False,311,,DFlash,445,dflash,Qwen/Qwen3-4B,0.7404761904761905,,29,compared,0
+False,420,alpaca,False,27,,BASTION (adaptive),365,bastion,Qwen/Qwen3-4B,0.06428571428571428,warm,29,compared,0
+False,1176,alpaca,False,22,,DFlash,1140,dflash,Qwen/Qwen3-4B,0.01870748299319728,,30,compared,0
+False,1176,alpaca,False,83,,BASTION (adaptive),1419,bastion,Qwen/Qwen3-4B,0.070578231292517,warm,30,compared,0
+False,213,alpaca,False,123,,DFlash,218,dflash,Qwen/Qwen3-4B,0.5774647887323944,,31,compared,0
+False,213,alpaca,False,16,,BASTION (adaptive),325,bastion,Qwen/Qwen3-4B,0.07511737089201878,warm,31,compared,0
+False,90,alpaca,False,39,,DFlash,110,dflash,Qwen/Qwen3-4B,0.43333333333333335,,32,compared,0
+False,90,alpaca,False,39,,BASTION (adaptive),110,bastion,Qwen/Qwen3-4B,0.43333333333333335,warm,32,compared,0
+False,9,alpaca,True,,,DFlash,9,dflash,Qwen/Qwen3-4B,1.0,,33,compared,0
+False,9,alpaca,True,,,BASTION (adaptive),9,bastion,Qwen/Qwen3-4B,1.0,warm,33,compared,0
+False,67,alpaca,True,,,DFlash,67,dflash,Qwen/Qwen3-4B,1.0,,34,compared,0
+False,67,alpaca,True,,,BASTION (adaptive),67,bastion,Qwen/Qwen3-4B,1.0,warm,34,compared,0
+False,180,alpaca,False,77,,DFlash,183,dflash,Qwen/Qwen3-4B,0.42777777777777776,,35,compared,0
+False,180,alpaca,False,85,,BASTION (adaptive),183,bastion,Qwen/Qwen3-4B,0.4722222222222222,warm,35,compared,0
+False,95,alpaca,False,30,,DFlash,109,dflash,Qwen/Qwen3-4B,0.3157894736842105,,36,compared,0
+False,95,alpaca,False,39,,BASTION (adaptive),109,bastion,Qwen/Qwen3-4B,0.4105263157894737,warm,36,compared,0
+False,667,alpaca,False,203,,DFlash,672,dflash,Qwen/Qwen3-4B,0.30434782608695654,,37,compared,0
+False,667,alpaca,False,29,,BASTION (adaptive),654,bastion,Qwen/Qwen3-4B,0.043478260869565216,warm,37,compared,0
+False,132,alpaca,False,68,,DFlash,132,dflash,Qwen/Qwen3-4B,0.5151515151515151,,38,compared,0
+False,132,alpaca,True,,,BASTION (adaptive),132,bastion,Qwen/Qwen3-4B,1.0,warm,38,compared,0
+False,14,alpaca,True,,,DFlash,14,dflash,Qwen/Qwen3-4B,1.0,,39,compared,0
+False,14,alpaca,True,,,BASTION (adaptive),14,bastion,Qwen/Qwen3-4B,1.0,warm,39,compared,0
+False,481,alpaca,False,175,,DFlash,494,dflash,Qwen/Qwen3-4B,0.36382536382536385,,40,compared,0
+False,481,alpaca,False,62,,BASTION (adaptive),571,bastion,Qwen/Qwen3-4B,0.1288981288981289,warm,40,compared,0
+False,699,alpaca,False,70,,DFlash,684,dflash,Qwen/Qwen3-4B,0.10014306151645208,,41,compared,0
+False,699,alpaca,False,70,,BASTION (adaptive),700,bastion,Qwen/Qwen3-4B,0.10014306151645208,warm,41,compared,0
+False,40,alpaca,True,,,DFlash,40,dflash,Qwen/Qwen3-4B,1.0,,42,compared,0
+False,40,alpaca,True,,,BASTION (adaptive),40,bastion,Qwen/Qwen3-4B,1.0,warm,42,compared,0
+False,154,alpaca,True,,,DFlash,154,dflash,Qwen/Qwen3-4B,1.0,,43,compared,0
+False,154,alpaca,False,103,,BASTION (adaptive),160,bastion,Qwen/Qwen3-4B,0.6688311688311688,warm,43,compared,0
+False,134,alpaca,False,97,,DFlash,128,dflash,Qwen/Qwen3-4B,0.7238805970149254,,44,compared,0
+False,134,alpaca,True,,,BASTION (adaptive),134,bastion,Qwen/Qwen3-4B,1.0,warm,44,compared,0
+False,538,alpaca,False,24,,DFlash,546,dflash,Qwen/Qwen3-4B,0.04460966542750929,,45,compared,0
+False,538,alpaca,False,24,,BASTION (adaptive),561,bastion,Qwen/Qwen3-4B,0.04460966542750929,warm,45,compared,0
+False,1074,alpaca,False,59,,DFlash,969,dflash,Qwen/Qwen3-4B,0.05493482309124767,,46,compared,0
+False,1074,alpaca,False,274,,BASTION (adaptive),1093,bastion,Qwen/Qwen3-4B,0.25512104283054005,warm,46,compared,0
+False,498,alpaca,False,35,,DFlash,392,dflash,Qwen/Qwen3-4B,0.07028112449799197,,47,compared,0
+False,498,alpaca,False,46,,BASTION (adaptive),508,bastion,Qwen/Qwen3-4B,0.09236947791164658,warm,47,compared,0
+False,878,alpaca,False,34,,DFlash,1411,dflash,Qwen/Qwen3-4B,0.0387243735763098,,48,compared,0
+False,878,alpaca,False,246,,BASTION (adaptive),1143,bastion,Qwen/Qwen3-4B,0.28018223234624146,warm,48,compared,0
+False,711,alpaca,False,63,,DFlash,807,dflash,Qwen/Qwen3-4B,0.08860759493670886,,49,compared,0
+False,711,alpaca,False,164,,BASTION (adaptive),680,bastion,Qwen/Qwen3-4B,0.23066104078762306,warm,49,compared,0
+False,60,alpaca,True,,,DFlash,60,dflash,Qwen/Qwen3-4B,1.0,,50,compared,0
+False,60,alpaca,True,,,BASTION (adaptive),60,bastion,Qwen/Qwen3-4B,1.0,warm,50,compared,0
+False,111,alpaca,False,40,,DFlash,103,dflash,Qwen/Qwen3-4B,0.36036036036036034,,51,compared,0
+False,111,alpaca,False,35,,BASTION (adaptive),90,bastion,Qwen/Qwen3-4B,0.3153153153153153,warm,51,compared,0
+False,22,alpaca,True,,,DFlash,22,dflash,Qwen/Qwen3-4B,1.0,,52,compared,0
+False,22,alpaca,True,,,BASTION (adaptive),22,bastion,Qwen/Qwen3-4B,1.0,warm,52,compared,0
+False,737,alpaca,False,19,,DFlash,609,dflash,Qwen/Qwen3-4B,0.025780189959294438,,53,compared,0
+False,737,alpaca,False,166,,BASTION (adaptive),787,bastion,Qwen/Qwen3-4B,0.22523744911804613,warm,53,compared,0
+False,55,alpaca,True,,,DFlash,55,dflash,Qwen/Qwen3-4B,1.0,,54,compared,0
+False,55,alpaca,True,,,BASTION (adaptive),55,bastion,Qwen/Qwen3-4B,1.0,warm,54,compared,0
+False,272,alpaca,True,,,DFlash,272,dflash,Qwen/Qwen3-4B,1.0,,55,compared,0
+False,272,alpaca,False,269,,BASTION (adaptive),271,bastion,Qwen/Qwen3-4B,0.9889705882352942,warm,55,compared,0
+False,250,alpaca,False,100,,DFlash,257,dflash,Qwen/Qwen3-4B,0.4,,56,compared,0
+False,250,alpaca,True,,,BASTION (adaptive),250,bastion,Qwen/Qwen3-4B,1.0,warm,56,compared,0
+False,162,alpaca,False,129,,DFlash,176,dflash,Qwen/Qwen3-4B,0.7962962962962963,,57,compared,0
+False,162,alpaca,False,121,,BASTION (adaptive),149,bastion,Qwen/Qwen3-4B,0.7469135802469136,warm,57,compared,0
+False,1111,alpaca,False,227,,DFlash,1265,dflash,Qwen/Qwen3-4B,0.20432043204320433,,58,compared,0
+False,1111,alpaca,False,325,,BASTION (adaptive),1293,bastion,Qwen/Qwen3-4B,0.2925292529252925,warm,58,compared,0
+False,150,alpaca,False,73,,DFlash,147,dflash,Qwen/Qwen3-4B,0.4866666666666667,,59,compared,0
+False,150,alpaca,False,117,,BASTION (adaptive),148,bastion,Qwen/Qwen3-4B,0.78,warm,59,compared,0
+False,176,alpaca,True,,,DFlash,176,dflash,Qwen/Qwen3-4B,1.0,,60,compared,0
+False,176,alpaca,True,,,BASTION (adaptive),176,bastion,Qwen/Qwen3-4B,1.0,warm,60,compared,0
+False,1335,alpaca,False,5,,DFlash,1032,dflash,Qwen/Qwen3-4B,0.003745318352059925,,61,compared,0
+False,1335,alpaca,False,14,,BASTION (adaptive),1415,bastion,Qwen/Qwen3-4B,0.010486891385767791,warm,61,compared,0
+False,746,alpaca,False,101,,DFlash,904,dflash,Qwen/Qwen3-4B,0.1353887399463807,,62,compared,0
+False,746,alpaca,False,101,,BASTION (adaptive),882,bastion,Qwen/Qwen3-4B,0.1353887399463807,warm,62,compared,0
+False,734,alpaca,False,213,,DFlash,831,dflash,Qwen/Qwen3-4B,0.2901907356948229,,63,compared,0
+False,734,alpaca,True,,,BASTION (adaptive),734,bastion,Qwen/Qwen3-4B,1.0,warm,63,compared,0
+False,246,gsm8k,False,58,,DFlash,245,dflash,Qwen/Qwen3-8B,0.23577235772357724,,0,compared,0
+False,246,gsm8k,False,58,,BASTION (adaptive),245,bastion,Qwen/Qwen3-8B,0.23577235772357724,warm,0,compared,0
+False,195,gsm8k,True,,,DFlash,195,dflash,Qwen/Qwen3-8B,1.0,,1,compared,0
+False,195,gsm8k,False,9,,BASTION (adaptive),202,bastion,Qwen/Qwen3-8B,0.046153846153846156,warm,1,compared,0
+False,204,gsm8k,False,34,,DFlash,203,dflash,Qwen/Qwen3-8B,0.16666666666666666,,2,compared,0
+False,204,gsm8k,True,,,BASTION (adaptive),204,bastion,Qwen/Qwen3-8B,1.0,warm,2,compared,0
+False,426,gsm8k,False,99,,DFlash,580,dflash,Qwen/Qwen3-8B,0.2323943661971831,,3,compared,0
+False,426,gsm8k,False,99,,BASTION (adaptive),420,bastion,Qwen/Qwen3-8B,0.2323943661971831,warm,3,compared,0
+False,323,gsm8k,True,,,DFlash,323,dflash,Qwen/Qwen3-8B,1.0,,4,compared,0
+False,323,gsm8k,True,,,BASTION (adaptive),323,bastion,Qwen/Qwen3-8B,1.0,warm,4,compared,0
+False,152,gsm8k,True,,,DFlash,152,dflash,Qwen/Qwen3-8B,1.0,,5,compared,0
+False,152,gsm8k,True,,,BASTION (adaptive),152,bastion,Qwen/Qwen3-8B,1.0,warm,5,compared,0
+False,331,gsm8k,False,316,,DFlash,331,dflash,Qwen/Qwen3-8B,0.9546827794561934,,6,compared,0
+False,331,gsm8k,False,72,,BASTION (adaptive),331,bastion,Qwen/Qwen3-8B,0.2175226586102719,warm,6,compared,0
+False,241,gsm8k,False,240,,DFlash,245,dflash,Qwen/Qwen3-8B,0.995850622406639,,7,compared,0
+False,241,gsm8k,False,240,,BASTION (adaptive),245,bastion,Qwen/Qwen3-8B,0.995850622406639,warm,7,compared,0
+False,303,gsm8k,True,,,DFlash,303,dflash,Qwen/Qwen3-8B,1.0,,8,compared,0
+False,303,gsm8k,False,238,,BASTION (adaptive),303,bastion,Qwen/Qwen3-8B,0.7854785478547854,warm,8,compared,0
+False,272,gsm8k,False,87,,DFlash,277,dflash,Qwen/Qwen3-8B,0.31985294117647056,,9,compared,0
+False,272,gsm8k,False,61,,BASTION (adaptive),267,bastion,Qwen/Qwen3-8B,0.22426470588235295,warm,9,compared,0
+False,222,gsm8k,False,4,,DFlash,205,dflash,Qwen/Qwen3-8B,0.018018018018018018,,10,compared,0
+False,222,gsm8k,True,,,BASTION (adaptive),222,bastion,Qwen/Qwen3-8B,1.0,warm,10,compared,0
+False,168,gsm8k,True,,,DFlash,168,dflash,Qwen/Qwen3-8B,1.0,,11,compared,0
+False,168,gsm8k,True,,,BASTION (adaptive),168,bastion,Qwen/Qwen3-8B,1.0,warm,11,compared,0
+False,381,gsm8k,False,314,,DFlash,381,dflash,Qwen/Qwen3-8B,0.8241469816272966,,12,compared,0
+False,381,gsm8k,False,314,,BASTION (adaptive),381,bastion,Qwen/Qwen3-8B,0.8241469816272966,warm,12,compared,0
+False,175,gsm8k,False,51,,DFlash,190,dflash,Qwen/Qwen3-8B,0.2914285714285714,,13,compared,0
+False,175,gsm8k,False,56,,BASTION (adaptive),174,bastion,Qwen/Qwen3-8B,0.32,warm,13,compared,0
+False,356,gsm8k,False,124,,DFlash,345,dflash,Qwen/Qwen3-8B,0.34831460674157305,,14,compared,0
+False,356,gsm8k,False,216,,BASTION (adaptive),360,bastion,Qwen/Qwen3-8B,0.6067415730337079,warm,14,compared,0
+False,265,gsm8k,False,3,,DFlash,246,dflash,Qwen/Qwen3-8B,0.011320754716981131,,15,compared,0
+False,265,gsm8k,False,23,,BASTION (adaptive),246,bastion,Qwen/Qwen3-8B,0.08679245283018867,warm,15,compared,0
+False,227,gsm8k,True,,,DFlash,227,dflash,Qwen/Qwen3-8B,1.0,,16,compared,0
+False,227,gsm8k,True,,,BASTION (adaptive),227,bastion,Qwen/Qwen3-8B,1.0,warm,16,compared,0
+False,445,gsm8k,False,347,,DFlash,442,dflash,Qwen/Qwen3-8B,0.7797752808988764,,17,compared,0
+False,445,gsm8k,True,,,BASTION (adaptive),445,bastion,Qwen/Qwen3-8B,1.0,warm,17,compared,0
+False,360,gsm8k,False,120,,DFlash,396,dflash,Qwen/Qwen3-8B,0.3333333333333333,,18,compared,0
+False,360,gsm8k,False,15,,BASTION (adaptive),359,bastion,Qwen/Qwen3-8B,0.041666666666666664,warm,18,compared,0
+False,339,gsm8k,True,,,DFlash,339,dflash,Qwen/Qwen3-8B,1.0,,19,compared,0
+False,339,gsm8k,True,,,BASTION (adaptive),339,bastion,Qwen/Qwen3-8B,1.0,warm,19,compared,0
+False,433,gsm8k,False,254,,DFlash,438,dflash,Qwen/Qwen3-8B,0.5866050808314087,,20,compared,0
+False,433,gsm8k,False,254,,BASTION (adaptive),442,bastion,Qwen/Qwen3-8B,0.5866050808314087,warm,20,compared,0
+False,241,gsm8k,True,,,DFlash,241,dflash,Qwen/Qwen3-8B,1.0,,21,compared,0
+False,241,gsm8k,True,,,BASTION (adaptive),241,bastion,Qwen/Qwen3-8B,1.0,warm,21,compared,0
+False,249,gsm8k,False,235,,DFlash,255,dflash,Qwen/Qwen3-8B,0.9437751004016064,,22,compared,0
+False,249,gsm8k,False,214,,BASTION (adaptive),256,bastion,Qwen/Qwen3-8B,0.8594377510040161,warm,22,compared,0
+False,405,gsm8k,True,,,DFlash,405,dflash,Qwen/Qwen3-8B,1.0,,23,compared,0
+False,405,gsm8k,True,,,BASTION (adaptive),405,bastion,Qwen/Qwen3-8B,1.0,warm,23,compared,0
+False,310,gsm8k,False,22,,DFlash,277,dflash,Qwen/Qwen3-8B,0.07096774193548387,,24,compared,0
+False,310,gsm8k,False,263,,BASTION (adaptive),310,bastion,Qwen/Qwen3-8B,0.8483870967741935,warm,24,compared,0
+False,253,gsm8k,False,3,,DFlash,247,dflash,Qwen/Qwen3-8B,0.011857707509881422,,25,compared,0
+False,253,gsm8k,False,3,,BASTION (adaptive),260,bastion,Qwen/Qwen3-8B,0.011857707509881422,warm,25,compared,0
+False,230,gsm8k,True,,,DFlash,230,dflash,Qwen/Qwen3-8B,1.0,,26,compared,0
+False,230,gsm8k,False,49,,BASTION (adaptive),223,bastion,Qwen/Qwen3-8B,0.21304347826086956,warm,26,compared,0
+False,231,gsm8k,False,39,,DFlash,236,dflash,Qwen/Qwen3-8B,0.16883116883116883,,27,compared,0
+False,231,gsm8k,False,42,,BASTION (adaptive),216,bastion,Qwen/Qwen3-8B,0.18181818181818182,warm,27,compared,0
+False,218,gsm8k,False,115,,DFlash,230,dflash,Qwen/Qwen3-8B,0.5275229357798165,,28,compared,0
+False,218,gsm8k,False,115,,BASTION (adaptive),230,bastion,Qwen/Qwen3-8B,0.5275229357798165,warm,28,compared,0
+False,562,gsm8k,False,223,,DFlash,566,dflash,Qwen/Qwen3-8B,0.39679715302491103,,29,compared,0
+False,562,gsm8k,False,457,,BASTION (adaptive),540,bastion,Qwen/Qwen3-8B,0.8131672597864769,warm,29,compared,0
+False,364,gsm8k,False,128,,DFlash,364,dflash,Qwen/Qwen3-8B,0.3516483516483517,,30,compared,0
+False,364,gsm8k,False,57,,BASTION (adaptive),348,bastion,Qwen/Qwen3-8B,0.1565934065934066,warm,30,compared,0
+False,280,gsm8k,False,210,,DFlash,281,dflash,Qwen/Qwen3-8B,0.75,,31,compared,0
+False,280,gsm8k,True,,,BASTION (adaptive),280,bastion,Qwen/Qwen3-8B,1.0,warm,31,compared,0
+False,316,gsm8k,True,,,DFlash,316,dflash,Qwen/Qwen3-8B,1.0,,32,compared,0
+False,316,gsm8k,True,,,BASTION (adaptive),316,bastion,Qwen/Qwen3-8B,1.0,warm,32,compared,0
+False,184,gsm8k,True,,,DFlash,184,dflash,Qwen/Qwen3-8B,1.0,,33,compared,0
+False,184,gsm8k,True,,,BASTION (adaptive),184,bastion,Qwen/Qwen3-8B,1.0,warm,33,compared,0
+False,343,gsm8k,False,291,,DFlash,344,dflash,Qwen/Qwen3-8B,0.8483965014577259,,34,compared,0
+False,343,gsm8k,False,291,,BASTION (adaptive),344,bastion,Qwen/Qwen3-8B,0.8483965014577259,warm,34,compared,0
+False,496,gsm8k,False,8,,DFlash,472,dflash,Qwen/Qwen3-8B,0.016129032258064516,,35,compared,0
+False,496,gsm8k,False,357,,BASTION (adaptive),478,bastion,Qwen/Qwen3-8B,0.719758064516129,warm,35,compared,0
+False,299,gsm8k,False,161,,DFlash,303,dflash,Qwen/Qwen3-8B,0.5384615384615384,,36,compared,0
+False,299,gsm8k,False,8,,BASTION (adaptive),243,bastion,Qwen/Qwen3-8B,0.026755852842809364,warm,36,compared,0
+False,200,gsm8k,False,8,,DFlash,197,dflash,Qwen/Qwen3-8B,0.04,,37,compared,0
+False,200,gsm8k,True,,,BASTION (adaptive),200,bastion,Qwen/Qwen3-8B,1.0,warm,37,compared,0
+False,278,gsm8k,False,182,,DFlash,249,dflash,Qwen/Qwen3-8B,0.6546762589928058,,38,compared,0
+False,278,gsm8k,False,182,,BASTION (adaptive),249,bastion,Qwen/Qwen3-8B,0.6546762589928058,warm,38,compared,0
+False,331,gsm8k,True,,,DFlash,331,dflash,Qwen/Qwen3-8B,1.0,,39,compared,0
+False,331,gsm8k,True,,,BASTION (adaptive),331,bastion,Qwen/Qwen3-8B,1.0,warm,39,compared,0
+False,263,gsm8k,False,91,,DFlash,268,dflash,Qwen/Qwen3-8B,0.34600760456273766,,40,compared,0
+False,263,gsm8k,True,,,BASTION (adaptive),263,bastion,Qwen/Qwen3-8B,1.0,warm,40,compared,0
+False,396,gsm8k,True,,,DFlash,396,dflash,Qwen/Qwen3-8B,1.0,,41,compared,0
+False,396,gsm8k,False,5,,BASTION (adaptive),458,bastion,Qwen/Qwen3-8B,0.012626262626262626,warm,41,compared,0
+False,284,gsm8k,False,33,,DFlash,287,dflash,Qwen/Qwen3-8B,0.11619718309859155,,42,compared,0
+False,284,gsm8k,False,169,,BASTION (adaptive),266,bastion,Qwen/Qwen3-8B,0.5950704225352113,warm,42,compared,0
+False,210,gsm8k,False,20,,DFlash,251,dflash,Qwen/Qwen3-8B,0.09523809523809523,,43,compared,0
+False,210,gsm8k,False,20,,BASTION (adaptive),251,bastion,Qwen/Qwen3-8B,0.09523809523809523,warm,43,compared,0
+False,316,gsm8k,False,235,,DFlash,284,dflash,Qwen/Qwen3-8B,0.7436708860759493,,44,compared,0
+False,316,gsm8k,False,2,,BASTION (adaptive),319,bastion,Qwen/Qwen3-8B,0.006329113924050633,warm,44,compared,0
+False,163,gsm8k,True,,,DFlash,163,dflash,Qwen/Qwen3-8B,1.0,,45,compared,0
+False,163,gsm8k,False,43,,BASTION (adaptive),171,bastion,Qwen/Qwen3-8B,0.26380368098159507,warm,45,compared,0
+False,510,gsm8k,False,104,,DFlash,406,dflash,Qwen/Qwen3-8B,0.20392156862745098,,46,compared,0
+False,510,gsm8k,False,104,,BASTION (adaptive),406,bastion,Qwen/Qwen3-8B,0.20392156862745098,warm,46,compared,0
+False,229,gsm8k,True,,,DFlash,229,dflash,Qwen/Qwen3-8B,1.0,,47,compared,0
+False,229,gsm8k,True,,,BASTION (adaptive),229,bastion,Qwen/Qwen3-8B,1.0,warm,47,compared,0
+False,239,gsm8k,False,18,,DFlash,245,dflash,Qwen/Qwen3-8B,0.07531380753138076,,48,compared,0
+False,239,gsm8k,False,18,,BASTION (adaptive),239,bastion,Qwen/Qwen3-8B,0.07531380753138076,warm,48,compared,0
+False,298,gsm8k,True,,,DFlash,298,dflash,Qwen/Qwen3-8B,1.0,,49,compared,0
+False,298,gsm8k,False,174,,BASTION (adaptive),300,bastion,Qwen/Qwen3-8B,0.5838926174496645,warm,49,compared,0
+False,522,gsm8k,False,497,,DFlash,522,dflash,Qwen/Qwen3-8B,0.9521072796934866,,50,compared,0
+False,522,gsm8k,False,507,,BASTION (adaptive),515,bastion,Qwen/Qwen3-8B,0.9712643678160919,warm,50,compared,0
+False,591,gsm8k,False,77,,DFlash,593,dflash,Qwen/Qwen3-8B,0.13028764805414553,,51,compared,0
+False,591,gsm8k,False,46,,BASTION (adaptive),580,bastion,Qwen/Qwen3-8B,0.077834179357022,warm,51,compared,0
+False,402,gsm8k,False,21,,DFlash,398,dflash,Qwen/Qwen3-8B,0.05223880597014925,,52,compared,0
+False,402,gsm8k,False,21,,BASTION (adaptive),398,bastion,Qwen/Qwen3-8B,0.05223880597014925,warm,52,compared,0
+False,279,gsm8k,False,273,,DFlash,276,dflash,Qwen/Qwen3-8B,0.978494623655914,,53,compared,0
+False,279,gsm8k,False,273,,BASTION (adaptive),276,bastion,Qwen/Qwen3-8B,0.978494623655914,warm,53,compared,0
+False,273,gsm8k,False,3,,DFlash,324,dflash,Qwen/Qwen3-8B,0.01098901098901099,,54,compared,0
+False,273,gsm8k,False,3,,BASTION (adaptive),327,bastion,Qwen/Qwen3-8B,0.01098901098901099,warm,54,compared,0
+False,163,gsm8k,True,,,DFlash,163,dflash,Qwen/Qwen3-8B,1.0,,55,compared,0
+False,163,gsm8k,True,,,BASTION (adaptive),163,bastion,Qwen/Qwen3-8B,1.0,warm,55,compared,0
+False,257,gsm8k,False,21,,DFlash,280,dflash,Qwen/Qwen3-8B,0.08171206225680934,,56,compared,0
+False,257,gsm8k,False,22,,BASTION (adaptive),308,bastion,Qwen/Qwen3-8B,0.08560311284046693,warm,56,compared,0
+False,219,gsm8k,True,,,DFlash,219,dflash,Qwen/Qwen3-8B,1.0,,57,compared,0
+False,219,gsm8k,True,,,BASTION (adaptive),219,bastion,Qwen/Qwen3-8B,1.0,warm,57,compared,0
+False,257,gsm8k,True,,,DFlash,257,dflash,Qwen/Qwen3-8B,1.0,,58,compared,0
+False,257,gsm8k,False,239,,BASTION (adaptive),259,bastion,Qwen/Qwen3-8B,0.9299610894941635,warm,58,compared,0
+False,245,gsm8k,True,,,DFlash,245,dflash,Qwen/Qwen3-8B,1.0,,59,compared,0
+False,245,gsm8k,True,,,BASTION (adaptive),245,bastion,Qwen/Qwen3-8B,1.0,warm,59,compared,0
+False,178,gsm8k,True,,,DFlash,178,dflash,Qwen/Qwen3-8B,1.0,,60,compared,0
+False,178,gsm8k,True,,,BASTION (adaptive),178,bastion,Qwen/Qwen3-8B,1.0,warm,60,compared,0
+False,430,gsm8k,False,188,,DFlash,428,dflash,Qwen/Qwen3-8B,0.4372093023255814,,61,compared,0
+False,430,gsm8k,False,331,,BASTION (adaptive),399,bastion,Qwen/Qwen3-8B,0.7697674418604651,warm,61,compared,0
+False,265,gsm8k,False,5,,DFlash,297,dflash,Qwen/Qwen3-8B,0.018867924528301886,,62,compared,0
+False,265,gsm8k,False,5,,BASTION (adaptive),303,bastion,Qwen/Qwen3-8B,0.018867924528301886,warm,62,compared,0
+False,335,gsm8k,True,,,DFlash,335,dflash,Qwen/Qwen3-8B,1.0,,63,compared,0
+False,335,gsm8k,False,33,,BASTION (adaptive),373,bastion,Qwen/Qwen3-8B,0.09850746268656717,warm,63,compared,0
+False,1500,math500,False,177,,DFlash,1496,dflash,Qwen/Qwen3-8B,0.118,,0,compared,0
+False,1500,math500,False,177,,BASTION (adaptive),1656,bastion,Qwen/Qwen3-8B,0.118,warm,0,compared,0
+False,832,math500,False,18,,DFlash,796,dflash,Qwen/Qwen3-8B,0.021634615384615384,,1,compared,0
+False,832,math500,False,103,,BASTION (adaptive),888,bastion,Qwen/Qwen3-8B,0.12379807692307693,warm,1,compared,0
+False,846,math500,False,196,,DFlash,990,dflash,Qwen/Qwen3-8B,0.23167848699763594,,2,compared,0
+False,846,math500,False,163,,BASTION (adaptive),1248,bastion,Qwen/Qwen3-8B,0.19267139479905437,warm,2,compared,0
+False,1404,math500,False,61,,DFlash,1273,dflash,Qwen/Qwen3-8B,0.04344729344729345,,3,compared,0
+False,1404,math500,False,165,,BASTION (adaptive),1214,bastion,Qwen/Qwen3-8B,0.11752136752136752,warm,3,compared,0
+False,318,math500,False,90,,DFlash,340,dflash,Qwen/Qwen3-8B,0.2830188679245283,,4,compared,0
+False,318,math500,False,277,,BASTION (adaptive),367,bastion,Qwen/Qwen3-8B,0.8710691823899371,warm,4,compared,0
+False,548,math500,False,24,,DFlash,526,dflash,Qwen/Qwen3-8B,0.043795620437956206,,5,compared,0
+False,548,math500,False,24,,BASTION (adaptive),509,bastion,Qwen/Qwen3-8B,0.043795620437956206,warm,5,compared,0
+False,788,math500,False,3,,DFlash,784,dflash,Qwen/Qwen3-8B,0.0038071065989847717,,6,compared,0
+False,788,math500,False,109,,BASTION (adaptive),771,bastion,Qwen/Qwen3-8B,0.1383248730964467,warm,6,compared,0
+False,206,math500,True,,,DFlash,206,dflash,Qwen/Qwen3-8B,1.0,,7,compared,0
+False,206,math500,False,114,,BASTION (adaptive),188,bastion,Qwen/Qwen3-8B,0.5533980582524272,warm,7,compared,0
+False,376,math500,True,,,DFlash,376,dflash,Qwen/Qwen3-8B,1.0,,8,compared,0
+False,376,math500,True,,,BASTION (adaptive),376,bastion,Qwen/Qwen3-8B,1.0,warm,8,compared,0
+True,2048,math500,False,3,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.00146484375,,9,compared,0
+True,2048,math500,False,282,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.1376953125,warm,9,compared,0
+False,861,math500,False,93,,DFlash,853,dflash,Qwen/Qwen3-8B,0.10801393728222997,,10,compared,0
+False,861,math500,False,93,,BASTION (adaptive),828,bastion,Qwen/Qwen3-8B,0.10801393728222997,warm,10,compared,0
+False,418,math500,False,152,,DFlash,419,dflash,Qwen/Qwen3-8B,0.36363636363636365,,11,compared,0
+False,418,math500,False,152,,BASTION (adaptive),462,bastion,Qwen/Qwen3-8B,0.36363636363636365,warm,11,compared,0
+False,1342,math500,False,143,,DFlash,1122,dflash,Qwen/Qwen3-8B,0.10655737704918032,,12,compared,0
+False,1342,math500,False,143,,BASTION (adaptive),1107,bastion,Qwen/Qwen3-8B,0.10655737704918032,warm,12,compared,0
+False,772,math500,False,310,,DFlash,773,dflash,Qwen/Qwen3-8B,0.4015544041450777,,13,compared,0
+False,772,math500,False,79,,BASTION (adaptive),773,bastion,Qwen/Qwen3-8B,0.10233160621761658,warm,13,compared,0
+True,2048,math500,False,463,,DFlash,1725,dflash,Qwen/Qwen3-8B,0.22607421875,,14,compared,0
+True,2048,math500,False,463,,BASTION (adaptive),1630,bastion,Qwen/Qwen3-8B,0.22607421875,warm,14,compared,0
+False,744,math500,False,153,,DFlash,745,dflash,Qwen/Qwen3-8B,0.2056451612903226,,15,compared,0
+False,744,math500,False,61,,BASTION (adaptive),746,bastion,Qwen/Qwen3-8B,0.08198924731182795,warm,15,compared,0
+False,656,math500,False,6,,DFlash,393,dflash,Qwen/Qwen3-8B,0.009146341463414634,,16,compared,0
+False,656,math500,True,,,BASTION (adaptive),656,bastion,Qwen/Qwen3-8B,1.0,warm,16,compared,0
+False,778,math500,True,,,DFlash,778,dflash,Qwen/Qwen3-8B,1.0,,17,compared,0
+False,778,math500,False,201,,BASTION (adaptive),778,bastion,Qwen/Qwen3-8B,0.2583547557840617,warm,17,compared,0
+False,336,math500,False,269,,DFlash,314,dflash,Qwen/Qwen3-8B,0.8005952380952381,,18,compared,0
+False,336,math500,True,,,BASTION (adaptive),336,bastion,Qwen/Qwen3-8B,1.0,warm,18,compared,0
+False,732,math500,False,317,,DFlash,797,dflash,Qwen/Qwen3-8B,0.43306010928961747,,19,compared,0
+False,732,math500,False,336,,BASTION (adaptive),782,bastion,Qwen/Qwen3-8B,0.45901639344262296,warm,19,compared,0
+False,1783,math500,False,268,,DFlash,1794,dflash,Qwen/Qwen3-8B,0.15030846887268648,,20,compared,0
+False,1783,math500,False,268,,BASTION (adaptive),1788,bastion,Qwen/Qwen3-8B,0.15030846887268648,warm,20,compared,0
+True,2048,math500,False,142,,DFlash,1926,dflash,Qwen/Qwen3-8B,0.0693359375,,21,compared,0
+True,2048,math500,False,4,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.001953125,warm,21,compared,0
+False,596,math500,False,21,,DFlash,605,dflash,Qwen/Qwen3-8B,0.03523489932885906,,22,compared,0
+False,596,math500,False,74,,BASTION (adaptive),608,bastion,Qwen/Qwen3-8B,0.12416107382550336,warm,22,compared,0
+False,674,math500,False,83,,DFlash,669,dflash,Qwen/Qwen3-8B,0.12314540059347182,,23,compared,0
+False,674,math500,True,,,BASTION (adaptive),674,bastion,Qwen/Qwen3-8B,1.0,warm,23,compared,0
+False,978,math500,False,9,,DFlash,571,dflash,Qwen/Qwen3-8B,0.009202453987730062,,24,compared,0
+False,978,math500,False,149,,BASTION (adaptive),1038,bastion,Qwen/Qwen3-8B,0.1523517382413088,warm,24,compared,0
+True,2048,math500,False,134,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.0654296875,,25,compared,0
+True,2048,math500,False,187,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.09130859375,warm,25,compared,0
+True,2048,math500,False,326,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.1591796875,,26,compared,0
+True,2048,math500,False,98,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.0478515625,warm,26,compared,0
+False,470,math500,True,,,DFlash,470,dflash,Qwen/Qwen3-8B,1.0,,27,compared,0
+False,470,math500,True,,,BASTION (adaptive),470,bastion,Qwen/Qwen3-8B,1.0,warm,27,compared,0
+False,1132,math500,False,55,,DFlash,1094,dflash,Qwen/Qwen3-8B,0.04858657243816254,,28,compared,0
+False,1132,math500,False,55,,BASTION (adaptive),755,bastion,Qwen/Qwen3-8B,0.04858657243816254,warm,28,compared,0
+True,2048,math500,False,72,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.03515625,,29,compared,0
+True,2048,math500,False,102,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.0498046875,warm,29,compared,0
+False,265,math500,True,,,DFlash,265,dflash,Qwen/Qwen3-8B,1.0,,30,compared,0
+False,265,math500,True,,,BASTION (adaptive),265,bastion,Qwen/Qwen3-8B,1.0,warm,30,compared,0
+False,222,math500,True,,,DFlash,222,dflash,Qwen/Qwen3-8B,1.0,,31,compared,0
+False,222,math500,True,,,BASTION (adaptive),222,bastion,Qwen/Qwen3-8B,1.0,warm,31,compared,0
+False,340,math500,False,141,,DFlash,343,dflash,Qwen/Qwen3-8B,0.4147058823529412,,32,compared,0
+False,340,math500,False,216,,BASTION (adaptive),338,bastion,Qwen/Qwen3-8B,0.6352941176470588,warm,32,compared,0
+False,957,math500,False,121,,DFlash,919,dflash,Qwen/Qwen3-8B,0.12643678160919541,,33,compared,0
+False,957,math500,False,121,,BASTION (adaptive),1859,bastion,Qwen/Qwen3-8B,0.12643678160919541,warm,33,compared,0
+False,511,math500,True,,,DFlash,511,dflash,Qwen/Qwen3-8B,1.0,,34,compared,0
+False,511,math500,True,,,BASTION (adaptive),511,bastion,Qwen/Qwen3-8B,1.0,warm,34,compared,0
+False,1020,math500,False,181,,DFlash,1022,dflash,Qwen/Qwen3-8B,0.17745098039215687,,35,compared,0
+False,1020,math500,False,267,,BASTION (adaptive),1021,bastion,Qwen/Qwen3-8B,0.26176470588235295,warm,35,compared,0
+False,729,math500,True,,,DFlash,729,dflash,Qwen/Qwen3-8B,1.0,,36,compared,0
+False,729,math500,False,74,,BASTION (adaptive),717,bastion,Qwen/Qwen3-8B,0.10150891632373114,warm,36,compared,0
+False,218,math500,False,72,,DFlash,218,dflash,Qwen/Qwen3-8B,0.3302752293577982,,37,compared,0
+False,218,math500,True,,,BASTION (adaptive),218,bastion,Qwen/Qwen3-8B,1.0,warm,37,compared,0
+False,609,math500,False,23,,DFlash,412,dflash,Qwen/Qwen3-8B,0.03776683087027915,,38,compared,0
+False,609,math500,False,57,,BASTION (adaptive),619,bastion,Qwen/Qwen3-8B,0.09359605911330049,warm,38,compared,0
+False,739,math500,False,184,,DFlash,605,dflash,Qwen/Qwen3-8B,0.2489851150202977,,39,compared,0
+False,739,math500,False,184,,BASTION (adaptive),604,bastion,Qwen/Qwen3-8B,0.2489851150202977,warm,39,compared,0
+False,585,math500,False,93,,DFlash,528,dflash,Qwen/Qwen3-8B,0.15897435897435896,,40,compared,0
+False,585,math500,False,123,,BASTION (adaptive),586,bastion,Qwen/Qwen3-8B,0.21025641025641026,warm,40,compared,0
+False,165,math500,True,,,DFlash,165,dflash,Qwen/Qwen3-8B,1.0,,41,compared,0
+False,165,math500,True,,,BASTION (adaptive),165,bastion,Qwen/Qwen3-8B,1.0,warm,41,compared,0
+False,1259,math500,False,819,,DFlash,1265,dflash,Qwen/Qwen3-8B,0.6505162827640985,,42,compared,0
+False,1259,math500,False,779,,BASTION (adaptive),1229,bastion,Qwen/Qwen3-8B,0.6187450357426529,warm,42,compared,0
+False,458,math500,False,33,,DFlash,292,dflash,Qwen/Qwen3-8B,0.07205240174672489,,43,compared,0
+False,458,math500,False,68,,BASTION (adaptive),654,bastion,Qwen/Qwen3-8B,0.14847161572052403,warm,43,compared,0
+False,625,math500,False,65,,DFlash,919,dflash,Qwen/Qwen3-8B,0.104,,44,compared,0
+False,625,math500,False,65,,BASTION (adaptive),840,bastion,Qwen/Qwen3-8B,0.104,warm,44,compared,0
+False,307,math500,True,,,DFlash,307,dflash,Qwen/Qwen3-8B,1.0,,45,compared,0
+False,307,math500,False,187,,BASTION (adaptive),298,bastion,Qwen/Qwen3-8B,0.6091205211726385,warm,45,compared,0
+False,320,math500,False,3,,DFlash,299,dflash,Qwen/Qwen3-8B,0.009375,,46,compared,0
+False,320,math500,False,3,,BASTION (adaptive),299,bastion,Qwen/Qwen3-8B,0.009375,warm,46,compared,0
+False,525,math500,False,185,,DFlash,531,dflash,Qwen/Qwen3-8B,0.3523809523809524,,47,compared,0
+False,525,math500,False,185,,BASTION (adaptive),477,bastion,Qwen/Qwen3-8B,0.3523809523809524,warm,47,compared,0
+False,343,math500,False,140,,DFlash,300,dflash,Qwen/Qwen3-8B,0.40816326530612246,,48,compared,0
+False,343,math500,False,140,,BASTION (adaptive),300,bastion,Qwen/Qwen3-8B,0.40816326530612246,warm,48,compared,0
+False,470,math500,True,,,DFlash,470,dflash,Qwen/Qwen3-8B,1.0,,49,compared,0
+False,470,math500,True,,,BASTION (adaptive),470,bastion,Qwen/Qwen3-8B,1.0,warm,49,compared,0
+False,215,math500,True,,,DFlash,215,dflash,Qwen/Qwen3-8B,1.0,,50,compared,0
+False,215,math500,True,,,BASTION (adaptive),215,bastion,Qwen/Qwen3-8B,1.0,warm,50,compared,0
+False,387,math500,False,14,,DFlash,311,dflash,Qwen/Qwen3-8B,0.03617571059431524,,51,compared,0
+False,387,math500,False,380,,BASTION (adaptive),399,bastion,Qwen/Qwen3-8B,0.9819121447028424,warm,51,compared,0
+False,352,math500,False,14,,DFlash,392,dflash,Qwen/Qwen3-8B,0.03977272727272727,,52,compared,0
+False,352,math500,False,14,,BASTION (adaptive),388,bastion,Qwen/Qwen3-8B,0.03977272727272727,warm,52,compared,0
+False,969,math500,False,239,,DFlash,969,dflash,Qwen/Qwen3-8B,0.24664602683178535,,53,compared,0
+False,969,math500,False,9,,BASTION (adaptive),806,bastion,Qwen/Qwen3-8B,0.009287925696594427,warm,53,compared,0
+False,848,math500,False,11,,DFlash,858,dflash,Qwen/Qwen3-8B,0.012971698113207548,,54,compared,0
+False,848,math500,False,89,,BASTION (adaptive),828,bastion,Qwen/Qwen3-8B,0.10495283018867925,warm,54,compared,0
+False,958,math500,False,27,,DFlash,1316,dflash,Qwen/Qwen3-8B,0.028183716075156576,,55,compared,0
+False,958,math500,False,162,,BASTION (adaptive),1070,bastion,Qwen/Qwen3-8B,0.16910229645093947,warm,55,compared,0
+False,1492,math500,False,346,,DFlash,1268,dflash,Qwen/Qwen3-8B,0.23190348525469168,,56,compared,0
+False,1492,math500,False,346,,BASTION (adaptive),1376,bastion,Qwen/Qwen3-8B,0.23190348525469168,warm,56,compared,0
+False,266,math500,True,,,DFlash,266,dflash,Qwen/Qwen3-8B,1.0,,57,compared,0
+False,266,math500,False,179,,BASTION (adaptive),239,bastion,Qwen/Qwen3-8B,0.6729323308270677,warm,57,compared,0
+False,486,math500,False,239,,DFlash,486,dflash,Qwen/Qwen3-8B,0.49176954732510286,,58,compared,0
+False,486,math500,False,3,,BASTION (adaptive),437,bastion,Qwen/Qwen3-8B,0.006172839506172839,warm,58,compared,0
+False,582,math500,False,76,,DFlash,948,dflash,Qwen/Qwen3-8B,0.13058419243986255,,59,compared,0
+False,582,math500,False,76,,BASTION (adaptive),957,bastion,Qwen/Qwen3-8B,0.13058419243986255,warm,59,compared,0
+True,2048,math500,False,134,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.0654296875,,60,compared,0
+True,2048,math500,False,134,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.0654296875,warm,60,compared,0
+False,1682,math500,False,230,,DFlash,1682,dflash,Qwen/Qwen3-8B,0.1367419738406659,,61,compared,0
+False,1682,math500,False,96,,BASTION (adaptive),1682,bastion,Qwen/Qwen3-8B,0.057074910820451845,warm,61,compared,0
+True,2048,math500,False,62,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.0302734375,,62,compared,0
+True,2048,math500,False,62,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.0302734375,warm,62,compared,0
+False,407,math500,True,,,DFlash,407,dflash,Qwen/Qwen3-8B,1.0,,63,compared,0
+False,407,math500,True,,,BASTION (adaptive),407,bastion,Qwen/Qwen3-8B,1.0,warm,63,compared,0
+False,801,aime25,False,195,,DFlash,832,dflash,Qwen/Qwen3-8B,0.24344569288389514,,0,compared,0
+False,801,aime25,False,86,,BASTION (adaptive),774,bastion,Qwen/Qwen3-8B,0.10736579275905118,warm,0,compared,0
+True,2048,aime25,False,535,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.26123046875,,1,compared,0
+True,2048,aime25,False,360,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.17578125,warm,1,compared,0
+False,1442,aime25,False,3,,DFlash,1484,dflash,Qwen/Qwen3-8B,0.0020804438280166435,,2,compared,0
+False,1442,aime25,False,4,,BASTION (adaptive),1411,bastion,Qwen/Qwen3-8B,0.0027739251040221915,warm,2,compared,0
+False,1367,aime25,False,113,,DFlash,1389,dflash,Qwen/Qwen3-8B,0.08266276517922458,,3,compared,0
+False,1367,aime25,False,57,,BASTION (adaptive),1486,bastion,Qwen/Qwen3-8B,0.04169714703730797,warm,3,compared,0
+True,2048,aime25,False,948,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.462890625,,4,compared,0
+True,2048,aime25,False,948,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.462890625,warm,4,compared,0
+False,1324,aime25,False,28,,DFlash,1377,dflash,Qwen/Qwen3-8B,0.021148036253776436,,5,compared,0
+False,1324,aime25,False,94,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.07099697885196375,warm,5,compared,0
+True,2048,aime25,False,43,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.02099609375,,6,compared,0
+True,2048,aime25,False,383,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.18701171875,warm,6,compared,0
+False,1949,aime25,False,74,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.03796818881477681,,7,compared,0
+False,1949,aime25,False,227,,BASTION (adaptive),1789,bastion,Qwen/Qwen3-8B,0.11646998460749101,warm,7,compared,0
+True,2048,aime25,False,59,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.02880859375,,8,compared,0
+True,2048,aime25,False,152,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.07421875,warm,8,compared,0
+False,1466,aime25,False,695,,DFlash,1430,dflash,Qwen/Qwen3-8B,0.4740791268758527,,9,compared,0
+False,1466,aime25,False,414,,BASTION (adaptive),978,bastion,Qwen/Qwen3-8B,0.28240109140518416,warm,9,compared,0
+True,2048,aime25,False,94,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.0458984375,,10,compared,0
+True,2048,aime25,False,94,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.0458984375,warm,10,compared,0
+True,2048,aime25,False,256,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.125,,11,compared,0
+True,2048,aime25,False,94,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.0458984375,warm,11,compared,0
+False,1318,aime25,False,68,,DFlash,1116,dflash,Qwen/Qwen3-8B,0.051593323216995446,,12,compared,0
+False,1318,aime25,False,132,,BASTION (adaptive),774,bastion,Qwen/Qwen3-8B,0.10015174506828528,warm,12,compared,0
+True,2048,aime25,False,230,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.1123046875,,13,compared,0
+True,2048,aime25,False,54,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.0263671875,warm,13,compared,0
+True,2048,aime25,False,316,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.154296875,,14,compared,0
+True,2048,aime25,False,353,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.17236328125,warm,14,compared,0
+True,2048,aime25,False,590,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.2880859375,,15,compared,0
+True,2048,aime25,False,590,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.2880859375,warm,15,compared,0
+False,888,aime25,False,763,,DFlash,884,dflash,Qwen/Qwen3-8B,0.8592342342342343,,16,compared,0
+False,888,aime25,False,491,,BASTION (adaptive),899,bastion,Qwen/Qwen3-8B,0.5529279279279279,warm,16,compared,0
+False,931,aime25,False,156,,DFlash,1199,dflash,Qwen/Qwen3-8B,0.16756176154672395,,17,compared,0
+False,931,aime25,False,146,,BASTION (adaptive),934,bastion,Qwen/Qwen3-8B,0.15682062298603652,warm,17,compared,0
+False,1925,aime25,False,3,,DFlash,1738,dflash,Qwen/Qwen3-8B,0.0015584415584415584,,18,compared,0
+False,1925,aime25,False,3,,BASTION (adaptive),1747,bastion,Qwen/Qwen3-8B,0.0015584415584415584,warm,18,compared,0
+False,1669,aime25,False,489,,DFlash,1303,dflash,Qwen/Qwen3-8B,0.29298981426003595,,19,compared,0
+False,1669,aime25,False,373,,BASTION (adaptive),1330,bastion,Qwen/Qwen3-8B,0.22348711803475135,warm,19,compared,0
+True,2048,aime25,False,186,,DFlash,842,dflash,Qwen/Qwen3-8B,0.0908203125,,20,compared,0
+True,2048,aime25,False,274,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.1337890625,warm,20,compared,0
+True,2048,aime25,False,232,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.11328125,,21,compared,0
+True,2048,aime25,False,232,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.11328125,warm,21,compared,0
+False,1358,aime25,False,111,,DFlash,1137,dflash,Qwen/Qwen3-8B,0.0817378497790869,,22,compared,0
+False,1358,aime25,True,,,BASTION (adaptive),1358,bastion,Qwen/Qwen3-8B,1.0,warm,22,compared,0
+True,2048,aime25,False,71,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.03466796875,,23,compared,0
+True,2048,aime25,False,54,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.0263671875,warm,23,compared,0
+True,2048,aime25,False,235,,DFlash,1191,dflash,Qwen/Qwen3-8B,0.11474609375,,24,compared,0
+True,2048,aime25,False,62,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.0302734375,warm,24,compared,0
+False,1232,aime25,False,370,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.3003246753246753,,25,compared,0
+False,1232,aime25,False,44,,BASTION (adaptive),927,bastion,Qwen/Qwen3-8B,0.03571428571428571,warm,25,compared,0
+True,2048,aime25,False,23,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.01123046875,,26,compared,0
+True,2048,aime25,False,23,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.01123046875,warm,26,compared,0
+True,2048,aime25,False,165,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.08056640625,,27,compared,0
+True,2048,aime25,False,39,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.01904296875,warm,27,compared,0
+True,2048,aime25,False,163,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.07958984375,,28,compared,0
+True,2048,aime25,False,141,,BASTION (adaptive),1075,bastion,Qwen/Qwen3-8B,0.06884765625,warm,28,compared,0
+True,2048,aime25,False,192,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.09375,,29,compared,0
+True,2048,aime25,False,325,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.15869140625,warm,29,compared,0
+False,583,humaneval,False,19,,DFlash,590,dflash,Qwen/Qwen3-8B,0.032590051457975985,,0,compared,0
+False,583,humaneval,False,84,,BASTION (adaptive),528,bastion,Qwen/Qwen3-8B,0.14408233276157806,warm,0,compared,0
+False,468,humaneval,False,115,,DFlash,417,dflash,Qwen/Qwen3-8B,0.24572649572649571,,1,compared,0
+False,468,humaneval,False,115,,BASTION (adaptive),392,bastion,Qwen/Qwen3-8B,0.24572649572649571,warm,1,compared,0
+False,701,humaneval,False,584,,DFlash,713,dflash,Qwen/Qwen3-8B,0.833095577746077,,2,compared,0
+False,701,humaneval,True,,,BASTION (adaptive),701,bastion,Qwen/Qwen3-8B,1.0,warm,2,compared,0
+False,612,humaneval,False,9,,DFlash,651,dflash,Qwen/Qwen3-8B,0.014705882352941176,,3,compared,0
+False,612,humaneval,False,9,,BASTION (adaptive),669,bastion,Qwen/Qwen3-8B,0.014705882352941176,warm,3,compared,0
+False,424,humaneval,False,21,,DFlash,326,dflash,Qwen/Qwen3-8B,0.049528301886792456,,4,compared,0
+False,424,humaneval,False,66,,BASTION (adaptive),431,bastion,Qwen/Qwen3-8B,0.15566037735849056,warm,4,compared,0
+False,329,humaneval,True,,,DFlash,329,dflash,Qwen/Qwen3-8B,1.0,,5,compared,0
+False,329,humaneval,False,241,,BASTION (adaptive),323,bastion,Qwen/Qwen3-8B,0.7325227963525835,warm,5,compared,0
+False,316,humaneval,False,202,,DFlash,314,dflash,Qwen/Qwen3-8B,0.6392405063291139,,6,compared,0
+False,316,humaneval,False,202,,BASTION (adaptive),314,bastion,Qwen/Qwen3-8B,0.6392405063291139,warm,6,compared,0
+False,465,humaneval,True,,,DFlash,465,dflash,Qwen/Qwen3-8B,1.0,,7,compared,0
+False,465,humaneval,True,,,BASTION (adaptive),465,bastion,Qwen/Qwen3-8B,1.0,warm,7,compared,0
+False,423,humaneval,False,411,,DFlash,423,dflash,Qwen/Qwen3-8B,0.9716312056737588,,8,compared,0
+False,423,humaneval,True,,,BASTION (adaptive),423,bastion,Qwen/Qwen3-8B,1.0,warm,8,compared,0
+False,241,humaneval,False,23,,DFlash,240,dflash,Qwen/Qwen3-8B,0.0954356846473029,,9,compared,0
+False,241,humaneval,False,23,,BASTION (adaptive),240,bastion,Qwen/Qwen3-8B,0.0954356846473029,warm,9,compared,0
+False,261,humaneval,False,150,,DFlash,251,dflash,Qwen/Qwen3-8B,0.5747126436781609,,10,compared,0
+False,261,humaneval,True,,,BASTION (adaptive),261,bastion,Qwen/Qwen3-8B,1.0,warm,10,compared,0
+False,367,humaneval,False,337,,DFlash,371,dflash,Qwen/Qwen3-8B,0.9182561307901907,,11,compared,0
+False,367,humaneval,False,73,,BASTION (adaptive),451,bastion,Qwen/Qwen3-8B,0.1989100817438692,warm,11,compared,0
+False,570,humaneval,False,308,,DFlash,566,dflash,Qwen/Qwen3-8B,0.5403508771929825,,12,compared,0
+False,570,humaneval,False,303,,BASTION (adaptive),565,bastion,Qwen/Qwen3-8B,0.531578947368421,warm,12,compared,0
+False,520,humaneval,False,19,,DFlash,392,dflash,Qwen/Qwen3-8B,0.03653846153846154,,13,compared,0
+False,520,humaneval,False,19,,BASTION (adaptive),511,bastion,Qwen/Qwen3-8B,0.03653846153846154,warm,13,compared,0
+False,429,humaneval,False,35,,DFlash,424,dflash,Qwen/Qwen3-8B,0.08158508158508158,,14,compared,0
+False,429,humaneval,True,,,BASTION (adaptive),429,bastion,Qwen/Qwen3-8B,1.0,warm,14,compared,0
+False,441,humaneval,False,53,,DFlash,415,dflash,Qwen/Qwen3-8B,0.12018140589569161,,15,compared,0
+False,441,humaneval,False,53,,BASTION (adaptive),415,bastion,Qwen/Qwen3-8B,0.12018140589569161,warm,15,compared,0
+False,264,humaneval,False,145,,DFlash,260,dflash,Qwen/Qwen3-8B,0.5492424242424242,,16,compared,0
+False,264,humaneval,True,,,BASTION (adaptive),264,bastion,Qwen/Qwen3-8B,1.0,warm,16,compared,0
+False,327,humaneval,False,57,,DFlash,359,dflash,Qwen/Qwen3-8B,0.1743119266055046,,17,compared,0
+False,327,humaneval,False,57,,BASTION (adaptive),358,bastion,Qwen/Qwen3-8B,0.1743119266055046,warm,17,compared,0
+False,316,humaneval,False,3,,DFlash,405,dflash,Qwen/Qwen3-8B,0.00949367088607595,,18,compared,0
+False,316,humaneval,False,111,,BASTION (adaptive),414,bastion,Qwen/Qwen3-8B,0.3512658227848101,warm,18,compared,0
+False,538,humaneval,False,313,,DFlash,541,dflash,Qwen/Qwen3-8B,0.5817843866171004,,19,compared,0
+False,538,humaneval,False,267,,BASTION (adaptive),534,bastion,Qwen/Qwen3-8B,0.4962825278810409,warm,19,compared,0
+False,507,humaneval,False,11,,DFlash,604,dflash,Qwen/Qwen3-8B,0.021696252465483234,,20,compared,0
+False,507,humaneval,False,11,,BASTION (adaptive),557,bastion,Qwen/Qwen3-8B,0.021696252465483234,warm,20,compared,0
+False,792,humaneval,False,26,,DFlash,819,dflash,Qwen/Qwen3-8B,0.03282828282828283,,21,compared,0
+False,792,humaneval,True,,,BASTION (adaptive),792,bastion,Qwen/Qwen3-8B,1.0,warm,21,compared,0
+False,751,humaneval,False,70,,DFlash,720,dflash,Qwen/Qwen3-8B,0.09320905459387484,,22,compared,0
+False,751,humaneval,False,97,,BASTION (adaptive),779,bastion,Qwen/Qwen3-8B,0.12916111850865514,warm,22,compared,0
+False,251,humaneval,True,,,DFlash,251,dflash,Qwen/Qwen3-8B,1.0,,23,compared,0
+False,251,humaneval,False,154,,BASTION (adaptive),262,bastion,Qwen/Qwen3-8B,0.6135458167330677,warm,23,compared,0
+False,584,humaneval,False,40,,DFlash,577,dflash,Qwen/Qwen3-8B,0.0684931506849315,,24,compared,0
+False,584,humaneval,False,40,,BASTION (adaptive),564,bastion,Qwen/Qwen3-8B,0.0684931506849315,warm,24,compared,0
+False,680,humaneval,False,112,,DFlash,650,dflash,Qwen/Qwen3-8B,0.16470588235294117,,25,compared,0
+False,680,humaneval,False,16,,BASTION (adaptive),644,bastion,Qwen/Qwen3-8B,0.023529411764705882,warm,25,compared,0
+False,357,humaneval,True,,,DFlash,357,dflash,Qwen/Qwen3-8B,1.0,,26,compared,0
+False,357,humaneval,True,,,BASTION (adaptive),357,bastion,Qwen/Qwen3-8B,1.0,warm,26,compared,0
+False,347,humaneval,False,237,,DFlash,347,dflash,Qwen/Qwen3-8B,0.6829971181556196,,27,compared,0
+False,347,humaneval,False,180,,BASTION (adaptive),330,bastion,Qwen/Qwen3-8B,0.5187319884726225,warm,27,compared,0
+False,459,humaneval,False,18,,DFlash,459,dflash,Qwen/Qwen3-8B,0.0392156862745098,,28,compared,0
+False,459,humaneval,False,246,,BASTION (adaptive),459,bastion,Qwen/Qwen3-8B,0.5359477124183006,warm,28,compared,0
+False,592,humaneval,False,368,,DFlash,591,dflash,Qwen/Qwen3-8B,0.6216216216216216,,29,compared,0
+False,592,humaneval,False,405,,BASTION (adaptive),589,bastion,Qwen/Qwen3-8B,0.6841216216216216,warm,29,compared,0
+False,399,humaneval,True,,,DFlash,399,dflash,Qwen/Qwen3-8B,1.0,,30,compared,0
+False,399,humaneval,False,17,,BASTION (adaptive),395,bastion,Qwen/Qwen3-8B,0.042606516290726815,warm,30,compared,0
+False,402,humaneval,False,21,,DFlash,377,dflash,Qwen/Qwen3-8B,0.05223880597014925,,31,compared,0
+False,402,humaneval,False,21,,BASTION (adaptive),355,bastion,Qwen/Qwen3-8B,0.05223880597014925,warm,31,compared,0
+False,416,humaneval,False,64,,DFlash,417,dflash,Qwen/Qwen3-8B,0.15384615384615385,,32,compared,0
+False,416,humaneval,False,64,,BASTION (adaptive),416,bastion,Qwen/Qwen3-8B,0.15384615384615385,warm,32,compared,0
+False,372,humaneval,True,,,DFlash,372,dflash,Qwen/Qwen3-8B,1.0,,33,compared,0
+False,372,humaneval,False,192,,BASTION (adaptive),381,bastion,Qwen/Qwen3-8B,0.5161290322580645,warm,33,compared,0
+False,283,humaneval,True,,,DFlash,283,dflash,Qwen/Qwen3-8B,1.0,,34,compared,0
+False,283,humaneval,False,218,,BASTION (adaptive),282,bastion,Qwen/Qwen3-8B,0.7703180212014135,warm,34,compared,0
+False,537,humaneval,False,26,,DFlash,456,dflash,Qwen/Qwen3-8B,0.048417132216014895,,35,compared,0
+False,537,humaneval,False,24,,BASTION (adaptive),459,bastion,Qwen/Qwen3-8B,0.0446927374301676,warm,35,compared,0
+False,472,humaneval,False,92,,DFlash,516,dflash,Qwen/Qwen3-8B,0.19491525423728814,,36,compared,0
+False,472,humaneval,False,61,,BASTION (adaptive),493,bastion,Qwen/Qwen3-8B,0.1292372881355932,warm,36,compared,0
+False,277,humaneval,False,3,,DFlash,453,dflash,Qwen/Qwen3-8B,0.010830324909747292,,37,compared,0
+False,277,humaneval,False,3,,BASTION (adaptive),422,bastion,Qwen/Qwen3-8B,0.010830324909747292,warm,37,compared,0
+False,465,humaneval,False,6,,DFlash,568,dflash,Qwen/Qwen3-8B,0.012903225806451613,,38,compared,0
+False,465,humaneval,False,3,,BASTION (adaptive),411,bastion,Qwen/Qwen3-8B,0.0064516129032258064,warm,38,compared,0
+False,310,humaneval,False,34,,DFlash,301,dflash,Qwen/Qwen3-8B,0.10967741935483871,,39,compared,0
+False,310,humaneval,True,,,BASTION (adaptive),310,bastion,Qwen/Qwen3-8B,1.0,warm,39,compared,0
+False,237,humaneval,False,59,,DFlash,237,dflash,Qwen/Qwen3-8B,0.2489451476793249,,40,compared,0
+False,237,humaneval,False,59,,BASTION (adaptive),237,bastion,Qwen/Qwen3-8B,0.2489451476793249,warm,40,compared,0
+False,624,humaneval,False,83,,DFlash,777,dflash,Qwen/Qwen3-8B,0.1330128205128205,,41,compared,0
+False,624,humaneval,False,2,,BASTION (adaptive),774,bastion,Qwen/Qwen3-8B,0.003205128205128205,warm,41,compared,0
+False,282,humaneval,False,21,,DFlash,319,dflash,Qwen/Qwen3-8B,0.07446808510638298,,42,compared,0
+False,282,humaneval,False,248,,BASTION (adaptive),274,bastion,Qwen/Qwen3-8B,0.8794326241134752,warm,42,compared,0
+False,315,humaneval,False,252,,DFlash,269,dflash,Qwen/Qwen3-8B,0.8,,43,compared,0
+False,315,humaneval,False,3,,BASTION (adaptive),272,bastion,Qwen/Qwen3-8B,0.009523809523809525,warm,43,compared,0
+False,713,humaneval,False,116,,DFlash,612,dflash,Qwen/Qwen3-8B,0.16269284712482468,,44,compared,0
+False,713,humaneval,False,116,,BASTION (adaptive),636,bastion,Qwen/Qwen3-8B,0.16269284712482468,warm,44,compared,0
+False,438,humaneval,False,3,,DFlash,388,dflash,Qwen/Qwen3-8B,0.00684931506849315,,45,compared,0
+False,438,humaneval,False,3,,BASTION (adaptive),424,bastion,Qwen/Qwen3-8B,0.00684931506849315,warm,45,compared,0
+False,520,humaneval,False,25,,DFlash,524,dflash,Qwen/Qwen3-8B,0.04807692307692308,,46,compared,0
+False,520,humaneval,False,351,,BASTION (adaptive),518,bastion,Qwen/Qwen3-8B,0.675,warm,46,compared,0
+False,640,humaneval,False,43,,DFlash,528,dflash,Qwen/Qwen3-8B,0.0671875,,47,compared,0
+False,640,humaneval,True,,,BASTION (adaptive),640,bastion,Qwen/Qwen3-8B,1.0,warm,47,compared,0
+False,482,humaneval,False,203,,DFlash,443,dflash,Qwen/Qwen3-8B,0.4211618257261411,,48,compared,0
+False,482,humaneval,False,20,,BASTION (adaptive),436,bastion,Qwen/Qwen3-8B,0.04149377593360996,warm,48,compared,0
+False,438,humaneval,False,435,,DFlash,439,dflash,Qwen/Qwen3-8B,0.9931506849315068,,49,compared,0
+False,438,humaneval,False,59,,BASTION (adaptive),439,bastion,Qwen/Qwen3-8B,0.13470319634703196,warm,49,compared,0
+False,506,humaneval,False,246,,DFlash,502,dflash,Qwen/Qwen3-8B,0.48616600790513836,,50,compared,0
+False,506,humaneval,False,304,,BASTION (adaptive),491,bastion,Qwen/Qwen3-8B,0.6007905138339921,warm,50,compared,0
+False,444,humaneval,False,202,,DFlash,442,dflash,Qwen/Qwen3-8B,0.45495495495495497,,51,compared,0
+False,444,humaneval,False,65,,BASTION (adaptive),438,bastion,Qwen/Qwen3-8B,0.1463963963963964,warm,51,compared,0
+False,601,humaneval,False,3,,DFlash,653,dflash,Qwen/Qwen3-8B,0.004991680532445923,,52,compared,0
+False,601,humaneval,False,3,,BASTION (adaptive),663,bastion,Qwen/Qwen3-8B,0.004991680532445923,warm,52,compared,0
+False,290,humaneval,False,244,,DFlash,285,dflash,Qwen/Qwen3-8B,0.8413793103448276,,53,compared,0
+False,290,humaneval,False,256,,BASTION (adaptive),289,bastion,Qwen/Qwen3-8B,0.8827586206896552,warm,53,compared,0
+False,414,humaneval,False,20,,DFlash,428,dflash,Qwen/Qwen3-8B,0.04830917874396135,,54,compared,0
+False,414,humaneval,False,20,,BASTION (adaptive),415,bastion,Qwen/Qwen3-8B,0.04830917874396135,warm,54,compared,0
+False,324,humaneval,False,21,,DFlash,323,dflash,Qwen/Qwen3-8B,0.06481481481481481,,55,compared,0
+False,324,humaneval,False,21,,BASTION (adaptive),301,bastion,Qwen/Qwen3-8B,0.06481481481481481,warm,55,compared,0
+False,395,humaneval,False,74,,DFlash,361,dflash,Qwen/Qwen3-8B,0.18734177215189873,,56,compared,0
+False,395,humaneval,False,74,,BASTION (adaptive),361,bastion,Qwen/Qwen3-8B,0.18734177215189873,warm,56,compared,0
+False,249,humaneval,False,165,,DFlash,248,dflash,Qwen/Qwen3-8B,0.6626506024096386,,57,compared,0
+False,249,humaneval,False,183,,BASTION (adaptive),250,bastion,Qwen/Qwen3-8B,0.7349397590361446,warm,57,compared,0
+False,521,humaneval,False,77,,DFlash,520,dflash,Qwen/Qwen3-8B,0.14779270633397312,,58,compared,0
+False,521,humaneval,False,449,,BASTION (adaptive),525,bastion,Qwen/Qwen3-8B,0.8618042226487524,warm,58,compared,0
+False,361,humaneval,False,204,,DFlash,372,dflash,Qwen/Qwen3-8B,0.5650969529085873,,59,compared,0
+False,361,humaneval,False,6,,BASTION (adaptive),346,bastion,Qwen/Qwen3-8B,0.01662049861495845,warm,59,compared,0
+False,337,humaneval,False,20,,DFlash,305,dflash,Qwen/Qwen3-8B,0.05934718100890208,,60,compared,0
+False,337,humaneval,True,,,BASTION (adaptive),337,bastion,Qwen/Qwen3-8B,1.0,warm,60,compared,0
+False,360,humaneval,False,18,,DFlash,372,dflash,Qwen/Qwen3-8B,0.05,,61,compared,0
+False,360,humaneval,False,18,,BASTION (adaptive),360,bastion,Qwen/Qwen3-8B,0.05,warm,61,compared,0
+False,319,humaneval,False,21,,DFlash,252,dflash,Qwen/Qwen3-8B,0.06583072100313479,,62,compared,0
+False,319,humaneval,False,21,,BASTION (adaptive),270,bastion,Qwen/Qwen3-8B,0.06583072100313479,warm,62,compared,0
+False,402,humaneval,False,144,,DFlash,431,dflash,Qwen/Qwen3-8B,0.3582089552238806,,63,compared,0
+False,402,humaneval,False,6,,BASTION (adaptive),456,bastion,Qwen/Qwen3-8B,0.014925373134328358,warm,63,compared,0
+False,218,mbpp,True,,,DFlash,218,dflash,Qwen/Qwen3-8B,1.0,,0,compared,0
+False,218,mbpp,False,60,,BASTION (adaptive),184,bastion,Qwen/Qwen3-8B,0.27522935779816515,warm,0,compared,0
+False,309,mbpp,True,,,DFlash,309,dflash,Qwen/Qwen3-8B,1.0,,1,compared,0
+False,309,mbpp,True,,,BASTION (adaptive),309,bastion,Qwen/Qwen3-8B,1.0,warm,1,compared,0
+False,422,mbpp,False,153,,DFlash,433,dflash,Qwen/Qwen3-8B,0.36255924170616116,,2,compared,0
+False,422,mbpp,False,370,,BASTION (adaptive),422,bastion,Qwen/Qwen3-8B,0.8767772511848341,warm,2,compared,0
+False,343,mbpp,False,33,,DFlash,345,dflash,Qwen/Qwen3-8B,0.09620991253644315,,3,compared,0
+False,343,mbpp,False,34,,BASTION (adaptive),307,bastion,Qwen/Qwen3-8B,0.09912536443148688,warm,3,compared,0
+False,310,mbpp,False,239,,DFlash,308,dflash,Qwen/Qwen3-8B,0.7709677419354839,,4,compared,0
+False,310,mbpp,False,230,,BASTION (adaptive),314,bastion,Qwen/Qwen3-8B,0.7419354838709677,warm,4,compared,0
+False,270,mbpp,True,,,DFlash,270,dflash,Qwen/Qwen3-8B,1.0,,5,compared,0
+False,270,mbpp,True,,,BASTION (adaptive),270,bastion,Qwen/Qwen3-8B,1.0,warm,5,compared,0
+False,347,mbpp,False,343,,DFlash,350,dflash,Qwen/Qwen3-8B,0.9884726224783862,,6,compared,0
+False,347,mbpp,False,247,,BASTION (adaptive),319,bastion,Qwen/Qwen3-8B,0.7118155619596542,warm,6,compared,0
+False,155,mbpp,True,,,DFlash,155,dflash,Qwen/Qwen3-8B,1.0,,7,compared,0
+False,155,mbpp,True,,,BASTION (adaptive),155,bastion,Qwen/Qwen3-8B,1.0,warm,7,compared,0
+False,841,mbpp,False,64,,DFlash,661,dflash,Qwen/Qwen3-8B,0.07609988109393578,,8,compared,0
+False,841,mbpp,False,155,,BASTION (adaptive),650,bastion,Qwen/Qwen3-8B,0.18430439952437574,warm,8,compared,0
+False,196,mbpp,False,98,,DFlash,195,dflash,Qwen/Qwen3-8B,0.5,,9,compared,0
+False,196,mbpp,False,98,,BASTION (adaptive),195,bastion,Qwen/Qwen3-8B,0.5,warm,9,compared,0
+False,196,mbpp,True,,,DFlash,196,dflash,Qwen/Qwen3-8B,1.0,,10,compared,0
+False,196,mbpp,True,,,BASTION (adaptive),196,bastion,Qwen/Qwen3-8B,1.0,warm,10,compared,0
+False,225,mbpp,False,5,,DFlash,189,dflash,Qwen/Qwen3-8B,0.022222222222222223,,11,compared,0
+False,225,mbpp,False,41,,BASTION (adaptive),190,bastion,Qwen/Qwen3-8B,0.18222222222222223,warm,11,compared,0
+False,224,mbpp,False,84,,DFlash,219,dflash,Qwen/Qwen3-8B,0.375,,12,compared,0
+False,224,mbpp,True,,,BASTION (adaptive),224,bastion,Qwen/Qwen3-8B,1.0,warm,12,compared,0
+False,198,mbpp,False,107,,DFlash,177,dflash,Qwen/Qwen3-8B,0.5404040404040404,,13,compared,0
+False,198,mbpp,True,,,BASTION (adaptive),198,bastion,Qwen/Qwen3-8B,1.0,warm,13,compared,0
+False,469,mbpp,False,22,,DFlash,655,dflash,Qwen/Qwen3-8B,0.046908315565031986,,14,compared,0
+False,469,mbpp,False,336,,BASTION (adaptive),472,bastion,Qwen/Qwen3-8B,0.7164179104477612,warm,14,compared,0
+False,183,mbpp,False,70,,DFlash,172,dflash,Qwen/Qwen3-8B,0.3825136612021858,,15,compared,0
+False,183,mbpp,False,70,,BASTION (adaptive),196,bastion,Qwen/Qwen3-8B,0.3825136612021858,warm,15,compared,0
+False,259,mbpp,False,24,,DFlash,224,dflash,Qwen/Qwen3-8B,0.09266409266409266,,16,compared,0
+False,259,mbpp,False,183,,BASTION (adaptive),259,bastion,Qwen/Qwen3-8B,0.7065637065637066,warm,16,compared,0
+False,226,mbpp,False,180,,DFlash,238,dflash,Qwen/Qwen3-8B,0.7964601769911505,,17,compared,0
+False,226,mbpp,False,180,,BASTION (adaptive),238,bastion,Qwen/Qwen3-8B,0.7964601769911505,warm,17,compared,0
+False,197,mbpp,False,127,,DFlash,188,dflash,Qwen/Qwen3-8B,0.6446700507614214,,18,compared,0
+False,197,mbpp,False,127,,BASTION (adaptive),188,bastion,Qwen/Qwen3-8B,0.6446700507614214,warm,18,compared,0
+False,209,mbpp,True,,,DFlash,209,dflash,Qwen/Qwen3-8B,1.0,,19,compared,0
+False,209,mbpp,True,,,BASTION (adaptive),209,bastion,Qwen/Qwen3-8B,1.0,warm,19,compared,0
+False,184,mbpp,True,,,DFlash,184,dflash,Qwen/Qwen3-8B,1.0,,20,compared,0
+False,184,mbpp,True,,,BASTION (adaptive),184,bastion,Qwen/Qwen3-8B,1.0,warm,20,compared,0
+False,279,mbpp,False,11,,DFlash,274,dflash,Qwen/Qwen3-8B,0.03942652329749104,,21,compared,0
+False,279,mbpp,False,11,,BASTION (adaptive),231,bastion,Qwen/Qwen3-8B,0.03942652329749104,warm,21,compared,0
+False,456,mbpp,False,93,,DFlash,505,dflash,Qwen/Qwen3-8B,0.20394736842105263,,22,compared,0
+False,456,mbpp,False,93,,BASTION (adaptive),545,bastion,Qwen/Qwen3-8B,0.20394736842105263,warm,22,compared,0
+False,177,mbpp,False,117,,DFlash,179,dflash,Qwen/Qwen3-8B,0.6610169491525424,,23,compared,0
+False,177,mbpp,False,117,,BASTION (adaptive),179,bastion,Qwen/Qwen3-8B,0.6610169491525424,warm,23,compared,0
+False,334,mbpp,True,,,DFlash,334,dflash,Qwen/Qwen3-8B,1.0,,24,compared,0
+False,334,mbpp,False,320,,BASTION (adaptive),358,bastion,Qwen/Qwen3-8B,0.9580838323353293,warm,24,compared,0
+False,290,mbpp,False,16,,DFlash,290,dflash,Qwen/Qwen3-8B,0.05517241379310345,,25,compared,0
+False,290,mbpp,False,16,,BASTION (adaptive),290,bastion,Qwen/Qwen3-8B,0.05517241379310345,warm,25,compared,0
+False,261,mbpp,False,170,,DFlash,261,dflash,Qwen/Qwen3-8B,0.6513409961685823,,26,compared,0
+False,261,mbpp,False,234,,BASTION (adaptive),267,bastion,Qwen/Qwen3-8B,0.896551724137931,warm,26,compared,0
+False,293,mbpp,True,,,DFlash,293,dflash,Qwen/Qwen3-8B,1.0,,27,compared,0
+False,293,mbpp,True,,,BASTION (adaptive),293,bastion,Qwen/Qwen3-8B,1.0,warm,27,compared,0
+False,326,mbpp,False,224,,DFlash,357,dflash,Qwen/Qwen3-8B,0.6871165644171779,,28,compared,0
+False,326,mbpp,True,,,BASTION (adaptive),326,bastion,Qwen/Qwen3-8B,1.0,warm,28,compared,0
+False,323,mbpp,False,152,,DFlash,329,dflash,Qwen/Qwen3-8B,0.47058823529411764,,29,compared,0
+False,323,mbpp,True,,,BASTION (adaptive),323,bastion,Qwen/Qwen3-8B,1.0,warm,29,compared,0
+False,314,mbpp,False,97,,DFlash,316,dflash,Qwen/Qwen3-8B,0.3089171974522293,,30,compared,0
+False,314,mbpp,False,47,,BASTION (adaptive),303,bastion,Qwen/Qwen3-8B,0.14968152866242038,warm,30,compared,0
+False,228,mbpp,True,,,DFlash,228,dflash,Qwen/Qwen3-8B,1.0,,31,compared,0
+False,228,mbpp,True,,,BASTION (adaptive),228,bastion,Qwen/Qwen3-8B,1.0,warm,31,compared,0
+False,900,mbpp,False,266,,DFlash,929,dflash,Qwen/Qwen3-8B,0.29555555555555557,,32,compared,0
+False,900,mbpp,False,246,,BASTION (adaptive),902,bastion,Qwen/Qwen3-8B,0.2733333333333333,warm,32,compared,0
+False,212,mbpp,False,55,,DFlash,195,dflash,Qwen/Qwen3-8B,0.25943396226415094,,33,compared,0
+False,212,mbpp,True,,,BASTION (adaptive),212,bastion,Qwen/Qwen3-8B,1.0,warm,33,compared,0
+False,238,mbpp,False,27,,DFlash,292,dflash,Qwen/Qwen3-8B,0.1134453781512605,,34,compared,0
+False,238,mbpp,False,121,,BASTION (adaptive),238,bastion,Qwen/Qwen3-8B,0.5084033613445378,warm,34,compared,0
+False,519,mbpp,False,261,,DFlash,553,dflash,Qwen/Qwen3-8B,0.5028901734104047,,35,compared,0
+False,519,mbpp,False,515,,BASTION (adaptive),520,bastion,Qwen/Qwen3-8B,0.9922928709055877,warm,35,compared,0
+False,178,mbpp,True,,,DFlash,178,dflash,Qwen/Qwen3-8B,1.0,,36,compared,0
+False,178,mbpp,False,69,,BASTION (adaptive),130,bastion,Qwen/Qwen3-8B,0.38764044943820225,warm,36,compared,0
+False,203,mbpp,False,74,,DFlash,199,dflash,Qwen/Qwen3-8B,0.3645320197044335,,37,compared,0
+False,203,mbpp,False,74,,BASTION (adaptive),199,bastion,Qwen/Qwen3-8B,0.3645320197044335,warm,37,compared,0
+False,269,mbpp,False,132,,DFlash,293,dflash,Qwen/Qwen3-8B,0.49070631970260226,,38,compared,0
+False,269,mbpp,False,61,,BASTION (adaptive),300,bastion,Qwen/Qwen3-8B,0.22676579925650558,warm,38,compared,0
+False,322,mbpp,False,97,,DFlash,282,dflash,Qwen/Qwen3-8B,0.30124223602484473,,39,compared,0
+False,322,mbpp,True,,,BASTION (adaptive),322,bastion,Qwen/Qwen3-8B,1.0,warm,39,compared,0
+False,239,mbpp,True,,,DFlash,239,dflash,Qwen/Qwen3-8B,1.0,,40,compared,0
+False,239,mbpp,True,,,BASTION (adaptive),239,bastion,Qwen/Qwen3-8B,1.0,warm,40,compared,0
+False,195,mbpp,False,55,,DFlash,211,dflash,Qwen/Qwen3-8B,0.28205128205128205,,41,compared,0
+False,195,mbpp,False,55,,BASTION (adaptive),217,bastion,Qwen/Qwen3-8B,0.28205128205128205,warm,41,compared,0
+False,157,mbpp,False,117,,DFlash,150,dflash,Qwen/Qwen3-8B,0.7452229299363057,,42,compared,0
+False,157,mbpp,False,117,,BASTION (adaptive),150,bastion,Qwen/Qwen3-8B,0.7452229299363057,warm,42,compared,0
+False,147,mbpp,True,,,DFlash,147,dflash,Qwen/Qwen3-8B,1.0,,43,compared,0
+False,147,mbpp,False,143,,BASTION (adaptive),150,bastion,Qwen/Qwen3-8B,0.9727891156462585,warm,43,compared,0
+False,288,mbpp,True,,,DFlash,288,dflash,Qwen/Qwen3-8B,1.0,,44,compared,0
+False,288,mbpp,True,,,BASTION (adaptive),288,bastion,Qwen/Qwen3-8B,1.0,warm,44,compared,0
+False,233,mbpp,False,68,,DFlash,233,dflash,Qwen/Qwen3-8B,0.2918454935622318,,45,compared,0
+False,233,mbpp,False,68,,BASTION (adaptive),235,bastion,Qwen/Qwen3-8B,0.2918454935622318,warm,45,compared,0
+False,96,mbpp,True,,,DFlash,96,dflash,Qwen/Qwen3-8B,1.0,,46,compared,0
+False,96,mbpp,True,,,BASTION (adaptive),96,bastion,Qwen/Qwen3-8B,1.0,warm,46,compared,0
+False,213,mbpp,False,146,,DFlash,296,dflash,Qwen/Qwen3-8B,0.6854460093896714,,47,compared,0
+False,213,mbpp,False,196,,BASTION (adaptive),241,bastion,Qwen/Qwen3-8B,0.92018779342723,warm,47,compared,0
+False,347,mbpp,False,54,,DFlash,347,dflash,Qwen/Qwen3-8B,0.15561959654178675,,48,compared,0
+False,347,mbpp,False,233,,BASTION (adaptive),351,bastion,Qwen/Qwen3-8B,0.6714697406340058,warm,48,compared,0
+False,239,mbpp,False,176,,DFlash,247,dflash,Qwen/Qwen3-8B,0.7364016736401674,,49,compared,0
+False,239,mbpp,False,220,,BASTION (adaptive),222,bastion,Qwen/Qwen3-8B,0.9205020920502092,warm,49,compared,0
+False,317,mbpp,False,180,,DFlash,266,dflash,Qwen/Qwen3-8B,0.5678233438485805,,50,compared,0
+False,317,mbpp,True,,,BASTION (adaptive),317,bastion,Qwen/Qwen3-8B,1.0,warm,50,compared,0
+False,190,mbpp,True,,,DFlash,190,dflash,Qwen/Qwen3-8B,1.0,,51,compared,0
+False,190,mbpp,True,,,BASTION (adaptive),190,bastion,Qwen/Qwen3-8B,1.0,warm,51,compared,0
+False,256,mbpp,False,130,,DFlash,250,dflash,Qwen/Qwen3-8B,0.5078125,,52,compared,0
+False,256,mbpp,False,132,,BASTION (adaptive),253,bastion,Qwen/Qwen3-8B,0.515625,warm,52,compared,0
+False,288,mbpp,False,139,,DFlash,274,dflash,Qwen/Qwen3-8B,0.4826388888888889,,53,compared,0
+False,288,mbpp,False,124,,BASTION (adaptive),269,bastion,Qwen/Qwen3-8B,0.4305555555555556,warm,53,compared,0
+False,350,mbpp,False,343,,DFlash,350,dflash,Qwen/Qwen3-8B,0.98,,54,compared,0
+False,350,mbpp,True,,,BASTION (adaptive),350,bastion,Qwen/Qwen3-8B,1.0,warm,54,compared,0
+False,246,mbpp,False,5,,DFlash,269,dflash,Qwen/Qwen3-8B,0.02032520325203252,,55,compared,0
+False,246,mbpp,True,,,BASTION (adaptive),246,bastion,Qwen/Qwen3-8B,1.0,warm,55,compared,0
+False,254,mbpp,True,,,DFlash,254,dflash,Qwen/Qwen3-8B,1.0,,56,compared,0
+False,254,mbpp,True,,,BASTION (adaptive),254,bastion,Qwen/Qwen3-8B,1.0,warm,56,compared,0
+False,156,mbpp,False,149,,DFlash,167,dflash,Qwen/Qwen3-8B,0.9551282051282052,,57,compared,0
+False,156,mbpp,True,,,BASTION (adaptive),156,bastion,Qwen/Qwen3-8B,1.0,warm,57,compared,0
+False,215,mbpp,True,,,DFlash,215,dflash,Qwen/Qwen3-8B,1.0,,58,compared,0
+False,215,mbpp,True,,,BASTION (adaptive),215,bastion,Qwen/Qwen3-8B,1.0,warm,58,compared,0
+False,220,mbpp,False,14,,DFlash,248,dflash,Qwen/Qwen3-8B,0.06363636363636363,,59,compared,0
+False,220,mbpp,False,14,,BASTION (adaptive),248,bastion,Qwen/Qwen3-8B,0.06363636363636363,warm,59,compared,0
+False,173,mbpp,True,,,DFlash,173,dflash,Qwen/Qwen3-8B,1.0,,60,compared,0
+False,173,mbpp,True,,,BASTION (adaptive),173,bastion,Qwen/Qwen3-8B,1.0,warm,60,compared,0
+False,415,mbpp,False,205,,DFlash,416,dflash,Qwen/Qwen3-8B,0.4939759036144578,,61,compared,0
+False,415,mbpp,False,278,,BASTION (adaptive),415,bastion,Qwen/Qwen3-8B,0.6698795180722892,warm,61,compared,0
+False,290,mbpp,False,16,,DFlash,287,dflash,Qwen/Qwen3-8B,0.05517241379310345,,62,compared,0
+False,290,mbpp,False,16,,BASTION (adaptive),320,bastion,Qwen/Qwen3-8B,0.05517241379310345,warm,62,compared,0
+False,284,mbpp,False,49,,DFlash,302,dflash,Qwen/Qwen3-8B,0.17253521126760563,,63,compared,0
+False,284,mbpp,False,46,,BASTION (adaptive),345,bastion,Qwen/Qwen3-8B,0.1619718309859155,warm,63,compared,0
+False,547,lcb,False,51,,DFlash,665,dflash,Qwen/Qwen3-8B,0.09323583180987204,,0,compared,0
+False,547,lcb,False,267,,BASTION (adaptive),717,bastion,Qwen/Qwen3-8B,0.48811700182815354,warm,0,compared,0
+False,79,lcb,False,6,,DFlash,172,dflash,Qwen/Qwen3-8B,0.0759493670886076,,1,compared,0
+False,79,lcb,False,32,,BASTION (adaptive),148,bastion,Qwen/Qwen3-8B,0.4050632911392405,warm,1,compared,0
+False,469,lcb,True,,,DFlash,469,dflash,Qwen/Qwen3-8B,1.0,,2,compared,0
+False,469,lcb,True,,,BASTION (adaptive),469,bastion,Qwen/Qwen3-8B,1.0,warm,2,compared,0
+False,69,lcb,True,,,DFlash,69,dflash,Qwen/Qwen3-8B,1.0,,3,compared,0
+False,69,lcb,True,,,BASTION (adaptive),69,bastion,Qwen/Qwen3-8B,1.0,warm,3,compared,0
+False,269,lcb,False,58,,DFlash,243,dflash,Qwen/Qwen3-8B,0.21561338289962825,,4,compared,0
+False,269,lcb,True,,,BASTION (adaptive),269,bastion,Qwen/Qwen3-8B,1.0,warm,4,compared,0
+False,288,lcb,True,,,DFlash,288,dflash,Qwen/Qwen3-8B,1.0,,5,compared,0
+False,288,lcb,True,,,BASTION (adaptive),288,bastion,Qwen/Qwen3-8B,1.0,warm,5,compared,0
+False,78,lcb,True,,,DFlash,78,dflash,Qwen/Qwen3-8B,1.0,,6,compared,0
+False,78,lcb,True,,,BASTION (adaptive),78,bastion,Qwen/Qwen3-8B,1.0,warm,6,compared,0
+False,50,lcb,True,,,DFlash,50,dflash,Qwen/Qwen3-8B,1.0,,7,compared,0
+False,50,lcb,True,,,BASTION (adaptive),50,bastion,Qwen/Qwen3-8B,1.0,warm,7,compared,0
+False,131,lcb,True,,,DFlash,131,dflash,Qwen/Qwen3-8B,1.0,,8,compared,0
+False,131,lcb,True,,,BASTION (adaptive),131,bastion,Qwen/Qwen3-8B,1.0,warm,8,compared,0
+False,586,lcb,False,83,,DFlash,422,dflash,Qwen/Qwen3-8B,0.1416382252559727,,9,compared,0
+False,586,lcb,False,229,,BASTION (adaptive),851,bastion,Qwen/Qwen3-8B,0.39078498293515357,warm,9,compared,0
+False,94,lcb,True,,,DFlash,94,dflash,Qwen/Qwen3-8B,1.0,,10,compared,0
+False,94,lcb,True,,,BASTION (adaptive),94,bastion,Qwen/Qwen3-8B,1.0,warm,10,compared,0
+False,100,lcb,True,,,DFlash,100,dflash,Qwen/Qwen3-8B,1.0,,11,compared,0
+False,100,lcb,True,,,BASTION (adaptive),100,bastion,Qwen/Qwen3-8B,1.0,warm,11,compared,0
+False,352,lcb,False,61,,DFlash,351,dflash,Qwen/Qwen3-8B,0.17329545454545456,,12,compared,0
+False,352,lcb,True,,,BASTION (adaptive),352,bastion,Qwen/Qwen3-8B,1.0,warm,12,compared,0
+False,111,lcb,True,,,DFlash,111,dflash,Qwen/Qwen3-8B,1.0,,13,compared,0
+False,111,lcb,True,,,BASTION (adaptive),111,bastion,Qwen/Qwen3-8B,1.0,warm,13,compared,0
+False,643,lcb,False,131,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.20373250388802489,,14,compared,0
+False,643,lcb,False,131,,BASTION (adaptive),659,bastion,Qwen/Qwen3-8B,0.20373250388802489,warm,14,compared,0
+False,439,lcb,False,80,,DFlash,419,dflash,Qwen/Qwen3-8B,0.18223234624145787,,15,compared,0
+False,439,lcb,False,80,,BASTION (adaptive),419,bastion,Qwen/Qwen3-8B,0.18223234624145787,warm,15,compared,0
+False,120,lcb,False,66,,DFlash,131,dflash,Qwen/Qwen3-8B,0.55,,16,compared,0
+False,120,lcb,False,66,,BASTION (adaptive),131,bastion,Qwen/Qwen3-8B,0.55,warm,16,compared,0
+False,185,lcb,False,162,,DFlash,183,dflash,Qwen/Qwen3-8B,0.8756756756756757,,17,compared,0
+False,185,lcb,False,20,,BASTION (adaptive),193,bastion,Qwen/Qwen3-8B,0.10810810810810811,warm,17,compared,0
+False,55,lcb,True,,,DFlash,55,dflash,Qwen/Qwen3-8B,1.0,,18,compared,0
+False,55,lcb,True,,,BASTION (adaptive),55,bastion,Qwen/Qwen3-8B,1.0,warm,18,compared,0
+True,2048,lcb,False,122,,DFlash,184,dflash,Qwen/Qwen3-8B,0.0595703125,,19,compared,0
+True,2048,lcb,False,122,,BASTION (adaptive),184,bastion,Qwen/Qwen3-8B,0.0595703125,warm,19,compared,0
+False,138,lcb,True,,,DFlash,138,dflash,Qwen/Qwen3-8B,1.0,,20,compared,0
+False,138,lcb,True,,,BASTION (adaptive),138,bastion,Qwen/Qwen3-8B,1.0,warm,20,compared,0
+False,57,lcb,True,,,DFlash,57,dflash,Qwen/Qwen3-8B,1.0,,21,compared,0
+False,57,lcb,True,,,BASTION (adaptive),57,bastion,Qwen/Qwen3-8B,1.0,warm,21,compared,0
+False,389,lcb,False,80,,DFlash,406,dflash,Qwen/Qwen3-8B,0.20565552699228792,,22,compared,0
+False,389,lcb,False,119,,BASTION (adaptive),382,bastion,Qwen/Qwen3-8B,0.3059125964010283,warm,22,compared,0
+False,43,lcb,True,,,DFlash,43,dflash,Qwen/Qwen3-8B,1.0,,23,compared,0
+False,43,lcb,True,,,BASTION (adaptive),43,bastion,Qwen/Qwen3-8B,1.0,warm,23,compared,0
+False,136,lcb,True,,,DFlash,136,dflash,Qwen/Qwen3-8B,1.0,,24,compared,0
+False,136,lcb,True,,,BASTION (adaptive),136,bastion,Qwen/Qwen3-8B,1.0,warm,24,compared,0
+False,172,lcb,True,,,DFlash,172,dflash,Qwen/Qwen3-8B,1.0,,25,compared,0
+False,172,lcb,True,,,BASTION (adaptive),172,bastion,Qwen/Qwen3-8B,1.0,warm,25,compared,0
+False,152,lcb,True,,,DFlash,152,dflash,Qwen/Qwen3-8B,1.0,,26,compared,0
+False,152,lcb,True,,,BASTION (adaptive),152,bastion,Qwen/Qwen3-8B,1.0,warm,26,compared,0
+False,40,lcb,True,,,DFlash,40,dflash,Qwen/Qwen3-8B,1.0,,27,compared,0
+False,40,lcb,True,,,BASTION (adaptive),40,bastion,Qwen/Qwen3-8B,1.0,warm,27,compared,0
+False,358,lcb,False,28,,DFlash,433,dflash,Qwen/Qwen3-8B,0.0782122905027933,,28,compared,0
+False,358,lcb,False,248,,BASTION (adaptive),359,bastion,Qwen/Qwen3-8B,0.6927374301675978,warm,28,compared,0
+False,83,lcb,False,80,,DFlash,92,dflash,Qwen/Qwen3-8B,0.963855421686747,,29,compared,0
+False,83,lcb,True,,,BASTION (adaptive),83,bastion,Qwen/Qwen3-8B,1.0,warm,29,compared,0
+False,244,lcb,True,,,DFlash,244,dflash,Qwen/Qwen3-8B,1.0,,30,compared,0
+False,244,lcb,True,,,BASTION (adaptive),244,bastion,Qwen/Qwen3-8B,1.0,warm,30,compared,0
+False,89,lcb,True,,,DFlash,89,dflash,Qwen/Qwen3-8B,1.0,,31,compared,0
+False,89,lcb,True,,,BASTION (adaptive),89,bastion,Qwen/Qwen3-8B,1.0,warm,31,compared,0
+False,182,lcb,False,107,,DFlash,2048,dflash,Qwen/Qwen3-8B,0.5879120879120879,,32,compared,0
+False,182,lcb,False,107,,BASTION (adaptive),296,bastion,Qwen/Qwen3-8B,0.5879120879120879,warm,32,compared,0
+False,65,lcb,True,,,DFlash,65,dflash,Qwen/Qwen3-8B,1.0,,33,compared,0
+False,65,lcb,True,,,BASTION (adaptive),65,bastion,Qwen/Qwen3-8B,1.0,warm,33,compared,0
+False,46,lcb,True,,,DFlash,46,dflash,Qwen/Qwen3-8B,1.0,,34,compared,0
+False,46,lcb,True,,,BASTION (adaptive),46,bastion,Qwen/Qwen3-8B,1.0,warm,34,compared,0
+False,93,lcb,True,,,DFlash,93,dflash,Qwen/Qwen3-8B,1.0,,35,compared,0
+False,93,lcb,True,,,BASTION (adaptive),93,bastion,Qwen/Qwen3-8B,1.0,warm,35,compared,0
+False,196,lcb,True,,,DFlash,196,dflash,Qwen/Qwen3-8B,1.0,,36,compared,0
+False,196,lcb,True,,,BASTION (adaptive),196,bastion,Qwen/Qwen3-8B,1.0,warm,36,compared,0
+False,52,lcb,True,,,DFlash,52,dflash,Qwen/Qwen3-8B,1.0,,37,compared,0
+False,52,lcb,True,,,BASTION (adaptive),52,bastion,Qwen/Qwen3-8B,1.0,warm,37,compared,0
+False,67,lcb,True,,,DFlash,67,dflash,Qwen/Qwen3-8B,1.0,,38,compared,0
+False,67,lcb,True,,,BASTION (adaptive),67,bastion,Qwen/Qwen3-8B,1.0,warm,38,compared,0
+False,164,lcb,False,133,,DFlash,165,dflash,Qwen/Qwen3-8B,0.8109756097560976,,39,compared,0
+False,164,lcb,False,133,,BASTION (adaptive),165,bastion,Qwen/Qwen3-8B,0.8109756097560976,warm,39,compared,0
+False,420,lcb,True,,,DFlash,420,dflash,Qwen/Qwen3-8B,1.0,,40,compared,0
+False,420,lcb,True,,,BASTION (adaptive),420,bastion,Qwen/Qwen3-8B,1.0,warm,40,compared,0
+False,150,lcb,True,,,DFlash,150,dflash,Qwen/Qwen3-8B,1.0,,41,compared,0
+False,150,lcb,True,,,BASTION (adaptive),150,bastion,Qwen/Qwen3-8B,1.0,warm,41,compared,0
+False,295,lcb,True,,,DFlash,295,dflash,Qwen/Qwen3-8B,1.0,,42,compared,0
+False,295,lcb,False,4,,BASTION (adaptive),344,bastion,Qwen/Qwen3-8B,0.013559322033898305,warm,42,compared,0
+False,224,lcb,True,,,DFlash,224,dflash,Qwen/Qwen3-8B,1.0,,43,compared,0
+False,224,lcb,True,,,BASTION (adaptive),224,bastion,Qwen/Qwen3-8B,1.0,warm,43,compared,0
+False,140,lcb,True,,,DFlash,140,dflash,Qwen/Qwen3-8B,1.0,,44,compared,0
+False,140,lcb,False,36,,BASTION (adaptive),140,bastion,Qwen/Qwen3-8B,0.2571428571428571,warm,44,compared,0
+False,232,lcb,False,148,,DFlash,231,dflash,Qwen/Qwen3-8B,0.6379310344827587,,45,compared,0
+False,232,lcb,True,,,BASTION (adaptive),232,bastion,Qwen/Qwen3-8B,1.0,warm,45,compared,0
+False,248,lcb,False,129,,DFlash,258,dflash,Qwen/Qwen3-8B,0.5201612903225806,,46,compared,0
+False,248,lcb,False,129,,BASTION (adaptive),258,bastion,Qwen/Qwen3-8B,0.5201612903225806,warm,46,compared,0
+False,72,lcb,True,,,DFlash,72,dflash,Qwen/Qwen3-8B,1.0,,47,compared,0
+False,72,lcb,True,,,BASTION (adaptive),72,bastion,Qwen/Qwen3-8B,1.0,warm,47,compared,0
+False,118,lcb,True,,,DFlash,118,dflash,Qwen/Qwen3-8B,1.0,,48,compared,0
+False,118,lcb,True,,,BASTION (adaptive),118,bastion,Qwen/Qwen3-8B,1.0,warm,48,compared,0
+False,29,lcb,True,,,DFlash,29,dflash,Qwen/Qwen3-8B,1.0,,49,compared,0
+False,29,lcb,True,,,BASTION (adaptive),29,bastion,Qwen/Qwen3-8B,1.0,warm,49,compared,0
+False,133,lcb,True,,,DFlash,133,dflash,Qwen/Qwen3-8B,1.0,,50,compared,0
+False,133,lcb,True,,,BASTION (adaptive),133,bastion,Qwen/Qwen3-8B,1.0,warm,50,compared,0
+False,382,lcb,False,195,,DFlash,431,dflash,Qwen/Qwen3-8B,0.5104712041884817,,51,compared,0
+False,382,lcb,True,,,BASTION (adaptive),382,bastion,Qwen/Qwen3-8B,1.0,warm,51,compared,0
+False,127,lcb,False,31,,DFlash,117,dflash,Qwen/Qwen3-8B,0.2440944881889764,,52,compared,0
+False,127,lcb,False,31,,BASTION (adaptive),117,bastion,Qwen/Qwen3-8B,0.2440944881889764,warm,52,compared,0
+False,152,lcb,False,89,,DFlash,153,dflash,Qwen/Qwen3-8B,0.5855263157894737,,53,compared,0
+False,152,lcb,False,105,,BASTION (adaptive),156,bastion,Qwen/Qwen3-8B,0.6907894736842105,warm,53,compared,0
+False,100,lcb,True,,,DFlash,100,dflash,Qwen/Qwen3-8B,1.0,,54,compared,0
+False,100,lcb,False,39,,BASTION (adaptive),143,bastion,Qwen/Qwen3-8B,0.39,warm,54,compared,0
+False,156,lcb,False,32,,DFlash,150,dflash,Qwen/Qwen3-8B,0.20512820512820512,,55,compared,0
+False,156,lcb,False,32,,BASTION (adaptive),150,bastion,Qwen/Qwen3-8B,0.20512820512820512,warm,55,compared,0
+False,124,lcb,True,,,DFlash,124,dflash,Qwen/Qwen3-8B,1.0,,56,compared,0
+False,124,lcb,True,,,BASTION (adaptive),124,bastion,Qwen/Qwen3-8B,1.0,warm,56,compared,0
+False,152,lcb,False,43,,DFlash,150,dflash,Qwen/Qwen3-8B,0.28289473684210525,,57,compared,0
+False,152,lcb,False,123,,BASTION (adaptive),152,bastion,Qwen/Qwen3-8B,0.8092105263157895,warm,57,compared,0
+False,311,lcb,True,,,DFlash,311,dflash,Qwen/Qwen3-8B,1.0,,58,compared,0
+False,311,lcb,True,,,BASTION (adaptive),311,bastion,Qwen/Qwen3-8B,1.0,warm,58,compared,0
+False,184,lcb,True,,,DFlash,184,dflash,Qwen/Qwen3-8B,1.0,,59,compared,0
+False,184,lcb,False,24,,BASTION (adaptive),162,bastion,Qwen/Qwen3-8B,0.13043478260869565,warm,59,compared,0
+False,101,lcb,True,,,DFlash,101,dflash,Qwen/Qwen3-8B,1.0,,60,compared,0
+False,101,lcb,False,71,,BASTION (adaptive),102,bastion,Qwen/Qwen3-8B,0.7029702970297029,warm,60,compared,0
+False,125,lcb,True,,,DFlash,125,dflash,Qwen/Qwen3-8B,1.0,,61,compared,0
+False,125,lcb,True,,,BASTION (adaptive),125,bastion,Qwen/Qwen3-8B,1.0,warm,61,compared,0
+False,41,lcb,True,,,DFlash,41,dflash,Qwen/Qwen3-8B,1.0,,62,compared,0
+False,41,lcb,True,,,BASTION (adaptive),41,bastion,Qwen/Qwen3-8B,1.0,warm,62,compared,0
+False,106,lcb,True,,,DFlash,106,dflash,Qwen/Qwen3-8B,1.0,,63,compared,0
+False,106,lcb,True,,,BASTION (adaptive),106,bastion,Qwen/Qwen3-8B,1.0,warm,63,compared,0
+False,55,mt-bench,True,,,DFlash,55,dflash,Qwen/Qwen3-8B,1.0,,0,compared,0
+False,55,mt-bench,True,,,BASTION (adaptive),55,bastion,Qwen/Qwen3-8B,1.0,warm,0,compared,0
+False,22,mt-bench,True,,,DFlash,22,dflash,Qwen/Qwen3-8B,1.0,,0,compared,1
+False,22,mt-bench,True,,,BASTION (adaptive),22,bastion,Qwen/Qwen3-8B,1.0,warm,0,compared,1
+False,660,mt-bench,False,37,,DFlash,680,dflash,Qwen/Qwen3-8B,0.05606060606060606,,1,compared,0
+False,660,mt-bench,False,23,,BASTION (adaptive),874,bastion,Qwen/Qwen3-8B,0.03484848484848485,warm,1,compared,0
+False,1153,mt-bench,False,140,,DFlash,1263,dflash,Qwen/Qwen3-8B,0.12142237640936687,,1,compared,1
+False,1153,mt-bench,False,35,,BASTION (adaptive),1086,bastion,Qwen/Qwen3-8B,0.030355594102341718,warm,1,compared,1
+False,476,mt-bench,True,,,DFlash,476,dflash,Qwen/Qwen3-8B,1.0,,2,compared,0
+False,476,mt-bench,True,,,BASTION (adaptive),476,bastion,Qwen/Qwen3-8B,1.0,warm,2,compared,0
+False,529,mt-bench,False,60,,DFlash,562,dflash,Qwen/Qwen3-8B,0.11342155009451796,,2,compared,1
+False,529,mt-bench,False,481,,BASTION (adaptive),517,bastion,Qwen/Qwen3-8B,0.9092627599243857,warm,2,compared,1
+False,10,mt-bench,True,,,DFlash,10,dflash,Qwen/Qwen3-8B,1.0,,3,compared,0
+False,10,mt-bench,True,,,BASTION (adaptive),10,bastion,Qwen/Qwen3-8B,1.0,warm,3,compared,0
+False,69,mt-bench,True,,,DFlash,69,dflash,Qwen/Qwen3-8B,1.0,,3,compared,1
+False,69,mt-bench,False,1,,BASTION (adaptive),73,bastion,Qwen/Qwen3-8B,0.014492753623188406,warm,3,compared,1
+False,1324,mt-bench,False,123,,DFlash,1456,dflash,Qwen/Qwen3-8B,0.09290030211480363,,4,compared,0
+False,1324,mt-bench,False,123,,BASTION (adaptive),2048,bastion,Qwen/Qwen3-8B,0.09290030211480363,warm,4,compared,0
+False,166,mt-bench,True,,,DFlash,166,dflash,Qwen/Qwen3-8B,1.0,,4,compared,1
+False,166,mt-bench,True,,,BASTION (adaptive),166,bastion,Qwen/Qwen3-8B,1.0,warm,4,compared,1
+False,90,mt-bench,True,,,DFlash,90,dflash,Qwen/Qwen3-8B,1.0,,5,compared,0
+False,90,mt-bench,True,,,BASTION (adaptive),90,bastion,Qwen/Qwen3-8B,1.0,warm,5,compared,0
+False,86,mt-bench,True,,,DFlash,86,dflash,Qwen/Qwen3-8B,1.0,,5,compared,1
+False,86,mt-bench,True,,,BASTION (adaptive),86,bastion,Qwen/Qwen3-8B,1.0,warm,5,compared,1
+False,857,mt-bench,False,159,,DFlash,857,dflash,Qwen/Qwen3-8B,0.1855309218203034,,6,compared,0
+False,857,mt-bench,False,68,,BASTION (adaptive),864,bastion,Qwen/Qwen3-8B,0.07934655775962661,warm,6,compared,0
+False,935,mt-bench,False,9,,DFlash,776,dflash,Qwen/Qwen3-8B,0.009625668449197862,,6,compared,1
+False,935,mt-bench,False,62,,BASTION (adaptive),932,bastion,Qwen/Qwen3-8B,0.06631016042780749,warm,6,compared,1
+False,120,mt-bench,False,50,,DFlash,122,dflash,Qwen/Qwen3-8B,0.4166666666666667,,7,compared,0
+False,120,mt-bench,False,50,,BASTION (adaptive),156,bastion,Qwen/Qwen3-8B,0.4166666666666667,warm,7,compared,0
+False,115,mt-bench,False,111,,DFlash,118,dflash,Qwen/Qwen3-8B,0.9652173913043478,,7,compared,1
+False,115,mt-bench,False,111,,BASTION (adaptive),118,bastion,Qwen/Qwen3-8B,0.9652173913043478,warm,7,compared,1
+False,1002,mt-bench,False,47,,DFlash,999,dflash,Qwen/Qwen3-8B,0.046906187624750496,,8,compared,0
+False,1002,mt-bench,False,139,,BASTION (adaptive),954,bastion,Qwen/Qwen3-8B,0.13872255489021956,warm,8,compared,0
+False,1420,mt-bench,False,102,,DFlash,1489,dflash,Qwen/Qwen3-8B,0.07183098591549296,,8,compared,1
+False,1420,mt-bench,False,570,,BASTION (adaptive),1319,bastion,Qwen/Qwen3-8B,0.4014084507042254,warm,8,compared,1
+False,342,mt-bench,True,,,DFlash,342,dflash,Qwen/Qwen3-8B,1.0,,9,compared,0
+False,342,mt-bench,False,53,,BASTION (adaptive),348,bastion,Qwen/Qwen3-8B,0.15497076023391812,warm,9,compared,0
+False,509,mt-bench,True,,,DFlash,509,dflash,Qwen/Qwen3-8B,1.0,,9,compared,1
+False,509,mt-bench,False,479,,BASTION (adaptive),519,bastion,Qwen/Qwen3-8B,0.9410609037328095,warm,9,compared,1
+False,619,mt-bench,False,34,,DFlash,564,dflash,Qwen/Qwen3-8B,0.05492730210016155,,10,compared,0
+False,619,mt-bench,False,34,,BASTION (adaptive),572,bastion,Qwen/Qwen3-8B,0.05492730210016155,warm,10,compared,0
+False,1130,mt-bench,False,41,,DFlash,1144,dflash,Qwen/Qwen3-8B,0.036283185840707964,,10,compared,1
+False,1130,mt-bench,False,103,,BASTION (adaptive),1329,bastion,Qwen/Qwen3-8B,0.09115044247787611,warm,10,compared,1
+False,237,mt-bench,False,137,,DFlash,244,dflash,Qwen/Qwen3-8B,0.5780590717299579,,11,compared,0
+False,237,mt-bench,False,113,,BASTION (adaptive),243,bastion,Qwen/Qwen3-8B,0.4767932489451477,warm,11,compared,0
+False,84,mt-bench,False,79,,DFlash,84,dflash,Qwen/Qwen3-8B,0.9404761904761905,,11,compared,1
+False,84,mt-bench,True,,,BASTION (adaptive),84,bastion,Qwen/Qwen3-8B,1.0,warm,11,compared,1
+False,322,mt-bench,True,,,DFlash,322,dflash,Qwen/Qwen3-8B,1.0,,12,compared,0
+False,322,mt-bench,True,,,BASTION (adaptive),322,bastion,Qwen/Qwen3-8B,1.0,warm,12,compared,0
+False,315,mt-bench,True,,,DFlash,315,dflash,Qwen/Qwen3-8B,1.0,,12,compared,1
+False,315,mt-bench,True,,,BASTION (adaptive),315,bastion,Qwen/Qwen3-8B,1.0,warm,12,compared,1
+False,355,mt-bench,False,176,,DFlash,359,dflash,Qwen/Qwen3-8B,0.49577464788732395,,13,compared,0
+False,355,mt-bench,False,176,,BASTION (adaptive),359,bastion,Qwen/Qwen3-8B,0.49577464788732395,warm,13,compared,0
+False,572,mt-bench,False,102,,DFlash,572,dflash,Qwen/Qwen3-8B,0.17832167832167833,,13,compared,1
+False,572,mt-bench,False,102,,BASTION (adaptive),551,bastion,Qwen/Qwen3-8B,0.17832167832167833,warm,13,compared,1
+False,98,mt-bench,True,,,DFlash,98,dflash,Qwen/Qwen3-8B,1.0,,14,compared,0
+False,98,mt-bench,True,,,BASTION (adaptive),98,bastion,Qwen/Qwen3-8B,1.0,warm,14,compared,0
+False,417,mt-bench,False,12,,DFlash,368,dflash,Qwen/Qwen3-8B,0.02877697841726619,,14,compared,1
+False,417,mt-bench,False,15,,BASTION (adaptive),371,bastion,Qwen/Qwen3-8B,0.03597122302158273,warm,14,compared,1
+False,109,mt-bench,False,85,,DFlash,109,dflash,Qwen/Qwen3-8B,0.7798165137614679,,15,compared,0
+False,109,mt-bench,True,,,BASTION (adaptive),109,bastion,Qwen/Qwen3-8B,1.0,warm,15,compared,0
+False,56,mt-bench,True,,,DFlash,56,dflash,Qwen/Qwen3-8B,1.0,,15,compared,1
+False,56,mt-bench,True,,,BASTION (adaptive),56,bastion,Qwen/Qwen3-8B,1.0,warm,15,compared,1
+False,83,mt-bench,True,,,DFlash,83,dflash,Qwen/Qwen3-8B,1.0,,16,compared,0
+False,83,mt-bench,True,,,BASTION (adaptive),83,bastion,Qwen/Qwen3-8B,1.0,warm,16,compared,0
+False,171,mt-bench,True,,,DFlash,171,dflash,Qwen/Qwen3-8B,1.0,,16,compared,1
+False,171,mt-bench,True,,,BASTION (adaptive),171,bastion,Qwen/Qwen3-8B,1.0,warm,16,compared,1
+False,237,mt-bench,False,96,,DFlash,236,dflash,Qwen/Qwen3-8B,0.4050632911392405,,17,compared,0
+False,237,mt-bench,False,90,,BASTION (adaptive),236,bastion,Qwen/Qwen3-8B,0.379746835443038,warm,17,compared,0
+False,109,mt-bench,True,,,DFlash,109,dflash,Qwen/Qwen3-8B,1.0,,17,compared,1
+False,109,mt-bench,True,,,BASTION (adaptive),109,bastion,Qwen/Qwen3-8B,1.0,warm,17,compared,1
+False,523,mt-bench,False,65,,DFlash,510,dflash,Qwen/Qwen3-8B,0.124282982791587,,18,compared,0
+False,523,mt-bench,False,28,,BASTION (adaptive),514,bastion,Qwen/Qwen3-8B,0.05353728489483748,warm,18,compared,0
+False,205,mt-bench,False,55,,DFlash,205,dflash,Qwen/Qwen3-8B,0.2682926829268293,,18,compared,1
+False,205,mt-bench,False,1,,BASTION (adaptive),203,bastion,Qwen/Qwen3-8B,0.004878048780487805,warm,18,compared,1
+False,173,mt-bench,True,,,DFlash,173,dflash,Qwen/Qwen3-8B,1.0,,19,compared,0
+False,173,mt-bench,True,,,BASTION (adaptive),173,bastion,Qwen/Qwen3-8B,1.0,warm,19,compared,0
+False,150,mt-bench,False,24,,DFlash,143,dflash,Qwen/Qwen3-8B,0.16,,19,compared,1
+False,150,mt-bench,False,5,,BASTION (adaptive),149,bastion,Qwen/Qwen3-8B,0.03333333333333333,warm,19,compared,1
+False,465,mt-bench,False,1,,DFlash,575,dflash,Qwen/Qwen3-8B,0.002150537634408602,,20,compared,0
+False,465,mt-bench,False,1,,BASTION (adaptive),483,bastion,Qwen/Qwen3-8B,0.002150537634408602,warm,20,compared,0
+False,792,mt-bench,False,721,,DFlash,898,dflash,Qwen/Qwen3-8B,0.9103535353535354,,20,compared,1
+False,792,mt-bench,False,17,,BASTION (adaptive),1021,bastion,Qwen/Qwen3-8B,0.021464646464646464,warm,20,compared,1
+False,204,mt-bench,False,71,,DFlash,205,dflash,Qwen/Qwen3-8B,0.3480392156862745,,21,compared,0
+False,204,mt-bench,False,33,,BASTION (adaptive),251,bastion,Qwen/Qwen3-8B,0.16176470588235295,warm,21,compared,0
+False,53,mt-bench,False,51,,DFlash,55,dflash,Qwen/Qwen3-8B,0.9622641509433962,,21,compared,1
+False,53,mt-bench,False,51,,BASTION (adaptive),55,bastion,Qwen/Qwen3-8B,0.9622641509433962,warm,21,compared,1
+False,1068,mt-bench,False,36,,DFlash,1033,dflash,Qwen/Qwen3-8B,0.033707865168539325,,22,compared,0
+False,1068,mt-bench,False,29,,BASTION (adaptive),1207,bastion,Qwen/Qwen3-8B,0.027153558052434457,warm,22,compared,0
+False,1171,mt-bench,False,158,,DFlash,1235,dflash,Qwen/Qwen3-8B,0.1349274124679761,,22,compared,1
+False,1171,mt-bench,False,73,,BASTION (adaptive),1389,bastion,Qwen/Qwen3-8B,0.0623398804440649,warm,22,compared,1
+False,619,mt-bench,False,11,,DFlash,632,dflash,Qwen/Qwen3-8B,0.017770597738287562,,23,compared,0
+False,619,mt-bench,False,38,,BASTION (adaptive),624,bastion,Qwen/Qwen3-8B,0.061389337641357025,warm,23,compared,0
+False,860,mt-bench,False,84,,DFlash,1051,dflash,Qwen/Qwen3-8B,0.09767441860465116,,23,compared,1
+False,860,mt-bench,False,236,,BASTION (adaptive),1042,bastion,Qwen/Qwen3-8B,0.2744186046511628,warm,23,compared,1
+False,210,mt-bench,False,79,,DFlash,192,dflash,Qwen/Qwen3-8B,0.3761904761904762,,24,compared,0
+False,210,mt-bench,False,9,,BASTION (adaptive),200,bastion,Qwen/Qwen3-8B,0.04285714285714286,warm,24,compared,0
+False,244,mt-bench,False,148,,DFlash,212,dflash,Qwen/Qwen3-8B,0.6065573770491803,,24,compared,1
+False,244,mt-bench,False,76,,BASTION (adaptive),212,bastion,Qwen/Qwen3-8B,0.3114754098360656,warm,24,compared,1
+False,134,mt-bench,False,114,,DFlash,143,dflash,Qwen/Qwen3-8B,0.8507462686567164,,25,compared,0
+False,134,mt-bench,False,114,,BASTION (adaptive),143,bastion,Qwen/Qwen3-8B,0.8507462686567164,warm,25,compared,0
+False,48,mt-bench,False,13,,DFlash,43,dflash,Qwen/Qwen3-8B,0.2708333333333333,,25,compared,1
+False,48,mt-bench,True,,,BASTION (adaptive),48,bastion,Qwen/Qwen3-8B,1.0,warm,25,compared,1
+False,327,mt-bench,False,7,,DFlash,238,dflash,Qwen/Qwen3-8B,0.021406727828746176,,26,compared,0
+False,327,mt-bench,False,7,,BASTION (adaptive),221,bastion,Qwen/Qwen3-8B,0.021406727828746176,warm,26,compared,0
+False,319,mt-bench,False,224,,DFlash,286,dflash,Qwen/Qwen3-8B,0.7021943573667712,,26,compared,1
+False,319,mt-bench,False,224,,BASTION (adaptive),286,bastion,Qwen/Qwen3-8B,0.7021943573667712,warm,26,compared,1
+False,678,mt-bench,False,44,,DFlash,695,dflash,Qwen/Qwen3-8B,0.06489675516224189,,27,compared,0
+False,678,mt-bench,False,411,,BASTION (adaptive),706,bastion,Qwen/Qwen3-8B,0.6061946902654868,warm,27,compared,0
+False,856,mt-bench,False,50,,DFlash,850,dflash,Qwen/Qwen3-8B,0.05841121495327103,,27,compared,1
+False,856,mt-bench,False,50,,BASTION (adaptive),873,bastion,Qwen/Qwen3-8B,0.05841121495327103,warm,27,compared,1
+False,43,mt-bench,True,,,DFlash,43,dflash,Qwen/Qwen3-8B,1.0,,28,compared,0
+False,43,mt-bench,True,,,BASTION (adaptive),43,bastion,Qwen/Qwen3-8B,1.0,warm,28,compared,0
+False,372,mt-bench,True,,,DFlash,372,dflash,Qwen/Qwen3-8B,1.0,,28,compared,1
+False,372,mt-bench,False,329,,BASTION (adaptive),366,bastion,Qwen/Qwen3-8B,0.8844086021505376,warm,28,compared,1
+False,308,mt-bench,False,21,,DFlash,275,dflash,Qwen/Qwen3-8B,0.06818181818181818,,29,compared,0
+False,308,mt-bench,False,43,,BASTION (adaptive),294,bastion,Qwen/Qwen3-8B,0.1396103896103896,warm,29,compared,0
+False,696,mt-bench,False,12,,DFlash,688,dflash,Qwen/Qwen3-8B,0.017241379310344827,,29,compared,1
+False,696,mt-bench,False,12,,BASTION (adaptive),694,bastion,Qwen/Qwen3-8B,0.017241379310344827,warm,29,compared,1
+False,15,mt-bench,True,,,DFlash,15,dflash,Qwen/Qwen3-8B,1.0,,30,compared,0
+False,15,mt-bench,True,,,BASTION (adaptive),15,bastion,Qwen/Qwen3-8B,1.0,warm,30,compared,0
+False,16,mt-bench,True,,,DFlash,16,dflash,Qwen/Qwen3-8B,1.0,,30,compared,1
+False,16,mt-bench,False,14,,BASTION (adaptive),16,bastion,Qwen/Qwen3-8B,0.875,warm,30,compared,1
+False,918,mt-bench,False,17,,DFlash,787,dflash,Qwen/Qwen3-8B,0.018518518518518517,,31,compared,0
+False,918,mt-bench,False,28,,BASTION (adaptive),881,bastion,Qwen/Qwen3-8B,0.030501089324618737,warm,31,compared,0
+False,362,mt-bench,False,78,,DFlash,355,dflash,Qwen/Qwen3-8B,0.2154696132596685,,31,compared,1
+False,362,mt-bench,False,78,,BASTION (adaptive),349,bastion,Qwen/Qwen3-8B,0.2154696132596685,warm,31,compared,1
+False,301,mt-bench,False,174,,DFlash,313,dflash,Qwen/Qwen3-8B,0.5780730897009967,,32,compared,0
+False,301,mt-bench,True,,,BASTION (adaptive),301,bastion,Qwen/Qwen3-8B,1.0,warm,32,compared,0
+False,302,mt-bench,False,137,,DFlash,332,dflash,Qwen/Qwen3-8B,0.45364238410596025,,32,compared,1
+False,302,mt-bench,False,204,,BASTION (adaptive),327,bastion,Qwen/Qwen3-8B,0.6754966887417219,warm,32,compared,1
+False,940,mt-bench,False,121,,DFlash,921,dflash,Qwen/Qwen3-8B,0.12872340425531914,,33,compared,0
+False,940,mt-bench,False,18,,BASTION (adaptive),854,bastion,Qwen/Qwen3-8B,0.019148936170212766,warm,33,compared,0
+False,794,mt-bench,False,476,,DFlash,887,dflash,Qwen/Qwen3-8B,0.5994962216624685,,33,compared,1
+False,794,mt-bench,False,18,,BASTION (adaptive),1006,bastion,Qwen/Qwen3-8B,0.022670025188916875,warm,33,compared,1
+False,918,mt-bench,False,178,,DFlash,946,dflash,Qwen/Qwen3-8B,0.19389978213507625,,34,compared,0
+False,918,mt-bench,False,22,,BASTION (adaptive),940,bastion,Qwen/Qwen3-8B,0.023965141612200435,warm,34,compared,0
+False,746,mt-bench,False,84,,DFlash,486,dflash,Qwen/Qwen3-8B,0.1126005361930295,,34,compared,1
+False,746,mt-bench,False,56,,BASTION (adaptive),988,bastion,Qwen/Qwen3-8B,0.07506702412868632,warm,34,compared,1
+False,315,mt-bench,False,111,,DFlash,317,dflash,Qwen/Qwen3-8B,0.3523809523809524,,35,compared,0
+False,315,mt-bench,False,150,,BASTION (adaptive),311,bastion,Qwen/Qwen3-8B,0.47619047619047616,warm,35,compared,0
+False,269,mt-bench,False,54,,DFlash,307,dflash,Qwen/Qwen3-8B,0.20074349442379183,,35,compared,1
+False,269,mt-bench,False,54,,BASTION (adaptive),311,bastion,Qwen/Qwen3-8B,0.20074349442379183,warm,35,compared,1
+False,1035,mt-bench,False,12,,DFlash,1023,dflash,Qwen/Qwen3-8B,0.011594202898550725,,36,compared,0
+False,1035,mt-bench,False,137,,BASTION (adaptive),986,bastion,Qwen/Qwen3-8B,0.1323671497584541,warm,36,compared,0
+False,1079,mt-bench,False,143,,DFlash,976,dflash,Qwen/Qwen3-8B,0.13253012048192772,,36,compared,1
+False,1079,mt-bench,False,143,,BASTION (adaptive),1030,bastion,Qwen/Qwen3-8B,0.13253012048192772,warm,36,compared,1
+False,358,mt-bench,False,349,,DFlash,358,dflash,Qwen/Qwen3-8B,0.9748603351955307,,37,compared,0
+False,358,mt-bench,False,132,,BASTION (adaptive),346,bastion,Qwen/Qwen3-8B,0.3687150837988827,warm,37,compared,0
+False,1062,mt-bench,False,201,,DFlash,1118,dflash,Qwen/Qwen3-8B,0.18926553672316385,,37,compared,1
+False,1062,mt-bench,False,51,,BASTION (adaptive),1118,bastion,Qwen/Qwen3-8B,0.0480225988700565,warm,37,compared,1
+False,573,mt-bench,False,86,,DFlash,603,dflash,Qwen/Qwen3-8B,0.15008726003490402,,38,compared,0
+False,573,mt-bench,False,86,,BASTION (adaptive),463,bastion,Qwen/Qwen3-8B,0.15008726003490402,warm,38,compared,0
+False,522,mt-bench,False,74,,DFlash,381,dflash,Qwen/Qwen3-8B,0.1417624521072797,,38,compared,1
+False,522,mt-bench,False,74,,BASTION (adaptive),436,bastion,Qwen/Qwen3-8B,0.1417624521072797,warm,38,compared,1
+False,757,mt-bench,False,17,,DFlash,661,dflash,Qwen/Qwen3-8B,0.022457067371202115,,39,compared,0
+False,757,mt-bench,False,24,,BASTION (adaptive),666,bastion,Qwen/Qwen3-8B,0.031704095112285335,warm,39,compared,0
+False,141,mt-bench,False,101,,DFlash,142,dflash,Qwen/Qwen3-8B,0.7163120567375887,,39,compared,1
+False,141,mt-bench,False,101,,BASTION (adaptive),142,bastion,Qwen/Qwen3-8B,0.7163120567375887,warm,39,compared,1
+False,310,alpaca,False,101,,DFlash,311,dflash,Qwen/Qwen3-8B,0.3258064516129032,,0,compared,0
+False,310,alpaca,False,300,,BASTION (adaptive),310,bastion,Qwen/Qwen3-8B,0.967741935483871,warm,0,compared,0
+False,370,alpaca,False,137,,DFlash,373,dflash,Qwen/Qwen3-8B,0.37027027027027026,,1,compared,0
+False,370,alpaca,False,137,,BASTION (adaptive),371,bastion,Qwen/Qwen3-8B,0.37027027027027026,warm,1,compared,0
+False,43,alpaca,True,,,DFlash,43,dflash,Qwen/Qwen3-8B,1.0,,2,compared,0
+False,43,alpaca,True,,,BASTION (adaptive),43,bastion,Qwen/Qwen3-8B,1.0,warm,2,compared,0
+False,29,alpaca,True,,,DFlash,29,dflash,Qwen/Qwen3-8B,1.0,,3,compared,0
+False,29,alpaca,True,,,BASTION (adaptive),29,bastion,Qwen/Qwen3-8B,1.0,warm,3,compared,0
+False,778,alpaca,False,47,,DFlash,692,dflash,Qwen/Qwen3-8B,0.060411311053984576,,4,compared,0
+False,778,alpaca,False,47,,BASTION (adaptive),616,bastion,Qwen/Qwen3-8B,0.060411311053984576,warm,4,compared,0
+False,118,alpaca,True,,,DFlash,118,dflash,Qwen/Qwen3-8B,1.0,,5,compared,0
+False,118,alpaca,True,,,BASTION (adaptive),118,bastion,Qwen/Qwen3-8B,1.0,warm,5,compared,0
+False,866,alpaca,False,331,,DFlash,857,dflash,Qwen/Qwen3-8B,0.38221709006928406,,6,compared,0
+False,866,alpaca,False,40,,BASTION (adaptive),758,bastion,Qwen/Qwen3-8B,0.046189376443418015,warm,6,compared,0
+False,293,alpaca,False,33,,DFlash,293,dflash,Qwen/Qwen3-8B,0.11262798634812286,,7,compared,0
+False,293,alpaca,False,37,,BASTION (adaptive),331,bastion,Qwen/Qwen3-8B,0.12627986348122866,warm,7,compared,0
+False,19,alpaca,True,,,DFlash,19,dflash,Qwen/Qwen3-8B,1.0,,8,compared,0
+False,19,alpaca,True,,,BASTION (adaptive),19,bastion,Qwen/Qwen3-8B,1.0,warm,8,compared,0
+False,146,alpaca,True,,,DFlash,146,dflash,Qwen/Qwen3-8B,1.0,,9,compared,0
+False,146,alpaca,False,122,,BASTION (adaptive),146,bastion,Qwen/Qwen3-8B,0.8356164383561644,warm,9,compared,0
+False,704,alpaca,False,210,,DFlash,709,dflash,Qwen/Qwen3-8B,0.29829545454545453,,10,compared,0
+False,704,alpaca,False,18,,BASTION (adaptive),620,bastion,Qwen/Qwen3-8B,0.02556818181818182,warm,10,compared,0
+False,146,alpaca,True,,,DFlash,146,dflash,Qwen/Qwen3-8B,1.0,,11,compared,0
+False,146,alpaca,False,98,,BASTION (adaptive),146,bastion,Qwen/Qwen3-8B,0.6712328767123288,warm,11,compared,0
+False,955,alpaca,False,90,,DFlash,993,dflash,Qwen/Qwen3-8B,0.09424083769633508,,12,compared,0
+False,955,alpaca,False,90,,BASTION (adaptive),1004,bastion,Qwen/Qwen3-8B,0.09424083769633508,warm,12,compared,0
+False,105,alpaca,True,,,DFlash,105,dflash,Qwen/Qwen3-8B,1.0,,13,compared,0
+False,105,alpaca,True,,,BASTION (adaptive),105,bastion,Qwen/Qwen3-8B,1.0,warm,13,compared,0
+False,28,alpaca,True,,,DFlash,28,dflash,Qwen/Qwen3-8B,1.0,,14,compared,0
+False,28,alpaca,True,,,BASTION (adaptive),28,bastion,Qwen/Qwen3-8B,1.0,warm,14,compared,0
+False,58,alpaca,True,,,DFlash,58,dflash,Qwen/Qwen3-8B,1.0,,15,compared,0
+False,58,alpaca,True,,,BASTION (adaptive),58,bastion,Qwen/Qwen3-8B,1.0,warm,15,compared,0
+False,724,alpaca,False,498,,DFlash,648,dflash,Qwen/Qwen3-8B,0.6878453038674033,,16,compared,0
+False,724,alpaca,False,162,,BASTION (adaptive),727,bastion,Qwen/Qwen3-8B,0.22375690607734808,warm,16,compared,0
+False,130,alpaca,False,107,,DFlash,129,dflash,Qwen/Qwen3-8B,0.823076923076923,,17,compared,0
+False,130,alpaca,False,107,,BASTION (adaptive),129,bastion,Qwen/Qwen3-8B,0.823076923076923,warm,17,compared,0
+False,667,alpaca,False,81,,DFlash,718,dflash,Qwen/Qwen3-8B,0.12143928035982009,,18,compared,0
+False,667,alpaca,False,14,,BASTION (adaptive),665,bastion,Qwen/Qwen3-8B,0.020989505247376312,warm,18,compared,0
+False,34,alpaca,True,,,DFlash,34,dflash,Qwen/Qwen3-8B,1.0,,19,compared,0
+False,34,alpaca,True,,,BASTION (adaptive),34,bastion,Qwen/Qwen3-8B,1.0,warm,19,compared,0
+False,226,alpaca,False,215,,DFlash,222,dflash,Qwen/Qwen3-8B,0.9513274336283186,,20,compared,0
+False,226,alpaca,False,38,,BASTION (adaptive),200,bastion,Qwen/Qwen3-8B,0.168141592920354,warm,20,compared,0
+False,119,alpaca,True,,,DFlash,119,dflash,Qwen/Qwen3-8B,1.0,,21,compared,0
+False,119,alpaca,False,47,,BASTION (adaptive),133,bastion,Qwen/Qwen3-8B,0.3949579831932773,warm,21,compared,0
+False,306,alpaca,True,,,DFlash,306,dflash,Qwen/Qwen3-8B,1.0,,22,compared,0
+False,306,alpaca,True,,,BASTION (adaptive),306,bastion,Qwen/Qwen3-8B,1.0,warm,22,compared,0
+False,192,alpaca,False,117,,DFlash,189,dflash,Qwen/Qwen3-8B,0.609375,,23,compared,0
+False,192,alpaca,False,122,,BASTION (adaptive),177,bastion,Qwen/Qwen3-8B,0.6354166666666666,warm,23,compared,0
+False,941,alpaca,False,13,,DFlash,810,dflash,Qwen/Qwen3-8B,0.01381509032943677,,24,compared,0
+False,941,alpaca,False,194,,BASTION (adaptive),910,bastion,Qwen/Qwen3-8B,0.206163655685441,warm,24,compared,0
+False,273,alpaca,False,73,,DFlash,276,dflash,Qwen/Qwen3-8B,0.2673992673992674,,25,compared,0
+False,273,alpaca,False,140,,BASTION (adaptive),276,bastion,Qwen/Qwen3-8B,0.5128205128205128,warm,25,compared,0
+False,837,alpaca,False,30,,DFlash,833,dflash,Qwen/Qwen3-8B,0.035842293906810034,,26,compared,0
+False,837,alpaca,False,30,,BASTION (adaptive),766,bastion,Qwen/Qwen3-8B,0.035842293906810034,warm,26,compared,0
+False,1074,alpaca,False,235,,DFlash,905,dflash,Qwen/Qwen3-8B,0.21880819366852886,,27,compared,0
+False,1074,alpaca,False,235,,BASTION (adaptive),997,bastion,Qwen/Qwen3-8B,0.21880819366852886,warm,27,compared,0
+False,46,alpaca,False,24,,DFlash,45,dflash,Qwen/Qwen3-8B,0.5217391304347826,,28,compared,0
+False,46,alpaca,True,,,BASTION (adaptive),46,bastion,Qwen/Qwen3-8B,1.0,warm,28,compared,0
+False,386,alpaca,False,117,,DFlash,442,dflash,Qwen/Qwen3-8B,0.30310880829015546,,29,compared,0
+False,386,alpaca,False,117,,BASTION (adaptive),474,bastion,Qwen/Qwen3-8B,0.30310880829015546,warm,29,compared,0
+False,924,alpaca,False,109,,DFlash,792,dflash,Qwen/Qwen3-8B,0.11796536796536797,,30,compared,0
+False,924,alpaca,False,109,,BASTION (adaptive),932,bastion,Qwen/Qwen3-8B,0.11796536796536797,warm,30,compared,0
+False,243,alpaca,False,84,,DFlash,230,dflash,Qwen/Qwen3-8B,0.345679012345679,,31,compared,0
+False,243,alpaca,False,49,,BASTION (adaptive),302,bastion,Qwen/Qwen3-8B,0.20164609053497942,warm,31,compared,0
+False,62,alpaca,True,,,DFlash,62,dflash,Qwen/Qwen3-8B,1.0,,32,compared,0
+False,62,alpaca,True,,,BASTION (adaptive),62,bastion,Qwen/Qwen3-8B,1.0,warm,32,compared,0
+False,9,alpaca,True,,,DFlash,9,dflash,Qwen/Qwen3-8B,1.0,,33,compared,0
+False,9,alpaca,False,2,,BASTION (adaptive),9,bastion,Qwen/Qwen3-8B,0.2222222222222222,warm,33,compared,0
+False,109,alpaca,True,,,DFlash,109,dflash,Qwen/Qwen3-8B,1.0,,34,compared,0
+False,109,alpaca,True,,,BASTION (adaptive),109,bastion,Qwen/Qwen3-8B,1.0,warm,34,compared,0
+False,189,alpaca,False,139,,DFlash,189,dflash,Qwen/Qwen3-8B,0.7354497354497355,,35,compared,0
+False,189,alpaca,False,139,,BASTION (adaptive),189,bastion,Qwen/Qwen3-8B,0.7354497354497355,warm,35,compared,0
+False,45,alpaca,True,,,DFlash,45,dflash,Qwen/Qwen3-8B,1.0,,36,compared,0
+False,45,alpaca,True,,,BASTION (adaptive),45,bastion,Qwen/Qwen3-8B,1.0,warm,36,compared,0
+False,727,alpaca,False,3,,DFlash,657,dflash,Qwen/Qwen3-8B,0.0041265474552957355,,37,compared,0
+False,727,alpaca,False,3,,BASTION (adaptive),568,bastion,Qwen/Qwen3-8B,0.0041265474552957355,warm,37,compared,0
+False,137,alpaca,True,,,DFlash,137,dflash,Qwen/Qwen3-8B,1.0,,38,compared,0
+False,137,alpaca,False,111,,BASTION (adaptive),137,bastion,Qwen/Qwen3-8B,0.8102189781021898,warm,38,compared,0
+False,18,alpaca,True,,,DFlash,18,dflash,Qwen/Qwen3-8B,1.0,,39,compared,0
+False,18,alpaca,True,,,BASTION (adaptive),18,bastion,Qwen/Qwen3-8B,1.0,warm,39,compared,0
+False,664,alpaca,False,28,,DFlash,695,dflash,Qwen/Qwen3-8B,0.04216867469879518,,40,compared,0
+False,664,alpaca,False,28,,BASTION (adaptive),591,bastion,Qwen/Qwen3-8B,0.04216867469879518,warm,40,compared,0
+False,654,alpaca,False,74,,DFlash,707,dflash,Qwen/Qwen3-8B,0.11314984709480122,,41,compared,0
+False,654,alpaca,False,39,,BASTION (adaptive),646,bastion,Qwen/Qwen3-8B,0.05963302752293578,warm,41,compared,0
+False,36,alpaca,False,18,,DFlash,35,dflash,Qwen/Qwen3-8B,0.5,,42,compared,0
+False,36,alpaca,False,18,,BASTION (adaptive),30,bastion,Qwen/Qwen3-8B,0.5,warm,42,compared,0
+False,161,alpaca,True,,,DFlash,161,dflash,Qwen/Qwen3-8B,1.0,,43,compared,0
+False,161,alpaca,True,,,BASTION (adaptive),161,bastion,Qwen/Qwen3-8B,1.0,warm,43,compared,0
+False,128,alpaca,False,53,,DFlash,129,dflash,Qwen/Qwen3-8B,0.4140625,,44,compared,0
+False,128,alpaca,False,53,,BASTION (adaptive),128,bastion,Qwen/Qwen3-8B,0.4140625,warm,44,compared,0
+False,672,alpaca,False,42,,DFlash,621,dflash,Qwen/Qwen3-8B,0.0625,,45,compared,0
+False,672,alpaca,False,37,,BASTION (adaptive),687,bastion,Qwen/Qwen3-8B,0.05505952380952381,warm,45,compared,0
+False,738,alpaca,False,89,,DFlash,728,dflash,Qwen/Qwen3-8B,0.12059620596205962,,46,compared,0
+False,738,alpaca,False,89,,BASTION (adaptive),806,bastion,Qwen/Qwen3-8B,0.12059620596205962,warm,46,compared,0
+False,509,alpaca,False,49,,DFlash,679,dflash,Qwen/Qwen3-8B,0.0962671905697446,,47,compared,0
+False,509,alpaca,False,127,,BASTION (adaptive),571,bastion,Qwen/Qwen3-8B,0.24950884086444008,warm,47,compared,0
+False,836,alpaca,False,29,,DFlash,822,dflash,Qwen/Qwen3-8B,0.034688995215311005,,48,compared,0
+False,836,alpaca,False,94,,BASTION (adaptive),1001,bastion,Qwen/Qwen3-8B,0.11244019138755981,warm,48,compared,0
+False,960,alpaca,False,172,,DFlash,932,dflash,Qwen/Qwen3-8B,0.17916666666666667,,49,compared,0
+False,960,alpaca,False,89,,BASTION (adaptive),1068,bastion,Qwen/Qwen3-8B,0.09270833333333334,warm,49,compared,0
+False,63,alpaca,True,,,DFlash,63,dflash,Qwen/Qwen3-8B,1.0,,50,compared,0
+False,63,alpaca,True,,,BASTION (adaptive),63,bastion,Qwen/Qwen3-8B,1.0,warm,50,compared,0
+False,105,alpaca,True,,,DFlash,105,dflash,Qwen/Qwen3-8B,1.0,,51,compared,0
+False,105,alpaca,True,,,BASTION (adaptive),105,bastion,Qwen/Qwen3-8B,1.0,warm,51,compared,0
+False,38,alpaca,True,,,DFlash,38,dflash,Qwen/Qwen3-8B,1.0,,52,compared,0
+False,38,alpaca,False,11,,BASTION (adaptive),38,bastion,Qwen/Qwen3-8B,0.2894736842105263,warm,52,compared,0
+False,759,alpaca,False,132,,DFlash,744,dflash,Qwen/Qwen3-8B,0.17391304347826086,,53,compared,0
+False,759,alpaca,False,255,,BASTION (adaptive),736,bastion,Qwen/Qwen3-8B,0.3359683794466403,warm,53,compared,0
+False,70,alpaca,False,46,,DFlash,73,dflash,Qwen/Qwen3-8B,0.6571428571428571,,54,compared,0
+False,70,alpaca,False,46,,BASTION (adaptive),73,bastion,Qwen/Qwen3-8B,0.6571428571428571,warm,54,compared,0
+False,229,alpaca,False,112,,DFlash,244,dflash,Qwen/Qwen3-8B,0.4890829694323144,,55,compared,0
+False,229,alpaca,True,,,BASTION (adaptive),229,bastion,Qwen/Qwen3-8B,1.0,warm,55,compared,0
+False,160,alpaca,False,135,,DFlash,161,dflash,Qwen/Qwen3-8B,0.84375,,56,compared,0
+False,160,alpaca,False,14,,BASTION (adaptive),377,bastion,Qwen/Qwen3-8B,0.0875,warm,56,compared,0
+False,153,alpaca,False,19,,DFlash,145,dflash,Qwen/Qwen3-8B,0.12418300653594772,,57,compared,0
+False,153,alpaca,True,,,BASTION (adaptive),153,bastion,Qwen/Qwen3-8B,1.0,warm,57,compared,0
+False,1151,alpaca,False,93,,DFlash,1176,dflash,Qwen/Qwen3-8B,0.08079930495221546,,58,compared,0
+False,1151,alpaca,False,380,,BASTION (adaptive),1193,bastion,Qwen/Qwen3-8B,0.3301476976542137,warm,58,compared,0
+False,217,alpaca,False,108,,DFlash,214,dflash,Qwen/Qwen3-8B,0.4976958525345622,,59,compared,0
+False,217,alpaca,False,64,,BASTION (adaptive),207,bastion,Qwen/Qwen3-8B,0.29493087557603687,warm,59,compared,0
+False,128,alpaca,False,90,,DFlash,155,dflash,Qwen/Qwen3-8B,0.703125,,60,compared,0
+False,128,alpaca,False,80,,BASTION (adaptive),127,bastion,Qwen/Qwen3-8B,0.625,warm,60,compared,0
+False,1038,alpaca,False,169,,DFlash,1035,dflash,Qwen/Qwen3-8B,0.1628131021194605,,61,compared,0
+False,1038,alpaca,False,169,,BASTION (adaptive),1222,bastion,Qwen/Qwen3-8B,0.1628131021194605,warm,61,compared,0
+False,945,alpaca,False,300,,DFlash,943,dflash,Qwen/Qwen3-8B,0.31746031746031744,,62,compared,0
+False,945,alpaca,False,300,,BASTION (adaptive),965,bastion,Qwen/Qwen3-8B,0.31746031746031744,warm,62,compared,0
+False,807,alpaca,False,18,,DFlash,677,dflash,Qwen/Qwen3-8B,0.022304832713754646,,63,compared,0
+False,807,alpaca,False,7,,BASTION (adaptive),873,bastion,Qwen/Qwen3-8B,0.008674101610904586,warm,63,compared,0
