@@ -13,5 +13,5 @@ Limits:
 Regenerate with:
 
 ```bash
-python -m Mixture_of_Experts.experiments.xshare.simulate_variants --logits results/gsm8k/router_logits_c8.pt results/gsm8k/router_logits_c32.pt --out-dir results/simulations
+python -m Mixture_of_Experts.experiments.xshare.simulate_variants --logits Mixture_of_Experts/experiments/xshare/results/gsm8k/router_logits_c8.pt Mixture_of_Experts/experiments/xshare/results/gsm8k/router_logits_c32.pt --out-dir Mixture_of_Experts/experiments/xshare/results/simulations
 ```

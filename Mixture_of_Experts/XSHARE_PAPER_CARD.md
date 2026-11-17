@@ -9,7 +9,7 @@
 - **Issue:** https://github.com/krsnoki/DA4022/issues/5
 - **Status:** partial-reproduction
 - **Upstream code / licence:** none found. Checked the paper text, the arXiv page, the ICML page and GitHub on 2026-11-17. Reimplemented from the paper.
-- **Backbone IDs:** `text.olmoe-1b-7b-0125-instruct` (64 experts, 8 per token, 16 layers; `Backbones/registry.yaml`)
+- **Backbone IDs:** `text.olmoe-1b-7b-0125-instruct` (64 experts, 8 per token, 16 layers; Apache-2.0 plus the Gemma Terms of Use; `Backbones/registry.yaml`)
 - **Dataset IDs and split:** `text.gsm8k.test`, three disjoint subsets of 200 test questions (600 questions; `Dataloaders/registry.yaml`)
 - **Hardware assumptions:** one CUDA GPU with about 16 GB free for the experiments. The core algorithms and all unit tests run on a CPU. Results were measured on one NVIDIA RTX PRO 4500 Blackwell (32 GB), driver 570.211.
 
@@ -90,21 +90,42 @@ are not reproduced here; see "Results" for what we measured.
       --out-dir Mixture_of_Experts/experiments/xshare/results/gsm8k
   ```
 
-  Then, from `Mixture_of_Experts/experiments/xshare/`, the tables, plots and
-  simulations:
+  Then the tables, plots, simulations and activated-expert analysis, also
+  from the repository root:
 
   ```bash
-  python -m Mixture_of_Experts.experiments.xshare.summarize results/gsm8k
-  python -m Mixture_of_Experts.experiments.xshare.plot_results results/gsm8k/summary.csv --out-dir results/plots
-  python -m Mixture_of_Experts.experiments.xshare.simulate_variants --logits results/gsm8k/router_logits_c8.pt results/gsm8k/router_logits_c32.pt --out-dir results/simulations
+  R=Mixture_of_Experts/experiments/xshare/results
+  python -m Mixture_of_Experts.experiments.xshare.summarize $R/gsm8k
+  python -m Mixture_of_Experts.experiments.xshare.plot_results $R/gsm8k/summary.csv --out-dir $R/plots
+  python -m Mixture_of_Experts.experiments.xshare.simulate_variants \
+      --logits $R/gsm8k/router_logits_c8.pt $R/gsm8k/router_logits_c32.pt --out-dir $R/simulations
+  python -m Mixture_of_Experts.experiments.xshare.expected_activation \
+      --n-experts 64 --top-k 8 --batches 1 2 3 4 6 8 12 16 24 32 \
+      --capture $R/gsm8k/router_logits_c8.pt $R/gsm8k/router_logits_c32.pt \
+      --out $R/expected_activation.csv
   ```
 
-- **Install:** see `requirements-xshare.txt` (exact versions).
-- **Tests:** `python -m pytest Mixture_of_Experts/tests Dataloaders/tests -q` (595 tests, all passing at commit `6054781`;
-  CPU only; the dataset and tokenizer tests skip unless those are cached locally).
+  The router-logit files (`router_logits_c*.pt`, 4 MB) are written by the
+  sweep and are not committed, so the last two commands need a sweep run first.
+
+- **Install** (exact versions; PyTorch first, from the index for your CUDA
+  setup):
+
+  ```bash
+  pip install "torch==2.13.0" --index-url https://download.pytorch.org/whl/cu129
+  pip install -r Mixture_of_Experts/requirements-xshare.txt
+  ```
+
+- **Tests:** `python -m pytest Mixture_of_Experts/tests Dataloaders/tests -q`.
+  595 tests, all passing at commit `6054781`. CPU only; the dataset and
+  tokenizer tests skip unless those are cached locally.
+- **GPU smoke test** (about two minutes; checks that the model loads and that
+  XShare with every expert kept reproduces the baseline's output exactly):
+  `python -m Mixture_of_Experts.experiments.xshare.smoke_test --batch-size 8`.
 - **Environment used:** Ubuntu 24.04, Python 3.12.3, torch 2.13.0+cu129,
-  transformers 5.19.0 (attention `sdpa`, experts `grouped_mm`), code tree `c984e3decbd2dfa3217c5d65f2aaa4026df04fce`, commit
-  `60547812a18a626202ce040b18d3dedf0620ec1c`.
+  transformers 5.19.0 (attention `sdpa`, experts `grouped_mm`). Code at commit
+  `60547812a18a626202ce040b18d3dedf0620ec1c` (tree
+  `c984e3decbd2dfa3217c5d65f2aaa4026df04fce`).
 
 ## Results
 
@@ -122,7 +143,9 @@ How to read the columns:
   questions, with a 95% Wilson interval.
 - **p:** exact McNemar test against the baseline on the same questions. It
   counts only the questions where the two disagree. Above 0.05, the accuracy
-  change is indistinguishable from noise.
+  change is indistinguishable from noise. There are 16 comparisons; with a
+  Holm-Bonferroni correction at 5%, the four results with p < 0.001 stay
+  significant and the p = 0.017 result (batch 8, XShare `k0=1, b=8`) does not.
 - **Latency:** median wall time of one decode step for the whole batch.
 - **Throughput:** decode tokens per second, mean ± standard deviation over the
   three subsets. Speed-up is computed per subset against the baseline.
@@ -167,21 +190,28 @@ What the measurements support:
    paper reports +20-23% for the equivalent setting.
 2. **The batch-level budget rescues aggressive warm-ups.** With `k0=1`, OEA
    loses 27-34 points. Adding `b=8` brings the loss to 3.0-4.5 points (66.0%
-   against 34.7% at batch 32). This matches the paper's claim that OEA with a
-   small `k0` collapses and the greedy budget prevents it.
+   against 34.7% at batch 32). This is consistent with the paper's claim that
+   OEA with a small `k0` collapses and the greedy budget prevents it, on a
+   different model with a different `k`.
 3. **With a generous warm-up, the greedy budget adds cost but no accuracy.**
    OEA `k0=4` already preserves accuracy, and adding `b=8` to it only makes
    it slower. In our setup the best configuration is warm-up only.
 4. **No configuration is faster at batch 8.** With about 5 live sequences per
    step the baseline activates only 25 of 64 experts, so there is little left
-   to prune. The 4.0 ms selection overhead outweighs the saving.
-5. **Pruning always lowers energy per token,** at both batch sizes, even where
-   throughput falls: fewer expert weights are read per step.
-6. **Selection overhead: 4.0 ms per decode step** at both batch sizes (keep-all
-   XShare against the baseline). Keep-all XShare produced exactly the
-   baseline's answer on all 600 questions at both batch sizes, which confirms
-   the routing replacement is exact.
-7. **Peak memory does not change:** all expert weights stay loaded. The saving
+   to prune. The selection overhead outweighs the saving.
+5. **Pruning lowered energy per token in every configuration,** at both batch
+   sizes, even where throughput fell. Energy per token also depends on answer
+   length (prefill energy is spread over the generated tokens, and pruning
+   changes the answers), so this is not purely an effect of fewer expert
+   weights being read.
+6. **Selection overhead: at least 4.0 ms per decode step** at both batch sizes,
+   measured as keep-all XShare against the baseline. That control has no
+   warm-up step; configurations with a warm-up also sort each token's scores,
+   so they pay somewhat more. Keep-all XShare produced exactly the baseline's
+   answer on all 600 questions at both batch sizes, which confirms the routing
+   replacement is exact.
+7. **Peak memory does not change beyond allocator noise** (13.4-13.5 GiB at
+   batch 8, 15.1 GiB at batch 32): all expert weights stay loaded. The saving
    is in weights read per step, not weights stored.
 
 ### Other experiments
@@ -191,7 +221,11 @@ What the measurements support:
   simulation matches the paper's formula `N(1-(1-k/N)^B)` to within 0.1 expert
   for 64 experts and `k = 8`. The real model activates fewer, because tokens
   in a batch share expert preferences: 33.4 for 8 tokens (formula 42.0) and
-  53.6 for 32 tokens (formula 63.1), measured on unpruned decode steps.
+  53.6 for 32 tokens (formula 63.1). These two values come from the first 48
+  unpruned decode steps of the first batch of subset 0 at each batch size
+  (768 layer calls each), while every sequence was still generating. The
+  sweep averages in the table (25.1 and 41.7) are lower because sequences
+  finish and fewer stay live.
 - **Speculative-decoding variant, simulated (approximate).** No draft model was
   run: each request contributes 4 consecutive true tokens from the captured
   router scores. Consecutive tokens of one request share 3.0 of their top-8
@@ -207,9 +241,11 @@ What the measurements support:
   2, 4 or 8 virtual GPUs by `expert index mod G`; there is one physical GPU.
   With 8 groups and 32 sequences, the busiest group's active experts fall from
   7.75 (unpruned) to 4.10 with the GPU-aware selection at 2 experts per group
-  (18 kept), against 6.11 for global selection with 33 kept. The GPU-aware sets
-  are smaller, so they retain less gate weight (76% and 85% against 93%). No
-  latency or communication cost was measured.
+  (18 kept) and 4.91 at 3 per group (24 kept), against 6.11 for global
+  selection with 33 kept. These sets are not the same size, so the comparison
+  mixes the effect of balancing with the effect of keeping fewer experts. The
+  smaller GPU-aware sets also retain less gate weight (76% and 85% against
+  93%). No latency or communication cost was measured.
 
 ## Differences and limitations
 
@@ -223,8 +259,9 @@ What the measurements support:
   (570.211) accepts only CUDA 12.8, and loading failed with
   `cudaErrorUnsupportedPtxVersion` (see `Backbones/Generative_Pretrained/gpt_oss_20b.md`).
 - **Selection overhead.** The paper builds the expert mask inside the MoE
-  kernel. Our selection runs as separate PyTorch operations and costs 4.0 ms
-  per decode step (measured). Every pruned configuration pays it.
+  kernel. Our selection runs as separate PyTorch operations and costs at least
+  4.0 ms per decode step (measured without a warm-up step). Every pruned
+  configuration pays it.
 - **Expert kernel.** transformers ran the experts with its `grouped_mm`
   implementation. We did not measure how much of the weight-read saving this
   kernel turns into time.
@@ -248,6 +285,33 @@ What the measurements support:
 - **Speculative decoding** was not run. The per-request variant is evaluated
   only by simulation on true consecutive tokens, which a real draft model may
   not produce.
+- **Run order.** Within each subset the configurations ran in a fixed order
+  with the baseline first, one run each, after one 8-token warm-up pass per
+  configuration. Slow drift (for example GPU temperature) is therefore not
+  randomised across configurations.
+- **Partial last batch.** 200 questions in batches of 32 leave a last batch of
+  8. It is the same for every configuration, so comparisons are fair, but it
+  pulls the batch-32 step-time and live-sequence averages down slightly.
+- **Idle power** was measured once per batch size, just after the model
+  loaded (34.5 W and 38.5 W). "Above idle" figures inherit that uncertainty.
+  The power sampler timestamps each `nvidia-smi` reading when Python reads it,
+  so pipe delays shift samples slightly; over runs of minutes this is small.
+- **Dropped tokens** are 0 by construction: the kept set is always topped up
+  to at least `k` experts, so every token is routed to `k` experts. The value
+  is not measured.
+- **Routing diagnostics.** The selection API returns each token's expert
+  assignment; the sweep logs only per-layer aggregates (kept and activated
+  experts, live tokens), since full assignments for every step would be very
+  large. OLMoE inference has no capacity factor, and its auxiliary routing
+  losses apply only in training. Router logits are computed in bfloat16, as
+  the model does; the selection itself runs in float32.
+- **Checkpoint.** The weights are never modified. `install_xshare` replaces
+  each layer's router module in memory with a wrapper that calls the original
+  router whenever nothing is pruned; reloading the model removes it.
+- **Result metadata.** The result-schema CSV has no columns for dataset
+  revision or model size. They are in the registries (`Dataloaders/registry.yaml`:
+  revision `740312ad...`; `Backbones/registry.yaml`: 6.92B parameters, about
+  13.8 GB on disk) and in every per-run JSON.
 
 ### Choices where the paper is ambiguous
 
@@ -259,6 +323,7 @@ What the measurements support:
 | What if the set has fewer than `k` experts? | Top up to `k` with the best remaining experts (`min_keep`). | Table 2 reports exactly 4.00 activated experts for `k0=1, b=0` at concurrency 4 with `k = 4`. |
 | When to prune? | Decode steps only (one new token per sequence). Prefill is unpruned. | The paper formulates the problem "at the decode phase". |
 | Per-request budget (`g`): total or additional? | Additional, as for `b`. | Table 3 shows activated experts rising with `g` beyond what a total cap of 4-6 would allow. |
+| Algorithm 5: finish the round-robin pass when the budget is reached mid-pass? | Stop as soon as the set holds `m_g × G` experts, so the size never exceeds the budget. | As written, the paper's loop finishes the whole pass, so it can overshoot the budget. Our choice keeps the budget exact but gives the last partial pass to the lower-numbered groups. Only the simulated expert-parallel results depend on this. |
 
 ## Reproduction checklist
 
@@ -267,4 +332,4 @@ What the measurements support:
 - [x] Baseline runs on the same setup
 - [x] Tests and seed handling added
 - [x] Resource and quality metrics reported
-- [x] Licence/data terms checked (model Apache-2.0, GSM8K MIT)
+- [x] Licence/data terms checked (model Apache-2.0, plus the Gemma Terms of Use because its fine-tuning data includes third-party model outputs; GSM8K MIT)

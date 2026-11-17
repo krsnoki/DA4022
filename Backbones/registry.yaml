@@ -17,14 +17,15 @@ text.olmoe-1b-7b-0125-instruct:
   hf_path: allenai/OLMoE-1B-7B-0125-Instruct
   revision: b89a7c4bc24fb9e55ce2543c9458ce0ca5c4650e
   license: apache-2.0
+  additional_terms: Gemma Terms of Use (https://ai.google.dev/gemma/terms); the fine-tuning data includes outputs of third-party models (per the model card)
   num_parameters: 6919161856
   dtype: bfloat16
   input_spec:
     max_position_embeddings: 4096
     chat_template: true
   preprocessing: tokenizer and chat template from the same repository and revision
-  parent_backbone: see card
-  fine_tuning_dataset: see card
+  parent_backbone: allenai/OLMoE-1B-7B-0125-DPO (base model allenai/OLMoE-1B-7B-0125)
+  fine_tuning_dataset: Tulu 3 based SFT and DPO mixes (see the card)
   loader: Backbones.Generative_Pretrained.hf_causal_lm.HFCausalLMBackbone
   card: Backbones/Generative_Pretrained/olmoe_1b_7b_0125_instruct.md
 

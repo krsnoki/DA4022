@@ -6,7 +6,7 @@
 - **Pretraining regime:** self_supervised (next-token prediction), followed by instruction tuning.
 - **Training objective/data:** Next-token prediction pretraining, then post-training. The model card states the models were trained on the Dolma dataset ("a mix of publicly available, synthetic and human-created datasets"). Post-training, as stated on the card: (1) supervised finetuning on an OLMo-specific variant of the Tulu 3 dataset (`allenai/tulu-3-sft-olmo-2-mixture`); (2) DPO on `allenai/olmo-2-1124-13b-preference-mix`; (3) RLVR on `allenai/RLVR-GSM`. Other training details (compute, filtering, exact mixture sizes): unknown.
 - **Weights URI and exact revision:** https://huggingface.co/allenai/OLMoE-1B-7B-0125-Instruct. Revision: `b89a7c4bc24fb9e55ce2543c9458ce0ca5c4650e`.
-- **License/usage terms:** Apache-2.0. Not gated.
+- **License/usage terms:** Apache-2.0, for research and educational use. The model card also states that the model "has been fine-tuned using a dataset mix with outputs generated from third party models" and is therefore subject to the [Gemma Terms of Use](https://ai.google.dev/gemma/terms) as well. Not gated.
 - **Tokenizer/processor revision:** Shipped in the same repository at the same revision (`b89a7c4bc24fb9e55ce2543c9458ce0ca5c4650e`). Chat template applied with `tokenizer.apply_chat_template`.
 - **Parent backbone (if fine-tuned):** `allenai/OLMoE-1B-7B-0125-DPO`, per the card's "Finetuned from" field. The card's model tree names the base checkpoint `allenai/OLMoE-1B-7B-0125`; the card contains both statements, and the DPO checkpoint is the stated immediate parent.
 - **Input/output contract:** Token ids in, next-token logits out. We use greedy decoding with a KV cache.
@@ -59,7 +59,7 @@ objective: next-token prediction pretraining (Dolma), then SFT (Tulu 3 OLMo-spec
 weights_source: huggingface
 weights_uri: https://huggingface.co/allenai/OLMoE-1B-7B-0125-Instruct
 revision: b89a7c4bc24fb9e55ce2543c9458ce0ca5c4650e
-license: Apache-2.0
+license: apache-2.0 (also subject to the Gemma Terms of Use; see the licence line above)
 num_parameters: 6919161856       # BF16 safetensors; active parameters per token: unknown
 input_spec:
   format: token ids; chat template applied with tokenizer.apply_chat_template

@@ -17,10 +17,10 @@ Run from the repository root (CPU is enough):
 
     python -m Mixture_of_Experts.experiments.xshare.expected_activation \
         --n-experts 64 --top-k 8 --batches 1 2 3 4 6 8 12 16 24 32 \
-        --capture results/gsm8k/router_logits_c8.pt results/gsm8k/router_logits_c32.pt \
-        --out results/expected_activation.csv
+        --capture Mixture_of_Experts/experiments/xshare/results/gsm8k/router_logits_c8.pt Mixture_of_Experts/experiments/xshare/results/gsm8k/router_logits_c32.pt \
+        --out Mixture_of_Experts/experiments/xshare/results/expected_activation.csv
 
-(paths relative to ``Mixture_of_Experts/experiments/xshare/``)
+The router-logit files are written by ``run_sweep.py``.
 """
 
 from __future__ import annotations

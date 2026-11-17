@@ -31,11 +31,11 @@ Why this is approximate:
   (changed hidden states in later layers) are not captured. Each layer is
   treated independently.
 
-Run (CPU is enough):
+Run from the repository root (CPU is enough):
 
     python -m Mixture_of_Experts.experiments.xshare.simulate_variants \
-        --logits results/gsm8k/router_logits_c8.pt results/gsm8k/router_logits_c32.pt \
-        --out-dir results/simulations
+        --logits Mixture_of_Experts/experiments/xshare/results/gsm8k/router_logits_c8.pt Mixture_of_Experts/experiments/xshare/results/gsm8k/router_logits_c32.pt \
+        --out-dir Mixture_of_Experts/experiments/xshare/results/simulations
 """
 
 from __future__ import annotations
