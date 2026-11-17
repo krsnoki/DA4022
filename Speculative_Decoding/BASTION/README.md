@@ -5,7 +5,8 @@ Tree-structured Block Diffusion Drafting* (arXiv 2605.29727). The official code
 (MIT, https://github.com/kaist-ai-osi-lab/BASTION) is pinned as the submodule
 `upstream/` at commit 1989b80 and is never modified. The scripts here import the
 upstream algorithm code and add multi-dataset runs, fixed budgets, logging,
-analysis and tests. The full reproduction report is maintained separately.
+analysis and tests. Results and the comparison with the paper are in
+[`REPORT.md`](REPORT.md) and [`PAPER_CARD.md`](PAPER_CARD.md).
 
 | Path | Purpose |
 |---|---|
@@ -13,6 +14,7 @@ analysis and tests. The full reproduction report is maintained separately.
 | `repro_lib.py` | GPU registration, tree-size recorder, upstream-identical sample selection, JSONL I/O |
 | `analysis/aggregate.py` | Speedup / AAL / tree size per (model, dataset, method), DA4022 CSV, Table-1 markdown |
 | `analysis/check_lossless.py` | E3: exact-match and first-divergence statistics vs AR |
+| `analysis/e1_extras.py` | E1 vs paper Table 1 per dataset, tree-size distribution, bootstrap intervals, resume check |
 | `analysis/score_math.py` | Boxed-answer accuracy on gsm8k / math500 / aime25 (quality sanity check) |
 | `analysis/latency_model.py` | E5: uncalibrated roofline vs calibrated fit vs measured (RMSE) |
 | `analysis/plots.py` | Speedup bars, budget sweep, latency-model figures |
