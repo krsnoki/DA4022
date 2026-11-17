@@ -1,0 +1,13 @@
+source_file,k,pair_type,mean_overlap,n_pairs
+router_logits_c8.pt,8,same_request_consecutive,3.052,6016
+router_logits_c8.pt,8,different_requests,2.0431,21504
+router_logits_c8.pt,16,same_request_consecutive,7.6489,6016
+router_logits_c8.pt,16,different_requests,5.7506,21504
+router_logits_c8.pt,24,same_request_consecutive,13.7987,6016
+router_logits_c8.pt,24,different_requests,11.5509,21504
+router_logits_c32.pt,8,same_request_consecutive,2.991,24064
+router_logits_c32.pt,8,different_requests,1.9368,320000
+router_logits_c32.pt,16,same_request_consecutive,7.5285,24064
+router_logits_c32.pt,16,different_requests,5.6156,320000
+router_logits_c32.pt,24,same_request_consecutive,13.6632,24064
+router_logits_c32.pt,24,different_requests,11.4166,320000

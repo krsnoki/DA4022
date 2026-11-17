@@ -1,0 +1,50 @@
+# Control runs for the XShare selection overhead.
+#
+# The main sweep (gsm8k_sweep.yaml) measures overhead with `xshare_keep_all`,
+# which has no warm-up step. Every configuration with a warm-up (k0 > 0) also
+# sorts each token's expert scores, so that figure is a lower bound. This
+# config re-runs the baseline and a keep-all configuration WITH a warm-up in
+# one session, so the full overhead is measured against a baseline from the
+# same session. Nothing is pruned in either method, so their answers must be
+# identical. From the repository root:
+#
+#   python -m Mixture_of_Experts.experiments.xshare.run_sweep --no-capture \
+#       --config Mixture_of_Experts/configs/xshare/gsm8k_overhead.yaml \
+#       --out-dir Mixture_of_Experts/experiments/xshare/results/gsm8k_overhead
+
+paper_id: xshare-KmY5XUgEYe
+backbone_id: text.olmoe-1b-7b-0125-instruct
+dataset:
+  id: text.gsm8k.test
+  split: test
+  num_samples: 200
+  subsets: [0, 1, 2]
+  seed: 42
+  preprocessing_id: gsm8k.build_prompt.v1   # Dataloaders/registry.yaml; prompt built by gsm8k.build_prompt
+calibration_dataset: null
+
+generation:
+  decoding: greedy
+  max_new_tokens: 320
+  warmup_tokens: 8
+
+batch_sizes: [8, 32]
+
+energy:
+  enabled: true
+  interval_ms: 100
+  idle_seconds: 10
+
+capture_router_logits:
+  steps: 48
+
+xshare:
+  budget_mode: additional
+  score: softmax
+  min_keep: null
+
+methods:
+  - name: baseline
+  - name: xshare_keep_all_k0-4     # warm-up of 4, then every expert added: nothing pruned
+    warmup_k0: 4
+    budget: all

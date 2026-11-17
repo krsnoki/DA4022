@@ -1,0 +1,70 @@
+# XShare on GSM8K: every result row in experiments/xshare/results/gsm8k
+# comes from this file. Reproduce all of them with one command, from the
+# repository root:
+#
+#   python -m Mixture_of_Experts.experiments.xshare.run_sweep \
+#       --config Mixture_of_Experts/configs/xshare/gsm8k_sweep.yaml \
+#       --out-dir Mixture_of_Experts/experiments/xshare/results/gsm8k
+#
+# Cells already written to --out-dir are skipped, so an interrupted sweep can
+# be resumed with the same command.
+
+paper_id: xshare-KmY5XUgEYe
+backbone_id: text.olmoe-1b-7b-0125-instruct   # Backbones/registry.yaml
+dataset:
+  id: text.gsm8k.test                         # Dataloaders/registry.yaml
+  split: test
+  num_samples: 200                            # questions per subset
+  subsets: [0, 1, 2]                          # disjoint blocks of one seeded permutation
+  seed: 42
+  preprocessing_id: gsm8k.build_prompt.v1   # Dataloaders/registry.yaml; prompt built by gsm8k.build_prompt
+calibration_dataset: null                     # XShare needs no calibration data
+
+generation:
+  decoding: greedy
+  max_new_tokens: 320
+  warmup_tokens: 8                            # one untimed short pass per cell
+
+batch_sizes: [8, 32]
+
+energy:
+  enabled: true
+  interval_ms: 100                            # nvidia-smi power sampling period
+  idle_seconds: 10                            # idle power measured once per batch size
+
+capture_router_logits:
+  steps: 48                                   # decode steps saved for simulate_variants.py
+
+# XShare settings shared by every pruning method below.
+xshare:
+  budget_mode: additional                     # b experts are added on top of the warm-up set
+  score: softmax                              # summed score: softmax over all experts
+  min_keep: null                              # null = top_k, so every token keeps k experts
+
+# Order matters only for logging; every method sees the same questions.
+methods:
+  - name: baseline                            # the model's own router, unchanged
+  - name: xshare_keep_all                     # XShare code path, nothing pruned: measures overhead
+    warmup_k0: 0
+    budget: all
+  - name: oea_k0-1                            # warm-up only (OEA, Oncescu et al. 2025)
+    warmup_k0: 1
+    budget: 0
+  - name: oea_k0-2
+    warmup_k0: 2
+    budget: 0
+  - name: oea_k0-4
+    warmup_k0: 4
+    budget: 0
+  - name: xshare_k0-1_b-8
+    warmup_k0: 1
+    budget: 8
+  - name: xshare_k0-2_b-8
+    warmup_k0: 2
+    budget: 8
+  - name: xshare_k0-2_b-16
+    warmup_k0: 2
+    budget: 16
+  - name: xshare_k0-4_b-8
+    warmup_k0: 4
+    budget: 8
