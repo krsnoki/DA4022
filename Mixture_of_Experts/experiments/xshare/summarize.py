@@ -28,7 +28,8 @@ columns mean, in plain words:
   experts, live sequences per step, J/token (and above idle): means over
   subsets. J/token is blank if any subset has no energy measurement.
 * peak MB: the largest peak allocated memory over subsets.
-* routing overhead: mean over subsets of (xshare_keep_all - baseline) median
+* routing overhead (also written to routing_overhead.csv): for every keep-all
+  control (a method named xshare_keep_all*), mean over subsets of (keep-all - baseline) median
   decode step time, plus how many generations of xshare_keep_all differ from
   the baseline's (0 means it reproduces the baseline exactly).
 
@@ -201,26 +202,49 @@ def build_rows(groups: dict) -> list[dict]:
     return rows
 
 
+KEEP_ALL_PREFIX = "xshare_keep_all"
+OVERHEAD_COLUMNS = ["batch_size", "method", "overhead_ms", "n_matched", "n_differ"]
+
+
 def routing_overhead(groups: dict) -> list[dict]:
-    """Per batch size: keep-all vs baseline step time and generation identity."""
+    """Selection overhead from every keep-all control (methods named ``xshare_keep_all*``).
+
+    A keep-all method runs the XShare code path but prunes nothing. Per batch
+    size and keep-all method: mean over subsets of its median decode-step time
+    minus the baseline's, and how many generations differ from the baseline
+    (0 means it reproduces the baseline exactly).
+    """
     out = []
+    keep_methods = sorted({m for _, m in groups if m.startswith(KEEP_ALL_PREFIX)})
     for batch in sorted({b for b, _ in groups}):
-        base, keep = groups.get((batch, "baseline")), groups.get((batch, "xshare_keep_all"))
-        if base is None or keep is None:
+        base = groups.get((batch, "baseline"))
+        if base is None:
             continue
-        diffs = [
-            field(keep[s], "decode_step_median_ms") - field(base[s], "decode_step_median_ms")
-            for s in sorted(keep.keys() & base.keys())
-            if field(keep[s], "decode_step_median_ms") is not None
-            and field(base[s], "decode_step_median_ms") is not None
-        ]
-        gk, gb = generations(keep), generations(base)
-        shared = gk.keys() & gb.keys()
-        out.append({
-            "batch_size": batch, "overhead_ms": mean_or_none(diffs),
-            "n_matched": len(shared), "n_differ": sum(1 for k in shared if gk[k] != gb[k]),
-        })
+        for method in keep_methods:
+            keep = groups.get((batch, method))
+            if keep is None:
+                continue
+            diffs = [
+                field(keep[s], "decode_step_median_ms") - field(base[s], "decode_step_median_ms")
+                for s in sorted(keep.keys() & base.keys())
+                if field(keep[s], "decode_step_median_ms") is not None
+                and field(base[s], "decode_step_median_ms") is not None
+            ]
+            gk, gb = generations(keep), generations(base)
+            shared = gk.keys() & gb.keys()
+            out.append({
+                "batch_size": batch, "method": method, "overhead_ms": mean_or_none(diffs),
+                "n_matched": len(shared), "n_differ": sum(1 for k in shared if gk[k] != gb[k]),
+            })
     return out
+
+
+def write_overhead_csv(overhead: list[dict], path: Path) -> None:
+    with path.open("w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=OVERHEAD_COLUMNS)
+        writer.writeheader()
+        for o in overhead:
+            writer.writerow({c: csv_value(o.get(c)) for c in OVERHEAD_COLUMNS})
 
 
 # ---------------------------------------------------------------- formatting
@@ -279,7 +303,7 @@ def print_markdown(rows: list[dict], overhead: list[dict]) -> None:
     print()
     for o in overhead:
         print(
-            f"Routing overhead, batch {o['batch_size']}: xshare_keep_all minus baseline "
+            f"Routing overhead, batch {o['batch_size']}: {o['method']} minus baseline "
             f"median decode step = {num(o['overhead_ms'], 3)} ms; generations differing from "
             f"baseline: {o['n_differ']} of {o['n_matched']} matched questions."
         )
@@ -303,10 +327,15 @@ def main() -> None:
     if not groups:
         raise SystemExit(f"no xshare-gsm8k-*.json files in {args.results_dir}")
     rows = build_rows(groups)
-    print_markdown(rows, routing_overhead(groups))
+    overhead = routing_overhead(groups)
+    print_markdown(rows, overhead)
     out = args.out_csv or args.results_dir / "summary.csv"
     write_csv(rows, out)
     print(f"\nWrote {out}")
+    if overhead:
+        overhead_path = out.parent / "routing_overhead.csv"
+        write_overhead_csv(overhead, overhead_path)
+        print(f"Wrote {overhead_path}")
 
 
 if __name__ == "__main__":

@@ -57,7 +57,7 @@ One row per implemented paper. Each linked CSV follows the schema above, with on
 
 | Paper / method | Module | Status | Results |
 |---|---|---|---|
-| XShare ([OpenReview](https://openreview.net/forum?id=KmY5XUgEYe)) | `Mixture_of_Experts/` | partial-reproduction | [`results.csv`](../Mixture_of_Experts/experiments/xshare/results/gsm8k/results.csv) |
+| XShare ([OpenReview](https://openreview.net/forum?id=KmY5XUgEYe)) | `Mixture_of_Experts/` | partial-reproduction | [main sweep](../Mixture_of_Experts/experiments/xshare/results/gsm8k/results.csv), [overhead controls](../Mixture_of_Experts/experiments/xshare/results/gsm8k_overhead/results.csv) |
 
 ## Recommended plots
 

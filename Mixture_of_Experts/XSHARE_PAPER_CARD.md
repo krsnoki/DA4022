@@ -61,13 +61,14 @@ are not reproduced here; see "Results" for what we measured.
 | Backbone wrapper (load, preprocess, forward, metadata) | `Backbones/Generative_Pretrained/hf_causal_lm.py` |
 | GSM8K loader (subsets, batching, scoring) | `Dataloaders/evaluation/gsm8k.py` |
 | Sweep configuration | `configs/xshare/gsm8k_sweep.yaml` |
+| Overhead control configuration | `configs/xshare/gsm8k_overhead.yaml` |
 | Sweep runner (all measurements) | `experiments/xshare/run_sweep.py` |
 | Summary table and paired statistics | `experiments/xshare/summarize.py` |
 | Plots | `experiments/xshare/plot_results.py` |
 | GPU smoke test | `experiments/xshare/smoke_test.py` |
 | Activated experts: formula, simulation, measured | `experiments/xshare/expected_activation.py` |
 | Simulations of Alg. 3-6 on captured router scores | `experiments/xshare/simulate_variants.py` |
-| Tests | `tests/test_xshare_selection.py`, `tests/test_xshare_hf.py`, `Dataloaders/tests/` |
+| Tests | `tests/test_xshare_selection.py`, `tests/test_xshare_hf.py`, `tests/test_xshare_summarize.py`, `tests/test_xshare_run_sweep.py`, `Dataloaders/tests/` |
 
 - **Input contract:** router logits `[n_tokens, n_experts]` (float) for one MoE
   layer at one decode step. Optional: `valid_mask [n_tokens]` (bool, false for
@@ -117,15 +118,33 @@ are not reproduced here; see "Results" for what we measured.
   ```
 
 - **Tests:** `python -m pytest Mixture_of_Experts/tests Dataloaders/tests -q`.
-  595 tests, all passing at commit `6054781`. CPU only; the dataset and
-  tokenizer tests skip unless those are cached locally.
+  660 tests, all passing at the last commit of this branch (595 at `6054781`,
+  the commit the main results were produced with; 652 at `98672bb`, the commit
+  of the overhead control runs). They cover the selection algorithms, the model hook, the
+  loaders, the summary statistics, the power-sample integration, the
+  generation loop and the per-cell runner. CPU only; the dataset and tokenizer
+  tests skip unless those are cached locally.
+- **Overhead control runs** (from the repository root):
+
+  ```bash
+  python -m Mixture_of_Experts.experiments.xshare.run_sweep --no-capture \
+      --config Mixture_of_Experts/configs/xshare/gsm8k_overhead.yaml \
+      --out-dir Mixture_of_Experts/experiments/xshare/results/gsm8k_overhead
+  ```
 - **GPU smoke test** (about two minutes; checks that the model loads and that
   XShare with every expert kept reproduces the baseline's output exactly):
   `python -m Mixture_of_Experts.experiments.xshare.smoke_test --batch-size 8`.
 - **Environment used:** Ubuntu 24.04, Python 3.12.3, torch 2.13.0+cu129,
-  transformers 5.19.0 (attention `sdpa`, experts `grouped_mm`). Code at commit
+  transformers 5.19.0 (attention `sdpa`, experts `grouped_mm`).
+- **Code versions behind the results:** the main sweep ran at commit
   `60547812a18a626202ce040b18d3dedf0620ec1c` (tree
-  `c984e3decbd2dfa3217c5d65f2aaa4026df04fce`).
+  `c984e3decbd2dfa3217c5d65f2aaa4026df04fce`); the overhead control runs ran
+  at commit `98672bbf11ef6840617eec14a38e99cf226ad37a`. Every per-run JSON and
+  `results.csv` row records its commit. Later commits on this branch change
+  only tests, documentation, the summary script and CPU-only code paths
+  (device checks in `run_sweep.py`); nothing that runs on the GPU changed.
+  Re-running `summarize.py` with the final code reproduces both `summary.csv`
+  files byte for byte and adds the `routing_overhead.csv` files.
 
 ## Results
 
@@ -146,7 +165,12 @@ How to read the columns:
   change is indistinguishable from noise. There are 16 comparisons; with a
   Holm-Bonferroni correction at 5%, the four results with p < 0.001 stay
   significant and the p = 0.017 result (batch 8, XShare `k0=1, b=8`) does not.
-- **Latency:** median wall time of one decode step for the whole batch.
+- **Latency:** median time of one decode step for the whole batch (the mean
+  over the three subsets of each subset's median), measured around the
+  model's forward pass (from just before the call to the
+  synchronised next tokens). It includes the XShare selection, which runs
+  inside the forward pass, but not the check for finished sequences between
+  steps.
 - **Throughput:** decode tokens per second, mean ± standard deviation over the
   three subsets. Speed-up is computed per subset against the baseline.
 - **Energy:** joules per generated token from whole-board GPU power
@@ -160,8 +184,8 @@ How to read the columns:
 | Local baseline | 8 | unpruned | 69.8% [66.0, 73.4] | | 24.0 ms | 214 ± 3 | 13.5 GiB | 0.474 (0.312) | 25.1 |
 | Local method | 8 | XShare keep-all (overhead check) | 69.8%, identical outputs | 1.00 | 28.0 ms | 182 ± 3 (−14.6%) | 13.5 GiB | 0.509 (0.320) | 25.1 |
 | Local method | 8 | OEA `k0=1` | 42.3% (−27.5 pt) | <0.001 | 21.2 ms | 221 ± 4 (+3.2%) | 13.4 GiB | 0.299 (0.142) | 8.0 |
-| Local method | 8 | OEA `k0=2` | 50.8% (−19.0 pt) | <0.001 | 21.6 ms | 223 ± 3 (+4.4%) | 13.4 GiB | 0.301 (0.145) | 9.6 |
-| Local method | 8 | OEA `k0=4` | 69.5% (−0.3 pt) | 0.92 | 23.7 ms | 211 ± 1 (−1.2%) | 13.4 GiB | 0.348 (0.184) | 14.6 |
+| Local method | 8 | OEA `k0=2` | 50.8% (−19.0 pt) | <0.001 | 21.6 ms | 223 ± 3 (+4.4%) | 13.4 GiB | 0.301 (0.145) | 9.5 |
+| Local method | 8 | OEA `k0=4` | 69.5% (−0.3 pt) | 0.92 | 23.6 ms | 211 ± 1 (−1.2%) | 13.4 GiB | 0.348 (0.184) | 14.6 |
 | Local method | 8 | XShare `k0=1, b=8` | 65.3% (−4.5 pt) | 0.017 | 23.2 ms | 207 ± 2 (−3.0%) | 13.4 GiB | 0.337 (0.170) | 12.0 |
 | Local method | 8 | XShare `k0=2, b=8` | 67.8% (−2.0 pt) | 0.26 | 24.6 ms | 205 ± 4 (−4.2%) | 13.4 GiB | 0.361 (0.192) | 15.7 |
 | Local method | 8 | XShare `k0=2, b=16` | 69.3% (−0.5 pt) | 0.82 | 26.6 ms | 190 ± 2 (−11.3%) | 13.5 GiB | 0.428 (0.246) | 20.6 |
@@ -190,31 +214,74 @@ What the measurements support:
    paper reports +20-23% for the equivalent setting.
 2. **The batch-level budget rescues aggressive warm-ups.** With `k0=1`, OEA
    loses 27-34 points. Adding `b=8` brings the loss to 3.0-4.5 points (66.0%
-   against 34.7% at batch 32). This is consistent with the paper's claim that
-   OEA with a small `k0` collapses and the greedy budget prevents it, on a
-   different model with a different `k`.
+   against 34.7% at batch 32); the 3.0-point drop at batch 32 is not
+   significant (p = 0.095), the 4.5-point drop at batch 8 is (p = 0.017, before
+   correction). The budget also keeps more experts, so part of the gain is set
+   size. At a similar size the greedy choice still scores higher: at batch
+   32, XShare `k0=1, b=8` activates 18.2 experts and scores 66.0%, while OEA
+   `k0=2` activates 17.8 and scores 61.3%. A paired McNemar test on the same
+   600 questions supports the gap: XShare was right on 82 questions that OEA
+   got wrong, and OEA on 54 that XShare got wrong (p = 0.020; at batch 8, 138
+   against 51, p < 0.001). This test was added after the main analysis, is
+   not part of the 16 corrected comparisons, and the two settings also differ
+   in `k0`. This is consistent with the paper's claim
+   that OEA with a small `k0` collapses and the greedy budget prevents it, on
+   a different model with a different `k`.
 3. **With a generous warm-up, the greedy budget adds cost but no accuracy.**
    OEA `k0=4` already preserves accuracy, and adding `b=8` to it only makes
    it slower. In our setup the best configuration is warm-up only.
-4. **No configuration is faster at batch 8.** With about 5 live sequences per
-   step the baseline activates only 25 of 64 experts, so there is little left
-   to prune. The selection overhead outweighs the saving.
-5. **Pruning lowered energy per token in every configuration,** at both batch
-   sizes, even where throughput fell. Energy per token also depends on answer
-   length (prefill energy is spread over the generated tokens, and pruning
-   changes the answers), so this is not purely an effect of fewer expert
-   weights being read.
-6. **Selection overhead: at least 4.0 ms per decode step** at both batch sizes,
-   measured as keep-all XShare against the baseline. That control has no
-   warm-up step; configurations with a warm-up also sort each token's scores,
-   so they pay somewhat more. Keep-all XShare produced exactly the baseline's
-   answer on all 600 questions at both batch sizes, which confirms the routing
-   replacement is exact.
+4. **No accuracy-preserving configuration is faster at batch 8.** Only the
+   two collapsing warm-up-only settings are slightly faster (OEA `k0=1` +3.2%,
+   `k0=2` +4.4%), and they lose 27.5 and 19.0 points. With about 5 live
+   sequences per step the baseline activates only 25 of 64 experts, so there
+   is little left to prune, and the selection overhead outweighs the saving.
+5. **Pruning lowered energy per token in every pruned configuration, in these
+   runs,** at both batch sizes, even where throughput fell. (The keep-all
+   controls prune nothing, and their energy per token rose.) The average board power
+   explains it: at batch 8 it fell from 101 W (baseline) to 81 W with XShare
+   `k0=2, b=16`, which is 11% slower but generates only 2% fewer tokens. The
+   keep-all control separates two effects. It prunes nothing and is 15%
+   slower, so the GPU waits more; its power falls only to 93 W and its energy
+   per token rises. The further drop to 81 W therefore comes from the pruning
+   itself, consistent with fewer expert weights being read. The run order was
+   not randomised and idle power was measured once, so the size of the effect
+   is approximate. Average powers are in the per-run JSON files
+   (`energy.mean_w`).
+6. **Selection overhead: 4.0 to 4.9 ms per decode step.** Keep-all XShare
+   without a warm-up set (`k0 = 0`) costs 4.0 ms at both batch sizes. With a
+   warm-up set, which every configuration with `k0 > 0` computes, it costs
+   4.9 ms at batch 8 and 4.5 ms at batch 32 (separate control runs, see
+   below). (The "warm-up set" is the method's top-`k0` experts per token, not
+   the 8-token warm-up pass that runs before timing.) Both
+   keep-all variants produced exactly the baseline's answer on all 600
+   questions at both batch sizes, which confirms the routing replacement is
+   exact.
 7. **Peak memory does not change beyond allocator noise** (13.4-13.5 GiB at
    batch 8, 15.1 GiB at batch 32): all expert weights stay loaded. The saving
    is in weights read per step, not weights stored.
 
 ### Other experiments
+
+- **Selection overhead control runs** (`configs/xshare/gsm8k_overhead.yaml`,
+  `results/gsm8k_overhead/`, runs at commit `98672bb`; the overhead and the
+  answer comparison are written by `summarize.py` to
+  `results/gsm8k/routing_overhead.csv` and
+  `results/gsm8k_overhead/routing_overhead.csv`). The keep-all control in the
+  main sweep has no warm-up set (`k0 = 0`), so it gives a lower bound. This
+  separate session re-ran the baseline and a keep-all configuration with a
+  warm-up set of `k0 = 4` (nothing pruned) on the same 600 questions:
+
+  | Batch | Baseline step (this session) | Keep-all with warm-up set | Overhead | Throughput |
+  |---:|---:|---:|---:|---:|
+  | 8 | 24.05 ms | 28.99 ms | 4.9 ms | −17.1% ± 0.8 |
+  | 32 | 34.07 ms | 38.59 ms | 4.5 ms | −13.3% ± 2.5 |
+
+  The baseline reproduced across the two sessions: identical answers and
+  accuracy (69.8% and 69.0%), throughput within 0.4% (212.9 against 213.7 and
+  529.6 against 531.6 tokens/s) and median step time within 0.1 ms. Idle
+  power in this session was 34.6 W (batch 8) and 39.1 W (batch 32), against
+  34.5 W and 38.5 W in the main sweep; the energy figures quoted elsewhere in
+  this card all come from the main sweep.
 
 - **Activated experts, formula vs measured**
   (`results/expected_activation.csv`). With uniform random routing the
@@ -233,10 +300,12 @@ What the measurements support:
   reports 2-3x). At 128 tokens per step, per-request selection keeps more of
   each token's top-8 gate weight than global selection with the same number of
   experts: 95.7% against 94.9% with about 40 experts kept, and 98.4% with 46
-  kept against 97.2% with 48 kept. At 32 tokens per step it is not better
-  (86.5% with 22 kept against 88.2% with 24 kept). This matches the paper,
-  where the per-request variant pays off at large effective batches. No
-  throughput or accuracy was measured for this variant.
+  kept against 97.2% with 48 kept. At 32 tokens per step the data show no
+  advantage (86.5% with 22.4 kept against 88.2% with 23.9 kept), but these
+  sets differ by 1.5 experts, so this comparison does not isolate the
+  algorithm. The pattern is consistent with the paper, where the per-request
+  variant pays off at large effective batches. No throughput or accuracy was
+  measured for this variant.
 - **Expert-parallel variant, simulated (approximate).** Experts are assigned to
   2, 4 or 8 virtual GPUs by `expert index mod G`; there is one physical GPU.
   With 8 groups and 32 sequences, the busiest group's active experts fall from
@@ -259,9 +328,9 @@ What the measurements support:
   (570.211) accepts only CUDA 12.8, and loading failed with
   `cudaErrorUnsupportedPtxVersion` (see `Backbones/Generative_Pretrained/gpt_oss_20b.md`).
 - **Selection overhead.** The paper builds the expert mask inside the MoE
-  kernel. Our selection runs as separate PyTorch operations and costs at least
-  4.0 ms per decode step (measured without a warm-up step). Every pruned
-  configuration pays it.
+  kernel. Our selection runs as separate PyTorch operations and costs 4.0 ms
+  per decode step without a warm-up set and 4.5-4.9 ms with one (measured).
+  Every pruned configuration pays it.
 - **Expert kernel.** transformers ran the experts with its `grouped_mm`
   implementation. We did not measure how much of the weight-read saving this
   kernel turns into time.
@@ -285,13 +354,22 @@ What the measurements support:
 - **Speculative decoding** was not run. The per-request variant is evaluated
   only by simulation on true consecutive tokens, which a real draft model may
   not produce.
+- **Step time and decode time differ.** The step time (the latency column and
+  the 4.0-4.9 ms overhead) covers the forward pass only. Total decode time,
+  which throughput is based on, also includes reading one value back from the
+  GPU between steps (to check which sequences have finished) and the loop's
+  Python bookkeeping. Both are the same for every method. Throughput counts
+  only tokens of unfinished sequences, so it also moves when pruning changes
+  how long the answers are.
 - **Run order.** Within each subset the configurations ran in a fixed order
   with the baseline first, one run each, after one 8-token warm-up pass per
   configuration. Slow drift (for example GPU temperature) is therefore not
   randomised across configurations.
 - **Partial last batch.** 200 questions in batches of 32 leave a last batch of
   8. It is the same for every configuration, so comparisons are fair, but it
-  pulls the batch-32 step-time and live-sequence averages down slightly.
+  pulls the batch-32 step-time and live-sequence averages down slightly. The
+  warm-up pass uses the first batch only, so this smaller last batch runs
+  without its own warm-up, equally for every method.
 - **Idle power** was measured once per batch size, just after the model
   loaded (34.5 W and 38.5 W). "Above idle" figures inherit that uncertainty.
   The power sampler timestamps each `nvidia-smi` reading when Python reads it,
@@ -308,6 +386,12 @@ What the measurements support:
 - **Checkpoint.** The weights are never modified. `install_xshare` replaces
   each layer's router module in memory with a wrapper that calls the original
   router whenever nothing is pruned; reloading the model removes it.
+- **Latency columns in `results.csv`.** `latency_median_ms` and
+  `latency_p95_ms` are decode-step times, not end-to-end. Prefill is recorded
+  separately, as a total per run (in the row notes and as `prefill_s_total`
+  in the JSON); per-batch prefill times were not kept, so there is no prefill
+  median or p95. End-to-end request latency (median and p95) is in the row
+  notes and in `summary.csv`.
 - **Result metadata.** The result-schema CSV has no columns for dataset
   revision or model size. They are in the registries (`Dataloaders/registry.yaml`:
   revision `740312ad...`; `Backbones/registry.yaml`: 6.92B parameters, about
@@ -323,6 +407,7 @@ What the measurements support:
 | What if the set has fewer than `k` experts? | Top up to `k` with the best remaining experts (`min_keep`). | Table 2 reports exactly 4.00 activated experts for `k0=1, b=0` at concurrency 4 with `k = 4`. |
 | When to prune? | Decode steps only (one new token per sequence). Prefill is unpruned. | The paper formulates the problem "at the decode phase". |
 | Per-request budget (`g`): total or additional? | Additional, as for `b`. | Table 3 shows activated experts rising with `g` beyond what a total cap of 4-6 would allow. |
+| Algorithms 5-6: is the per-GPU budget `m_g` a total or added on top of the warm-up? | Total: the set grows only until it holds `m_g × G` experts, warm-up included, as in the paper's pseudocode (start from the warm-up set, loop while the set has fewer than `m_g × G` experts). If the warm-up alone is larger, it is kept whole (for example 18.0 experts at `m_g = 2`, `G = 8`, against a nominal 16). | Unlike `b` and `g` above, the pseudocode states this directly. The paper's Table 1 (43.4 activated experts at `m_g = 5`, 8 GPUs, nominal 40) does not contradict it, because the paper's loop finishes each pass and can overshoot by up to `G − 1`; but an "additional" reading would fit it too. Only the simulated expert-parallel results depend on this. |
 | Algorithm 5: finish the round-robin pass when the budget is reached mid-pass? | Stop as soon as the set holds `m_g × G` experts, so the size never exceeds the budget. | As written, the paper's loop finishes the whole pass, so it can overshoot the budget. Our choice keeps the budget exact but gives the last partial pass to the lower-numbered groups. Only the simulated expert-parallel results depend on this. |
 
 ## Reproduction checklist

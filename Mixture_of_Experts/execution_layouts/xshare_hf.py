@@ -13,7 +13,9 @@ pruning applies, so the unpruned baseline runs the model's own code.
 
 Pruning applies only at decode steps (one new token per sequence). Prefill
 passes, where each sequence contributes many tokens, are left unpruned, as in
-the paper.
+the paper. A pass is treated as a decode step when its sequence length is 1,
+so a one-token prompt would be pruned at prefill; chat-templated prompts are
+always longer than one token.
 """
 
 from __future__ import annotations

@@ -25,6 +25,7 @@ from Mixture_of_Experts.experiments.xshare.summarize import (
     summarise_group,
     wilson_interval,
     write_csv,
+    write_overhead_csv,
 )
 
 
@@ -354,3 +355,31 @@ def test_write_csv_header_and_empty_cells(tmp_path):
         assert base[column] == ""
     assert base["accuracy"] == "0.375"
     assert all(cell != "None" for line in lines for cell in line)
+
+
+def test_routing_overhead_finds_every_keep_all_variant(tmp_path):
+    """Would catch a keep-all control with a suffix (e.g. a warm-up variant) being ignored."""
+    for s in (0, 1):
+        save(tmp_path, make_run("baseline", 4, s, BASE_S0, 100.0, step_ms=10.0))
+        save(tmp_path, make_run("xshare_keep_all", 4, s, BASE_S0, 100.0, step_ms=11.0))
+        save(tmp_path, make_run("xshare_keep_all_k0-4", 4, s, BASE_S0, 100.0, step_ms=12.5))
+    out = routing_overhead(load_runs(tmp_path))
+    by_method = {o["method"]: o for o in out}
+    assert set(by_method) == {"xshare_keep_all", "xshare_keep_all_k0-4"}
+    assert by_method["xshare_keep_all"]["overhead_ms"] == pytest.approx(1.0)
+    assert by_method["xshare_keep_all_k0-4"]["overhead_ms"] == pytest.approx(2.5)
+
+
+def test_write_overhead_csv(tmp_path):
+    """Would catch a missing header or a None written as text in the overhead file."""
+    path = tmp_path / "routing_overhead.csv"
+    write_overhead_csv(
+        [{"batch_size": 8, "method": "xshare_keep_all", "overhead_ms": 4.0, "n_matched": 600, "n_differ": 0},
+         {"batch_size": 32, "method": "xshare_keep_all", "overhead_ms": None, "n_matched": 0, "n_differ": 0}],
+        path,
+    )
+    with path.open(newline="") as fh:
+        rows = list(csv.DictReader(fh))
+    assert list(rows[0]) == ["batch_size", "method", "overhead_ms", "n_matched", "n_differ"]
+    assert rows[0]["overhead_ms"] == "4.0"
+    assert rows[1]["overhead_ms"] == ""

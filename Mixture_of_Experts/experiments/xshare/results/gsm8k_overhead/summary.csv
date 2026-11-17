@@ -1,0 +1,5 @@
+batch_size,method,n_subsets,n_questions,accuracy,acc_ci_low,acc_ci_high,acc_change_pt,mcnemar_b,mcnemar_c,mcnemar_p,tps_mean,tps_sd,speedup_pct_mean,speedup_pct_sd,step_median_ms,step_p95_ms,req_latency_median_s,req_latency_p95_s,kept_experts,activated_experts,live_seq_per_step,j_per_token,j_per_token_above_idle,peak_memory_mb
+8,baseline,3,600,0.6983,0.6604,0.7337,,,,,212.9126,4.0184,,,24.0507,26.3141,4.8021,7.7644,64.0,25.1115,5.1138,0.4769,0.3136,13782.145
+8,xshare_keep_all_k0-4,3,600,0.6983,0.6604,0.7337,0.0,0,0,1.0,176.4762,2.2488,-17.1053,0.8307,28.9857,31.2135,5.7429,9.3449,64.0,25.1115,5.1138,0.5188,0.3221,13782.145
+32,baseline,3,600,0.69,0.6519,0.7257,,,,,529.5901,12.69,,,34.0679,37.3884,6.6241,11.275,64.0,41.6757,17.4348,0.2338,0.1591,15441.1919
+32,xshare_keep_all_k0-4,3,600,0.69,0.6519,0.7257,0.0,0,0,1.0,459.2392,19.7653,-13.2953,2.5415,38.5893,43.7659,7.6236,12.6632,64.0,41.6757,17.4348,0.2429,0.1569,15441.1919

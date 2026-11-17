@@ -18,6 +18,7 @@ from Mixture_of_Experts.experiments.xshare.run_sweep import (
     PowerSampler,
     csv_row,
     generate_batch,
+    run_cell,
     method_config,
 )
 from Mixture_of_Experts.routing.xshare import XShareConfig
@@ -359,3 +360,112 @@ def test_csv_row_fields_from_result_and_config():
     assert row["batch_size"] == 4
     assert row["latency_median_ms"] == 12.346
     assert row["throughput"] == 123.46
+
+
+# ------------------------------------------------------------ PowerSampler._read
+
+
+def test_power_reader_parses_numbers_and_skips_junk():
+    """Would catch a crash on a non-numeric line, or readings stored without times."""
+    sampler = make_sampler([])
+    sampler._proc = types.SimpleNamespace(stdout=iter(["12.5\n", "[N/A]\n", "13.0\n", "\n"]))
+    sampler._read()
+    assert [w for _, w in sampler.samples] == [12.5, 13.0]
+    times = [t for t, _ in sampler.samples]
+    assert times == sorted(times)
+
+
+# ------------------------------------------------------------ run_cell
+
+
+class PrefillResetLM(torch.nn.Module):
+    """Greedy next token is ``rows[b % len(rows)][step]``; ``step`` restarts at every
+    prefill (an input longer than one token), so each batch replays the schedule."""
+
+    def __init__(self, rows, vocab=64):
+        super().__init__()
+        self.rows = rows
+        self.vocab = vocab
+        self.step = 0
+
+    def forward(self, input_ids, attention_mask=None, past_key_values=None, use_cache=True):
+        batch, length = input_ids.shape
+        self.step = 0 if length > 1 else self.step + 1
+        logits = torch.zeros(batch, length, self.vocab)
+        for b in range(batch):
+            row = self.rows[b % len(self.rows)]
+            logits[b, -1, row[min(self.step, len(row) - 1)]] = 1.0
+        return types.SimpleNamespace(logits=logits, past_key_values=None)
+
+
+class ConstantPowerSampler:
+    """Stand-in for PowerSampler: a fixed power, or no data at all."""
+
+    field = "power.draw.instant"
+    interval_ms = 100
+
+    def __init__(self, watts):
+        self.watts = watts
+
+    def energy(self, t0, t1):
+        return None if self.watts is None else (self.watts * (t1 - t0), self.watts)
+
+
+# Rows alternate within each batch: "5 6" (EOS at step 2) and "5" (EOS at step 1).
+CELL_ROWS = [[5, 6, 1, 1, 1], [5, 1, 1, 1, 1]]
+CELL_GOLDS = ["6", "5", "7", "5", "6"]  # the third answer is wrong on purpose
+CELL_GEN = {"warmup_tokens": 2, "max_new_tokens": 4}
+
+
+def run_one_cell(sampler=None, idle_w=None):
+    examples = [{"index": i, "answer": gold, "question": "q"} for i, gold in enumerate(CELL_GOLDS)]
+    prompts = ["ab", "abc", "abcd", "abcde", "ab"]
+    backbone = types.SimpleNamespace(
+        model=PrefillResetLM(CELL_ROWS),
+        tokenizer=StubTokenizer(),
+        device=torch.device("cpu"),
+        eos_token_ids=lambda: {1},
+    )
+    controller = XShareController(None, n_layers=1)
+    return run_cell(backbone, controller, sampler, idle_w, examples, prompts, 2, None, CELL_GEN)
+
+
+def test_run_cell_scores_every_question_in_order():
+    """Would catch dropped, duplicated or misaligned answers across batches."""
+    result = run_one_cell()
+    assert result["num_examples"] == 5
+    assert [r["index"] for r in result["records"]] == [0, 1, 2, 3, 4]
+    assert [r["generation"] for r in result["records"]] == ["5 6", "5", "5 6", "5", "5 6"]
+    assert [r["new_tokens"] for r in result["records"]] == [2, 1, 2, 1, 2]
+    assert result["accuracy"] == pytest.approx(0.8)
+
+
+def test_run_cell_excludes_the_warm_up_pass():
+    """Would catch the warm-up's decode step or tokens leaking into the measurements."""
+    result = run_one_cell()
+    # Batches of 2, 2 and 1 take 2 decode steps each; the warm-up's step is excluded.
+    assert len(result["decode_step_ms"]) == 6
+    assert result["generated_tokens_timed"] == 3 + 3 + 2
+
+
+def test_run_cell_on_cpu_has_no_peak_memory_and_no_energy_without_sampler():
+    """Would catch a CUDA-only call on a CPU device, or energy invented without samples."""
+    result = run_one_cell()
+    assert result["peak_memory_allocated_mb"] is None
+    assert result["energy"] is None
+
+
+def test_run_cell_energy_per_token_and_above_idle():
+    """Would catch the wrong token count (prefill tokens) or a wrong idle subtraction."""
+    result = run_one_cell(ConstantPowerSampler(100.0), idle_w=40.0)
+    energy = result["energy"]
+    assert energy["tokens"] == 8 + 5  # decode tokens plus one prefill token per question
+    assert energy["mean_w"] == pytest.approx(100.0)
+    assert energy["joules"] == pytest.approx(100.0 * energy["window_s"])
+    assert energy["j_per_token"] == pytest.approx(energy["joules"] / 13)
+    assert energy["j_per_token_above_idle"] == pytest.approx(60.0 * energy["window_s"] / 13)
+
+
+def test_run_cell_energy_dropped_when_a_window_has_no_samples():
+    """Would catch a partial energy total reported as if it covered every batch."""
+    assert run_one_cell(ConstantPowerSampler(None), idle_w=40.0)["energy"] is None

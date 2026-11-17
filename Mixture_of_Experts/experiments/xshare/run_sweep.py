@@ -21,7 +21,10 @@ What is measured, and where the clock starts and stops
   with a KV cache. The GPU is synchronised at every boundary.
 * ``decode_tokens_per_s``: tokens produced by decode steps for sequences that
   were still generating, divided by total decode time. Prefill, tokenisation
-  and answer scoring are excluded.
+  and answer scoring are excluded. Decode time does include the per-step
+  check for finished sequences (one GPU-to-host read) and the loop's Python
+  bookkeeping; both are the same for every method. Because only live tokens
+  count, throughput also moves when pruning changes how long answers are.
 * ``decode_step_ms``: wall time of every decode step (the whole batch), kept as
   raw samples; the JSON also has the median and p95.
 * Request latency: for each question, the time from the start of its batch's
@@ -294,7 +297,9 @@ def run_cell(backbone, controller, sampler, idle_w, examples, prompts, batch_siz
     eos_ids = backbone.eos_token_ids()
     generate_batch(backbone, controller, batches[0][1], gen["warmup_tokens"], eos_ids)  # warm-up
     controller.reset_stats()
-    torch.cuda.reset_peak_memory_stats()
+    on_cuda = torch.device(backbone.device).type == "cuda"
+    if on_cuda:
+        torch.cuda.reset_peak_memory_stats(backbone.device)
 
     records, step_ms = [], []
     prefill_s = decode_s = 0.0
@@ -359,7 +364,9 @@ def run_cell(backbone, controller, sampler, idle_w, examples, prompts, batch_siz
         "decode_s_total": decode_s,
         "generated_tokens_timed": live_tokens,
         "prompt_tokens": prompt_tokens,
-        "peak_memory_allocated_mb": torch.cuda.max_memory_allocated() / 2**20,
+        "peak_memory_allocated_mb": (
+            torch.cuda.max_memory_allocated(backbone.device) / 2**20 if on_cuda else None
+        ),
         "energy": energy,
         "routing": controller.stats(),
         "records": records,
@@ -436,7 +443,7 @@ def csv_row(result: dict, cfg: dict) -> dict:
             f"prefill {result['prefill_s_total']:.1f} s total; memory=torch max_memory_allocated; "
             f"{energy_note}; warm-up 1 pass of {cfg['generation']['warmup_tokens']} tokens; "
             f"activated experts/layer {stats.get('mean_activated_experts', 0):.2f} of {meta['n_experts']}, "
-            f"kept {stats.get('mean_kept_experts', 0):.2f}; dropped tokens 0; "
+            f"kept {stats.get('mean_kept_experts', 0):.2f}; dropped tokens 0 by construction (not measured); "
             f"static batching, Hugging Face transformers; not comparable to the paper's vLLM numbers"
         ),
     }

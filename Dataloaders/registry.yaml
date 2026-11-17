@@ -12,7 +12,7 @@ text.gsm8k.test:
   hf_config: main
   license: mit
   version: 740312add88f781978c0658806c59bc2815b9866  # Hugging Face dataset revision
-  role: evaluation
+  role: benchmark  # one of the roles listed in README_dataloader.md
   split: test
   num_examples: 1319
   sampling: >-

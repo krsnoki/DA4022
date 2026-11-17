@@ -307,8 +307,14 @@ def gpu_aware_greedy(
     """Algorithm 5: round-robin greedy over GPU groups.
 
     Each pass adds, for every group in turn, that group's best unselected
-    expert. The loop stops when the set has ``per_gpu_budget * n_groups``
-    experts, as in the paper, or when no group has an expert left.
+    expert. The loop stops as soon as the set has ``per_gpu_budget *
+    n_groups`` experts (the paper's loop finishes the pass; see the paper
+    card), or when no group has an expert left. The budget includes the
+    initial set.
+
+    This is a plain Python loop that reads values one at a time, written for
+    the offline expert-parallel simulation. It is not meant for a GPU decode
+    path, where each read would stall the device.
 
     Starting from the empty set, no group ends up more than one expert ahead
     of another, so the largest group load is at most ``ceil(|S| / n_groups)``
