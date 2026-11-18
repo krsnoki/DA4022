@@ -249,7 +249,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--num-samples", type=int, default=8)
     p.add_argument("--selection-cap", type=int, default=64, help="gsm8k cap of the E1 selection (first N are used)")
     p.add_argument("--max-new-tokens", type=int, default=256)
-    p.add_argument("--device", default="cuda")
+    p.add_argument("--device", default="cuda:0")
     p.add_argument("--out-dir", required=True)
     p.add_argument("--model-key", default=None, help="cost-model key (default: inferred from --model)")
     p.add_argument("--gpu-key", default=None, help="cost-model GPU key (default: inferred on cuda, b4500 on cpu)")
