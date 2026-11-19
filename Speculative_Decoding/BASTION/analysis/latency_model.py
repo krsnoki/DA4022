@@ -228,6 +228,13 @@ def main(argv=None) -> None:
         res["profile"] = json.loads(st["profile"].read_text()) if st["profile"] else None
         if records:
             res["in_situ"] = in_situ(records, res["params"], res["model_key"], res["gpu_key"])
+            # Per run as well: E1 (adaptive trees) and a budget sweep (fixed trees up to N=1024, beyond the
+            # probe grid's s <= 512) test different ranges of the estimator and should not only be pooled.
+            by_run = defaultdict(list)
+            for rec in records:
+                by_run[rec.get("run_name") or Path(rec["_source"]).stem].append(rec)
+            per_run = {name: in_situ(recs, res["params"], res["model_key"], res["gpu_key"]) for name, recs in sorted(by_run.items())}
+            res["in_situ_by_run"] = {k: v for k, v in per_run.items() if v.get("n_steps")}
         results.append(res)
         with open(out / f"latency_points_{st['gpu_key']}_{st['model_key']}.csv", "w", newline="") as fh:
             w = csv.DictWriter(fh, fieldnames=list(res["points"][0].keys()))
@@ -235,7 +242,7 @@ def main(argv=None) -> None:
             w.writerows(res["points"])
     slim = [{k: v for k, v in r.items() if k != "points"} for r in results]
     (out / "latency_model.json").write_text(json.dumps(slim, indent=1), encoding="utf-8")
-    lines = ["| GPU | Model | points | RMSE uncal (ms) | RMSE cal (ms) | reduction | RMSE uncal c∈{64,256,1024} | RMSE cal c∈{64,256,1024} | LOCO cal RMSE (mean over held-out c) | in-situ RMSE cal (ms) |",
+    lines = ["| GPU | Model | points | RMSE uncal (ms) | RMSE cal (ms) | reduction | RMSE uncal c∈{64,256,1024} | RMSE cal c∈{64,256,1024} | LOCO cal RMSE (mean over held-out c) | in-situ RMSE cal (ms), all runs pooled |",
              "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for r in slim:
         a, p = r["rmse_all"], r["rmse_paper_contexts"] or {}
@@ -247,6 +254,16 @@ def main(argv=None) -> None:
     md = ("# Verification-latency model accuracy (E5)\n\n" + "\n".join(lines) +
           "\n\nPaper (A100, App. H.4): 29.2→2.3 ms (Qwen3-4B), 30.6→3.1 ms (Qwen3-8B), 26.4→3.5 ms (Llama-3.1-8B). "
           "Calibrated RMSE here is in-sample unless stated (LOCO column).\n")
+    situ = [(r, name, v) for r in slim for name, v in (r.get("in_situ_by_run") or {}).items()]
+    if situ:
+        md += ("\nIn-situ check per run: calibrated prediction vs verification latency measured at every BASTION step "
+               "(tree mask, real contexts). Mean measured / predicted latency (ms) per realized tree-size bin "
+               "(bin b holds sizes b to 2b-1).\n\n| Model | Run | steps | RMSE uncal (ms) | RMSE cal (ms) | mean bias cal (ms) "
+               "| measured / predicted by tree-size bin |\n|---|---|---:|---:|---:|---:|---|\n")
+        for r, name, v in situ:
+            bins = ", ".join(f"{b}: {x['measured_ms']:.1f} / {x['cal_ms']:.1f} (n={x['n']})" for b, x in v["by_tree_size_bin"].items())
+            md += (f"| {r['model_key']} | {name} | {v['n_steps']} | {v['rmse_uncal_ms']:.2f} | {v['rmse_cal_ms']:.2f} "
+                   f"| {v['mean_bias_cal_ms']:.2f} | {bins} |\n")
     noted = set()  # one note per registered GPU, not one per model
     for r in slim:
         if r["gpu_key"] not in {"a5000", "a6000", "a100", "h100", "h200", "b6000"} and r["gpu_key"] not in noted:

@@ -7,8 +7,8 @@ cd "$ROOT"
 export CUDA_VISIBLE_DEVICES=""
 LOG="$RUNS/analysis.log"
 shopt -s nullglob
-E1=("$RUNS"/e1_*.jsonl)
-SWEEPS=("$RUNS"/sweep_*.jsonl)
+E1=(runs/e1_*.jsonl)  # relative paths: they are written into the outputs
+SWEEPS=(runs/sweep_*.jsonl)
 {
 echo "[$(date -Is)] analysis: E1=${E1[*]:-none} SWEEPS=${SWEEPS[*]:-none}"
 SUMMARIES=()
@@ -23,9 +23,10 @@ fi
 SWEEP_SUMMARIES=()
 for s in "${SWEEPS[@]}"; do
   name="$(basename "$s" .jsonl)"; key="${name#sweep_}"
-  ref="$RUNS/e1_$key.jsonl"; REF=(); [ -f "$ref" ] && REF=(--ar-jsonl "$ref")
+  ref="runs/e1_$key.jsonl"; REF=(); [ -f "$ref" ] && REF=(--ar-jsonl "$ref")
   "$PY" analysis/aggregate.py --runs "$s" "${REF[@]}" --out-dir "$RESULTS" --prefix "${name}_" --status "${STATUS:-partial}"
   "$PY" analysis/check_lossless.py --runs "$s" "${REF[@]}" --out-dir "$RESULTS" --prefix "${name}_"
+  [ -f "$ref" ] && "$PY" analysis/sweep_extras.py --sweep "$s" --e1 "$ref" --out-dir "$RESULTS" --prefix "${name}_"
   SWEEP_SUMMARIES+=("$RESULTS/${name}_summary.json")
 done
 "$PY" analysis/latency_model.py --out-dir "$RESULTS" --runs "${E1[@]}" "${SWEEPS[@]}"

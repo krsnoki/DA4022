@@ -1,0 +1,283 @@
+{
+ "model": "Qwen/Qwen3-8B",
+ "sweep": "runs/sweep_qwen3-8b.jsonl",
+ "e1": "runs/e1_qwen3-8b.jsonl",
+ "n_keys": 144,
+ "n_keys_skipped": 0,
+ "keys_per_dataset": {
+  "gsm8k": 16,
+  "math500": 16,
+  "aime25": 16,
+  "humaneval": 16,
+  "mbpp": 16,
+  "lcb": 16,
+  "mt-bench": 32,
+  "alpaca": 16
+ },
+ "configs": [
+  "AR",
+  "DFlash (E1)",
+  "Adaptive warm (E1 repeat)",
+  "Fixed-32",
+  "Fixed-64",
+  "Fixed-128",
+  "Fixed-256",
+  "Fixed-512",
+  "Fixed-1024",
+  "Adaptive warm",
+  "Adaptive upstream-cold"
+ ],
+ "speedup_per_dataset": {
+  "gsm8k": {
+   "DFlash (E1)": 4.450663678777095,
+   "Adaptive warm (E1 repeat)": 4.902010888808793,
+   "Fixed-32": 4.906638131261952,
+   "Fixed-64": 4.790310188846388,
+   "Fixed-128": 4.527638877345511,
+   "Fixed-256": 3.798572152126008,
+   "Fixed-512": 2.3031048118049493,
+   "Fixed-1024": 1.2895711313186402,
+   "Adaptive warm": 4.901877608451213,
+   "Adaptive upstream-cold": 4.884351133656992
+  },
+  "math500": {
+   "DFlash (E1)": 5.868715114717187,
+   "Adaptive warm (E1 repeat)": 5.934321609590321,
+   "Fixed-32": 5.846565938585917,
+   "Fixed-64": 5.693653935225862,
+   "Fixed-128": 5.348713090807153,
+   "Fixed-256": 4.571693109611665,
+   "Fixed-512": 2.755424177583054,
+   "Fixed-1024": 1.562579915587287,
+   "Adaptive warm": 5.95305974481047,
+   "Adaptive upstream-cold": 5.844251660615278
+  },
+  "aime25": {
+   "DFlash (E1)": 5.011317451636652,
+   "Adaptive warm (E1 repeat)": 4.861987112177659,
+   "Fixed-32": 4.952591063918669,
+   "Fixed-64": 4.800434801543384,
+   "Fixed-128": 4.5785318420947485,
+   "Fixed-256": 3.854461559954604,
+   "Fixed-512": 2.3475838829620326,
+   "Fixed-1024": 1.34600488195108,
+   "Adaptive warm": 4.86492018992001,
+   "Adaptive upstream-cold": 4.842780043728898
+  },
+  "humaneval": {
+   "DFlash (E1)": 4.576934658069057,
+   "Adaptive warm (E1 repeat)": 5.171822018293927,
+   "Fixed-32": 5.124758397351904,
+   "Fixed-64": 5.050948176377614,
+   "Fixed-128": 4.8366776967067056,
+   "Fixed-256": 4.079224045936278,
+   "Fixed-512": 2.4386100775952295,
+   "Fixed-1024": 1.3634062817863946,
+   "Adaptive warm": 5.174234759811868,
+   "Adaptive upstream-cold": 5.1668611171014485
+  },
+  "mbpp": {
+   "DFlash (E1)": 4.131905954834438,
+   "Adaptive warm (E1 repeat)": 4.4824160641644895,
+   "Fixed-32": 4.500110955700482,
+   "Fixed-64": 4.534794690225919,
+   "Fixed-128": 4.214193633120753,
+   "Fixed-256": 3.536302964116013,
+   "Fixed-512": 2.1881650424033987,
+   "Fixed-1024": 1.2429688046291816,
+   "Adaptive warm": 4.48439756011817,
+   "Adaptive upstream-cold": 4.469137927613462
+  },
+  "lcb": {
+   "DFlash (E1)": 4.354619428068781,
+   "Adaptive warm (E1 repeat)": 4.683919922519325,
+   "Fixed-32": 4.665801484533948,
+   "Fixed-64": 4.575558886908566,
+   "Fixed-128": 4.327620231963497,
+   "Fixed-256": 3.7075710138004885,
+   "Fixed-512": 2.3128682515635792,
+   "Fixed-1024": 1.320549472252484,
+   "Adaptive warm": 4.6850379238508735,
+   "Adaptive upstream-cold": 4.821753729795681
+  },
+  "mt-bench": {
+   "DFlash (E1)": 2.5495852900962057,
+   "Adaptive warm (E1 repeat)": 2.983310325359638,
+   "Fixed-32": 2.958408030885669,
+   "Fixed-64": 2.8920195173863017,
+   "Fixed-128": 2.802496225852224,
+   "Fixed-256": 2.432137954439511,
+   "Fixed-512": 1.4479839249624615,
+   "Fixed-1024": 0.8155897885926496,
+   "Adaptive warm": 2.985691647088919,
+   "Adaptive upstream-cold": 2.9275380582317942
+  },
+  "alpaca": {
+   "DFlash (E1)": 2.6308435212079737,
+   "Adaptive warm (E1 repeat)": 3.113500218245851,
+   "Fixed-32": 3.1141478210002846,
+   "Fixed-64": 3.083016119705666,
+   "Fixed-128": 2.9503239737494256,
+   "Fixed-256": 2.59113210622785,
+   "Fixed-512": 1.5526241448982316,
+   "Fixed-1024": 0.8671921391482131,
+   "Adaptive warm": 3.115255564399386,
+   "Adaptive upstream-cold": 3.1553976389737843
+  }
+ },
+ "speedup_average": {
+  "DFlash (E1)": 4.196823137175923,
+  "Adaptive warm (E1 repeat)": 4.516661019895001,
+  "Fixed-32": 4.508627727904853,
+  "Fixed-64": 4.427592039527463,
+  "Fixed-128": 4.198274446455002,
+  "Fixed-256": 3.5713868632765524,
+  "Fixed-512": 2.1682955392216168,
+  "Fixed-1024": 1.2259828019082413,
+  "Adaptive warm": 4.520559374806363,
+  "Adaptive upstream-cold": 4.514008913714667
+ },
+ "best_fixed_per_dataset": {
+  "gsm8k": "Fixed-32",
+  "math500": "Fixed-32",
+  "aime25": "Fixed-32",
+  "humaneval": "Fixed-32",
+  "mbpp": "Fixed-64",
+  "lcb": "Fixed-32",
+  "mt-bench": "Fixed-32",
+  "alpaca": "Fixed-32"
+ },
+ "oracle_average": 4.512963194720532,
+ "ratios": [
+  {
+   "num": "Adaptive warm",
+   "den": "Oracle (best fixed N per dataset)",
+   "point": 1.0016831912333604,
+   "ci95": [
+    0.9926075098394963,
+    1.0105090528035776
+   ]
+  },
+  {
+   "num": "Adaptive warm",
+   "den": "Fixed-32",
+   "point": 1.0026464032121487,
+   "ci95": [
+    0.9945657712778193,
+    1.010763109460714
+   ]
+  },
+  {
+   "num": "Adaptive warm",
+   "den": "Fixed-64",
+   "point": 1.020997267690639,
+   "ci95": [
+    1.0107221326641127,
+    1.0315591490893452
+   ]
+  },
+  {
+   "num": "Adaptive warm",
+   "den": "Fixed-128",
+   "point": 1.076766045779474,
+   "ci95": [
+    1.0624550211266426,
+    1.0919208497135247
+   ]
+  },
+  {
+   "num": "Adaptive warm",
+   "den": "Fixed-256",
+   "point": 1.2657714069819355,
+   "ci95": [
+    1.2507379697947552,
+    1.2819987341807348
+   ]
+  },
+  {
+   "num": "Adaptive warm",
+   "den": "Fixed-512",
+   "point": 2.084844659335125,
+   "ci95": [
+    2.0532849411079765,
+    2.118113263471044
+   ]
+  },
+  {
+   "num": "Adaptive warm",
+   "den": "Fixed-1024",
+   "point": 3.6872942815919734,
+   "ci95": [
+    3.6356373115417133,
+    3.742068432289452
+   ]
+  },
+  {
+   "num": "Adaptive warm",
+   "den": "Adaptive upstream-cold",
+   "point": 1.001451140486629,
+   "ci95": [
+    0.9862989863157543,
+    1.016235002160059
+   ]
+  },
+  {
+   "num": "Adaptive warm",
+   "den": "DFlash (E1)",
+   "point": 1.0771384037518161,
+   "ci95": [
+    1.0550676705879651,
+    1.0963622163617033
+   ]
+  },
+  {
+   "num": "Adaptive warm",
+   "den": "Adaptive warm (E1 repeat)",
+   "point": 1.0008631054874808,
+   "ci95": [
+    1.0005760546413942,
+    1.0011691208151419
+   ]
+  },
+  {
+   "num": "Adaptive upstream-cold",
+   "den": "DFlash (E1)",
+   "point": 1.0755775895650872,
+   "ci95": [
+    1.0551119001510938,
+    1.0949226262184357
+   ]
+  }
+ ],
+ "adaptive_tree_sizes": {
+  "Adaptive warm (E1 repeat)": {
+   "n_steps": 11642,
+   "pooled_mean": 33.17368149802439,
+   "distribution": {
+    "32": 11230,
+    "64": 397,
+    "96": 15
+   }
+  },
+  "Adaptive warm": {
+   "n_steps": 11642,
+   "pooled_mean": 33.17368149802439,
+   "distribution": {
+    "32": 11230,
+    "64": 397,
+    "96": 15
+   }
+  },
+  "Adaptive upstream-cold": {
+   "n_steps": 12100,
+   "pooled_mean": 40.03173553719008,
+   "distribution": {
+    "32": 9300,
+    "64": 2584,
+    "96": 199,
+    "128": 13,
+    "160": 4
+   }
+  }
+ }
+}

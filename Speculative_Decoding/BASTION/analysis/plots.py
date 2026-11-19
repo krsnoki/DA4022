@@ -19,6 +19,7 @@ import argparse
 import csv
 import json
 import sys
+from collections import defaultdict
 from pathlib import Path
 
 import matplotlib
@@ -33,6 +34,7 @@ from common import ADAPTIVE_LABELS, DATASET_LABELS, PAPER_TABLE1_T0, dataset_sor
 # Validated categorical palette (dataviz reference instance, light mode), fixed order.
 BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
 INK, INK2, GRID = "#0b0b0b", "#52514e", "#e4e3df"
+GOLD = "#b8860b"  # oracle reference line (dashed gold, as in the paper's Fig. 4)
 METHOD_COLORS = {"dflash": BLUE, "bastion": ORANGE}
 # Adaptive BASTION variants (controller profile constants): colour and marker.
 VARIANT_STYLE = {"warm": (ORANGE, "*", 15), "upstream": (AQUA, "P", 10)}
@@ -144,10 +146,21 @@ def plot_budget_sweep(rows: list[dict], out_dir: Path) -> list[Path]:
             xs = [r["mean_tree_size"] or r["fixed_budget"] for r in fixed]
             ys = [r["speedup"] for r in fixed]
             ax.plot(xs, ys, "-o", color=BLUE, linewidth=2, markersize=6, label="BASTION-Fixed (N)")
-            for r, xv, yv in zip(fixed, xs, ys):
+            for i, (r, xv, yv) in enumerate(zip(fixed, xs, ys)):
                 if yv is not None:
-                    ax.annotate(f"N={r['fixed_budget']}", (xv, yv), textcoords="offset points", xytext=(0, 7),
-                                ha="center", fontsize=7, color=INK2)
+                    # Labels below each point: above them sit the adaptive markers and the oracle line. Below-left
+                    # stays clear of a falling curve; the first label goes below-right to stay inside the axes.
+                    ax.annotate(f"N={r['fixed_budget']}", (xv, yv), textcoords="offset points",
+                                xytext=(5, -12) if i == 0 else (-5, -12), ha="left" if i == 0 else "right",
+                                fontsize=7, color=INK2)
+            # Oracle as in the paper's Fig. 4: best fixed N per dataset, averaged over datasets.
+            per_ds = defaultdict(list)
+            for r in b_rows:
+                if r.get("fixed_budget") is not None and r["dataset"] not in ("Average", "Pooled") and r.get("speedup"):
+                    per_ds[r["dataset"]].append(r["speedup"])
+            if per_ds:
+                oracle = float(np.mean([max(v) for v in per_ds.values()]))
+                ax.axhline(oracle, color=GOLD, linestyle="--", linewidth=1.3, label=f"Oracle: best fixed N per dataset ({oracle:.2f}×)")
         for r in adaptive:
             if r.get("speedup") is not None and r.get("mean_tree_size") is not None:
                 color, marker, size = VARIANT_STYLE[_variant(r)]
@@ -156,6 +169,8 @@ def plot_budget_sweep(rows: list[dict], out_dir: Path) -> list[Path]:
                         label=f"{ADAPTIVE_LABELS[_variant(r)]} (mean N̄={r['mean_tree_size']:.0f})")
         ax.set_xscale("log", base=2)
         _int_ticks(ax)
+        lo, hi = ax.get_ylim()
+        ax.set_ylim(lo - 0.06 * (hi - lo), hi + 0.06 * (hi - lo))
         ax.set_xlabel("Mean realized verification tree size (nodes, log scale)")
         ax.set_ylabel("Speedup over AR (×), mean over datasets")
         n_ds = max((len(r.get("datasets_included", [])) for r in avg), default=0)

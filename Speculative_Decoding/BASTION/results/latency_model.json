@@ -142,6 +142,35 @@
     }
    },
    "note": "measured = verification forward with tree mask inside bastion_generate (includes first-step / context effects); calibration probe used causal dummy forwards"
+  },
+  "in_situ_by_run": {
+   "e1_qwen3-4b": {
+    "n_steps": 36048,
+    "rmse_uncal_ms": 8.675319543856968,
+    "rmse_cal_ms": 1.6781425242879204,
+    "mean_bias_cal_ms": -0.5552306794210075,
+    "by_tree_size_bin": {
+     "32": {
+      "n": 5840,
+      "measured_ms": 18.923572397260273,
+      "cal_ms": 18.192382134364774,
+      "uncal_ms": 10.378907347162427
+     },
+     "64": {
+      "n": 30203,
+      "measured_ms": 19.042493970797604,
+      "cal_ms": 18.521149528780477,
+      "uncal_ms": 10.56627313729478
+     },
+     "128": {
+      "n": 5,
+      "measured_ms": 22.771939999999997,
+      "cal_ms": 23.044297156896874,
+      "uncal_ms": 11.447712914285713
+     }
+    },
+    "note": "measured = verification forward with tree mask inside bastion_generate (includes first-step / context effects); calibration probe used causal dummy forwards"
+   }
   }
  },
  {
@@ -262,37 +291,129 @@
    "attn_impl": "sdpa"
   },
   "in_situ": {
-   "n_steps": 37311,
-   "rmse_uncal_ms": 10.399543447971272,
-   "rmse_cal_ms": 1.9120190240733157,
-   "mean_bias_cal_ms": -0.9361730843935223,
+   "n_steps": 124623,
+   "rmse_uncal_ms": 26.170385946637634,
+   "rmse_cal_ms": 6.245313651485276,
+   "mean_bias_cal_ms": -1.569585748098059,
    "by_tree_size_bin": {
     "32": {
-     "n": 35943,
-     "measured_ms": 28.916642250229533,
-     "cal_ms": 27.95041359356548,
-     "uncal_ms": 18.730828566945284
+     "n": 68395,
+     "measured_ms": 29.114636894509832,
+     "cal_ms": 27.958575111833294,
+     "uncal_ms": 18.75207336649922
     },
     "64": {
-     "n": 1362,
-     "measured_ms": 31.571524669603523,
-     "cal_ms": 31.412765262053917,
-     "uncal_ms": 19.055633641283826
+     "n": 15866,
+     "measured_ms": 32.135563412328246,
+     "cal_ms": 31.370301720228998,
+     "uncal_ms": 19.137727651942157
     },
     "128": {
-     "n": 4,
-     "measured_ms": 39.2855,
-     "cal_ms": 41.3945526871214,
-     "uncal_ms": 20.273206857142856
+     "n": 10691,
+     "measured_ms": 36.15412580675334,
+     "cal_ms": 38.05486196870539,
+     "uncal_ms": 19.926831658137015
     },
     "256": {
-     "n": 2,
-     "measured_ms": 48.68815,
-     "cal_ms": 52.38652850167117,
-     "uncal_ms": 22.744767999999997
+     "n": 10160,
+     "measured_ms": 44.3615340452756,
+     "cal_ms": 51.59406681869953,
+     "uncal_ms": 21.584435437570303
+    },
+    "512": {
+     "n": 9962,
+     "measured_ms": 81.69544589439873,
+     "cal_ms": 79.15963734935066,
+     "uncal_ms": 40.302048701185086
+    },
+    "1024": {
+     "n": 9549,
+     "measured_ms": 153.78732093412924,
+     "cal_ms": 135.67677788125837,
+     "uncal_ms": 82.0657014165688
     }
    },
    "note": "measured = verification forward with tree mask inside bastion_generate (includes first-step / context effects); calibration probe used causal dummy forwards"
+  },
+  "in_situ_by_run": {
+   "e1_qwen3-8b": {
+    "n_steps": 37311,
+    "rmse_uncal_ms": 10.399543447971272,
+    "rmse_cal_ms": 1.9120190240733157,
+    "mean_bias_cal_ms": -0.9361730843935223,
+    "by_tree_size_bin": {
+     "32": {
+      "n": 35943,
+      "measured_ms": 28.916642250229533,
+      "cal_ms": 27.95041359356548,
+      "uncal_ms": 18.730828566945284
+     },
+     "64": {
+      "n": 1362,
+      "measured_ms": 31.571524669603523,
+      "cal_ms": 31.412765262053917,
+      "uncal_ms": 19.055633641283826
+     },
+     "128": {
+      "n": 4,
+      "measured_ms": 39.2855,
+      "cal_ms": 41.3945526871214,
+      "uncal_ms": 20.273206857142856
+     },
+     "256": {
+      "n": 2,
+      "measured_ms": 48.68815,
+      "cal_ms": 52.38652850167117,
+      "uncal_ms": 22.744767999999997
+     }
+    },
+    "note": "measured = verification forward with tree mask inside bastion_generate (includes first-step / context effects); calibration probe used causal dummy forwards"
+   },
+   "sweep_qwen3-8b": {
+    "n_steps": 87312,
+    "rmse_uncal_ms": 30.517971114933406,
+    "rmse_cal_ms": 7.355898467536552,
+    "mean_bias_cal_ms": -1.8402617135493144,
+    "by_tree_size_bin": {
+     "32": {
+      "n": 32452,
+      "measured_ms": 29.333930666831012,
+      "cal_ms": 27.967614599418038,
+      "uncal_ms": 18.77560355971897
+     },
+     "64": {
+      "n": 14504,
+      "measured_ms": 32.188529543574184,
+      "cal_ms": 31.36631417582982,
+      "uncal_ms": 19.145436700654006
+     },
+     "128": {
+      "n": 10687,
+      "measured_ms": 36.15295377561523,
+      "cal_ms": 38.053611967500785,
+      "uncal_ms": 19.926702014570438
+     },
+     "256": {
+      "n": 10158,
+      "measured_ms": 44.3606821815318,
+      "cal_ms": 51.59391079159126,
+      "uncal_ms": 21.584206980676736
+     },
+     "512": {
+      "n": 9962,
+      "measured_ms": 81.69544589439873,
+      "cal_ms": 79.15963734935066,
+      "uncal_ms": 40.302048701185086
+     },
+     "1024": {
+      "n": 9549,
+      "measured_ms": 153.78732093412924,
+      "cal_ms": 135.67677788125837,
+      "uncal_ms": 82.0657014165688
+     }
+    },
+    "note": "measured = verification forward with tree mask inside bastion_generate (includes first-step / context effects); calibration probe used causal dummy forwards"
+   }
   }
  }
 ]
