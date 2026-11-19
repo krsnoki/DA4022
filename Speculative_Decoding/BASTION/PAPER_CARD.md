@@ -2,9 +2,14 @@
 
 - **Paper / OpenReview:** <https://openreview.net/forum?id=uqeOxztSIS> (AdaptFM accepted paper). arXiv: <https://arxiv.org/abs/2605.29727>. arXiv lists v1 (28 May 2026) to v4 (28 Oct 2026). The text this card quotes from carries an ICML 2026 (PMLR 306) header. Which arXiv version that text matches was not verified.
 - **Primary module:** `Speculative_Decoding/`
-- **Secondary modules:** `Backbones/Generative_Pretrained/` (target models), `Dataloaders/evaluation/` (benchmark prompts), `Performance_Metrics/` (result rows, pending)
+- **Secondary modules:** `Backbones/Generative_Pretrained/` (target models), `Dataloaders/evaluation/` (benchmark prompts), `Performance_Metrics/` (summary rows in `README_metrics.md`)
 - **Owner / reviewer:** `<owner GitHub handle>` / `<reviewer GitHub handle>`
-- **Status:** `partial-reproduction`. E1 (Table 1 at T=0, Qwen3-4B and Qwen3-8B), E3 (exact match against AR) and E5 (latency model) are measured. The E4 budget sweep and the fp32/bf16 precision check are still running (see "Pending"). The full write-up is in [`REPORT.md`](REPORT.md).
+- **Status:** `partial-reproduction`. Everything planned was measured: E1 (Table 1 at T=0, Qwen3-4B and Qwen3-8B), E3 (exact match against AR), E4 (budget sweep, Qwen3-8B), E5 (latency model), math accuracy and an fp32/bf16 precision check.
+  - **Reproduced:** the qualitative claims. BASTION beats DFlash, has higher AAL, adaptive tracks the oracle budget, over-budgeting hurts, and calibration fixes most of the roofline error.
+  - **Partially reproduced:** the latency-model accuracy.
+  - **Not reproduced on this GPU:** the speedup magnitudes and tree sizes.
+  - **Not run:** T=1, Llama-3.1-8B, EAGLE-3, LongBench, H100 and the ablations.
+  - The full write-up is in [`REPORT.md`](REPORT.md).
 - **Upstream code / licence:** <https://github.com/kaist-ai-osi-lab/BASTION>, MIT ("Copyright (c) 2026 Z Lab"), pinned as the git submodule `upstream/` at commit `1989b80b304f01710946d7fb68af330c03d97461` and not modified
 - **Backbone IDs:** `text.qwen3-4b.post_trained.mixed` + drafter `text.qwen3-4b-dflash-b16.drafter.unknown`, and `text.qwen3-8b.post_trained.mixed` + drafter `text.qwen3-8b-dflash-b16.drafter.unknown` ([`Backbones/registry.yaml`](../../Backbones/registry.yaml))
 - **Dataset IDs and split:** `text.gsm8k.main.test`, `text.math500.test`, `text.aime25.test`, `text.humaneval.test`, `text.mbpp.sanitized.test`, `text.livecodebench.release_v2.test`, `text.mt_bench_prompts.train`, `text.alpaca.train` ([`Dataloaders/registry.yaml`](../../Dataloaders/registry.yaml), cards in [`Dataloaders/evaluation/bastion_short_benchmarks.md`](../../Dataloaders/evaluation/bastion_short_benchmarks.md))
@@ -49,7 +54,7 @@ The code lives in this folder. See [`README.md`](README.md), section "How to run
   scripts/run_sweep.sh qwen3-8b                                             # E4
   scripts/run_analysis.sh                                                   # E1/E3/E4/E5 tables, math accuracy, figures (CPU)
   ```
-- **Tests:** `CUDA_VISIBLE_DEVICES="" .venv/bin/python -m pytest tests -q`. CPU only, synthetic data and tiny random models, no downloads. On 2026-11-22: 114 passed.
+- **Tests:** `CUDA_VISIBLE_DEVICES="" .venv/bin/python -m pytest tests -q`. CPU only, synthetic data and tiny random models, no downloads. On 2026-11-22: 115 passed.
 
 ## Results
 
@@ -57,12 +62,12 @@ Experiments in this reproduction:
 
 - **E1:** AR vs DFlash vs BASTION, Table 1 setting at T=0. Measured.
 - **E3:** lossless check, exact match against AR at T=0. Measured.
-- **E4:** fixed vs adaptive budget, as in Fig. 4. **Pending** (run in progress).
+- **E4:** fixed vs adaptive budget, as in Fig. 4. Measured (Qwen3-8B).
 - **E5:** accuracy of the latency model, as in Fig. 9a. Measured.
 - **Math accuracy:** a quality check on GSM8K, MATH-500 and AIME25. Measured.
-- **Precision check:** fp32 vs bf16 decoding on GSM8K prompts, to test whether the E3 mismatches are a bf16 effect. **Pending**.
+- **Precision check:** fp32 vs bf16 decoding on GSM8K prompts, to test whether the E3 mismatches are a bf16 effect. Measured (Qwen3-4B, 8 prompts).
 
-All local numbers come from `runs/e1_qwen3-4b.jsonl` and `runs/e1_qwen3-8b.jsonl` (494 prompts/turns × 3 modes per model) through the scripts in `analysis/`. The output files are in [`results/`](results/). Paper numbers are quoted from the paper and were not measured here.
+All local numbers come from `runs/e1_qwen3-4b.jsonl` and `runs/e1_qwen3-8b.jsonl` (494 prompts/turns × 3 modes per model), `runs/sweep_qwen3-8b.jsonl` (144 prompts/turns × 8 configurations) and `results/precision_check_qwen3-4b/`, through the scripts in `analysis/`. The output files are in [`results/`](results/). Paper numbers are quoted from the paper and were not measured here.
 
 ### Reproduction verdict
 
@@ -73,9 +78,11 @@ All local numbers come from `runs/e1_qwen3-4b.jsonl` and `runs/e1_qwen3-8b.jsonl
 | BASTION/DFlash average ratio 1.43 / 1.39 | **Not reproduced**: 1.14 / 1.07. | E1 |
 | BASTION AAL > DFlash AAL | **Reproduced** on all 16 cells. The gain is smaller: +1.88 / +1.27 tokens vs the paper's +2.33 / +2.24. | E1 |
 | Mean realized tree N̄ = 202.0 / 139.3 (A100, Fig. 9b) | **Different**: 60.1 / 33.2 (pooled over steps). On Qwen3-8B, 96.3% of steps stop at the minimum size of 32. | E1 |
-| Lossless at T=0 (output equals AR) | **Not confirmed.** Only 30–35% of DFlash and BASTION outputs match AR exactly, at similar rates for both methods. The cause is not yet established; the precision check is pending. | E3 |
+| Lossless at T=0 (output equals AR) | **Holds in fp32, not in bf16.** In bf16, only 30–35% of DFlash and BASTION outputs match AR exactly, at similar rates for both methods. In fp32 both match AR on 8/8 prompts, and every bf16 divergence is at a top-1/top-2 logit margin ≤ 0.25. AR's own output changes between bf16 and fp32 on 6/8 prompts. This is attributed to bf16 near-ties; small n (8 prompts). | E3, precision check |
 | Calibration cuts the latency-model RMSE by 87–92% | **Partially reproduced**: 83.0% / 84.9% on the paper's contexts, with a higher calibrated residual (3.28 / 4.34 ms vs 2.3 / 3.1 ms). | E5 |
-| Adaptive budget tracks the best fixed budget (Fig. 4) | Pending (E4). | E4 |
+| Adaptive budget tracks the per-dataset best fixed budget, "Oracle" (Fig. 4) | **Reproduced** (Qwen3-8B, 16 prompts/benchmark): 4.52× vs oracle 4.51×, ratio 1.002 [0.993, 1.011]. No fixed N ≥ 32 is faster. | E4 |
+| Over-budgeting degrades speed (Fig. 4) | **Reproduced**: fixed N=32 / 128 / 1024 give 4.51× / 4.20× / 1.23×; at N=1024, MT-Bench and Alpaca are slower than AR. | E4 |
+| Fixed-budget curves are sharply peaked; small N underutilizes the verifier (Fig. 4) | **Not observed**: speed falls monotonically from the smallest tested N=32. The interior peak, if any, lies below 32 on this GPU. | E4 |
 
 ### Template summary
 
@@ -138,17 +145,25 @@ Exact match means the generated token ids are identical to AR's for the same pro
 | Qwen3-8B | DFlash | 30.2% (149/494) | 345 | 90 | per-dataset range 0.0% (AIME25) to 65.6% (LCB) |
 | Qwen3-8B | BASTION | 31.0% (153/494) | 341 | 90 | per-dataset range 3.3% (AIME25) to 65.6% (LCB) |
 
-Both speculative methods diverge from AR at about the same rate, and long generations (AIME25, MATH500) almost never match. Greedy speculative decoding is lossless in exact arithmetic. The working hypothesis is that bf16 numerics differ with the shape of the target forward pass (1 token for AR, a 16-token block for DFlash, an N-node tree for BASTION), so near-ties in the argmax flip. **This is not established yet**: the fp32-vs-bf16 precision check is pending. Speedups are still computed on matched prompts, but the continuations differ, so the decoded token sequences are not identical across modes. Mean output lengths stay within 2.6% of AR's (Qwen3-4B: AR 512.7, DFlash 520.2, BASTION 525.9 tokens; Qwen3-8B: AR 500.9, DFlash 497.3, BASTION 499.2). Files: [`results/e1_lossless.md`](results/e1_lossless.md), [`results/e1_lossless_per_record.csv`](results/e1_lossless_per_record.csv).
+Both speculative methods diverge from AR at about the same rate, and long generations (AIME25, MATH500) almost never match. Greedy speculative decoding is lossless in exact arithmetic. The working hypothesis is that bf16 numerics differ with the shape of the target forward pass (1 token for AR, a 16-token block for DFlash, an N-node tree for BASTION), so near-ties in the argmax flip. The precision check supports this on a small sample (see below): fp32 is exact on 8/8 prompts, and bf16 divergences sit on near-ties. In E4, exact-match rates are 26.4–33.3% for every tree size from 32 to 1024, so they do not grow with the tree. Speedups are still computed on matched prompts, but the continuations differ, so the decoded token sequences are not identical across modes. Mean output lengths stay within 2.6% of AR's (Qwen3-4B: AR 512.7, DFlash 520.2, BASTION 525.9 tokens; Qwen3-8B: AR 500.9, DFlash 497.3, BASTION 499.2). Files: [`results/e1_lossless.md`](results/e1_lossless.md), [`results/e1_lossless_per_record.csv`](results/e1_lossless_per_record.csv).
 
 ### E4: fixed vs adaptive budget (Qwen3-8B, 16 samples per benchmark)
 
-**Pending: the sweep is still running (`runs/sweep_qwen3-8b.jsonl`).** It covers fixed N ∈ {32, 64, 128, 256, 512, 1024}, adaptive with the warm profile (E1 configuration), and adaptive with upstream's cold profile.
+Configurations: fixed N ∈ {32, 64, 128, 256, 512, 1024} (BASTION's best-first tree with min = max = N), adaptive with the warm profile (the E1 configuration), and adaptive with upstream's cold profile. Speedups are measured against E1's AR records of the same 144 prompts/turns (prompt-hash checked).
 
-The paper shows this only as a figure (Fig. 4: Qwen3-8B and Llama-3.1-8B on A100, RTX PRO 6000 and A6000). It reports qualitatively that adaptive BASTION tracks the per-dataset best fixed N ("Oracle") on most panels. No numbers are quoted here.
+The paper shows this only as a figure (Fig. 4: Qwen3-8B and Llama-3.1-8B on A100, RTX PRO 6000 and A6000). It reports qualitatively that adaptive BASTION tracks the per-dataset best fixed N ("Oracle") on most panels, and that over-budgeting degrades the fixed sweep. No numbers are quoted here.
 
-| N | 32 | 64 | 128 | 256 | 512 | 1024 | adaptive, warm (mean realized N) | adaptive, upstream cold (mean realized N) |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Mean speedup (local) | pending | pending | pending | pending | pending | pending | pending | pending |
+| N | 32 | 64 | 128 | 256 | 512 | 1024 | adaptive, warm | adaptive, upstream cold | Oracle | DFlash (E1, same prompts) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Mean speedup (local) | 4.51× | 4.43× | 4.20× | 3.57× | 2.17× | 1.23× | **4.52×** | 4.51× | 4.51× | 4.20× |
+| τ | 7.03 | 7.52 | 7.96 | 8.19 | 8.73 | 8.99 | 7.15 | 7.40 | — | — |
+| Mean realized N | 32 | 64 | 128 | 256 | 512 | 1024 | 33.2 | 40.0 | N=32 on 7 benchmarks, 64 on MBPP | — |
+
+Ratios with 95% bootstrap intervals over prompts: adaptive warm / oracle 1.002 [0.993, 1.011]; / fixed N=32 1.003 [0.995, 1.011]; / fixed N=64 1.021 [1.011, 1.032]; / fixed N=128 1.077 [1.062, 1.092]; / adaptive cold 1.001 [0.986, 1.016]; / DFlash 1.077 [1.055, 1.096].
+
+The adaptive-warm configuration was run twice on these prompts, once in E1 and once in E4, in different processes. Both runs produced bit-identical outputs on all 144, with per-prompt TPOT ratios between 0.990 and 1.004.
+
+Files: [`results/sweep_qwen3-8b_table1.md`](results/sweep_qwen3-8b_table1.md), [`results/sweep_qwen3-8b_extras.md`](results/sweep_qwen3-8b_extras.md), [`results/sweep_qwen3-8b_lossless.md`](results/sweep_qwen3-8b_lossless.md), and figures [`results/figures/budget_sweep_Qwen3-8B.png`](results/figures/budget_sweep_Qwen3-8B.png) and [`results/figures/budget_sweep_Qwen3-8B_per_dataset.png`](results/figures/budget_sweep_Qwen3-8B_per_dataset.png).
 
 Pilot evidence (Qwen3-4B, 2 samples per dataset, 256 new tokens, upstream cold profile; `runs/pilot_qwen3-4b.jsonl`, not a result): pooled speedup was 3.62× for DFlash, 3.45× for adaptive BASTION (mean tree 181.2) and 4.21× for fixed N=64.
 
@@ -164,8 +179,9 @@ Probe grid from upstream's calibration: s = 16…512 (step 16) × c ∈ {64, 128
 | Qwen3-8B, all 192 points | 29.92 ms | 5.08 ms (LOCO 5.31) | 83.0% | — |
 | Qwen3-4B, in-situ (36,048 steps) | 8.68 ms | 1.68 ms | — | — |
 | Qwen3-8B, in-situ (37,311 steps) | 10.40 ms | 1.91 ms | — | — |
+| Qwen3-8B, in-situ, E4 sweep (87,312 steps; fixed trees up to 1024 nodes) | 30.52 ms | 7.36 ms | — | — |
 
-The uncalibrated roofline underestimates latency throughout (mean bias −17.8 / −26.3 ms on the paper's contexts), as in the paper. Its absolute error depends on the **assumed** peak throughput of the RTX PRO 4500 (202 TFLOPS; see below). The fitted memory-term slopes are α_m = 1.75 (Qwen3-4B) and 1.35 (Qwen3-8B). Measured latency jumps between s = 256 and 272 (+12.0 to +15.6 ms, depending on model and context) and again between s = 384 and 400. A linear calibration cannot follow these steps. The paper attributes such steps to CUDA tile allocation. Files: [`results/latency_model.md`](results/latency_model.md), [`results/latency_model.json`](results/latency_model.json), figures [`results/figures/latency_model_b4500_qwen3-4b.png`](results/figures/latency_model_b4500_qwen3-4b.png) and [`results/figures/latency_model_b4500_qwen3-8b.png`](results/figures/latency_model_b4500_qwen3-8b.png).
+The uncalibrated roofline underestimates latency throughout (mean bias −17.8 / −26.3 ms on the paper's contexts), as in the paper. Its absolute error depends on the **assumed** peak throughput of the RTX PRO 4500 (202 TFLOPS; see below). The fitted memory-term slopes are α_m = 1.75 (Qwen3-4B) and 1.35 (Qwen3-8B). Measured latency jumps between s = 256 and 272 (+12.0 to +15.6 ms, depending on model and context) and again between s = 384 and 400. A linear calibration cannot follow these steps. The paper attributes such steps to CUDA tile allocation. For the large fixed trees of E4, the calibrated model over-predicts at 256–511 nodes (51.6 vs 44.4 ms measured) and under-predicts at 1024 nodes (135.7 vs 153.8 ms), which lies beyond the probe grid (s ≤ 512). Files: [`results/latency_model.md`](results/latency_model.md), [`results/latency_model.json`](results/latency_model.json), figures [`results/figures/latency_model_b4500_qwen3-4b.png`](results/figures/latency_model_b4500_qwen3-4b.png) and [`results/figures/latency_model_b4500_qwen3-8b.png`](results/figures/latency_model_b4500_qwen3-8b.png).
 
 ### Math accuracy (quality check, not in the paper)
 
@@ -184,7 +200,19 @@ Across the 158 problems the speculative methods differ from AR by at most 2 corr
 
 ### Precision check (fp32 vs bf16)
 
-**Pending** (`results/precision_check_qwen3-4b/`, run queued after the sweep).
+Setup: Qwen3-4B, the first 8 GSM8K prompts of the E1 selection, 256 new tokens, SDPA. AR, DFlash and adaptive BASTION were run in bf16 and in fp32. At each first divergence, the reference model was run teacher-forced to read the top-1 minus top-2 logit margin.
+
+| Comparison (vs reference) | Exact match | Margin at first divergence (logits) |
+|---|---:|---|
+| DFlash bf16 vs AR bf16 | 4/8 | 0, 0.25, 0.25, 0 |
+| BASTION bf16 vs AR bf16 | 4/8 | 0.25, 0.25, 0.125, 0 |
+| DFlash fp32 vs AR fp32 | 8/8 | — |
+| BASTION fp32 vs AR fp32 | 8/8 | — |
+| AR bf16 vs AR fp32 | 2/8 | 0.012–0.175 |
+
+At the bf16 divergences, a teacher-forced AR-bf16 pass reproduces AR-bf16's own token in only 2/4 (DFlash rows) and 3/4 (BASTION rows) cases. So AR's choice at these near-ties already depends on the shape of the forward pass. With n = 8, this shows that bf16 near-tie flips are sufficient to explain the E3 mismatches, but not that they explain every one.
+
+The first attempt failed because upstream's GPU resolver needs an explicit device index. It was rerun with `--device cuda:0 --gpu-key b4500`, and `cuda:0` is now the script default. File: [`results/precision_check_qwen3-4b/precision_check.md`](results/precision_check_qwen3-4b/precision_check.md).
 
 ## Differences and limitations
 
@@ -209,7 +237,7 @@ Workarounds and environment differences:
 
 - **GPU not in upstream's cost-model table.** Unmodified upstream raises `Unsupported gpu_type: 'NVIDIA RTX PRO 4500 Blackwell'`. [`tools/bastion_local.py`](tools/bastion_local.py) registers it at run time as `b4500`, and the harness reuses that registration. The memory bandwidth is 896 GB/s, from NVIDIA's product page. The peak dense bf16 throughput is **assumed** to be about 202 TFLOPS: 1617 sparse FP4 TOPS divided by 8, the same ratio that maps the RTX PRO 6000 to upstream's 504 TFLOPS. A 4096² bf16 matmul measured 177 TFLOPS locally. These priors feed straight into the uncalibrated roofline (E5). The per-(GPU, model) linear calibration absorbs a constant scale error.
 - **Calibration memory fix.** Upstream's calibration OOMed on Qwen3-8B with 32 GB (`runs/setup_smoke_Qwen3-8B.oom_attempt1.log`): its untimed context prefill runs with autograd enabled and keeps activations alive. `tools/bastion_local.py` wraps `collect_calibration_data` in `torch.inference_mode()`. The timed forwards were already in inference mode, so the measured latencies are unaffected.
-- **Controller profile constants (warm profile).** Upstream profiles draft latency and non-verification overhead once, cold (3 trials, no warm-up). On this machine that gave 15.1 ms / 151.3 ms for Qwen3-4B and 5.4 ms / 17.4 ms for Qwen3-8B. Repeating the same profiler call and keeping the second result gave 3.2 ms / 0.85 ms and 4.9 ms / 0.99 ms. During E1, the logged per-step draft latency averaged 3.3 ms (Qwen3-4B) and 5.0 ms (Qwen3-8B). Inflated constants make the controller choose oversized trees: in the pilot, with the cold profile, adaptive was slower than both DFlash and fixed N=64 (see E4). E1 therefore uses `--profile-mode warm`. This is a deliberate deviation from upstream's default, and E4 runs both variants.
+- **Controller profile constants (warm profile).** Upstream profiles draft latency and non-verification overhead once, cold (3 trials, no warm-up). On this machine that gave 15.1 ms / 151.3 ms for Qwen3-4B and 5.4 ms / 17.4 ms for Qwen3-8B. Repeating the same profiler call and keeping the second result gave 3.2 ms / 0.85 ms and 4.9 ms / 0.99 ms. During E1, the logged per-step draft latency averaged 3.3 ms (Qwen3-4B) and 5.0 ms (Qwen3-8B). Inflated constants make the controller choose oversized trees: in the pilot, with the cold profile, adaptive was slower than both DFlash and fixed N=64 (see E4). E1 therefore uses `--profile-mode warm`. This is a deliberate deviation from upstream's default. In E4 (Qwen3-8B), the cold profile gave larger trees (N̄ 40.0 vs 33.2) at the same speed (4.51× vs 4.52×). The strongly inflated Qwen3-4B case was not swept.
 - **LiveCodeBench loading.** `livecodebench/code_generation_lite` is script-only, and `datasets>=4` rejects scripts. [`tools/prepare_lcb.py`](tools/prepare_lcb.py) rebuilds the `release_v2` prompt cache (511 items) from the raw `test.jsonl` and `test2.jsonl` at a pinned revision, using upstream's own prompt format.
 - **Software versions:** `datasets` 5.0.1, where upstream's `uv.lock` pins 4.8.5. The DFlash model cards list torch 2.9 and transformers 4.57.3 for their evaluation; this setup has torch 2.8.0+cu128 and transformers 4.57.1. The full freeze is in `runs/setup_pip_freeze.txt` (git-ignored).
 - **Dataset revisions:** upstream does not pin them. The revisions cached on 2026-11-21 and the sha256 of each prompt file are recorded in `Dataloaders/registry.yaml`.
@@ -227,6 +255,6 @@ Workarounds and environment differences:
 - [ ] Exact paper link and version verified. The OpenReview and arXiv links resolve, but which arXiv version (v1–v4) matches the quoted text was not verified.
 - [x] Base model and dataset revisions pinned. Model revisions are pinned. Dataset revisions and prompt-file hashes are recorded, but upstream loads `main`.
 - [x] Baseline runs on the same setup. AR and DFlash run in the same process, on the same prompts and GPU, as BASTION.
-- [x] Tests and seed handling added (114 CPU tests; selection equivalence with upstream tested)
-- [ ] Resource and quality metrics reported. Latency, throughput, peak memory and math accuracy are reported for E1. Energy is not measured. E4 and the precision check are pending.
+- [x] Tests and seed handling added (115 CPU tests; selection equivalence with upstream tested)
+- [x] Resource and quality metrics reported: latency, throughput, peak memory and math accuracy (E1); speed per budget (E4). Energy is not measured. Rows are in `Performance_Metrics/README_metrics.md`.
 - [x] Licence/data terms checked. Upstream code: MIT. Qwen3: Apache-2.0. DFlash drafters: MIT. For the datasets, see the dataset card; the MATH-500 and LiveCodeBench licences are not verified, and Alpaca is CC-BY-NC-4.0.
