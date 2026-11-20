@@ -10,7 +10,7 @@ This module holds the speculative-decoding papers listed in [`PAPER_INDEX.md`](.
 
 | Paper | Folder | Status |
 |---|---|---|
-| [BASTION: Budget-Aware Speculative Decoding with Tree-structured Block Diffusion Drafting](https://openreview.net/forum?id=uqeOxztSIS) | [`BASTION/`](BASTION/) | partial reproduction, see [`BASTION/PAPER_CARD.md`](BASTION/PAPER_CARD.md) |
+| [BASTION: Budget-Aware Speculative Decoding with Tree-structured Block Diffusion Drafting](https://openreview.net/forum?id=uqeOxztSIS) | [`BASTION/`](BASTION/) | `partial-reproduction` (Qwen3-4B/8B, T=0, one RTX PRO 4500). The qualitative claims reproduce; the speedup magnitudes do not (BASTION 4.50× / 4.47× vs 6.93× / 6.61× on A100). See [`BASTION/PAPER_CARD.md`](BASTION/PAPER_CARD.md) and [`BASTION/REPORT.md`](BASTION/REPORT.md) |
 
 ## Other papers in scope
 
@@ -27,6 +27,6 @@ Follow [`Performance_Metrics/README_metrics.md`](../Performance_Metrics/README_m
 
 - **The baseline is target-only AR decoding.** Use the same target checkpoint, prompts, chat template, `max_new_tokens`, temperature, batch size and GPU. Report speedup as a ratio of per-token latencies measured on the same inputs.
 - **Report average accepted length (AAL, τ)** next to speedup. AAL does not depend on the hardware, while speedup does.
-- **Check losslessness.** At temperature 0 the speculative output should equal the AR output token for token. Report the exact-match rate rather than assuming it; bf16 numerics can cause rare divergences.
+- **Check losslessness.** At temperature 0 the speculative output should equal the AR output token for token. Report the exact-match rate rather than assuming it. bf16 numerics can cause divergences, and they need not be rare: in the BASTION reproduction only 30–35% of bf16 outputs matched AR, while fp32 matched exactly on the prompts tested.
 - **Separate prefill from decode**, and state whether one-off costs (calibration, profiling, warm-up) are excluded from the timings.
 - **Name the attention backend** (SDPA, FlashAttention, etc.) for each mode, because tree verification usually needs a custom mask that rules out some kernels.
