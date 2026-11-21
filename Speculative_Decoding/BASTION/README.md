@@ -15,6 +15,7 @@ analysis and tests. Results and the comparison with the paper are in
 | `analysis/aggregate.py` | Speedup / AAL / tree size per (model, dataset, method), DA4022 CSV, Table-1 markdown |
 | `analysis/check_lossless.py` | E3: exact-match and first-divergence statistics vs AR |
 | `analysis/e1_extras.py` | E1 vs paper Table 1 per dataset, tree-size distribution, bootstrap intervals, resume check |
+| `analysis/sweep_extras.py` | E4 budget sweep: per-dataset oracle, adaptive vs fixed-N ratios with bootstrap intervals, E1-repeat consistency check |
 | `analysis/score_math.py` | Boxed-answer accuracy on gsm8k / math500 / aime25 (quality sanity check) |
 | `analysis/latency_model.py` | E5: uncalibrated roofline vs calibrated fit vs measured (RMSE) |
 | `analysis/plots.py` | Speedup bars, budget sweep, latency-model figures |
