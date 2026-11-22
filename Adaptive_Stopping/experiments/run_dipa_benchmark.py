@@ -370,7 +370,8 @@ def _build_allocator(method: str, cfg: AllocationConfig) -> BudgetAllocator:
     if method == "dipa_mgl":
         return DIPABudgetAllocator(replace(cfg, gen_proxy="mgl"))
     if method == "dipa_mgc":
-        return DIPABudgetAllocator(replace(cfg, gen_proxy="mgc"))
+        # MGC has no input-based counterpart in Table 1; 1/MGC >= 1.0 needs a unit prior to avoid mql scale lock-in.
+        return DIPABudgetAllocator(replace(cfg, input_proxy="const", gen_proxy="mgc"))
     available = ", ".join(sorted(VALID_METHODS))
     raise ValueError(f"Unknown method {method!r}. Expected one of: {available}")
 

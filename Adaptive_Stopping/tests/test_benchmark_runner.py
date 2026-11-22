@@ -12,12 +12,14 @@ from typing import Any
 import pytest
 
 from Adaptive_Stopping.experiments.run_dipa_benchmark import (
+    _build_allocator,
     append_pool_entry,
     build_response_pool,
     evaluate_pool,
     load_pool_jsonl,
     run_benchmark,
 )
+from Adaptive_Stopping.methods.dipa.types import AllocationConfig
 from Dataloaders.evaluation.math500 import Math500LoaderConfig, load_math500
 from Performance_Metrics import METRICS_COLUMNS
 
@@ -363,3 +365,43 @@ class TestBenchmarkRunnerAndEvaluation:
             env=env,
             check=True,
         )
+
+    def test_dipa_mgc_uses_const_input_prior_and_explores_long_prompts(self) -> None:
+        alloc = _build_allocator(
+            "dipa_mgc",
+            AllocationConfig(total_budget=20, input_proxy="mql", gen_proxy="mgl", seed=42),
+        )
+        assert alloc.config.input_proxy == "const"
+        assert alloc.config.gen_proxy == "mgc"
+
+        long_records = [
+            {
+                "instance_id": f"long_{i}",
+                "prompt": " ".join(f"word{k}" for k in range(50)),
+                "ground_truth": "42",
+                "metadata": {"level": 3},
+            }
+            for i in range(20)
+        ]
+        pool_entries, _ = build_response_pool(
+            records=long_records, mode="mock", pool_size=4, seed=42
+        )
+        # Force the first 2 attempts on every problem to fail with distinct answers so
+        # an unfixed mql+mgc scale mismatch would lock onto a single arm.
+        for i, entry in enumerate(pool_entries.values()):
+            entry["attempts"][0]["is_correct"] = False
+            entry["attempts"][0]["extracted_answer"] = f"wrong_a_{i}"
+            entry["attempts"][1]["is_correct"] = False
+            entry["attempts"][1]["extracted_answer"] = f"wrong_b_{i}"
+            entry["attempts"][2]["is_correct"] = True
+            entry["attempts"][2]["extracted_answer"] = "42"
+
+        rows = evaluate_pool(
+            pool_entries=pool_entries,
+            methods=("dipa_mgc",),
+            budget_multipliers=(1.0,),
+            seeds=(42,),
+            config_dict={"allocation": {"input_proxy": "mql"}},
+        )
+        assert len(rows) == 1
+        assert "pool_wrapped=" not in rows[0].notes
