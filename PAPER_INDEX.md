@@ -45,7 +45,7 @@ This is an engineering-oriented shortlist from the [official AdaptFM accepted-pa
 ## Quantization, pruning and compression
 
 - [AAAC: Activation-Aware Adaptive Codebooks for 4-bit LLM Weight Quantization](https://openreview.net/forum?id=ddOlFn6d0B) — weight quantization.
-- [CafeQ: Calibration-free Quantization via Learned Transformations and Adaptive Rounding](https://openreview.net/forum?id=CBtx52vftl) — PTQ.
+- [CafeQ: Calibration-free Quantization via Learned Transformations and Adaptive Rounding](https://openreview.net/forum?id=CBtx52vftl) — PTQ; status: tested ([card](Quantization_and_Pruning/quantization/weight_only/cafeq/PAPER_CARD.md)).
 - [COAT: COrrelation-Aware Orthogonal Transform for LLM Quantization](https://openreview.net/forum?id=6JGbm48VoG) — transform-based quantization.
 - [Jacobian-guided Noise Injection for Quantization Robustness in Large Language Models](https://openreview.net/forum?id=wxKn35RAhW) — quantization robustness.
 - [Leech Lattice Vector Quantization for Efficient LLM Compression](https://openreview.net/forum?id=HFk5TQ2ILj) — vector quantization.

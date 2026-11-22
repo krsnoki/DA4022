@@ -1,0 +1,58 @@
+# CPU smoke test on a random tiny Llama-style model (use with run_cafeq.py --tiny). No downloads.
+experiment_id: cafeq_tiny_smoke
+paper_id: adaptfm.cafeq
+seed: 0
+device: cpu
+output_dir: outputs/cafeq
+calibration_dataset: null
+
+backbone:
+  id: tiny.llama.random
+  hf_name: none
+  revision: null
+  dtype: float32
+
+evaluation:
+  dataset_id: synthetic.random_tokens
+  split: test
+  seq_len: 64
+  max_chunks: 4
+  batch_size: 2
+
+quantization:
+  method: cafeq
+  bits: 4
+  group_size: null
+  targets: {ff: true, qk: true, vo: true}
+
+block_transform:
+  block_size: 16
+  iterations: 50
+  lr: 0.001
+  optimizer: adam
+  loss: paper_eq4
+  init: rotation
+  keep_best: true
+  fallback_if_worse: true
+  log_every: 0
+
+paired_transform:
+  enabled: true
+  iterations: 50
+  lr: 0.001
+  optimizer: adam
+  pseudo_loss: logsumexp
+  temperature: 5.0
+  orth_weight: 0.0
+  normalize: true
+  init: identity
+  keep_best: true
+  log_every: 0
+
+adaptive_rounding:
+  enabled: true
+  iterations: 3
+  keep_best: true
+
+random_baseline:
+  block_size: 1024

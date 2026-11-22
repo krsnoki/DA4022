@@ -1,0 +1,13 @@
+# Experiment outputs, checkpoints and caches (never commit weights or datasets)
+outputs/
+*.pt
+*.pth
+*.bin
+*.safetensors
+.cache/
+hf_cache/
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/

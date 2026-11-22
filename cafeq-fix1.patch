@@ -1,0 +1,75 @@
+diff --git a/Quantization_and_Pruning/quantization/weight_only/cafeq/PAPER_CARD.md b/Quantization_and_Pruning/quantization/weight_only/cafeq/PAPER_CARD.md
+index c233e39..6f0748a 100644
+--- a/Quantization_and_Pruning/quantization/weight_only/cafeq/PAPER_CARD.md
++++ b/Quantization_and_Pruning/quantization/weight_only/cafeq/PAPER_CARD.md
+@@ -35,7 +35,7 @@ Post-training weight quantization reduces the memory traffic that dominates LLM
+ | Block-diagonal / Hadamard transforms | `quantization/common/transforms.py` |
+ | Eq. (4) surrogate + learning `M` (Sec. 3.1) | `cafeq/block_diagonal.py` |
+ | Paired V/O transform, LogSumExp / sum-sq pseudo-losses, orthonormal penalty (App. A, F) | `cafeq/paired.py` |
+-| Algorithm 1, generic + GQA-aware V/O version | `cafeq/adaptive_rounding.py` |
++| Algorithm 1, generic + GQA-aware V/O version | `cafeq/joint_rounding.py` |
+ | Model surgery, baselines (`rtn`, `random_hadamard`), report | `cafeq/apply.py` |
+ | Inference module, save/load | `cafeq/modules.py` |
+ | Config schema and validation | `cafeq/config.py`, configs in `configs/cafeq/` |
+diff --git a/Quantization_and_Pruning/quantization/weight_only/cafeq/__init__.py b/Quantization_and_Pruning/quantization/weight_only/cafeq/__init__.py
+index 16c3c72..6bc32ae 100644
+--- a/Quantization_and_Pruning/quantization/weight_only/cafeq/__init__.py
++++ b/Quantization_and_Pruning/quantization/weight_only/cafeq/__init__.py
+@@ -30,13 +30,17 @@ _EXPORTS = {
+     "pseudo_loss": "paired",
+     "orth_penalty": "paired",
+     "paired_error": "paired",
+-    "adaptive_rounding": "adaptive_rounding",
+-    "adaptive_rounding_vo": "adaptive_rounding",
+-    "vo_paired_error": "adaptive_rounding",
++    "adaptive_rounding": "joint_rounding",
++    "adaptive_rounding_vo": "joint_rounding",
++    "vo_paired_error": "joint_rounding",
+ }
+ 
+ __all__ = sorted(_EXPORTS)
+ 
++# An exported name must never equal a submodule name: importing the submodule would set the
++# package attribute to the module object and shadow the lazily exported function.
++assert not set(_EXPORTS) & set(_EXPORTS.values()), "exported name collides with a submodule"
++
+ 
+ def __getattr__(name):
+     if name in _EXPORTS:
+diff --git a/Quantization_and_Pruning/quantization/weight_only/cafeq/apply.py b/Quantization_and_Pruning/quantization/weight_only/cafeq/apply.py
+index e7f0846..305a269 100644
+--- a/Quantization_and_Pruning/quantization/weight_only/cafeq/apply.py
++++ b/Quantization_and_Pruning/quantization/weight_only/cafeq/apply.py
+@@ -25,7 +25,7 @@ import torch.nn as nn
+ 
+ from ...common.transforms import pick_block_size, random_block_diagonal
+ from ...common.uniform import QuantSpec, quantize_dequantize, relative_l2
+-from .adaptive_rounding import _split_vo, adaptive_rounding_vo, vo_paired_error
++from .joint_rounding import _split_vo, adaptive_rounding_vo, vo_paired_error
+ from .block_diagonal import effective_weight, learn_block_transform, transform_weight
+ from .config import CafeQConfig
+ from .modules import CafeQLinear
+diff --git a/Quantization_and_Pruning/quantization/weight_only/cafeq/adaptive_rounding.py b/Quantization_and_Pruning/quantization/weight_only/cafeq/joint_rounding.py
+similarity index 100%
+rename from Quantization_and_Pruning/quantization/weight_only/cafeq/adaptive_rounding.py
+rename to Quantization_and_Pruning/quantization/weight_only/cafeq/joint_rounding.py
+diff --git a/Quantization_and_Pruning/tests/test_cafeq_algorithms.py b/Quantization_and_Pruning/tests/test_cafeq_algorithms.py
+index 3cbdced..555edff 100644
+--- a/Quantization_and_Pruning/tests/test_cafeq_algorithms.py
++++ b/Quantization_and_Pruning/tests/test_cafeq_algorithms.py
+@@ -123,6 +123,15 @@ def test_paired_pseudo_losses_run(pseudo_loss):
+ 
+ # ------------------------------------------------------------------ Appendix B (adaptive rounding)
+ 
++def test_exports_are_not_shadowed_by_submodules():
++    import Quantization_and_Pruning.quantization.weight_only.cafeq as cafeq
++    import Quantization_and_Pruning.quantization.weight_only.cafeq.apply  # noqa: F401  loads every submodule
++
++    for name in cafeq.__all__:
++        obj = getattr(cafeq, name)
++        assert not isinstance(obj, type(cafeq)), f"cafeq.{name} resolved to a module"
++
++
+ def test_paper_toy_example():
+     """Appendix B: 1-bit grid {0, 1}; PQE drops from 0.64 to 0.36."""
+     w = torch.diag(torch.tensor([1.0, 0.6]))
