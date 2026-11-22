@@ -1,0 +1,22 @@
+models:
+  - id: llm.qwen2_5_math_1_5b_instruct.generative
+    name: Qwen2.5-Math-1.5B-Instruct
+    modality: text
+    architecture: Qwen2ForCausalLM
+    pretraining_regime: mixed  # self-supervised next-token pretraining + math instruction post-training
+    objective: mathematical reasoning via chain-of-thought and tool-integrated reasoning
+    weights_source: huggingface
+    weights_uri: https://huggingface.co/Qwen/Qwen2.5-Math-1.5B-Instruct
+    revision: "main (pin exact commit SHA on first Kaggle download)"
+    license: apache-2.0
+    num_parameters: 1540000000
+    context_length: 32768
+    max_generation_tokens: 8192
+    dtype: float16
+    parent_backbone: Qwen/Qwen2.5-Math-1.5B
+    fine_tuning_dataset: unknown
+    wrapper: Backbones.Generative_Pretrained.qwen2_5_math_1_5b_instruct.Qwen25Math15BInstructBackbone
+    notes: >
+      Math-specialized instruction-tuned causal LM. Target inference hardware is
+      Kaggle Tesla T4 (16 GB VRAM) in float16 (or bfloat16 on Ampere+ GPUs).
+      Pin revision to the resolved Hugging Face commit SHA on first download.
