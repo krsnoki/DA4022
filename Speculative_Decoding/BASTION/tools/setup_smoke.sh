@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Usage: smoke.sh <model> <draft>   (refuses to run if any other compute process is on the GPU)
+# Usage: tools/setup_smoke.sh <model> <draft>   (refuses to run if any other compute process is on the GPU)
 set -u
-ROOT=/home/prateek/Documents/gpu-test/DA4022/Speculative_Decoding/BASTION
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MODEL=$1; DRAFT=$2; TAG=$(basename $MODEL)
 LOG=$ROOT/runs/setup_smoke_${TAG}.log; MEM=$ROOT/runs/setup_smoke_${TAG}.gpumem.csv
 mkdir -p $ROOT/runs

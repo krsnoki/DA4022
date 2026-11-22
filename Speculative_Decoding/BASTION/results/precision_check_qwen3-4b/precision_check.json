@@ -21,8 +21,8 @@
   "cost_gpu_type": "b4500",
   "draft_latency_s": 0.003218190660441501,
   "non_verify_latency_s": 0.0008501615245930023,
-  "calibration_json": "/home/prateek/Documents/gpu-test/DA4022/Speculative_Decoding/BASTION/upstream/cache/calibration_b4500_qwen3-4b.json",
-  "profile_json": "/home/prateek/Documents/gpu-test/DA4022/Speculative_Decoding/BASTION/upstream/cache/calibration_b4500_qwen3-4b.profile.warm.json"
+  "calibration_json": "upstream/cache/calibration_b4500_qwen3-4b.json",
+  "profile_json": "upstream/cache/calibration_b4500_qwen3-4b.profile.warm.json"
  },
  "prompts": [
   {

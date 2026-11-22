@@ -109,8 +109,8 @@
    "1024": 2.7928943878003145,
    "2048": 7.5011143179802735
   },
-  "probe_file": "/home/prateek/Documents/gpu-test/DA4022/Speculative_Decoding/BASTION/upstream/cache/calib_probe_b4500_qwen3-4b.sigma_sequence_v1.jsonl",
-  "calibration_file": "/home/prateek/Documents/gpu-test/DA4022/Speculative_Decoding/BASTION/upstream/cache/calibration_b4500_qwen3-4b.json",
+  "probe_file": "upstream/cache/calib_probe_b4500_qwen3-4b.sigma_sequence_v1.jsonl",
+  "calibration_file": "upstream/cache/calibration_b4500_qwen3-4b.json",
   "profile": {
    "draft_latency_s": 0.015120795106567029,
    "non_verify_latency_s": 0.15132261131010535,
@@ -283,8 +283,8 @@
    "1024": 4.770924548738196,
    "2048": 9.719574493468286
   },
-  "probe_file": "/home/prateek/Documents/gpu-test/DA4022/Speculative_Decoding/BASTION/upstream/cache/calib_probe_b4500_qwen3-8b.sigma_sequence_v1.jsonl",
-  "calibration_file": "/home/prateek/Documents/gpu-test/DA4022/Speculative_Decoding/BASTION/upstream/cache/calibration_b4500_qwen3-8b.json",
+  "probe_file": "upstream/cache/calib_probe_b4500_qwen3-8b.sigma_sequence_v1.jsonl",
+  "calibration_file": "upstream/cache/calibration_b4500_qwen3-8b.json",
   "profile": {
    "draft_latency_s": 0.005387595835297058,
    "non_verify_latency_s": 0.017445280714633152,
