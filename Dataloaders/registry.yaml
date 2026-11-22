@@ -1,0 +1,14 @@
+datasets:
+  - id: math.math500.test
+    name: MATH-500 evaluation test split
+    modality: text
+    task: mathematical_reasoning
+    source_url: https://huggingface.co/datasets/HuggingFaceH4/MATH-500
+    license: mit
+    version: "main (pin exact commit SHA on first Hugging Face load)"
+    role: evaluation
+    split: test
+    preprocessing_id: dipa.math_cot_boxed.v1
+    seed: 42
+    num_examples: 500
+    labels_available: true
