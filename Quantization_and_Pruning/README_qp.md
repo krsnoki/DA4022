@@ -24,6 +24,14 @@ Quantization_and_Pruning/
 └── experiments/
 ```
 
+## Implemented methods
+
+| Method | Code | Paper card | Status |
+|---|---|---|---|
+| CafeQ (calibration-free PTQ: learned block-diagonal + paired V/O transforms, adaptive rounding) | [`quantization/weight_only/cafeq/`](quantization/weight_only/cafeq/) | [`PAPER_CARD.md`](quantization/weight_only/cafeq/PAPER_CARD.md) | tested |
+
+Shared primitives that other methods can reuse: [`quantization/common/uniform.py`](quantization/common/uniform.py) (min-max group quantizer) and [`quantization/common/transforms.py`](quantization/common/transforms.py) (block-diagonal, Hadamard and random orthogonal transforms). Run the tests with `python -m pytest Quantization_and_Pruning/tests -q` from the repo root.
+
 ## Quantization paper shortlist
 
 - [AAAC: Activation-Aware Adaptive Codebooks for 4-bit LLM Weight Quantization](https://openreview.net/forum?id=ddOlFn6d0B)

@@ -1,0 +1,59 @@
+# CafeQ, 4-bit per-channel weight-only, Qwen2.5-0.5B (CPU-feasible scaled-down setting).
+# Paper equivalents: Section 4 / Table 5 use Qwen2.5-7B with diagonal block size 128.
+experiment_id: cafeq_qwen2.5-0.5b_w4_perchannel
+paper_id: adaptfm.cafeq
+seed: 0
+device: cpu                 # set to cuda if available
+output_dir: outputs/cafeq   # git-ignored
+calibration_dataset: null   # calibration-free method: must stay null
+
+backbone:
+  id: text.qwen2_5_0_5b.base
+  hf_name: Qwen/Qwen2.5-0.5B
+  revision: null            # TODO pin the exact commit hash before reporting results
+  dtype: float32
+
+evaluation:
+  dataset_id: text.wikitext2.raw.test
+  split: test
+  seq_len: 2048
+  max_chunks: null          # null = full test split
+  batch_size: 1
+
+quantization:
+  method: cafeq             # none | rtn | random_hadamard | cafeq
+  bits: 4
+  group_size: null          # null = per-channel along the contraction dimension; or 256 / 128
+  targets: {ff: true, qk: true, vo: true}
+
+block_transform:            # Section 3.1
+  block_size: 128           # paper: 128 (Gemma 2 2B, Qwen2.5-7B), 256 (Gemma 2 9B)
+  iterations: 2000          # paper: 20,000 (Appendix E); reduced for CPU
+  lr: 0.001
+  optimizer: adam           # not specified in the paper
+  loss: paper_eq4           # paper_eq4 | grouped_bound
+  init: rotation            # paper: random rotation blocks
+  keep_best: true
+  fallback_if_worse: true
+  log_every: 0
+
+paired_transform:           # Appendix A / F
+  enabled: true
+  iterations: 5000          # paper: 100,000 (Appendix F.2); reduced for CPU
+  lr: 0.001
+  optimizer: adam           # paper: unconstrained Adam
+  pseudo_loss: logsumexp
+  temperature: 5.0          # paper: t = 5
+  orth_weight: 0.0
+  normalize: true           # our choice, see PAPER_CARD.md
+  init: identity
+  keep_best: true
+  log_every: 0
+
+adaptive_rounding:          # Appendix B, Algorithm 1
+  enabled: true
+  iterations: 5
+  keep_best: true
+
+random_baseline:
+  block_size: 1024          # Table 1 "random"; capped to the largest power-of-two divisor

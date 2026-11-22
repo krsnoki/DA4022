@@ -51,6 +51,14 @@ experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,sp
 
 Unknown/not-measured quantities should be empty/null plus a `status` or notes entry—never `0` unless zero was actually measured.
 
+## Results registry
+
+One CSV per method under [`results/`](results/), using the schema above. Rows marked `not_measured` are reserved slots for planned runs, not results.
+
+| Method | File | Includes unmodified baseline |
+|---|---|---|
+| CafeQ (+ RTN and random-Hadamard baselines) | [`results/cafeq.csv`](results/cafeq.csv) | yes (`method=none`) |
+
 ## Recommended plots
 
 - quality vs. latency;

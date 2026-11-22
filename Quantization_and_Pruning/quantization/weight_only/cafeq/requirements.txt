@@ -1,0 +1,7 @@
+# Core (install PyTorch first with the official selector: https://pytorch.org/get-started/locally/)
+torch>=2.1
+pyyaml>=6.0
+pytest>=7.0
+# Model integration, tiny-model tests and the WikiText-2 run script
+transformers>=4.42   # 4.42+ needed for Gemma 2
+datasets>=2.18

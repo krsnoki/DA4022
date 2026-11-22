@@ -82,6 +82,10 @@ Do not invent dataset licence, version, or split counts; use `unknown` until ver
 - Verify batching, padding, and truncation at boundary sizes.
 - Keep large datasets and cache files out of Git; add the relevant local paths to `.gitignore`.
 
+## Implemented loaders
+
+- `evaluation/wikitext2.py`: WikiText-2 raw perplexity chunks ([card](evaluation/README_wikitext2.md)).
+
 ## Reproducibility note
 
 An experiment config should point to `dataset_id`, `split`, `preprocessing_id`, `seed`, and `num_samples`—not contain a second implementation of the loader. See [`templates/DATASET_CARD_TEMPLATE.md`](../templates/DATASET_CARD_TEMPLATE.md).
