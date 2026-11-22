@@ -47,6 +47,7 @@ class BudgetAllocator(StoppingPolicy):
         self._last_report: AllocationReport | None = None
         self._budget_used: int = 0
         self._active_arms: int = 0
+        self._num_instances: int = 0
         self._request_metadata: dict[str, Any] = {}
 
     def reset(self, request_metadata: dict[str, Any] | None = None) -> None:
@@ -54,6 +55,7 @@ class BudgetAllocator(StoppingPolicy):
         self._last_report = None
         self._budget_used = 0
         self._active_arms = 0
+        self._num_instances = 0
         self._request_metadata = dict(request_metadata or {})
 
     def should_stop(self, state: Any, metrics: dict[str, Any], budget: int) -> bool:
@@ -131,6 +133,7 @@ class BudgetAllocator(StoppingPolicy):
     ) -> AllocationReport:
         """Allocate ``config.total_budget`` attempts across ``instances``."""
         self.reset()
+        self._num_instances = len(instances)
         total_budget = self.config.total_budget
         if not instances or total_budget == 0:
             empty_arms = [ArmState(instance=inst, difficulty=1.0) for inst in instances]
@@ -205,18 +208,31 @@ class DIPABudgetAllocator(BudgetAllocator):
     deterministic: bool = False
 
     def compute_sampling_probabilities(
-        self, active_arms: Sequence[ArmState]
+        self,
+        active_arms: Sequence[ArmState],
+        total_instances: int | None = None,
     ) -> np.ndarray:
-        """Compute P_k proportional to 1 / M_k^lambda_t in stabilized log-space."""
+        """Compute P_k proportional to 1 / M_k^lambda_t in stabilized log-space.
+
+        In ``dynamic`` mode, ``lambda_t = lambda_value * (|X| / N)`` remains
+        strictly proportional to ``|X|`` while staying batch-size invariant
+        across ``N = 20, 100, 500``.
+        """
         n = len(active_arms)
         if n == 0:
             return np.empty(0, dtype=np.float64)
 
-        lambda_t = (
-            self.config.lambda_value
-            if self.config.lambda_mode == "fixed"
-            else self.config.lambda_value * n
-        )
+        if self.config.lambda_mode == "fixed":
+            lambda_t = self.config.lambda_value
+        else:
+            # Normalize by total batch size N so lambda_t stays O(1) across N = 20, 100, 500.
+            denom = (
+                total_instances
+                if total_instances is not None
+                else (self._num_instances if self._num_instances > 0 else n)
+            )
+            denom = max(1, int(denom))
+            lambda_t = self.config.lambda_value * (n / denom)
         raw_diffs = np.array(
             [float(arm.difficulty) for arm in active_arms], dtype=np.float64
         )

@@ -333,25 +333,39 @@ class TestAllocatorEdgeCasesAndBehavior:
         alloc_empty = DIPABudgetAllocator(AllocationConfig(total_budget=10))
         assert alloc_empty.compute_sampling_probabilities([]).size == 0
 
-        p_low_lam = DIPABudgetAllocator(
+        alloc_low = DIPABudgetAllocator(
             AllocationConfig(total_budget=10, lambda_mode="fixed", lambda_value=0.5)
-        ).compute_sampling_probabilities(arms)
-        p_mid_lam = DIPABudgetAllocator(
+        )
+        alloc_mid = DIPABudgetAllocator(
             AllocationConfig(total_budget=10, lambda_mode="fixed", lambda_value=1.0)
-        ).compute_sampling_probabilities(arms)
-        p_high_lam = DIPABudgetAllocator(
+        )
+        alloc_high = DIPABudgetAllocator(
             AllocationConfig(total_budget=10, lambda_mode="fixed", lambda_value=4.0)
-        ).compute_sampling_probabilities(arms)
+        )
+        p_low_lam = alloc_low.compute_sampling_probabilities(arms)
+        p_mid_lam = alloc_mid.compute_sampling_probabilities(arms)
+        p_high_lam = alloc_high.compute_sampling_probabilities(arms)
 
         assert p_mid_lam.tolist() == pytest.approx([2.0 / 3.0, 1.0 / 3.0])
+        assert alloc_mid.compute_sampling_probabilities(
+            arms, total_instances=100
+        ).tolist() == pytest.approx(p_mid_lam.tolist())
         assert p_low_lam[0] < p_mid_lam[0] < p_high_lam[0]
 
         alloc_dyn = DIPABudgetAllocator(
-            AllocationConfig(total_budget=10, lambda_mode="dynamic", lambda_value=1.0)
+            AllocationConfig(total_budget=10, lambda_mode="dynamic", lambda_value=5.0)
         )
-        p_dyn = alloc_dyn.compute_sampling_probabilities(arms)
-        assert p_dyn.tolist() == pytest.approx([0.8, 0.2])
-        assert p_dyn[0] > p_mid_lam[0]
+        p_dyn_standalone = alloc_dyn.compute_sampling_probabilities(arms)
+        p_dyn_n2 = alloc_dyn.compute_sampling_probabilities(arms, total_instances=2)
+        expected_lam5 = [32.0 / 33.0, 1.0 / 33.0]
+        assert p_dyn_standalone.tolist() == pytest.approx(expected_lam5)
+        assert p_dyn_n2.tolist() == pytest.approx(expected_lam5)
+
+        p_dyn_n100 = alloc_dyn.compute_sampling_probabilities(arms, total_instances=100)
+        w2 = 2.0 ** -0.1
+        expected_lam01 = [1.0 / (1.0 + w2), w2 / (1.0 + w2)]
+        assert p_dyn_n100.tolist() == pytest.approx(expected_lam01)
+        assert p_dyn_n100[0] < p_mid_lam[0] < p_dyn_n2[0]
 
         # 500 arms with lambda_t=500 across [1e-6, 5e5] would overflow float64 without log-space shift.
         diffs_500 = np.geomspace(1e-6, 5e5, 500)
@@ -361,11 +375,17 @@ class TestAllocatorEdgeCasesAndBehavior:
             )
             for i, d in enumerate(diffs_500)
         ]
-        p_many = alloc_dyn.compute_sampling_probabilities(many_arms)
-        assert p_many.shape == (500,)
-        assert np.all(np.isfinite(p_many))
-        assert float(np.sum(p_many)) == pytest.approx(1.0)
-        assert p_many[0] > p_many[-1]
+        alloc_fixed_500 = DIPABudgetAllocator(
+            AllocationConfig(total_budget=10, lambda_mode="fixed", lambda_value=500.0)
+        )
+        for p_many in (
+            alloc_fixed_500.compute_sampling_probabilities(many_arms),
+            alloc_dyn.compute_sampling_probabilities(many_arms, total_instances=500),
+        ):
+            assert p_many.shape == (500,)
+            assert np.all(np.isfinite(p_many))
+            assert float(np.sum(p_many)) == pytest.approx(1.0)
+            assert p_many[0] > p_many[-1]
 
         bad_arms = [
             ArmState(instance=inst, difficulty=float("nan")),
@@ -556,3 +576,54 @@ class TestBaselinesAndBenchmark:
         assert dipa_mgl_report.coverage > hard2easy_report.coverage
         assert dipa_mgc_report.coverage > uniform_report.coverage
         assert dipa_mgc_report.coverage > hard2easy_report.coverage
+
+    def test_dipa_dynamic_lambda_escapes_easy2hard_trap_at_n100(self) -> None:
+        instances: list[ProblemInstance] = (
+            [ProblemInstance(f"easy_{i}", " ".join(["w"] * 8), "1") for i in range(40)]
+            + [ProblemInstance(f"trap_{i}", " ".join(["w"] * 9), "1") for i in range(5)]
+            + [ProblemInstance(f"med_{i}", " ".join(["w"] * 18), "1") for i in range(35)]
+            + [ProblemInstance(f"hard_{i}", " ".join(["w"] * 45), "1") for i in range(20)]
+        )
+        solve_probs: dict[str, float] = {
+            **{f"easy_{i}": 0.8 for i in range(40)},
+            **{f"trap_{i}": 0.0 for i in range(5)},
+            **{f"med_{i}": 0.25 for i in range(35)},
+            **{f"hard_{i}": 0.0 for i in range(20)},
+        }
+        token_lengths: dict[str, int] = {
+            **{f"easy_{i}": 18 for i in range(40)},
+            **{f"trap_{i}": 20 for i in range(5)},
+            **{f"med_{i}": 35 for i in range(35)},
+            **{f"hard_{i}": 140 for i in range(20)},
+        }
+
+        def gen(
+            inst: ProblemInstance,
+            attempt_idx: int,
+            rng: np.random.Generator,
+        ) -> GenerationAttempt:
+            ok = rng.random() < solve_probs[inst.instance_id]
+            ans = inst.ground_truth if ok else "wrong"
+            return GenerationAttempt(
+                text=rf"\boxed{{{ans}}}",
+                num_tokens=token_lengths[inst.instance_id],
+            )
+
+        e2h_report = Easy2HardAllocator(
+            AllocationConfig(total_budget=400, seed=42)
+        ).allocate(instances, gen)
+        uniform_report = UniformAllocator(
+            AllocationConfig(total_budget=400, seed=42), eliminate_solved=False
+        ).allocate(instances, gen)
+        uniform_elim_report = UniformAllocator(
+            AllocationConfig(total_budget=400, seed=42), eliminate_solved=True
+        ).allocate(instances, gen)
+        dipa_report = DIPABudgetAllocator(
+            AllocationConfig(
+                total_budget=400, lambda_mode="dynamic", lambda_value=5.0, seed=42
+            )
+        ).allocate(instances, gen)
+
+        assert dipa_report.coverage > e2h_report.coverage
+        assert dipa_report.coverage > uniform_report.coverage
+        assert dipa_report.coverage > uniform_elim_report.coverage

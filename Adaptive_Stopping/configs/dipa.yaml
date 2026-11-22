@@ -16,7 +16,7 @@ allocation:
   input_proxy: mql
   gen_proxy: mgl
   lambda_mode: dynamic
-  lambda_value: 1.0
+  lambda_value: 5.0
   min_difficulty: 1.0e-6
   seeds: [42, 43, 44]
   budget_multipliers: [0.5, 1, 2, 4, 8]

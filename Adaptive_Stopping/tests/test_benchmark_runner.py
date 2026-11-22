@@ -209,6 +209,8 @@ class TestBenchmarkRunnerAndEvaluation:
             assert float(row["throughput"]) > 0.0
             assert "budget_multiplier=" in row["notes"]
             assert "pool_size=4" in row["notes"]
+            assert "lambda_mode=dynamic" in row["notes"]
+            assert "lambda_value=5" in row["notes"]
 
         assert dict_rows_a == dict_rows_b
 
@@ -405,3 +407,122 @@ class TestBenchmarkRunnerAndEvaluation:
         )
         assert len(rows) == 1
         assert "pool_wrapped=" not in rows[0].notes
+
+    def test_lambda_overrides_propagate_to_notes_and_cli(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        out_csv = tmp_path / "override.csv"
+        pool_path = tmp_path / "override_pool.jsonl"
+        shared_cfg = {
+            "backbone_id": "Qwen/Qwen2.5-Math-1.5B-Instruct",
+            "dataset_id": "HuggingFaceH4/MATH-500",
+            "split": "test",
+            "allocation": {
+                "input_proxy": "mql",
+                "gen_proxy": "mgl",
+                "lambda_mode": "dynamic",
+                "lambda_value": 5.0,
+                "min_difficulty": 1e-6,
+                "seeds": [42],
+                "budget_multipliers": [1.0],
+            },
+        }
+        monkeypatch.setattr(
+            "Adaptive_Stopping.experiments.run_dipa_benchmark._load_yaml_config",
+            lambda _path: shared_cfg,
+        )
+
+        rows = run_benchmark(
+            config_path=CONFIG_PATH,
+            mode="mock",
+            local_jsonl=FIXTURE_PATH,
+            pool_size=4,
+            gen_batch_size=2,
+            pool_path=pool_path,
+            methods=("uniform", "dipa_mgl"),
+            budget_multipliers=(1.0,),
+            seeds=(42,),
+            lambda_mode="fixed",
+            lambda_value=2.5,
+            output_csv=out_csv,
+            overwrite_csv=True,
+            print_summary=False,
+        )
+        assert len(rows) == 2
+        for row in rows:
+            assert "lambda_mode=fixed" in row.notes
+            assert "lambda_value=2.5" in row.notes
+        assert shared_cfg["allocation"]["lambda_mode"] == "dynamic"
+        assert shared_cfg["allocation"]["lambda_value"] == 5.0
+
+        with out_csv.open("r", encoding="utf-8", newline="") as handle:
+            csv_rows = list(csv.DictReader(handle))
+        assert len(csv_rows) == 2
+        for csv_row in csv_rows:
+            assert "lambda_mode=fixed" in csv_row["notes"]
+            assert "lambda_value=2.5" in csv_row["notes"]
+
+        for bad_kwargs in (
+            {"lambda_mode": "invalid"},
+            {"lambda_value": 0.0},
+            {"lambda_value": -1.0},
+        ):
+            with pytest.raises(ValueError):
+                run_benchmark(
+                    config_path=CONFIG_PATH,
+                    mode="mock",
+                    local_jsonl=FIXTURE_PATH,
+                    pool_path=pool_path,
+                    output_csv=None,
+                    print_summary=False,
+                    **bad_kwargs,
+                )
+
+        cli_csv = tmp_path / "cli_override.csv"
+        env = os.environ.copy()
+        existing_pp = env.get("PYTHONPATH", "")
+        env["PYTHONPATH"] = (
+            f"{REPO_ROOT}{os.pathsep}{existing_pp}" if existing_pp else str(REPO_ROOT)
+        )
+        proc = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "Adaptive_Stopping.experiments.run_dipa_benchmark",
+                "--mode",
+                "mock",
+                "--local-jsonl",
+                str(FIXTURE_PATH),
+                "--pool-size",
+                "4",
+                "--gen-batch-size",
+                "2",
+                "--pool-path",
+                str(pool_path),
+                "--methods",
+                "uniform,dipa_mgl",
+                "--budget-multipliers",
+                "1",
+                "--seeds",
+                "42",
+                "--lambda-mode",
+                "fixed",
+                "--lambda-value",
+                "1.5",
+                "--output-csv",
+                str(cli_csv),
+                "--overwrite-csv",
+            ],
+            cwd=str(REPO_ROOT),
+            env=env,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        assert proc.returncode == 0
+        with cli_csv.open("r", encoding="utf-8", newline="") as handle:
+            cli_rows = list(csv.DictReader(handle))
+        assert len(cli_rows) == 2
+        for cli_row in cli_rows:
+            assert "lambda_mode=fixed" in cli_row["notes"]
+            assert "lambda_value=1.5" in cli_row["notes"]

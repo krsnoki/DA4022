@@ -514,6 +514,8 @@ def evaluate_pool(
                     f"num_instances={report.num_instances}",
                     f"num_solved={report.num_solved}",
                     f"total_tokens={report.total_tokens}",
+                    f"lambda_mode={lambda_mode}",
+                    f"lambda_value={lambda_value:g}",
                 ]
                 if wrapped_count > 0:
                     note_parts.append(f"pool_wrapped={wrapped_count}")
@@ -606,6 +608,8 @@ def run_benchmark(
     methods: Sequence[str] = DEFAULT_METHODS,
     budget_multipliers: Sequence[float] | None = None,
     seeds: Sequence[int] | None = None,
+    lambda_mode: str | None = None,
+    lambda_value: float | None = None,
     output_csv: str | Path | None = DEFAULT_OUTPUT_CSV,
     overwrite_csv: bool = False,
     status: str | None = None,
@@ -633,9 +637,23 @@ def run_benchmark(
         raise ValueError(
             f"Invalid status {resolved_status!r}. Expected one of: {allowed}"
         )
+    if isinstance(lambda_value, bool):
+        raise ValueError(f"lambda_value must be > 0, got {lambda_value!r}")
+    if lambda_mode is not None or lambda_value is not None:
+        AllocationConfig(
+            total_budget=0,
+            lambda_mode=lambda_mode if lambda_mode is not None else "dynamic",
+            lambda_value=float(lambda_value) if lambda_value is not None else 1.0,
+        )
 
-    config_dict = _load_yaml_config(config_path)
-    alloc_cfg = config_dict.get("allocation", {})
+    config_dict = dict(_load_yaml_config(config_path))
+    raw_alloc = config_dict.get("allocation")
+    alloc_cfg = dict(raw_alloc) if isinstance(raw_alloc, Mapping) else {}
+    if lambda_mode is not None:
+        alloc_cfg["lambda_mode"] = lambda_mode
+    if lambda_value is not None:
+        alloc_cfg["lambda_value"] = float(lambda_value)
+    config_dict["allocation"] = alloc_cfg
     prompt_cfg = config_dict.get("prompt_template", {})
 
     resolved_multipliers = (
@@ -805,6 +823,18 @@ def _build_arg_parser() -> argparse.ArgumentParser:
         help="Comma-separated integer seeds overriding config.",
     )
     parser.add_argument(
+        "--lambda-mode",
+        choices=("fixed", "dynamic"),
+        default=None,
+        help="Override allocation.lambda_mode ('fixed' or 'dynamic').",
+    )
+    parser.add_argument(
+        "--lambda-value",
+        type=float,
+        default=None,
+        help="Override allocation.lambda_value (must be > 0).",
+    )
+    parser.add_argument(
         "--output-csv",
         default=str(DEFAULT_OUTPUT_CSV),
         help="Destination CSV path conforming to Performance_Metrics schema.",
@@ -856,6 +886,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         methods=methods,
         budget_multipliers=budget_multipliers,
         seeds=seeds,
+        lambda_mode=args.lambda_mode,
+        lambda_value=args.lambda_value,
         output_csv=args.output_csv,
         overwrite_csv=args.overwrite_csv,
         status=args.status,
