@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+import os
+from pathlib import Path
+import subprocess
+import sys
+
 import pytest
 
 from Adaptive_Stopping.methods.dipa.verifier import (
@@ -116,3 +121,110 @@ class TestVerifyMathAnswer:
         ok, extracted = verify_math_answer(generation, ground_truth)
         assert ok is expected_ok
         assert extracted == expected_extracted
+
+    @pytest.mark.parametrize(
+        ("generation_answer", "ground_truth"),
+        [
+            (r"\left( 3, \frac{\pi}{2} \right)", r"(3, \frac{\pi}{2})"),
+            ("2x + 1", "2x+1"),
+            (r"3\, \pi", r"3\pi"),
+            (r"\text{42}", "42"),
+            (r"45^\circ", "45"),
+            (r"\frac12", r"\frac{1}{2}"),
+            (r"\sqrt2", r"\sqrt{2}"),
+        ],
+    )
+    def test_spacing_and_macro_canonicalization(
+        self, generation_answer: str, ground_truth: str
+    ) -> None:
+        ok, extracted = verify_math_answer(
+            rf"\boxed{{{generation_answer}}}", ground_truth
+        )
+        assert ok is True
+        assert extracted == generation_answer
+
+        ok_rev, extracted_rev = verify_math_answer(
+            rf"\boxed{{{ground_truth}}}", generation_answer
+        )
+        assert ok_rev is True
+        assert extracted_rev == ground_truth
+
+    @pytest.mark.parametrize(
+        ("generation_answer", "ground_truth"),
+        [
+            (r"\frac{\sqrt{2}}{2}", r"\frac{1}{\sqrt{2}}"),
+            ("2x + 4", "4 + 2x"),
+            (r"\frac{\pi}{2}", r"\pi/2"),
+            (r"(3, \frac{\pi}{2})", r"(3, \pi/2)"),
+        ],
+    )
+    def test_tuple_and_symbolic_equivalence(
+        self, generation_answer: str, ground_truth: str
+    ) -> None:
+        pytest.importorskip("sympy")
+        ok, extracted = verify_math_answer(
+            rf"\boxed{{{generation_answer}}}", ground_truth
+        )
+        assert ok is True
+        assert extracted == generation_answer
+
+    @pytest.mark.parametrize(
+        ("generation_answer", "ground_truth"),
+        [
+            ("x + 1", "x + 2"),
+            (r"\sqrt{2}", r"\sqrt{3}"),
+            ("(1, 2)", "(2, 1)"),
+            ("(1,2)+(3,4)", "(1,2)+(3,5)"),
+            ("(1,2)+(3,4)", "(1.0,2)+(3,4)"),
+        ],
+    )
+    def test_negative_symbolic_and_tuple_cases(
+        self, generation_answer: str, ground_truth: str
+    ) -> None:
+        ok, extracted = verify_math_answer(
+            rf"\boxed{{{generation_answer}}}", ground_truth
+        )
+        assert ok is False
+        assert extracted == generation_answer
+
+    def test_non_tuple_sum_spacing_and_long_malformed_safety(self) -> None:
+        ok_sum, ext_sum = verify_math_answer(
+            r"\boxed{(1,2)+(3,4)}", "(1, 2) + (3, 4)"
+        )
+        assert ok_sum is True
+        assert ext_sum == "(1,2)+(3,4)"
+
+        malformed = "(" * 110 + r"\frac{1}" + "x" * 100
+        assert len(malformed) > 200
+        ok_bad, ext_bad = verify_math_answer(rf"\boxed{{{malformed}}}", "42")
+        assert ok_bad is False
+        assert ext_bad == malformed
+
+        unclosed = r"\boxed{" + "(" * 210
+        ok_unclosed, ext_unclosed = verify_math_answer(unclosed, "42")
+        assert ok_unclosed is False
+        assert ext_unclosed is None
+
+    def test_verifier_import_does_not_import_sympy(self) -> None:
+        repo_root = Path(__file__).resolve().parents[2]
+        env = os.environ.copy()
+        existing_pp = env.get("PYTHONPATH", "")
+        env["PYTHONPATH"] = (
+            f"{repo_root}{os.pathsep}{existing_pp}"
+            if existing_pp
+            else str(repo_root)
+        )
+        script = (
+            "import sys\n"
+            "import Adaptive_Stopping.methods.dipa.verifier as v\n"
+            "assert 'sympy' not in sys.modules, 'sympy imported at module level'\n"
+            "ok, _ = v.verify_math_answer(r'\\boxed{42}', '42')\n"
+            "assert ok is True\n"
+            "assert 'sympy' not in sys.modules, 'sympy imported on fast path'\n"
+        )
+        subprocess.run(
+            [sys.executable, "-c", script],
+            cwd=str(repo_root),
+            env=env,
+            check=True,
+        )

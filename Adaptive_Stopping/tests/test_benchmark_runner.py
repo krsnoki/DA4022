@@ -526,3 +526,147 @@ class TestBenchmarkRunnerAndEvaluation:
         for cli_row in cli_rows:
             assert "lambda_mode=fixed" in cli_row["notes"]
             assert "lambda_value=1.5" in cli_row["notes"]
+
+    def test_reverify_eval_only_and_cli_recompute_stale_entries(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        import Adaptive_Stopping.experiments.run_dipa_benchmark as runner_mod
+
+        pool_path = tmp_path / "stale_pool.jsonl"
+        out_csv = tmp_path / "reverified.csv"
+        cli_csv = tmp_path / "cli_reverified.csv"
+
+        stale_specs = [
+            (
+                "stale_0",
+                r"\left( 3, \frac{\pi}{2} \right)",
+                r"Reasoning... \boxed{(3, \frac{\pi}{2})}",
+            ),
+            (
+                "stale_1",
+                r"\frac{1}{2}",
+                r"Reasoning... \boxed{\frac12}",
+            ),
+        ]
+        for iid, gt, text in stale_specs:
+            append_pool_entry(
+                pool_path,
+                {
+                    "instance_id": iid,
+                    "prompt": f"Solve {iid}",
+                    "ground_truth": gt,
+                    "metadata": {"level": 3},
+                    "attempts": [
+                        {
+                            "text": text,
+                            "num_tokens": 16,
+                            "latency_ms": 8.0,
+                            "extracted_answer": "stale_wrong",
+                            "is_correct": False,
+                        }
+                        for _ in range(4)
+                    ],
+                },
+            )
+        pool_bytes_before = pool_path.read_bytes()
+
+        stale_rows = run_benchmark(
+            config_path=CONFIG_PATH,
+            mode="mock",
+            pool_path=pool_path,
+            eval_only=True,
+            reverify=False,
+            methods=("uniform", "dipa_mgl"),
+            budget_multipliers=(1.0,),
+            seeds=(42,),
+            output_csv=None,
+            print_summary=False,
+        )
+        assert len(stale_rows) == 2
+        assert all(row.quality_value == 0.0 for row in stale_rows)
+        assert all("reverified=true" not in row.notes for row in stale_rows)
+
+        reverified_rows = run_benchmark(
+            config_path=CONFIG_PATH,
+            mode="mock",
+            pool_path=pool_path,
+            eval_only=True,
+            reverify=True,
+            methods=("uniform", "dipa_mgl"),
+            budget_multipliers=(1.0,),
+            seeds=(42,),
+            output_csv=out_csv,
+            overwrite_csv=True,
+            print_summary=False,
+        )
+        assert len(reverified_rows) == 2
+        assert all(row.quality_value == 1.0 for row in reverified_rows)
+        assert all("reverified=true" in row.notes for row in reverified_rows)
+        assert pool_path.read_bytes() == pool_bytes_before
+
+        pool_entries = load_pool_jsonl(pool_path)
+        orig_verify = runner_mod.verify_math_answer
+        verify_calls = 0
+
+        def _counting_verify(gen: str, gt: str) -> tuple[bool, str | None]:
+            nonlocal verify_calls
+            verify_calls += 1
+            return orig_verify(gen, gt)
+
+        monkeypatch.setattr(runner_mod, "verify_math_answer", _counting_verify)
+        eval_rows = evaluate_pool(
+            pool_entries=pool_entries,
+            methods=("uniform", "dipa_mgl"),
+            budget_multipliers=(1.0, 2.0),
+            seeds=(42, 43),
+            config_dict={},
+            reverify=True,
+        )
+        assert verify_calls == 8
+        assert len(eval_rows) == 8
+        assert all(row.quality_value == 1.0 for row in eval_rows)
+        assert all("reverified=true" in row.notes for row in eval_rows)
+        for entry in pool_entries.values():
+            for attempt in entry["attempts"]:
+                assert attempt["is_correct"] is False
+                assert attempt["extracted_answer"] == "stale_wrong"
+
+        env = os.environ.copy()
+        existing_pp = env.get("PYTHONPATH", "")
+        env["PYTHONPATH"] = (
+            f"{REPO_ROOT}{os.pathsep}{existing_pp}" if existing_pp else str(REPO_ROOT)
+        )
+        proc = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "Adaptive_Stopping.experiments.run_dipa_benchmark",
+                "--mode",
+                "mock",
+                "--pool-path",
+                str(pool_path),
+                "--eval-only",
+                "--reverify",
+                "--methods",
+                "uniform,dipa_mgl",
+                "--budget-multipliers",
+                "1",
+                "--seeds",
+                "42",
+                "--output-csv",
+                str(cli_csv),
+                "--overwrite-csv",
+            ],
+            cwd=str(REPO_ROOT),
+            env=env,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        assert proc.returncode == 0
+        assert pool_path.read_bytes() == pool_bytes_before
+        with cli_csv.open("r", encoding="utf-8", newline="") as handle:
+            cli_rows = list(csv.DictReader(handle))
+        assert len(cli_rows) == 2
+        assert all(float(r["quality_value"]) == 1.0 for r in cli_rows)
+        assert all("reverified=true" in r["notes"] for r in cli_rows)

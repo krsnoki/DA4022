@@ -390,12 +390,32 @@ def evaluate_pool(
     backbone_revision: str = "main",
     peak_memory_mb: float | None = None,
     gen_batch_size: int = 1,
+    reverify: bool = False,
 ) -> list[MetricsRow]:
     """Evaluate all requested methods across shared instances, budgets, and seeds."""
     for method in methods:
         if method not in VALID_METHODS:
             available = ", ".join(sorted(VALID_METHODS))
             raise ValueError(f"Unknown method {method!r}. Expected one of: {available}")
+
+    if reverify:
+        reverified_entries: dict[str, dict[str, Any]] = {}
+        for iid, entry in pool_entries.items():
+            gt = str(entry["ground_truth"])
+            new_attempts: list[dict[str, Any]] = []
+            for attempt in entry.get("attempts", []):
+                text = str(attempt.get("text", ""))
+                is_correct, extracted = verify_math_answer(text, gt)
+                updated = dict(attempt)
+                updated["is_correct"] = bool(is_correct)
+                updated["extracted_answer"] = extracted
+                new_attempts.append(updated)
+            copied_entry = dict(entry)
+            copied_entry["attempts"] = new_attempts
+            reverified_entries[iid] = copied_entry
+        active_pool: Mapping[str, Mapping[str, Any]] = reverified_entries
+    else:
+        active_pool = pool_entries
 
     instances = [
         ProblemInstance(
@@ -404,7 +424,7 @@ def evaluate_pool(
             ground_truth=str(entry["ground_truth"]),
             metadata=dict(entry.get("metadata", {})),
         )
-        for entry in pool_entries.values()
+        for entry in active_pool.values()
     ]
 
     alloc_cfg = config_dict.get("allocation", {})
@@ -421,7 +441,7 @@ def evaluate_pool(
         int(gen_cfg["max_new_tokens"]) if "max_new_tokens" in gen_cfg else None
     )
 
-    pool_sizes = [len(pool_entries[inst.instance_id].get("attempts", [])) for inst in instances]
+    pool_sizes = [len(active_pool[inst.instance_id].get("attempts", [])) for inst in instances]
     if not pool_sizes:
         pool_size_desc = "0"
     elif len(set(pool_sizes)) == 1:
@@ -438,7 +458,7 @@ def evaluate_pool(
             seed_i = int(seed)
             permutations: dict[str, np.ndarray] = {}
             for inst in instances:
-                n_attempts = len(pool_entries[inst.instance_id].get("attempts", []))
+                n_attempts = len(active_pool[inst.instance_id].get("attempts", []))
                 if total_budget > 0 and n_attempts == 0:
                     raise ValueError(
                         f"Instance {inst.instance_id!r} has 0 pooled attempts"
@@ -470,7 +490,7 @@ def evaluate_pool(
                     _permutations: dict[str, np.ndarray] = permutations,
                 ) -> GenerationAttempt:
                     nonlocal wrapped_count
-                    attempts = pool_entries[inst.instance_id]["attempts"]
+                    attempts = active_pool[inst.instance_id]["attempts"]
                     perm = _permutations[inst.instance_id]
                     if attempt_idx >= len(attempts):
                         wrapped_count += 1
@@ -519,6 +539,8 @@ def evaluate_pool(
                 ]
                 if wrapped_count > 0:
                     note_parts.append(f"pool_wrapped={wrapped_count}")
+                if reverify:
+                    note_parts.append("reverified=true")
 
                 rows.append(
                     MetricsRow(
@@ -605,6 +627,7 @@ def run_benchmark(
     gen_batch_size: int = 4,
     pool_path: str | Path | None = None,
     eval_only: bool = False,
+    reverify: bool = False,
     methods: Sequence[str] = DEFAULT_METHODS,
     budget_multipliers: Sequence[float] | None = None,
     seeds: Sequence[int] | None = None,
@@ -746,6 +769,7 @@ def run_benchmark(
         backbone_revision=backbone_revision,
         peak_memory_mb=peak_memory_mb,
         gen_batch_size=gen_batch_size,
+        reverify=reverify,
     )
 
     if output_csv is not None:
@@ -806,6 +830,11 @@ def _build_arg_parser() -> argparse.ArgumentParser:
         "--eval-only",
         action="store_true",
         help="Skip model loading and generation; evaluate an existing --pool-path.",
+    )
+    parser.add_argument(
+        "--reverify",
+        action="store_true",
+        help="Re-run verify_math_answer on pooled attempts before evaluation.",
     )
     parser.add_argument(
         "--methods",
@@ -883,6 +912,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         gen_batch_size=args.gen_batch_size,
         pool_path=args.pool_path,
         eval_only=args.eval_only,
+        reverify=args.reverify,
         methods=methods,
         budget_multipliers=budget_multipliers,
         seeds=seeds,
