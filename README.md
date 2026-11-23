@@ -16,11 +16,20 @@ This repository is a **research and engineering library** for implementing and c
 | `Mixture_of_Experts/` | Sparse and elastic experts | Expert routing, expert pruning, load balancing, MoE quantization and serving |
 | `Adaptive_Stopping/` | Variable-depth/variable-compute inference | Early exit, learned stopping, adaptive reasoning budgets, confidence-based stopping |
 | `LoRA/` | Parameter-efficient adaptation baseline | LoRA adapters, rank/target-module configs, merge/unmerge tests |
+| `Speculative_Decoding/` | Speculative decoding and serving | Drafter/target architectures, tree decoding, verification strategies, token acceptance |
 | `Performance_Metrics/` | Shared experiment protocol | Latency, throughput, memory, quality, energy, profiling and report schemas |
 | `PAPER_INDEX.md` | Cross-repository paper map | Paper-to-module assignments and direct paper links |
 | `templates/` | Contribution templates | Paper implementation card, model card, dataset card |
 
 The module README files explain each module's scope and link relevant papers. Papers may appear in more than one module when methods genuinely cross boundaries; choose one **primary owner** for implementation and cross-link the other modules.
+
+## Active implementations
+
+| Paper | Primary module | Upstream code & licence | Status | Key artifacts |
+|---|---|---|---|---|
+| [BASTION: Budget-Aware Speculative Decoding with Tree-structured Block Diffusion Drafting](https://arxiv.org/abs/2605.29727) ([OpenReview](https://openreview.net/forum?id=uqeOxztSIS), local copy: [`BASTION.pdf`](BASTION.pdf)) | [`Speculative_Decoding/BASTION/`](Speculative_Decoding/BASTION/) | [kaist-ai-osi-lab/BASTION](https://github.com/kaist-ai-osi-lab/BASTION) (commit `1989b80`, MIT) | `partial-reproduction` | [Paper Card](Speculative_Decoding/BASTION/PAPER_CARD.md), [Report](Speculative_Decoding/BASTION/REPORT.md), [Metrics](Performance_Metrics/README_metrics.md#bastion-speculative_decodingbastion-status-partial) |
+
+*BASTION note:* Evaluated on Qwen3-4B & Qwen3-8B (T=0, NVIDIA RTX PRO 4500 Blackwell). Qualitative claims reproduced (speedup over DFlash, higher accepted length $\tau$, adaptive budget matching per-dataset oracle, calibration error reduction); speedup magnitudes lower than paper's A100 numbers (4.50× / 4.47× vs 6.93× / 6.61×). Unmeasured energy is marked `not_measured`.
 
 ## Important terminology
 
@@ -81,6 +90,7 @@ Suggested status labels: `proposed`, `reading`, `baseline-ready`, `implementing`
 AdaptFM-DA4022/
 ├── README.md
 ├── PAPER_INDEX.md
+├── BASTION.pdf
 ├── Adaptive_Stopping/
 ├── Attention/
 ├── Backbones/
@@ -98,6 +108,8 @@ AdaptFM-DA4022/
 ├── Mixture_of_Experts/
 ├── Performance_Metrics/
 ├── Quantization_and_Pruning/
+├── Speculative_Decoding/
+│   └── BASTION/
 └── templates/
 ```
 

@@ -1,0 +1,19 @@
+model,dataset,mode,fixed_budget,profile_variant,method,n,correct,accuracy,n_no_boxed,n_hit_max_new_tokens
+Qwen/Qwen3-4B,gsm8k,ar,,,AR,64,56,0.875,0,0
+Qwen/Qwen3-4B,gsm8k,bastion,,warm,BASTION (adaptive),64,57,0.890625,0,0
+Qwen/Qwen3-4B,gsm8k,dflash,,,DFlash,64,56,0.875,0,0
+Qwen/Qwen3-4B,math500,ar,,,AR,64,48,0.75,6,6
+Qwen/Qwen3-4B,math500,bastion,,warm,BASTION (adaptive),64,46,0.71875,8,8
+Qwen/Qwen3-4B,math500,dflash,,,DFlash,64,47,0.734375,6,6
+Qwen/Qwen3-4B,aime25,ar,,,AR,30,5,0.16666666666666666,15,15
+Qwen/Qwen3-4B,aime25,bastion,,warm,BASTION (adaptive),30,4,0.13333333333333333,17,18
+Qwen/Qwen3-4B,aime25,dflash,,,DFlash,30,4,0.13333333333333333,19,19
+Qwen/Qwen3-8B,gsm8k,ar,,,AR,64,59,0.921875,0,0
+Qwen/Qwen3-8B,gsm8k,bastion,,warm,BASTION (adaptive),64,58,0.90625,0,0
+Qwen/Qwen3-8B,gsm8k,dflash,,,DFlash,64,59,0.921875,0,0
+Qwen/Qwen3-8B,math500,ar,,,AR,64,47,0.734375,8,8
+Qwen/Qwen3-8B,math500,bastion,,warm,BASTION (adaptive),64,48,0.75,7,7
+Qwen/Qwen3-8B,math500,dflash,,,DFlash,64,48,0.75,6,6
+Qwen/Qwen3-8B,aime25,ar,,,AR,30,5,0.16666666666666666,16,17
+Qwen/Qwen3-8B,aime25,bastion,,warm,BASTION (adaptive),30,5,0.16666666666666666,16,17
+Qwen/Qwen3-8B,aime25,dflash,,,DFlash,30,5,0.16666666666666666,17,17

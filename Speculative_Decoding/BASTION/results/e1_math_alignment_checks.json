@@ -1,0 +1,17 @@
+{
+ "aime25": {
+  "hf_rows": 30,
+  "cache_rows": 30,
+  "prompt_mismatches": 0
+ },
+ "gsm8k": {
+  "hf_rows": 1319,
+  "cache_rows": 1319,
+  "prompt_mismatches": 0
+ },
+ "math500": {
+  "hf_rows": 500,
+  "cache_rows": 500,
+  "prompt_mismatches": 0
+ }
+}

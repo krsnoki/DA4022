@@ -77,7 +77,7 @@ This is an engineering-oriented shortlist from the [official AdaptFM accepted-pa
 
 ## Speculative decoding and serving
 
-- [BASTION: Budget-Aware Speculative Decoding with Tree-structured Block Diffusion Drafting](https://openreview.net/forum?id=uqeOxztSIS) — budget-aware speculative decoding.
+- [BASTION: Budget-Aware Speculative Decoding with Tree-structured Block Diffusion Drafting](https://openreview.net/forum?id=uqeOxztSIS) ([arXiv:2605.29727](https://arxiv.org/abs/2605.29727), code: [kaist-ai-osi-lab/BASTION](https://github.com/kaist-ai-osi-lab/BASTION)) — budget-aware speculative decoding. **Status: partial-reproduction** (Qwen3-4B/8B, T=0, RTX PRO 4500; qualitative claims reproduced, speedup magnitudes lower than paper A100), see [paper card](Speculative_Decoding/BASTION/PAPER_CARD.md) and [report](Speculative_Decoding/BASTION/REPORT.md).
 - [ShadowSpec: Towards Zero Speculation Overhead for Substitute Speculative Decoding](https://openreview.net/forum?id=ss50E1FoBU) — speculative decoding.
 - [Fast Inference via Hierarchical Speculative Decoding](https://openreview.net/forum?id=i2IDDWcoEw) — hierarchical speculative decoding.
 - [Layer Verification Accelerates Speculative Tree Decoding](https://openreview.net/forum?id=XrqcUo6B6L) — verification strategy.

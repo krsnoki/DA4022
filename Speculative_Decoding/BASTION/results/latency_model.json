@@ -1,0 +1,419 @@
+[
+ {
+  "model_key": "qwen3-4b",
+  "gpu_key": "b4500",
+  "gpu_spec": {
+   "display_name": "NVIDIA RTX PRO 4500 Blackwell",
+   "peak_throughput_bf16": 202000000000000.0,
+   "memory_bandwidth": 896000000000.0
+  },
+  "attn_impl": "sdpa",
+  "n_points": 192,
+  "contexts": [
+   64,
+   128,
+   256,
+   512,
+   1024,
+   2048
+  ],
+  "sequence_sizes": [
+   16,
+   512
+  ],
+  "refit_params": {
+   "alpha_m": 1.752822481774863,
+   "beta_m": 1.7077331659620443e-16,
+   "alpha_c": 1.8239926589149917,
+   "beta_c": 0.012147134177894543
+  },
+  "params_source": "calibration cache",
+  "params": {
+   "alpha_m": 1.752822481774863,
+   "beta_m": 1.7077331659620443e-16,
+   "alpha_c": 1.8239926589149917,
+   "beta_c": 0.012147134177894543
+  },
+  "controller_estimator_max_abs_diff_s": 1.0637324354689781e-14,
+  "rmse_all": {
+   "n": 192,
+   "rmse_uncal_ms": 20.464597321323243,
+   "rmse_cal_ms": 3.8162047507248333,
+   "reduction_pct": 81.35216300225703,
+   "mean_bias_uncal_ms": -18.7595617364385,
+   "mean_bias_cal_ms": 0.19237756934650213
+  },
+  "rmse_paper_contexts": {
+   "n": 96,
+   "rmse_uncal_ms": 19.283287347105148,
+   "rmse_cal_ms": 3.2805868559432225,
+   "reduction_pct": 82.98740874991051,
+   "mean_bias_uncal_ms": -17.76223248619252,
+   "mean_bias_cal_ms": 1.1057132201929016
+  },
+  "rmse_by_context": {
+   "64": {
+    "n": 32,
+    "rmse_uncal_ms": 17.382151179985183,
+    "rmse_cal_ms": 3.8273879536716597,
+    "reduction_pct": 77.9809304726406,
+    "mean_bias_uncal_ms": -15.973085131482708,
+    "mean_bias_cal_ms": 2.7392562372932017
+   },
+   "128": {
+    "n": 32,
+    "rmse_uncal_ms": 17.69985110046458,
+    "rmse_cal_ms": 3.659248485778134,
+    "reduction_pct": 79.32610582423439,
+    "mean_bias_uncal_ms": -16.295197082162666,
+    "mean_bias_cal_ms": 2.4443626439577173
+   },
+   "256": {
+    "n": 32,
+    "rmse_uncal_ms": 18.3166494757494,
+    "rmse_cal_ms": 3.237891450180736,
+    "reduction_pct": 82.32268704782723,
+    "mean_bias_uncal_ms": -16.909545227805072,
+    "mean_bias_cal_ms": 1.8844512130042625
+   },
+   "512": {
+    "n": 32,
+    "rmse_uncal_ms": 19.51681771898653,
+    "rmse_cal_ms": 2.6451958667353908,
+    "reduction_pct": 86.44658209743864,
+    "mean_bias_uncal_ms": -18.08521468602597,
+    "mean_bias_cal_ms": 0.8119867821357993
+   },
+   "1024": {
+    "n": 32,
+    "rmse_uncal_ms": 21.860848223976696,
+    "rmse_cal_ms": 2.674679563442667,
+    "reduction_pct": 87.76497811960877,
+    "mean_bias_uncal_ms": -20.40406709928979,
+    "mean_bias_cal_ms": -1.3065677897187593
+   },
+   "2048": {
+    "n": 32,
+    "rmse_uncal_ms": 26.51550575711546,
+    "rmse_cal_ms": 5.891230871770591,
+    "reduction_pct": 77.78194040221287,
+    "mean_bias_uncal_ms": -24.890261191864788,
+    "mean_bias_cal_ms": -5.419223670593209
+   }
+  },
+  "loco_rmse_cal_ms": {
+   "64": 4.239521586376242,
+   "128": 4.01633383974202,
+   "256": 3.5027503619942575,
+   "512": 2.736601191510264,
+   "1024": 2.7928943878003145,
+   "2048": 7.5011143179802735
+  },
+  "probe_file": "upstream/cache/calib_probe_b4500_qwen3-4b.sigma_sequence_v1.jsonl",
+  "calibration_file": "upstream/cache/calibration_b4500_qwen3-4b.json",
+  "profile": {
+   "draft_latency_s": 0.015120795106567029,
+   "non_verify_latency_s": 0.15132261131010535,
+   "attn_impl": "sdpa"
+  },
+  "in_situ": {
+   "n_steps": 36048,
+   "rmse_uncal_ms": 8.675319543856968,
+   "rmse_cal_ms": 1.6781425242879204,
+   "mean_bias_cal_ms": -0.5552306794210075,
+   "by_tree_size_bin": {
+    "32": {
+     "n": 5840,
+     "measured_ms": 18.923572397260273,
+     "cal_ms": 18.192382134364774,
+     "uncal_ms": 10.378907347162427
+    },
+    "64": {
+     "n": 30203,
+     "measured_ms": 19.042493970797604,
+     "cal_ms": 18.521149528780477,
+     "uncal_ms": 10.56627313729478
+    },
+    "128": {
+     "n": 5,
+     "measured_ms": 22.771939999999997,
+     "cal_ms": 23.044297156896874,
+     "uncal_ms": 11.447712914285713
+    }
+   },
+   "note": "measured = verification forward with tree mask inside bastion_generate (includes first-step / context effects); calibration probe used causal dummy forwards"
+  },
+  "in_situ_by_run": {
+   "e1_qwen3-4b": {
+    "n_steps": 36048,
+    "rmse_uncal_ms": 8.675319543856968,
+    "rmse_cal_ms": 1.6781425242879204,
+    "mean_bias_cal_ms": -0.5552306794210075,
+    "by_tree_size_bin": {
+     "32": {
+      "n": 5840,
+      "measured_ms": 18.923572397260273,
+      "cal_ms": 18.192382134364774,
+      "uncal_ms": 10.378907347162427
+     },
+     "64": {
+      "n": 30203,
+      "measured_ms": 19.042493970797604,
+      "cal_ms": 18.521149528780477,
+      "uncal_ms": 10.56627313729478
+     },
+     "128": {
+      "n": 5,
+      "measured_ms": 22.771939999999997,
+      "cal_ms": 23.044297156896874,
+      "uncal_ms": 11.447712914285713
+     }
+    },
+    "note": "measured = verification forward with tree mask inside bastion_generate (includes first-step / context effects); calibration probe used causal dummy forwards"
+   }
+  }
+ },
+ {
+  "model_key": "qwen3-8b",
+  "gpu_key": "b4500",
+  "gpu_spec": {
+   "display_name": "NVIDIA RTX PRO 4500 Blackwell",
+   "peak_throughput_bf16": 202000000000000.0,
+   "memory_bandwidth": 896000000000.0
+  },
+  "attn_impl": "sdpa",
+  "n_points": 192,
+  "contexts": [
+   64,
+   128,
+   256,
+   512,
+   1024,
+   2048
+  ],
+  "sequence_sizes": [
+   16,
+   512
+  ],
+  "refit_params": {
+   "alpha_m": 1.3485014338075023,
+   "beta_m": 0.0014146239392047052,
+   "alpha_c": 1.3532614332627457,
+   "beta_c": 0.024620429160559943
+  },
+  "params_source": "calibration cache",
+  "params": {
+   "alpha_m": 1.3485014338075023,
+   "beta_m": 0.0014146239392047052,
+   "alpha_c": 1.3532614332627457,
+   "beta_c": 0.024620429160559943
+  },
+  "controller_estimator_max_abs_diff_s": 4.565792188770956e-15,
+  "rmse_all": {
+   "n": 192,
+   "rmse_uncal_ms": 29.92161708599596,
+   "rmse_cal_ms": 5.0817304239397,
+   "reduction_pct": 83.01652477760612,
+   "mean_bias_uncal_ms": -27.28680876462261,
+   "mean_bias_cal_ms": -0.13924545610908706
+  },
+  "rmse_paper_contexts": {
+   "n": 96,
+   "rmse_uncal_ms": 28.740166293035912,
+   "rmse_cal_ms": 4.342596599544023,
+   "reduction_pct": 84.89014797177326,
+   "mean_bias_uncal_ms": -26.257758276595236,
+   "mean_bias_cal_ms": 0.8878524564325784
+  },
+  "rmse_by_context": {
+   "64": {
+    "n": 32,
+    "rmse_uncal_ms": 26.883242203078208,
+    "rmse_cal_ms": 4.446424535077593,
+    "reduction_pct": 83.46023704473986,
+    "mean_bias_uncal_ms": -24.514096038746846,
+    "mean_bias_cal_ms": 2.622583391248288
+   },
+   "128": {
+    "n": 32,
+    "rmse_uncal_ms": 27.18439749238799,
+    "rmse_cal_ms": 4.35915426224572,
+    "reduction_pct": 83.96449925562506,
+    "mean_bias_uncal_ms": -24.812670708516734,
+    "mean_bias_cal_ms": 2.325497271983848
+   },
+   "256": {
+    "n": 32,
+    "rmse_uncal_ms": 27.75131096959813,
+    "rmse_cal_ms": 4.124322834373949,
+    "reduction_pct": 85.13827747131589,
+    "mean_bias_uncal_ms": -25.36624869402099,
+    "mean_bias_cal_ms": 1.7748963874904866
+   },
+   "512": {
+    "n": 32,
+    "rmse_uncal_ms": 29.01871513444977,
+    "rmse_cal_ms": 3.8710250188375768,
+    "reduction_pct": 86.66024666873669,
+    "mean_bias_uncal_ms": -26.595407531585202,
+    "mean_bias_cal_ms": 0.5516917519480597
+   },
+   "1024": {
+    "n": 32,
+    "rmse_uncal_ms": 31.387059495489055,
+    "rmse_cal_ms": 4.449011765643642,
+    "reduction_pct": 85.82533108498725,
+    "mean_bias_uncal_ms": -28.892930097017878,
+    "mean_bias_cal_ms": -1.7339224094410395
+   },
+   "2048": {
+    "n": 32,
+    "rmse_uncal_ms": 36.23189538946624,
+    "rmse_cal_ms": 8.023864926077133,
+    "reduction_pct": 77.85413973012871,
+    "mean_bias_uncal_ms": -33.539499517848014,
+    "mean_bias_cal_ms": -6.376219129884165
+   }
+  },
+  "loco_rmse_cal_ms": {
+   "64": 4.679951077844009,
+   "128": 4.537412647559467,
+   "256": 4.2399733454116335,
+   "512": 3.9119740137161667,
+   "1024": 4.770924548738196,
+   "2048": 9.719574493468286
+  },
+  "probe_file": "upstream/cache/calib_probe_b4500_qwen3-8b.sigma_sequence_v1.jsonl",
+  "calibration_file": "upstream/cache/calibration_b4500_qwen3-8b.json",
+  "profile": {
+   "draft_latency_s": 0.005387595835297058,
+   "non_verify_latency_s": 0.017445280714633152,
+   "attn_impl": "sdpa"
+  },
+  "in_situ": {
+   "n_steps": 124623,
+   "rmse_uncal_ms": 26.170385946637634,
+   "rmse_cal_ms": 6.245313651485276,
+   "mean_bias_cal_ms": -1.569585748098059,
+   "by_tree_size_bin": {
+    "32": {
+     "n": 68395,
+     "measured_ms": 29.114636894509832,
+     "cal_ms": 27.958575111833294,
+     "uncal_ms": 18.75207336649922
+    },
+    "64": {
+     "n": 15866,
+     "measured_ms": 32.135563412328246,
+     "cal_ms": 31.370301720228998,
+     "uncal_ms": 19.137727651942157
+    },
+    "128": {
+     "n": 10691,
+     "measured_ms": 36.15412580675334,
+     "cal_ms": 38.05486196870539,
+     "uncal_ms": 19.926831658137015
+    },
+    "256": {
+     "n": 10160,
+     "measured_ms": 44.3615340452756,
+     "cal_ms": 51.59406681869953,
+     "uncal_ms": 21.584435437570303
+    },
+    "512": {
+     "n": 9962,
+     "measured_ms": 81.69544589439873,
+     "cal_ms": 79.15963734935066,
+     "uncal_ms": 40.302048701185086
+    },
+    "1024": {
+     "n": 9549,
+     "measured_ms": 153.78732093412924,
+     "cal_ms": 135.67677788125837,
+     "uncal_ms": 82.0657014165688
+    }
+   },
+   "note": "measured = verification forward with tree mask inside bastion_generate (includes first-step / context effects); calibration probe used causal dummy forwards"
+  },
+  "in_situ_by_run": {
+   "e1_qwen3-8b": {
+    "n_steps": 37311,
+    "rmse_uncal_ms": 10.399543447971272,
+    "rmse_cal_ms": 1.9120190240733157,
+    "mean_bias_cal_ms": -0.9361730843935223,
+    "by_tree_size_bin": {
+     "32": {
+      "n": 35943,
+      "measured_ms": 28.916642250229533,
+      "cal_ms": 27.95041359356548,
+      "uncal_ms": 18.730828566945284
+     },
+     "64": {
+      "n": 1362,
+      "measured_ms": 31.571524669603523,
+      "cal_ms": 31.412765262053917,
+      "uncal_ms": 19.055633641283826
+     },
+     "128": {
+      "n": 4,
+      "measured_ms": 39.2855,
+      "cal_ms": 41.3945526871214,
+      "uncal_ms": 20.273206857142856
+     },
+     "256": {
+      "n": 2,
+      "measured_ms": 48.68815,
+      "cal_ms": 52.38652850167117,
+      "uncal_ms": 22.744767999999997
+     }
+    },
+    "note": "measured = verification forward with tree mask inside bastion_generate (includes first-step / context effects); calibration probe used causal dummy forwards"
+   },
+   "sweep_qwen3-8b": {
+    "n_steps": 87312,
+    "rmse_uncal_ms": 30.517971114933406,
+    "rmse_cal_ms": 7.355898467536552,
+    "mean_bias_cal_ms": -1.8402617135493144,
+    "by_tree_size_bin": {
+     "32": {
+      "n": 32452,
+      "measured_ms": 29.333930666831012,
+      "cal_ms": 27.967614599418038,
+      "uncal_ms": 18.77560355971897
+     },
+     "64": {
+      "n": 14504,
+      "measured_ms": 32.188529543574184,
+      "cal_ms": 31.36631417582982,
+      "uncal_ms": 19.145436700654006
+     },
+     "128": {
+      "n": 10687,
+      "measured_ms": 36.15295377561523,
+      "cal_ms": 38.053611967500785,
+      "uncal_ms": 19.926702014570438
+     },
+     "256": {
+      "n": 10158,
+      "measured_ms": 44.3606821815318,
+      "cal_ms": 51.59391079159126,
+      "uncal_ms": 21.584206980676736
+     },
+     "512": {
+      "n": 9962,
+      "measured_ms": 81.69544589439873,
+      "cal_ms": 79.15963734935066,
+      "uncal_ms": 40.302048701185086
+     },
+     "1024": {
+      "n": 9549,
+      "measured_ms": 153.78732093412924,
+      "cal_ms": 135.67677788125837,
+      "uncal_ms": 82.0657014165688
+     }
+    },
+    "note": "measured = verification forward with tree mask inside bastion_generate (includes first-step / context effects); calibration probe used causal dummy forwards"
+   }
+  }
+ }
+]
