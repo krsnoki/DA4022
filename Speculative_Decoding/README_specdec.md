@@ -10,7 +10,7 @@ This module holds the speculative-decoding papers listed in [`PAPER_INDEX.md`](.
 
 | Paper | Folder | Status |
 |---|---|---|
-| [BASTION: Budget-Aware Speculative Decoding with Tree-structured Block Diffusion Drafting](https://openreview.net/forum?id=uqeOxztSIS) | [`BASTION/`](BASTION/) | `partial-reproduction` (Qwen3-4B/8B, T=0, one RTX PRO 4500). The qualitative claims reproduce; the speedup magnitudes do not (BASTION 4.50× / 4.47× vs 6.93× / 6.61× on A100). See [`BASTION/PAPER_CARD.md`](BASTION/PAPER_CARD.md) and [`BASTION/REPORT.md`](BASTION/REPORT.md) |
+| [BASTION: Budget-Aware Speculative Decoding with Tree-structured Block Diffusion Drafting](https://arxiv.org/abs/2605.29727) ([OpenReview](https://openreview.net/forum?id=uqeOxztSIS), code: [kaist-ai-osi-lab/BASTION](https://github.com/kaist-ai-osi-lab/BASTION)) | [`BASTION/`](BASTION/) | `partial-reproduction` (Qwen3-4B/8B, T=0, one RTX PRO 4500). The qualitative claims reproduce; the speedup magnitudes do not (BASTION 4.50× / 4.47× vs 6.93× / 6.61× on A100). See [`BASTION/PAPER_CARD.md`](BASTION/PAPER_CARD.md) and [`BASTION/REPORT.md`](BASTION/REPORT.md) |
 
 ## Other papers in scope
 
