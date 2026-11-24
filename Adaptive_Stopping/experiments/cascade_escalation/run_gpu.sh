@@ -27,11 +27,27 @@ nvidia-smi || echo "WARNING: nvidia-smi not found"
 if [ -z "${HF_HOME:-}" ]; then
   if [ -d /workspace ]; then export HF_HOME=/workspace/hf_cache; else export HF_HOME="$ROOT/.hf_cache"; fi
 fi
-export HF_HUB_ENABLE_HF_TRANSFER=0 TOKENIZERS_PARALLELISM=false PYTHONUNBUFFERED=1
-# Use the python that already has CUDA torch (vast.ai images: /venv/main -> `python`; RunPod: python3).
-if [ -n "${PYTHON:-}" ]; then PY="$PYTHON"
-elif python -c "import torch" 2>/dev/null; then PY=python
-else PY=python3; fi
+export HF_HUB_ENABLE_HF_TRANSFER=0 TOKENIZERS_PARALLELISM=false PYTHONUNBUFFERED=1 PIP_BREAK_SYSTEM_PACKAGES=1
+# Use a python that already has torch (vast.ai: /venv/main, often not activated in a fresh
+# terminal; RunPod: python3; conda images: /opt/conda). If none has it, make our own venv
+# with CUDA 12.8 torch (needs driver >= 12.8). A venv also avoids Ubuntu 24.04's
+# "externally-managed-environment" pip block on the system python.
+PY=""
+for c in "${PYTHON:-}" /venv/main/bin/python python python3 /opt/conda/bin/python; do
+  if [ -n "$c" ] && command -v "$c" >/dev/null 2>&1 && "$c" -c "import torch" 2>/dev/null; then PY="$c"; break; fi
+done
+if [ -z "$PY" ]; then
+  MAINV="$ROOT/.venv"
+  echo "no python with torch found -> installing torch into $MAINV (a few minutes)"
+  if [ ! -x "$MAINV/bin/python" ]; then
+    python3 -m venv "$MAINV" 2>/dev/null \
+      || { apt-get update -qq && apt-get install -y -qq python3-venv >/dev/null && python3 -m venv "$MAINV"; } \
+      || { python3 -m pip install -q --break-system-packages virtualenv && python3 -m virtualenv -q "$MAINV"; }
+  fi
+  "$MAINV/bin/python" -m pip install -q --upgrade pip
+  "$MAINV/bin/python" -m pip install -q torch --index-url https://download.pytorch.org/whl/cu128
+  PY="$MAINV/bin/python"
+fi
 echo "python: $($PY --version) at $(command -v $PY); HF_HOME=$HF_HOME"
 mkdir -p "$HF_HOME"
 echo "free disk at HF_HOME: $(df -h "$HF_HOME" | tail -1)  (need ~60 GB free)"

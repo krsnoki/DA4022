@@ -5,3 +5,4 @@ __pycache__/
 .vllm_venv/
 .hf_cache/
 run.out
+.venv/
