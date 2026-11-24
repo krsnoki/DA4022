@@ -1,0 +1,56 @@
+# Model pool + data for the cascade-escalation reproduction (Bouchard 2026).
+# The paper used 8 API models; we use 5 open models that fit a 24 GB GPU
+# one at a time in bf16 and need no gated-access approval.
+#
+# num_parameters: from the model cards; collect_generations.py re-checks it
+# from the safetensors metadata on the Hub and records both.
+experiment_id: cascade_escalation_qwen25_phi35_v1
+paper_id: bouchard2026_escalation_worth_it
+seed: 2026            # data subsampling seed (same records for every model)
+top_k_logprobs: 15    # paper: K=15 where available
+dtype: bfloat16
+max_model_len: 4096
+
+models:
+  - id: Qwen/Qwen2.5-0.5B-Instruct
+    slug: qwen2.5-0.5b
+    num_parameters: 494032768
+    license: apache-2.0
+  - id: Qwen/Qwen2.5-1.5B-Instruct
+    slug: qwen2.5-1.5b
+    num_parameters: 1543714304
+    license: apache-2.0
+  - id: Qwen/Qwen2.5-3B-Instruct
+    slug: qwen2.5-3b
+    num_parameters: 3085938688
+    license: qwen-research (non-commercial research use)
+  - id: microsoft/Phi-3.5-mini-instruct
+    slug: phi3.5-mini
+    num_parameters: 3821079552
+    license: mit
+  - id: Qwen/Qwen2.5-7B-Instruct
+    slug: qwen2.5-7b
+    num_parameters: 7615616512
+    license: apache-2.0
+
+datasets:
+  mmlu:      {num_examples: 2000, max_new_tokens: 16}
+  triviaqa:  {num_examples: 2000, max_new_tokens: 48}
+  math_hard: {num_examples: 2000, max_new_tokens: 1024}
+
+sweep:
+  n_splits: 50            # paper: 50 stratified splits, seeds 42-91
+  split_seed0: 42
+  cal_fraction: 0.5
+  n_budgets: 500          # paper: 500 budgets per split
+  max_depth: 5            # S_1 ... S_5
+  grid_sizes: {2: null, 3: 128, 4: 40, 5: 16}
+  costs: [flops, gpu_time] # primary: FLOP proxy 2*N*(in+out); secondary: apportioned GPU seconds
+  scores: [mean_negentropy, min_negentropy, prob_margin, min_prob, length_norm,
+           correctness_tokenprob, benefit_tokenprob, random]
+
+live:                      # real bs=1 cascade run for latency / peak memory
+  datasets: {mmlu: 200, triviaqa: 200, math_hard: 20}
+  budget_fractions: [0.25, 0.5, 0.75]
+  score: mean_negentropy
+  warmup: 3

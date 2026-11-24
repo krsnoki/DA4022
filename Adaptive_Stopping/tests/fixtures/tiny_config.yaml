@@ -1,0 +1,29 @@
+# CPU smoke-test config: three tiny random models (offline), tiny data.
+experiment_id: cascade_escalation_tiny_smoke
+paper_id: bouchard2026_escalation_worth_it
+seed: 2026
+top_k_logprobs: 15
+dtype: float32
+max_model_len: 512
+models:
+  - {id: tiny-random-0, slug: tiny0, num_parameters: 1000}
+  - {id: tiny-random-1, slug: tiny1, num_parameters: 4000}
+  - {id: tiny-random-2, slug: tiny2, num_parameters: 16000}
+datasets:
+  mmlu:      {num_examples: 24, max_new_tokens: 4}
+  triviaqa:  {num_examples: 24, max_new_tokens: 6}
+  math_hard: {num_examples: 24, max_new_tokens: 8}
+sweep:
+  n_splits: 3
+  split_seed0: 42
+  cal_fraction: 0.5
+  n_budgets: 20
+  max_depth: 3
+  grid_sizes: {2: null, 3: 8}
+  costs: [flops, gpu_time]
+  scores: [mean_negentropy, correctness_tokenprob, benefit_tokenprob, random]
+live:
+  datasets: {mmlu: 4, triviaqa: 4}
+  budget_fractions: [0.5]
+  score: mean_negentropy
+  warmup: 1

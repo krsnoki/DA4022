@@ -1,0 +1,14 @@
+# Stage-1/2 (GPU box). vLLM is optional and installed separately by run_gpu.sh;
+# if it fails the scripts fall back to transformers.
+transformers>=4.45
+accelerate
+huggingface_hub
+tokenizers
+numpy
+pandas
+pyarrow
+pyyaml
+sympy
+matplotlib
+pytest
+antlr4-python3-runtime==4.11.1  # sympy LaTeX parsing for MATH grading
