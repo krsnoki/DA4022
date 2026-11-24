@@ -1,0 +1,36 @@
+# requirements.txt — Paper #12: Rethinking Layer Redundancy
+# Install ONLY what you need for this module.
+# Do NOT install everything if you are only running smoke tests.
+#
+# Registered by: <!-- YOUR NAME HERE e.g. John Doe (@johndoe) -->
+#
+# Install with:
+#   pip install -r requirements.txt
+
+# Core deep learning
+torch>=2.1.0
+transformers>=4.40.0
+accelerate>=0.27.0
+
+# Datasets
+datasets>=2.18.0
+
+# Evaluation
+lm-eval>=0.4.0        # for HellaSwag, BoolQ zero-shot eval
+
+# Config and utilities
+pyyaml>=6.0
+tqdm>=4.66.0
+
+# Testing
+pytest>=8.0.0
+
+# Optional: only needed for plotting results
+# matplotlib>=3.8.0
+# seaborn>=0.13.0
+
+# Notes:
+# - Install PyTorch separately using the official selector:
+#   https://pytorch.org/get-started/locally/
+# - For CPU-only smoke tests, torch CPU build is sufficient.
+# - lm-eval handles HellaSwag and BoolQ zero-shot evaluation out of the box.
