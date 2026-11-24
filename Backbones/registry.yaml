@@ -1,0 +1,100 @@
+# Backbone registry (see README_backbones.md for field meanings).
+# Revisions/licences/parameter counts were read from the Hugging Face Hub API on 2026-11-13.
+# Weights are downloaded at run time and are never committed.
+
+- id: text.qwen2_5_0_5b.base
+  name: Qwen2.5-0.5B (base)
+  modality: text
+  architecture: qwen2 decoder-only transformer (GQA)
+  pretraining_regime: self_supervised
+  objective: next-token prediction
+  weights_source: huggingface
+  weights_uri: https://huggingface.co/Qwen/Qwen2.5-0.5B
+  hf_id: Qwen/Qwen2.5-0.5B
+  revision: 060db6499f32faf8b98477b0a26969ef7d8b9987
+  license: apache-2.0
+  num_parameters: 494032768
+  input_spec: {max_length: 32768, dtype: bfloat16}
+  preprocessing: tokenizer from the same repo/revision
+  parent_backbone: null
+  fine_tuning_dataset: null
+  notes: Small stand-in for the paper's Qwen2.5-3B; fits a free 16 GB GPU for full fine-tuning at seq 512.
+
+- id: text.qwen2_5_1_5b.base
+  name: Qwen2.5-1.5B (base)
+  modality: text
+  architecture: qwen2 decoder-only transformer (GQA)
+  pretraining_regime: self_supervised
+  objective: next-token prediction
+  weights_source: huggingface
+  weights_uri: https://huggingface.co/Qwen/Qwen2.5-1.5B
+  hf_id: Qwen/Qwen2.5-1.5B
+  revision: 8faed761d45a263340a0528343f099c05c9a4323
+  license: apache-2.0
+  num_parameters: 1543714304
+  input_spec: {max_length: 32768, dtype: bfloat16}
+  preprocessing: tokenizer from the same repo/revision
+  parent_backbone: null
+  fine_tuning_dataset: null
+  notes: Optional larger LLM; likely needs LoRA or a >16 GB GPU for fine-tuning.
+
+- id: multimodal.siglip_base_p16_224
+  name: SigLIP base patch16 224
+  modality: multimodal
+  architecture: siglip (ViT-B/16 image tower + text tower)
+  pretraining_regime: self_supervised
+  objective: sigmoid image-text contrastive loss on WebLI
+  weights_source: huggingface
+  weights_uri: https://huggingface.co/google/siglip-base-patch16-224
+  hf_id: google/siglip-base-patch16-224
+  revision: 7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed
+  license: apache-2.0
+  num_parameters: 203155970
+  input_spec: {image_size: [224, 224], channels: 3, text_max_length: 64, dtype: float32}
+  preprocessing: SiglipProcessor from the same repo/revision (text padding="max_length")
+  parent_backbone: null
+  fine_tuning_dataset: null
+  notes: Cheaper stand-in for the paper's SigLIP-base-16-384.
+
+- id: multimodal.siglip_base_p16_384
+  name: SigLIP base patch16 384
+  modality: multimodal
+  architecture: siglip (ViT-B/16 image tower + text tower)
+  pretraining_regime: self_supervised
+  objective: sigmoid image-text contrastive loss on WebLI
+  weights_source: huggingface
+  weights_uri: https://huggingface.co/google/siglip-base-patch16-384
+  hf_id: google/siglip-base-patch16-384
+  revision: 41aec1c83b32e0a6fca20ad88ba058aa5b5ea394
+  license: apache-2.0
+  num_parameters: 203447810
+  input_spec: {image_size: [384, 384], channels: 3, text_max_length: 64, dtype: float32}
+  preprocessing: SiglipProcessor from the same repo/revision (text padding="max_length")
+  parent_backbone: null
+  fine_tuning_dataset: null
+  notes: The model used in the paper's Table 2.
+
+# ---- randomly initialised tiny models for CPU smoke tests (no download) ----
+- id: test.tiny_qwen2.random
+  name: tiny random Qwen2 (2 layers, hidden 64)
+  modality: text
+  architecture: qwen2
+  pretraining_regime: unknown
+  objective: none (random init)
+  weights_source: local-config
+  hf_id: null
+  revision: null
+  license: n/a
+  notes: For tests only. Built from a Qwen2Config in Backbones/registry.py.
+
+- id: test.tiny_siglip.random
+  name: tiny random SigLIP (2+2 layers, hidden 32, image 32x32)
+  modality: multimodal
+  architecture: siglip
+  pretraining_regime: unknown
+  objective: none (random init)
+  weights_source: local-config
+  hf_id: null
+  revision: null
+  license: n/a
+  notes: For tests only. Built from a SiglipConfig in Backbones/registry.py.

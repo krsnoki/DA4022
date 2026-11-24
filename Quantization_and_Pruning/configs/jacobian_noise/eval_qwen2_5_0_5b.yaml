@@ -1,0 +1,41 @@
+# Quantize + evaluate a Qwen2.5-0.5B checkpoint. Set model.path to a train_lm.py checkpoint
+# (leave null to evaluate the original pretrained weights).
+task: lm
+experiment:
+  name: qwen05
+  output_dir: outputs/jacobian_noise/eval
+  seed: 0
+  device: auto
+  status: approximate
+model:
+  backbone_id: text.qwen2_5_0_5b.base
+  path: null
+  label: null              # auto from run.json next to the checkpoint
+quant:
+  tags: [FP16, W8A8, W6A6, W4A8, W4A4, W4A4QK4]
+  weight_method: rtn       # rtn | gptq
+  calib_samples: 128       # GPTQ only, WikiText-2 *train* windows
+  calib_seq_len: 2048
+  calib_seed: 0
+  percdamp: 0.01
+  fake_quant:
+    include: '\.layers\.\d+\.'
+    w_symmetric: true
+    a_symmetric: false
+    w_group_size: null
+eval:
+  dtype: auto
+  jacobian_diagnostics: true
+  diagnostic_batches: 8
+  lm:
+    dataset: text.wikitext2_raw.test
+    seq_len: 2048
+    max_windows: null
+    lm_eval_tasks: [arc_easy, arc_challenge, piqa, hellaswag, winogrande, boolq, truthfulqa_mc2]
+    lm_eval_limit: 500     # per task subset to fit the GPU budget; set null for full sets
+    lm_eval_batch_size: 8
+latency:
+  enabled: true
+  input_length: 512
+  warmup: 3
+  iters: 10

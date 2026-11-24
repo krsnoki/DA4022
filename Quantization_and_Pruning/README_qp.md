@@ -24,12 +24,20 @@ Quantization_and_Pruning/
 └── experiments/
 ```
 
+## Implemented methods
+
+| Method | Code | Status | Shared primitives added |
+|---|---|---|---|
+| Jacobian-guided Noise Injection ([paper card](quantization/qat/jacobian_noise/README.md)) | `quantization/qat/jacobian_noise/` | `partial-reproduction`: CPU-tested; SigLIP-224 GPU results reported | `quantization/activation/fake_quant.py` (simulated W/A/QK quantization), `quantization/weight_only/gptq.py` (GPTQ) |
+
+Run the module's tests with `python -m pytest Quantization_and_Pruning/tests -q`. Experiment instructions: [`experiments/jacobian_noise/README.md`](experiments/jacobian_noise/README.md).
+
 ## Quantization paper shortlist
 
 - [AAAC: Activation-Aware Adaptive Codebooks for 4-bit LLM Weight Quantization](https://openreview.net/forum?id=ddOlFn6d0B)
 - [CafeQ: Calibration-free Quantization via Learned Transformations and Adaptive Rounding](https://openreview.net/forum?id=CBtx52vftl)
 - [COAT: COrrelation-Aware Orthogonal Transform for LLM Quantization](https://openreview.net/forum?id=6JGbm48VoG)
-- [Jacobian-guided Noise Injection for Quantization Robustness in Large Language Models](https://openreview.net/forum?id=wxKn35RAhW)
+- [Jacobian-guided Noise Injection for Quantization Robustness in Large Language Models](https://openreview.net/forum?id=wxKn35RAhW) — **implemented**: [`quantization/qat/jacobian_noise/`](quantization/qat/jacobian_noise/README.md).
 - [Leech Lattice Vector Quantization for Efficient LLM Compression](https://openreview.net/forum?id=HFk5TQ2ILj)
 - [What Matters for NVFP4 Training? A Scaling Study of Low-Precision Pre-Training Recipes](https://openreview.net/forum?id=jlkIyaG32w)
 - [Activation Quantization of Vision Encoders Needs Prefixing Registers](https://openreview.net/forum?id=p6y2soVAlT)

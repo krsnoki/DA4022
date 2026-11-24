@@ -1,0 +1,8 @@
+extends: eval_qwen2_5_0_5b.yaml
+experiment: {name: smoke_lm, output_dir: outputs/smoke/eval, device: cpu, status: smoke-test}
+model: {backbone_id: test.tiny_qwen2.random}
+quant: {tags: [FP16, W8A8, W4A4, W4A4QK4], calib_samples: 4}
+eval:
+  diagnostic_batches: 2
+  lm: {dataset: synthetic.lm, seq_len: 32, max_windows: 4, lm_eval_tasks: []}
+latency: {input_length: 32, warmup: 1, iters: 3}

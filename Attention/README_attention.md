@@ -34,6 +34,10 @@ Attention/
 - [StreamAttention: Energy-Efficient and High-Utilization Attention on Systolic Hardware](https://openreview.net/forum?id=SRQuPOMzkX) — hardware mapping.
 - [Hybrid Linear Attention Done Right: Efficient Distillation and Effective Architectures for Extremely Long Contexts](https://openreview.net/forum?id=llfDaQar98) — hybrid linear attention.
 
+Cross-listed from other modules:
+
+- [Jacobian-guided Noise Injection for Quantization Robustness in Large Language Models](https://openreview.net/forum?id=wxKn35RAhW): adds training-time noise to pre-softmax attention logits. It is implemented in `Quantization_and_Pruning/quantization/qat/jacobian_noise/` as a Hugging Face attention implementation (`"jacobian_noise"`) that equals eager attention when noise is off.
+
 See also the [full module-to-paper index](../PAPER_INDEX.md).
 
 ## Inputs and outputs

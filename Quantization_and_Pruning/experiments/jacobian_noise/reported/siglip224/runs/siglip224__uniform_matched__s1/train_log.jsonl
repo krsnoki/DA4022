@@ -1,0 +1,21 @@
+{"step": 25, "loss": 0.9426958656311035, "grad_norm": 50.37458419799805, "lr": 1.3e-07, "elapsed_s": 62.1, "in_warmup": true}
+{"step": 50, "loss": 0.8620965886116028, "grad_norm": 54.30396270751953, "lr": 2.55e-07, "elapsed_s": 106.8, "in_warmup": true}
+{"step": 75, "loss": 0.8209225344657898, "grad_norm": 47.3554801940918, "lr": 3.7999999999999996e-07, "elapsed_s": 150.6, "in_warmup": true}
+{"step": 100, "loss": 0.7714351212978363, "grad_norm": 30.120492935180664, "lr": 5e-07, "elapsed_s": 195.0, "sigma_mean": 0.12493304908275604, "sigma_global": 0.12493304163217545, "in_warmup": false}
+{"step": 125, "loss": 0.6361964249610901, "grad_norm": 31.751575469970703, "lr": 4.951963201008075e-07, "elapsed_s": 239.3, "sigma_mean": 0.12493304908275604, "sigma_global": 0.12493304163217545, "in_warmup": false}
+{"step": 150, "loss": 0.6505686557292938, "grad_norm": 37.38644027709961, "lr": 4.809698831278217e-07, "elapsed_s": 283.6, "sigma_mean": 0.12493304908275604, "sigma_global": 0.12493304163217545, "in_warmup": false}
+{"step": 175, "loss": 0.5653938460350036, "grad_norm": 41.647464752197266, "lr": 4.578674030756363e-07, "elapsed_s": 327.8, "sigma_mean": 0.12493304908275604, "sigma_global": 0.12493304163217545, "in_warmup": false}
+{"step": 200, "loss": 0.6022032868862152, "grad_norm": 48.357479095458984, "lr": 4.2677669529663686e-07, "elapsed_s": 373.1, "sigma_mean": 0.12484182417392731, "sigma_global": 0.12484182417392731, "in_warmup": false}
+{"step": 225, "loss": 0.5504668939113617, "grad_norm": 21.343685150146484, "lr": 3.8889255825490053e-07, "elapsed_s": 417.4, "sigma_mean": 0.12484182417392731, "sigma_global": 0.12484182417392731, "in_warmup": false}
+{"step": 250, "loss": 0.5644649708271027, "grad_norm": 52.47563934326172, "lr": 3.4567085809127245e-07, "elapsed_s": 461.7, "sigma_mean": 0.12484182417392731, "sigma_global": 0.12484182417392731, "in_warmup": false}
+{"step": 275, "loss": 0.587546414732933, "grad_norm": 26.044830322265625, "lr": 2.987725805040321e-07, "elapsed_s": 505.7, "sigma_mean": 0.12484182417392731, "sigma_global": 0.12484182417392731, "in_warmup": false}
+{"step": 300, "loss": 0.5885624814033509, "grad_norm": 29.496135711669922, "lr": 2.5e-07, "elapsed_s": 549.7, "sigma_mean": 0.1228594183921814, "sigma_global": 0.1228594183921814, "in_warmup": false}
+{"step": 325, "loss": 0.5735743981599808, "grad_norm": 36.40949630737305, "lr": 2.0122741949596793e-07, "elapsed_s": 593.8, "sigma_mean": 0.1228594183921814, "sigma_global": 0.1228594183921814, "in_warmup": false}
+{"step": 350, "loss": 0.633133796453476, "grad_norm": 45.85841751098633, "lr": 1.5432914190872756e-07, "elapsed_s": 637.9, "sigma_mean": 0.1228594183921814, "sigma_global": 0.1228594183921814, "in_warmup": false}
+{"step": 375, "loss": 0.5992938828468323, "grad_norm": 52.497764587402344, "lr": 1.1110744174509951e-07, "elapsed_s": 681.9, "sigma_mean": 0.1228594183921814, "sigma_global": 0.1228594183921814, "in_warmup": false}
+{"step": 400, "loss": 0.5989338397979737, "grad_norm": 60.42893981933594, "lr": 7.322330470336313e-08, "elapsed_s": 725.9, "sigma_mean": 0.12363854795694351, "sigma_global": 0.12363854795694351, "in_warmup": false}
+{"step": 425, "loss": 0.5340713620185852, "grad_norm": 26.25602912902832, "lr": 4.213259692436366e-08, "elapsed_s": 770.0, "sigma_mean": 0.12363854795694351, "sigma_global": 0.12363854795694351, "in_warmup": false}
+{"step": 450, "loss": 0.5808845889568329, "grad_norm": 20.281410217285156, "lr": 1.9030116872178314e-08, "elapsed_s": 814.2, "sigma_mean": 0.12363854795694351, "sigma_global": 0.12363854795694351, "in_warmup": false}
+{"step": 475, "loss": 0.6602549064159393, "grad_norm": 43.47243881225586, "lr": 4.803679899192392e-09, "elapsed_s": 858.3, "sigma_mean": 0.12363854795694351, "sigma_global": 0.12363854795694351, "in_warmup": false}
+{"step": 500, "loss": 0.5174338510632515, "grad_norm": 35.60270690917969, "lr": 0.0, "elapsed_s": 902.6, "sigma_mean": 0.12470605224370956, "sigma_global": 0.12470605224370956, "in_warmup": false}
+{"step": 500, "val_top1": 0.712, "val_examples": 1000}

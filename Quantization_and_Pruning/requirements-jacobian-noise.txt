@@ -1,0 +1,16 @@
+# Jacobian-guided noise injection (Quantization_and_Pruning/quantization/qat/jacobian_noise)
+# Install PyTorch first from https://pytorch.org/get-started/locally/ (CPU or CUDA build);
+# Kaggle/Colab images already ship a CUDA torch, which we deliberately do not pin here.
+# Versions below are the ones the CPU test-suite was run with (2026-11-13).
+transformers==4.57.6       # attention plug-in uses AttentionInterface / AttentionMaskInterface (>=4.53)
+datasets==5.0.1
+accelerate==1.15.0
+pyyaml==6.0.3
+pillow==13.0.0
+sentencepiece==0.2.3       # SigLIP tokenizer
+protobuf==7.36.2
+pytest==9.2.0
+# optional:
+# lm-eval==<version>       # zero-shot tasks in eval_quant.py (eval.lm.lm_eval_tasks); leave tasks [] without it
+# peft==<version>          # train.lora in train_lm.py
+# matplotlib               # summarize.py --plot

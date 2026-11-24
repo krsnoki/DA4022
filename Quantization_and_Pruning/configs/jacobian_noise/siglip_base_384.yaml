@@ -1,0 +1,11 @@
+# The paper's SigLIP model (Table 2). ~3x the compute of the 224 config.
+extends: siglip_base_224.yaml
+experiment:
+  name: siglip384
+backbone:
+  id: multimodal.siglip_base_p16_384
+train:
+  batch_size: 16
+  grad_accum: 2
+  max_steps: 500
+  gradient_checkpointing: true

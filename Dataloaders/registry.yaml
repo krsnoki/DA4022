@@ -1,0 +1,94 @@
+# Dataset registry (see README_dataloader.md).  Revisions/licences read from the
+# Hugging Face Hub API on 2026-11-13.  Nothing here is downloaded into the repo.
+
+- id: text.alpaca.train
+  name: Stanford Alpaca (52K instruction-following examples)
+  modality: text
+  task: instruction tuning (causal LM)
+  source_url: https://huggingface.co/datasets/tatsu-lab/alpaca
+  hf_id: tatsu-lab/alpaca
+  license: cc-by-nc-4.0
+  version: dce01c9b08f87459cf36a430d809084718273017
+  role: train
+  split: train (seeded shuffle; first 500 = held-out validation, rest = training)
+  preprocessing_id: alpaca_prompt_v1 (Dataloaders/supervised/alpaca.py), response-only loss
+  seed: 42
+  num_examples: 52002 (hub metadata; not re-counted)
+  labels_available: true
+  loader: Dataloaders/supervised/alpaca.py
+  notes: Non-commercial licence. Used as the noise fine-tuning set, following Pandey et al. App. B.1.
+
+- id: text.wikitext2_raw.test
+  name: WikiText-2 raw (test)
+  modality: text
+  task: language-model perplexity
+  source_url: https://huggingface.co/datasets/Salesforce/wikitext
+  hf_id: Salesforce/wikitext
+  config: wikitext-2-raw-v1
+  license: cc-by-sa-3.0 / gfdl
+  version: b08601e04326c79dfdd32d625aee71d232d685c3
+  role: evaluation
+  split: test
+  preprocessing_id: join("\n\n") + non-overlapping windows (Dataloaders/evaluation/wikitext2.py)
+  seed: null
+  num_examples: unknown (window count depends on tokenizer and seq_len)
+  labels_available: true
+  loader: Dataloaders/evaluation/wikitext2.py
+
+- id: text.wikitext2_raw.train
+  name: WikiText-2 raw (train) - calibration only
+  modality: text
+  task: PTQ calibration (GPTQ Hessians)
+  source_url: https://huggingface.co/datasets/Salesforce/wikitext
+  hf_id: Salesforce/wikitext
+  config: wikitext-2-raw-v1
+  license: cc-by-sa-3.0 / gfdl
+  version: b08601e04326c79dfdd32d625aee71d232d685c3
+  role: calibration
+  split: train
+  preprocessing_id: random windows of seq_len tokens
+  seed: 0
+  num_examples: 128 windows (default)
+  labels_available: false
+  loader: Dataloaders/evaluation/wikitext2.py
+
+- id: vision.imagenet1k_256.train
+  name: ImageNet-1K train, 256 px parquet copy
+  modality: vision
+  task: image classification (SigLIP zero-shot head fine-tuning + calibration)
+  source_url: https://huggingface.co/datasets/benjamin-paine/imagenet-1k-256x256
+  hf_id: benjamin-paine/imagenet-1k-256x256
+  license: other (ImageNet terms of access - non-commercial research)
+  version: 1bd0400450249a7fe90c0aece37d0d03e7ea956a
+  role: train / calibration
+  split: train (streamed, seeded shuffle; first num_calib -> calibration, next num_train -> training)
+  preprocessing_id: SiglipImageProcessor of the backbone revision
+  seed: 0
+  num_examples: 1281167 in the split (hub metadata); we use a subset (default 50000 train, 256 calibration)
+  labels_available: true
+  loader: Dataloaders/evaluation/imagenet_zeroshot.py
+
+- id: vision.imagenet1k_256.validation
+  name: ImageNet-1K validation, 256 px parquet copy
+  modality: vision
+  task: zero-shot image classification (top-1)
+  source_url: https://huggingface.co/datasets/benjamin-paine/imagenet-1k-256x256
+  hf_id: benjamin-paine/imagenet-1k-256x256
+  license: other (ImageNet terms of access - non-commercial research)
+  version: 1bd0400450249a7fe90c0aece37d0d03e7ea956a
+  role: evaluation
+  split: validation (streamed, seeded shuffle; first num_eval images)
+  preprocessing_id: SiglipImageProcessor of the backbone revision
+  seed: 0
+  num_examples: 50000 in the split (hub metadata); default evaluation subset 10000
+  labels_available: true
+  loader: Dataloaders/evaluation/imagenet_zeroshot.py
+  notes: Images are pre-resized to 256 px, so absolute accuracy can differ slightly from full-resolution ImageNet; baseline and method always share this pipeline.
+
+- id: synthetic.lm / synthetic.images
+  name: synthetic smoke-test data
+  modality: text / vision
+  task: smoke tests only
+  role: synthetic
+  loader: Dataloaders/supervised/alpaca.py (synthetic_lm_examples), Dataloaders/evaluation/imagenet_zeroshot.py (synthetic_image_batches)
+  notes: Never used for reported results.

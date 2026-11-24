@@ -1,0 +1,224 @@
+{
+  "run_name": "siglip224__uniform_matched__s0",
+  "config": {
+    "experiment": {
+      "name": "siglip224",
+      "output_dir": "/kaggle/working/out_s0",
+      "seed": 0,
+      "device": "auto"
+    },
+    "backbone": {
+      "id": "multimodal.siglip_base_p16_224"
+    },
+    "data": {
+      "dataset": "vision.imagenet1k_256",
+      "num_train": 16000,
+      "num_calib": 256,
+      "seed": 0,
+      "prompt": "a photo of a {}."
+    },
+    "train": {
+      "max_steps": 500,
+      "batch_size": 32,
+      "grad_accum": 1,
+      "lr": "5e-7",
+      "weight_decay": 0.01,
+      "warmup_steps": 100,
+      "grad_clip": 1.0,
+      "precision": "bf16",
+      "gradient_checkpointing": false,
+      "log_every": 25,
+      "eval_every": 500,
+      "eval_examples": 1000,
+      "save": true
+    },
+    "noise": {
+      "mode": "uniform_matched",
+      "alpha": 0.5,
+      "sigma_min": 0.005,
+      "sigma_max": 10.0,
+      "warmup_steps": 100,
+      "warmup_sigma": 0.1,
+      "update_interval": 100,
+      "collect": "last_step"
+    }
+  },
+  "backbone": {
+    "id": "multimodal.siglip_base_p16_224",
+    "name": "SigLIP base patch16 224",
+    "modality": "multimodal",
+    "architecture": "siglip (ViT-B/16 image tower + text tower)",
+    "pretraining_regime": "self_supervised",
+    "objective": "sigmoid image-text contrastive loss on WebLI",
+    "weights_source": "huggingface",
+    "weights_uri": "https://huggingface.co/google/siglip-base-patch16-224",
+    "hf_id": "google/siglip-base-patch16-224",
+    "revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed",
+    "license": "apache-2.0",
+    "num_parameters": 203155970,
+    "input_spec": {
+      "image_size": [
+        224,
+        224
+      ],
+      "channels": 3,
+      "text_max_length": 64,
+      "dtype": "float32"
+    },
+    "preprocessing": "SiglipProcessor from the same repo/revision (text padding=\"max_length\")",
+    "parent_backbone": null,
+    "fine_tuning_dataset": null,
+    "notes": "Cheaper stand-in for the paper's SigLIP-base-16-384.",
+    "loaded_revision": "7fd15f0689c79d79e38b1c2e2e2370a7bf2761ed"
+  },
+  "env": {
+    "python": "3.13.16",
+    "torch": "2.11.0+cu130",
+    "transformers": "4.57.6",
+    "cuda": "13.0",
+    "device": "Tesla T4 (15 GB)",
+    "commit": "0a24904",
+    "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "time_utc": "2026-11-23T21:09:33+00:00",
+    "datasets": "5.0.1"
+  },
+  "final": {
+    "val_top1": 0.714,
+    "val_examples": 1000
+  },
+  "noise_summary": {
+    "global_step": 500,
+    "mode": "uniform_matched",
+    "in_warmup": false,
+    "sigma_mean": 0.12463119626045227,
+    "sigma_per_layer": [
+      0.12463,
+      0.12463,
+      0.12463,
+      0.12463,
+      0.12463,
+      0.12463,
+      0.12463,
+      0.12463,
+      0.12463,
+      0.12463,
+      0.12463,
+      0.12463
+    ],
+    "sigma_global": 0.12463121116161346
+  },
+  "noise_history": [
+    {
+      "step": 100,
+      "global_step": 99,
+      "mode": "uniform_matched",
+      "in_warmup": true,
+      "sigma_mean": 0.12472238391637802,
+      "sigma_per_layer": [
+        0.12472,
+        0.12472,
+        0.12472,
+        0.12472,
+        0.12472,
+        0.12472,
+        0.12472,
+        0.12472,
+        0.12472,
+        0.12472,
+        0.12472,
+        0.12472
+      ],
+      "sigma_global": 0.12472237646579742
+    },
+    {
+      "step": 200,
+      "global_step": 199,
+      "mode": "uniform_matched",
+      "in_warmup": false,
+      "sigma_mean": 0.12488193809986115,
+      "sigma_per_layer": [
+        0.12488,
+        0.12488,
+        0.12488,
+        0.12488,
+        0.12488,
+        0.12488,
+        0.12488,
+        0.12488,
+        0.12488,
+        0.12488,
+        0.12488,
+        0.12488
+      ],
+      "sigma_global": 0.12488193809986115
+    },
+    {
+      "step": 300,
+      "global_step": 299,
+      "mode": "uniform_matched",
+      "in_warmup": false,
+      "sigma_mean": 0.12286440283060074,
+      "sigma_per_layer": [
+        0.12286,
+        0.12286,
+        0.12286,
+        0.12286,
+        0.12286,
+        0.12286,
+        0.12286,
+        0.12286,
+        0.12286,
+        0.12286,
+        0.12286,
+        0.12286
+      ],
+      "sigma_global": 0.12286440283060074
+    },
+    {
+      "step": 400,
+      "global_step": 399,
+      "mode": "uniform_matched",
+      "in_warmup": false,
+      "sigma_mean": 0.12351352721452713,
+      "sigma_per_layer": [
+        0.12351,
+        0.12351,
+        0.12351,
+        0.12351,
+        0.12351,
+        0.12351,
+        0.12351,
+        0.12351,
+        0.12351,
+        0.12351,
+        0.12351,
+        0.12351
+      ],
+      "sigma_global": 0.12351353466510773
+    },
+    {
+      "step": 500,
+      "global_step": 499,
+      "mode": "uniform_matched",
+      "in_warmup": false,
+      "sigma_mean": 0.12463119626045227,
+      "sigma_per_layer": [
+        0.12463,
+        0.12463,
+        0.12463,
+        0.12463,
+        0.12463,
+        0.12463,
+        0.12463,
+        0.12463,
+        0.12463,
+        0.12463,
+        0.12463,
+        0.12463
+      ],
+      "sigma_global": 0.12463121116161346
+    }
+  ],
+  "train_time_s": 849.8433707450004,
+  "train_peak_memory_mb": 5074.18115234375
+}

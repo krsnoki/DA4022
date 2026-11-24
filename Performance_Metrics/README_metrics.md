@@ -60,6 +60,18 @@ Unknown/not-measured quantities should be empty/null plus a `status` or notes en
 - energy per token/request vs. quality, only for measured energy;
 - Pareto frontiers across configurations.
 
+## Reported results
+
+Locally produced results. Each entry links to its machine-readable rows in the schema above.
+
+| Paper / method | Backbone | Dataset / metric | Setting | Baseline | Method | Status | Rows |
+|---|---|---|---|---:|---:|---|---|
+| [Jacobian-guided noise injection](https://openreview.net/forum?id=wxKn35RAhW) (α=0.5) | `multimodal.siglip_base_p16_224` | ImageNet val (5k), zero-shot top-1 | simulated W5A5 (RTN) | 65.40 | 66.24 ± 0.25 | `partial`, 2 seeds, T4 | [`results.csv`](../Quantization_and_Pruning/experiments/jacobian_noise/reported/siglip224/results.csv) |
+| same, α=4 | same | same | simulated W5A5 (RTN) | 65.40 | 66.50 ± 0.59 | `partial`, 2 seeds, T4 | same |
+| same, uniform-noise control | same | same | simulated W5A5 (RTN) | 65.40 | 65.95 ± 0.04 | `partial`, 2 seeds, T4 | same |
+
+Full tables (FP16, W6A6, W5A5, W4A4), resources and caveats: [paper card](../Quantization_and_Pruning/quantization/qat/jacobian_noise/README.md#results).
+
 ## Paper references with system/energy relevance
 
 - [GreenMoE: Exploiting Dynamic Load Imbalance for Energy-Efficient Long-Context MoE Training](https://openreview.net/forum?id=ShvjLjCOGB)

@@ -1,0 +1,7 @@
+extends: siglip_base_224.yaml
+experiment: {name: smoke_siglip, output_dir: outputs/smoke, device: cpu}
+backbone: {id: test.tiny_siglip.random}
+data: {dataset: synthetic.images, num_train: 64, num_calib: 16, num_classes: 4, image_size: 32}
+train: {max_steps: 12, batch_size: 8, lr: 1.0e-3, warmup_steps: 2, precision: fp32, log_every: 4,
+        eval_every: 6, eval_examples: 16}
+noise: {warmup_steps: 4, update_interval: 4}
