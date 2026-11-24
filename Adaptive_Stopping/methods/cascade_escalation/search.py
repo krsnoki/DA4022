@@ -148,13 +148,9 @@ def pareto_frontier(cands: Sequence[CandidateSet], tie_tol: float = 1e-15) -> Fr
     depth = np.concatenate([np.full(len(c.acc), len(c.sequence)) for c in cands])
     # sort by cost asc, then acc desc, then depth asc
     order = np.lexsort((depth, -accs, costs))
-    best = -np.inf
-    keep = []
-    for k in order:
-        if accs[k] > best + tie_tol:
-            keep.append(k)
-            best = accs[k]
-    keep = np.asarray(keep, dtype=np.int64)
+    a = accs[order]
+    prev_best = np.concatenate([[-np.inf], np.maximum.accumulate(a)[:-1]])
+    keep = order[a > prev_best + tie_tol]
     pols = [cands[owner[k]].policy(local[k]) for k in keep]
     return Frontier(costs[keep], accs[keep], pols)
 
