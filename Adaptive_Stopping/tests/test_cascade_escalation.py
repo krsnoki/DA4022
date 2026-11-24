@@ -5,6 +5,7 @@ Run: ``pytest Adaptive_Stopping/tests -q`` (no GPU, no network).
 
 from __future__ import annotations
 
+import json
 import math
 import sys
 from pathlib import Path
@@ -372,6 +373,29 @@ def test_generation_end_to_end_tiny_model():
     assert one["response"] == res[0]["response"]
 
 
+def test_hf_generate_halves_batch_on_cuda_oom():
+    torch = pytest.importorskip("torch")
+    pytest.importorskip("transformers")
+    from generation import load_hf_generator
+
+    g = load_hf_generator("tiny-random-0", top_k=15, device="cpu")
+    prompts = [f"prompt number {i}" for i in range(10)]
+    ref = g.generate(prompts, max_new_tokens=4, batch_size=10)
+    real, seen = g.generate_ids, []
+
+    def flaky(batch, mnt):  # pretend anything above 3 rows does not fit on the GPU
+        seen.append(len(batch))
+        if len(batch) > 3:
+            raise torch.cuda.OutOfMemoryError("fake")
+        return real(batch, mnt)
+
+    g.generate_ids = flaky
+    out = g.generate(prompts, max_new_tokens=4, batch_size=10)
+    assert seen[:3] == [10, 5, 2] and max(seen[2:]) <= 2 and g.last_batch_size == 2
+    assert [r["response"] for r in out] == [r["response"] for r in ref]
+    assert all(r["gpu_s"] > 0 for r in out)
+
+
 _REAL_LOAD_RECORDS = bench.load_records
 
 
@@ -410,3 +434,85 @@ def test_pipeline_cli_tiny(tmp_path, monkeypatch):
     assert collect_generations.main(["--config", cfg, "--model", "tiny-random-0", "--out", str(tmp_path)]) == 0
     assert live_cascade.main(["--config", cfg, "--results", str(tmp_path), "--device", "cpu"]) == 0
     assert (tmp_path / "live" / "live_summary.csv").exists()
+
+
+def test_collect_resumes_from_checkpoint_after_crash(tmp_path, monkeypatch):
+    """A crash mid-dataset keeps finished chunks; the re-run continues from them
+    (also after a torn final write) and matches an uninterrupted run."""
+    pytest.importorskip("torch")
+    import collect_generations
+    from common import generation_path, partial_path, read_jsonl
+
+    monkeypatch.setattr(bench, "load_records", _fake_records)
+    cfg = str(ROOT / "Adaptive_Stopping" / "tests" / "fixtures" / "tiny_config.yaml")
+    base = ["--config", cfg, "--model", "tiny-random-1", "--datasets", "mmlu", "--chunk-size", "5"]
+    assert collect_generations.main(base + ["--out", str(tmp_path / "ref")]) == 0
+    ref = read_jsonl(generation_path(tmp_path / "ref", "mmlu", "tiny1"))
+
+    real_make, calls = collect_generations.make_generator, {"n": 0}
+
+    def crashing_make(*a, **k):
+        g = real_make(*a, **k)
+        real_generate = g.generate
+
+        def generate(*ga, **gk):
+            calls["n"] += 1
+            if calls["n"] == 3:
+                raise RuntimeError("simulated crash")
+            return real_generate(*ga, **gk)
+
+        g.generate = generate
+        return g
+
+    out = tmp_path / "run"
+    monkeypatch.setattr(collect_generations, "make_generator", crashing_make)
+    with pytest.raises(RuntimeError):
+        collect_generations.main(base + ["--out", str(out)])
+    ppath = partial_path(out, "mmlu", "tiny1")
+    assert not generation_path(out, "mmlu", "tiny1").exists()
+    assert len(ppath.read_text().splitlines()) == 1 + 10  # header + two chunks
+    with open(ppath, "a") as f:
+        f.write('{"uid": "mmlu-tor')  # crash in the middle of a write
+
+    monkeypatch.setattr(collect_generations, "make_generator", real_make)
+    assert collect_generations.main(base + ["--out", str(out)]) == 0
+    rows = read_jsonl(generation_path(out, "mmlu", "tiny1"))
+    assert not ppath.exists()
+    assert [r["uid"] for r in rows] == [r["uid"] for r in ref]
+    assert [r["response"] for r in rows] == [r["response"] for r in ref]
+    meta = json.loads((out / "generations" / "meta" / "tiny1.json").read_text())
+    assert meta["datasets"]["mmlu"]["rows_from_checkpoint"] == 10
+
+
+def test_partial_checkpoint_discarded_when_settings_change(tmp_path):
+    from common import append_partial, load_partial
+
+    p = tmp_path / "x.partial.jsonl"
+    append_partial(p, {"max_new_tokens": 16}, [{"uid": "a"}, {"uid": "b"}])
+    assert [r["uid"] for r in load_partial(p, {"max_new_tokens": 16})] == ["a", "b"]
+    assert load_partial(p, {"max_new_tokens": 32}) == [] and not p.exists()
+
+
+def test_live_resumes_from_checkpoints(tmp_path, monkeypatch):
+    """A finished live measurement is not repeated: the re-run rebuilds the
+    summary from checkpoints without loading any model."""
+    pytest.importorskip("torch")
+    import collect_generations
+    import generation
+    import live_cascade
+
+    monkeypatch.setattr(bench, "load_records", _fake_records)
+    cfg = str(ROOT / "Adaptive_Stopping" / "tests" / "fixtures" / "tiny_config.yaml")
+    for m in ("tiny-random-0", "tiny-random-1", "tiny-random-2"):
+        assert collect_generations.main(["--config", cfg, "--model", m, "--out", str(tmp_path)]) == 0
+    args = ["--config", cfg, "--results", str(tmp_path), "--device", "cpu"]
+    assert live_cascade.main(args) == 0
+    first = (tmp_path / "live" / "live_summary.csv").read_text()
+    (tmp_path / "live" / "live_summary.csv").unlink()
+
+    def no_load(*a, **k):
+        raise AssertionError("model loaded although every measurement was checkpointed")
+
+    monkeypatch.setattr(generation, "load_hf_generator", no_load)
+    assert live_cascade.main(args) == 0
+    assert (tmp_path / "live" / "live_summary.csv").read_text() == first

@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -96,6 +97,7 @@ def main(argv=None) -> int:
     results = Path(args.results)
     out_dir = results / "live"
     out_dir.mkdir(parents=True, exist_ok=True)
+    ckpt_dir = out_dir / "checkpoints"
     slug2id = {m["slug"] + args.tag: m["id"] for m in cfg["models"]}
     slug2params = {m["slug"] + args.tag: m["num_parameters"] for m in cfg["models"]}
     summary, per_query = [], []
@@ -132,19 +134,43 @@ def main(argv=None) -> int:
                                                             seed=cfg.get("seed", 2026))}
         uids = [table.uids[i] for i in test[:n]]
         mnt = int(cfg["datasets"][ds]["max_new_tokens"])
-        gL, gH = ensure([sL, sH])
         policies = [{"name": f"always:{sL}", "policy": CascadePolicy((0,), ())},
                     {"name": f"always:{sH}", "policy": CascadePolicy((1,), ())}]
         for p in pols:
             policies.append({**p, "policy": CascadePolicy((0, 1), p["policy"].thresholds)
                              if p["policy"].depth == 2 else CascadePolicy((0 if p["policy"].sequence[0] == L else 1,), ())})
+        # Checkpoint per (dataset, policy): a finished measurement is reused on re-run as
+        # long as the same models, thresholds, queries and settings would be measured.
+        todo = []
+        for pinfo in policies:
+            pol = pinfo["policy"]
+            pinfo["fingerprint"] = {"dataset": ds, "policy": pinfo["name"], "small": sL, "large": sH,
+                                    "sequence": list(pol.sequence), "thresholds": [float(t) for t in pol.thresholds],
+                                    "uids": uids, "max_new_tokens": mnt, "score": live.get("score", "mean_negentropy")}
+            ck = ckpt_dir / (re.sub(r"[^A-Za-z0-9_.-]", "_", f"{ds}__{pinfo['name']}") + ".json")
+            pinfo["ckpt"] = ck
+            if ck.exists():
+                try:
+                    saved = json.loads(ck.read_text())
+                except json.JSONDecodeError:
+                    saved = {}
+                if saved.get("fingerprint") == pinfo["fingerprint"]:
+                    summary.append(saved["summary"])
+                    per_query.extend(saved["per_query"])
+                    print(f"[live] {ds} {pinfo['name']}: from checkpoint", flush=True)
+                    continue
+            todo.append(pinfo)
+        if not todo:
+            continue
+        gL, gH = ensure([sL, sH])
         gens = [gL, gH]
         params = [slug2params[sL], slug2params[sH]]
         for g in gens:  # warm-up
             for u in uids[: live.get("warmup", 3)]:
                 g.generate_one_timed(records[u]["prompt"], mnt)
-        for pinfo in policies:
+        for pinfo in todo:
             pol: CascadePolicy = pinfo["policy"]
+            pq = []
             sp = CascadeStoppingPolicy(pol)
             if cuda:
                 torch.cuda.synchronize()
@@ -172,8 +198,8 @@ def main(argv=None) -> int:
                 corr.append(ok)
                 esc.append(stage > 0)
                 flops.append(f)
-                per_query.append({"dataset": ds, "policy": pinfo["name"], "uid": u, "latency_s": dt,
-                                  "correct": ok, "stages": stage + 1, "tflops": f})
+                pq.append({"dataset": ds, "policy": pinfo["name"], "uid": u, "latency_s": dt,
+                           "correct": ok, "stages": stage + 1, "tflops": f})
             lat = np.asarray(lat)
             row = {
                 "dataset": ds, "policy": pinfo["name"], "small": sL, "large": sH,
@@ -189,9 +215,15 @@ def main(argv=None) -> int:
                 "weights_mb_small": gL.weights_mb, "weights_mb_large": gH.weights_mb,
             }
             summary.append(row)
+            per_query.extend(pq)
+            ckpt_dir.mkdir(parents=True, exist_ok=True)
+            tmp = pinfo["ckpt"].with_suffix(".tmp")
+            tmp.write_text(json.dumps({"fingerprint": pinfo["fingerprint"], "summary": row, "per_query": pq}))
+            tmp.replace(pinfo["ckpt"])
             print(f"[live] {ds} {pinfo['name']}: acc={row['accuracy']:.3f} esc={row['escalation_rate']:.2f} "
                   f"lat_med={row['latency_median_ms']:.0f}ms peak={row['peak_memory_allocated_mb']}", flush=True)
 
+    out_dir.mkdir(parents=True, exist_ok=True)  # recreate if removed during a long run
     with open(out_dir / "live_summary.csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(summary[0]))
         w.writeheader()

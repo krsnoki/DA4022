@@ -7,7 +7,9 @@ with one row per query::
 
 and ``<out>/generations/meta/<slug>.json`` (model revision, parameter count,
 backend, timings, peak memory, environment). Existing outputs are skipped, so
-the command can be re-run after an interruption.
+the command can be re-run after an interruption. Within a dataset, rows are
+checkpointed every ``--chunk-size`` queries to ``<slug>.partial.jsonl``; a
+re-run (with either backend) continues from the checkpoint.
 
 Example::
 
@@ -25,7 +27,8 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import REPO_ROOT, environment_metadata, generation_path, load_config, write_jsonl  # noqa: E402
+from common import (REPO_ROOT, append_partial, environment_metadata, generation_path, load_config,  # noqa: E402
+                    load_partial, partial_path, write_jsonl)
 
 from Adaptive_Stopping.methods.cascade_escalation.scores import token_scores_from_topk  # noqa: E402
 from Dataloaders.evaluation import cascade_benchmarks as bench  # noqa: E402
@@ -65,7 +68,8 @@ def make_generator(model_id: str, backend: str, cfg: dict, revision=None):
 
 def default_batch_size(n_params: int, max_new_tokens: int) -> int:
     """HF-backend batch size (vLLM schedules its own batches). Qwen2.5/Phi-3.5 KV
-    caches are small, so these fit a 24 GB GPU even at 1024 new tokens."""
+    caches are small, so these fit a 24 GB GPU even at 1024 new tokens. Phi-3.5
+    (no GQA) does not at 64; HFGenerator halves the batch on OOM."""
     if n_params < 2e9:
         return 96
     if n_params < 5e9:
@@ -83,6 +87,8 @@ def main(argv=None) -> int:
     ap.add_argument("--num-examples", type=int, default=None, help="override (smoke runs)")
     ap.add_argument("--batch-size", type=int, default=None)
     ap.add_argument("--tag", default="", help="suffix for output file names (smoke runs)")
+    ap.add_argument("--chunk-size", type=int, default=500,
+                    help="queries per checkpoint; a crash loses at most one chunk")
     args = ap.parse_args(argv)
 
     cfg = load_config(args.config)
@@ -126,20 +132,39 @@ def main(argv=None) -> int:
         bs = args.batch_size or default_batch_size(n_params, mnt)
         if torch.cuda.is_available():
             torch.cuda.reset_peak_memory_stats()
-        print(f"[collect] {slug} {ds}: {len(records)} prompts, max_new_tokens={mnt}, backend={gen.backend}", flush=True)
+        # Checkpointing: rows are appended to a partial file every `chunk` queries, and a
+        # re-run (even with the other backend) continues from there.
+        ppath = partial_path(out, ds, slug)
+        header = {"model_id": args.model, "dataset": ds, "uids": len(records), "seed": cfg.get("seed", 2026),
+                  "max_new_tokens": mnt, "top_k": cfg.get("top_k_logprobs", 15)}
+        wanted = {r["uid"] for r in records}
+        done = {r["uid"]: r for r in load_partial(ppath, header) if r["uid"] in wanted}
+        pending = [r for r in records if r["uid"] not in done]
+        print(f"[collect] {slug} {ds}: {len(records)} prompts ({len(done)} from checkpoint), "
+              f"max_new_tokens={mnt}, backend={gen.backend}", flush=True)
         t0 = time.perf_counter()
-        res = gen.generate([r["prompt"] for r in records], max_new_tokens=mnt, batch_size=bs)
-        wall = time.perf_counter() - t0
-        rows = []
-        for rec, r in zip(records, res):
-            sc = token_scores_from_topk(r["chosen_logprobs"], r["topk_logprobs"], k=cfg.get("top_k_logprobs", 15))
-            rows.append({
-                "uid": rec["uid"], "response": r["response"], "n_in": r["n_in"], "n_out": r["n_out"],
-                "finish": r["finish"], "correct": int(bench.grade(r["response"], rec)),
-                "gpu_s": r["gpu_s"], "scores": sc,
-            })
+        for c in range(0, len(pending), args.chunk_size):
+            chunk = pending[c:c + args.chunk_size]
+            res = gen.generate([r["prompt"] for r in chunk], max_new_tokens=mnt, batch_size=bs)
+            new = []
+            for rec, r in zip(chunk, res):
+                sc = token_scores_from_topk(r["chosen_logprobs"], r["topk_logprobs"], k=cfg.get("top_k_logprobs", 15))
+                new.append({
+                    "uid": rec["uid"], "response": r["response"], "n_in": r["n_in"], "n_out": r["n_out"],
+                    "finish": r["finish"], "correct": int(bench.grade(r["response"], rec)),
+                    "gpu_s": r["gpu_s"], "scores": sc, "backend": gen.backend,
+                })
+            append_partial(ppath, header, new)
+            done.update((x["uid"], x) for x in new)
+            print(f"[collect] {slug} {ds}: {len(done)}/{len(records)} saved "
+                  f"({time.perf_counter() - t0:.0f}s this session)", flush=True)
+        rows = [done[r["uid"]] for r in records]
+        wall = sum(x["gpu_s"] for x in rows)  # generation time summed over chunks and sessions
         acc = sum(x["correct"] for x in rows) / max(len(rows), 1)
-        info = {"n": len(rows), "accuracy": acc, "wall_s": wall, "max_new_tokens": mnt, "batch_size": bs,
+        info = {"n": len(rows), "accuracy": acc, "wall_s": wall, "max_new_tokens": mnt,
+                "batch_size": getattr(gen, "last_batch_size", bs),
+                "backends": sorted({x.get("backend", gen.backend) for x in rows}),
+                "rows_from_checkpoint": len(rows) - len(pending),
                 "truncated_frac": sum(x["finish"] == "length" for x in rows) / max(len(rows), 1),
                 "mean_n_in": sum(x["n_in"] for x in rows) / max(len(rows), 1),
                 "mean_n_out": sum(x["n_out"] for x in rows) / max(len(rows), 1)}
@@ -151,6 +176,7 @@ def main(argv=None) -> int:
                 info["memory_note"] = "vLLM pre-allocates gpu_memory_utilization of device memory; use live run for peak memory"
         meta["datasets"][ds] = info
         write_jsonl(generation_path(out, ds, slug), rows)
+        ppath.unlink(missing_ok=True)
         meta_path.parent.mkdir(parents=True, exist_ok=True)
         meta_path.write_text(json.dumps(meta, indent=2))
         print(f"[collect] {slug} {ds}: acc={acc:.3f} wall={wall:.1f}s", flush=True)
