@@ -70,3 +70,47 @@ Unknown/not-measured quantities should be empty/null plus a `status` or notes en
 ## Benchmark anti-patterns
 
 Do not compare different checkpoints, input lengths, quantization settings, warm-up policies, or batch sizes and attribute the whole difference to a method. Do not report GPU utilization alone as speed. Do not mix paper-reported numbers with locally reproduced numbers without marking the source.
+
+
+---
+
+## Paper #12 — Rethinking Layer Redundancy in LLMs
+
+**Paper:** [Rethinking Layer Redundancy in Large Language Models: Calibration Objectives and Search for Depth Pruning](https://openreview.net/forum?id=QuWWYol2nP)
+**Primary module:** `Quantization_and_Pruning/pruning/layer_depth/paper12_layer_redundancy/`
+**Implementation status:** `partial-reproduction`
+**Backbone:** `meta-llama/Llama-2-7b-hf` (paper used LLaMA3-8B, LLaMA3.1-8B, Qwen3-8B)
+**Hardware:** _(fill in your device — e.g. NVIDIA A100 40GB)_
+**Seed:** 42 | **Calibration samples:** 128 | **Pruning budget k:** 7
+
+### Paper-reported results (from Table 1 — LLaMA3-8B, TLM objective)
+
+> Source: paper Table 1. Units: accuracy in %, perplexity is dimensionless. Mark = paper-reported.
+
+| experiment_id | method | objective | backbone | k_pruned | hellaswag_acc | boolq_acc | avg_acc | margin_tlm | status |
+|---|---|---|---|---:|---:|---:|---:|---:|---|
+| paper_llama3_8b_baseline | none | none | LLaMA3-8B | 0 | 79.23 | 82.26 | 74.58 | -0.571 | paper-reported |
+| paper_llama3_8b_oneshot_tlm_k7 | one-shot | tlm | LLaMA3-8B | 7 | 59.23 | 62.72 | 57.99 | -0.312 | paper-reported |
+| paper_llama3_8b_greedy_tlm_k7 | greedy | tlm | LLaMA3-8B | 7 | 60.47 | 67.49 | 60.69 | -0.408 | paper-reported |
+| paper_llama3_8b_oneshot_tlm_k9 | one-shot | tlm | LLaMA3-8B | 9 | 46.63 | 63.18 | 52.51 | 0.007 | paper-reported |
+| paper_llama3_8b_greedy_tlm_k9 | greedy | tlm | LLaMA3-8B | 9 | 53.28 | 63.21 | 54.43 | -0.168 | paper-reported |
+
+### Local results (partial reproduction — LLaMA-2-7B, k=7)
+
+> Fill these in after running `python baseline_runner.py` and `python run_experiment.py`.
+> Device, latency, and memory should be filled from your actual run environment.
+
+| experiment_id | method | objective | backbone | k_pruned | perplexity_wikitext2 | hellaswag_acc | boolq_acc | peak_memory_mb | latency_ms | status |
+|---|---|---|---|---:|---:|---:|---:|---:|---:|---|
+| local_baseline | none | none | llama-2-7b | 0 | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ | pending |
+| local_oneshot_ppl_k7 | one-shot | perplexity | llama-2-7b | 7 | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ | pending |
+| local_oneshot_tlm_k7 | one-shot | tlm | llama-2-7b | 7 | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ | pending |
+| local_greedy_ppl_k7 | greedy | perplexity | llama-2-7b | 7 | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ | pending |
+| local_greedy_tlm_k7 | greedy | tlm | llama-2-7b | 7 | _TBD_ | _TBD_ | _TBD_ | _TBD_ | _TBD_ | pending |
+
+### Key observation to verify (main paper claim)
+
+After running experiments, check:
+1. `local_oneshot_ppl_k7` and `local_greedy_ppl_k7` → removed layer indices should be **similar** (objective dominates)
+2. `local_oneshot_ppl_k7` and `local_oneshot_tlm_k7` → removed layer indices should be **different** (objective matters more than algorithm)
+3. Spearman correlation between perplexity rank and accuracy rank should be near zero or negative

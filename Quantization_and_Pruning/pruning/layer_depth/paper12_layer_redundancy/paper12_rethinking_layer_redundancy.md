@@ -4,7 +4,7 @@
 - **Primary module:** `Quantization_and_Pruning/pruning/layer_depth/`
 - **Secondary modules:** none
 - **Owner / reviewer:** @satviksingh121
-- **Status:** implementing
+- **Status:** implementing → baseline-ready
 - **Upstream code / licence:** not found (anonymous ICML submission)
 - **Backbone IDs:** meta-llama/Llama-2-7b-hf
 - **Dataset IDs and split:** allenai/c4 (calibration), EleutherAI/wikitext (evaluation), HellaSwag eval split, BoolQ eval split
