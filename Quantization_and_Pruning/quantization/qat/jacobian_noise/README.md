@@ -3,12 +3,12 @@
 - **Paper / OpenReview:** https://openreview.net/forum?id=wxKn35RAhW · arXiv: https://arxiv.org/abs/2608.20988 (v1, Pandey, Chavan, Lele, Dayal, Gupta; ICML 2026 AdaptFM workshop)
 - **Primary module:** `Quantization_and_Pruning/` (quantization-aware fine-tuning, `quantization/qat/`)
 - **Secondary modules:** `Attention/` (the method modifies pre-softmax attention logits); `Performance_Metrics/` (result rows)
-- **Owner / reviewer:** <GitHub handles>
-- **Status:** `tested` (implementation + CPU tests). GPU results: not yet produced.
+- **Owner / reviewer:** @TakshayBansal
+- **Status:** `partial`. Implementation and CPU tests are complete; SigLIP-B/16-224 GPU results are reported below (2 seeds, Kaggle T4). The Qwen2.5 pipeline is implemented and CPU-tested but has no GPU results yet.
 - **Upstream code / licence:** **not found**. No code link on arXiv, OpenReview or the authors' pages (checked 2026-11-13). This is an independent re-implementation from the paper text.
 - **Backbone IDs:** `multimodal.siglip_base_p16_224`, `multimodal.siglip_base_p16_384`, `text.qwen2_5_0_5b.base` (optional `text.qwen2_5_1_5b.base`); tests use `test.tiny_qwen2.random`, `test.tiny_siglip.random`
 - **Dataset IDs and split:** `text.alpaca.train` (fine-tuning), `text.wikitext2_raw.test` (PPL), `text.wikitext2_raw.train` (GPTQ calibration), `vision.imagenet1k_256.train` (SigLIP fine-tuning + calibration, disjoint), `vision.imagenet1k_256.validation` (evaluation). See `Dataloaders/registry.yaml`.
-- **Hardware assumptions:** training needs one CUDA GPU with 16 GB (Kaggle T4/P100 tested by design, not yet run). Tests and smoke runs need only CPU.
+- **Hardware assumptions:** training needs one CUDA GPU with 16 GB (reported results: Kaggle Tesla T4). Tests and smoke runs need only CPU.
 
 ## Research summary
 
@@ -80,11 +80,39 @@ detach_jacobian_noise(model)              # restores the previous attention impl
 
 ## Results
 
-| Source | Quality | Latency | Throughput | Peak memory | Energy | Notes |
+### Local results: SigLIP-B/16-224, ImageNet zero-shot top-1 (%)
+
+Status `partial` / `approximate`. Mean ± std over 2 seeds; 5,000 seeded validation images, the same for every model. Weights: per-channel symmetric RTN; activations: per-token asymmetric RTN; quantization is simulated. Fine-tuning: 500 steps × 32 images, LR 5e-7, identical for every row except `noise.*`. Commit `0a24904`, Kaggle Tesla T4, torch 2.11 / transformers 4.57.6, bf16. Raw rows: [`reported/siglip224/results.csv`](../../../experiments/jacobian_noise/reported/siglip224/results.csv); tables: [`summary.md`](../../../experiments/jacobian_noise/reported/siglip224/summary.md).
+
+| Training | FP16 | W6A6 | W5A5 | W4A4 |
+|---|---:|---:|---:|---:|
+| Pretrained, no fine-tuning | 73.40 | 72.34 | 67.78 | 5.98 |
+| Fine-tune, no noise (**baseline**) | 72.28 ± 0.00 | 71.26 ± 0.00 | 65.40 ± 0.00 | 6.90 ± 0.00 |
+| + uniform noise, energy matched to α=0.5 | 72.21 ± 0.01 | 71.38 ± 0.06 | 65.95 ± 0.04 (+0.55) | 7.06 ± 0.28 |
+| + Jacobian noise, α=0.5 (paper default) | 72.19 ± 0.07 | 71.37 ± 0.35 | 66.24 ± 0.25 (+0.84) | 6.73 ± 0.04 |
+| + Jacobian noise, α=4 | 72.52 ± 0.03 | 71.18 ± 0.14 | 66.50 ± 0.59 (+1.10) | 7.33 ± 0.61 |
+
+"FP16" means unquantized; on the T4 the model ran in bf16 (see the `dtype` column). Values in parentheses are Δ vs the baseline.
+
+**Reading of the results:**
+- **W5A5** is the only informative low-bit column. There, the ranking is baseline < uniform noise < Jacobian α=0.5 < Jacobian α=4, which is the direction the paper predicts. The gains are small (+0.55 to +1.10 points).
+- **Jacobian vs uniform noise at the same energy** (α=0.5) differs by +0.29 points, about the seed spread. At this scale we cannot attribute the gain to the Jacobian shaping. The α=4 run has no energy-matched uniform control, so its +1.10 may come from noise strength alone.
+- **Noise does not hurt unquantized accuracy** (FP16 within ±0.3 points).
+- **The pretrained model beats every fine-tuned model** at W5A5. Here, noise reduces the accuracy lost to fine-tuning rather than improving on the original checkpoint.
+- **W4A4 with RTN collapses** to ~7% for every model, so it cannot test the paper's headline W4A4 claim (which used RepQ-ViT/ERQ).
+- **Attention sharpness is unchanged:** the mean ‖J‖² over layers is 0.0615–0.0617 for every model ([`jacobian_diagnostics.jsonl`](../../../experiments/jacobian_noise/reported/siglip224/jacobian_diagnostics.jsonl)). σ is 0.09–0.15 across layers at α=0.5 (≈1.0 at α=4), so Jacobian-shaped noise is close to uniform.
+- **Seed caveat:** the seed changes only the noise RNG. Data order (`data.seed=0`) and the pretrained start are shared, so the two no-noise runs are identical (std 0.00) and the ± values understate run-to-run variance.
+- **Learning rate:** in a pilot, LR 1e-5 cut FP16 accuracy from 72.9 to 56.5 after 200 steps; LR 5e-7 (the paper's value) kept it at 72.1. The configs use 5e-7.
+
+### Resources
+
+| Source | Quality | Latency (median, batch 32) | Throughput | Peak memory | Energy | Notes |
 |---|---:|---:|---:|---:|---:|---|
-| Paper-reported | see table above | n/a | n/a | n/a | n/a | 8×A100, 3B LLMs, SigLIP-384 |
-| Local baseline | pending | | | | not_measured | to be filled from `results.csv` |
-| Local method | pending | | | | not_measured | |
+| Paper-reported | see "Expected behaviour" | n/a | n/a | n/a | n/a | 8×A100, 3B LLMs, SigLIP-384 |
+| Local, unquantized | table above | 467–529 ms | not_measured | 825 MB | not_measured | T4, bf16, image tower only |
+| Local, simulated W/A quant | table above | 612–685 ms | not_measured | 1236 MB | not_measured | quant-dequant overhead; not real low-bit speed |
+
+Noise is training-only, so a noise-trained checkpoint has exactly the baseline's inference cost. Latency is measured on a separate batch of 32 random images (`latency.batch_size`); peak memory is over the evaluation pass (batch 64, the `batch_size` column of `results.csv`). Training cost: ~14 min per 500-step run plus ~11 min of evaluation per checkpoint on one T4.
 
 CPU sanity check of the evaluation pipeline (pretrained weights, no fine-tuning, *tiny subsets*, status `cpu-check`, not a result):
 
@@ -95,7 +123,7 @@ CPU sanity check of the evaluation pipeline (pretrained weights, no fine-tuning,
 
 ## Differences and limitations
 
-- **Scale:** our models are Qwen2.5-0.5B and SigLIP-B/16-224 (optionally -384) instead of 3B LLMs, and training is ~1000–1500 steps on one 16 GB GPU instead of 5–10 epochs on 8×A100. Results are labelled `approximate`.
+- **Scale:** reported results use SigLIP-B/16-224 (the paper used -384) with 500 steps on one 16 GB GPU, instead of 5–10 epochs on 8×A100. The Qwen2.5-0.5B path has no GPU results. Results are labelled `approximate`.
 - **PTQ methods:** RTN and GPTQ weights + per-token RTN activations (+ optional Q/K) are implemented. AWQ, SpinQuant, RepQ-ViT and ERQ are **not** implemented, so we cannot compare against the paper's exact PTQ rows.
 - **Simulated quantization:** quant-dequant in floating point. There are no INT4 kernels, so measured latency and memory are *not* those of real low-bit inference.
 - **Choices where the paper is silent:**
@@ -106,7 +134,7 @@ CPU sanity check of the evaluation pipeline (pretrained weights, no fine-tuning,
   - All parameters are trained (LoRA optional for LMs).
   - LM loss is the response-only causal-LM loss.
   - The SigLIP objective is a zero-shot-head cross-entropy with a frozen text tower (the paper does not state it).
-- **Hyperparameters changed for budget:** LR 1e-5 instead of 5e-7, LR warm-up 100 instead of 500 steps, sequence length 512 instead of 2048. They are identical across all noise modes.
+- **Hyperparameters changed for budget:** SigLIP uses the paper's LR 5e-7 but LR warm-up 100 instead of 500 steps. The (untested on GPU) Qwen config uses LR 1e-5 and sequence length 512 instead of 2048. All settings are identical across noise modes.
 - **ImageNet:** a public 256-px parquet copy is streamed. Absolute accuracies can differ slightly from full-resolution ImageNet; baseline and method share the pipeline.
 - **Gradient checkpointing** replays the same noise, because torch restores the RNG state (tested). A custom `noise.seed` generator is therefore disallowed with checkpointing.
 
@@ -116,5 +144,5 @@ CPU sanity check of the evaluation pipeline (pretrained weights, no fine-tuning,
 - [x] Base model and dataset revisions pinned (`Backbones/registry.yaml`, `Dataloaders/registry.yaml`)
 - [x] Baseline runs on the same setup (`mode: none`, same configs and seeds)
 - [x] Tests and seed handling added
-- [ ] Resource and quality metrics reported (pending GPU runs)
+- [x] Resource and quality metrics reported (SigLIP-B/16-224, 2 seeds; LLM pending)
 - [x] Licence/data terms checked (Alpaca CC-BY-NC-4.0; ImageNet research terms; models Apache-2.0)

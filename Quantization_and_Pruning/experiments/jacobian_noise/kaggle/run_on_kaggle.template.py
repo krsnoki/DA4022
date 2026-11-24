@@ -24,6 +24,8 @@ def sh(cmd, **kw):
 os.makedirs("/kaggle/tmp", exist_ok=True)
 os.environ["HF_HOME"] = "/kaggle/tmp/hf"
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+os.environ.setdefault("USE_TF", "0")  # keep transformers from importing Kaggle's TensorFlow (noisy CUDA warnings)
+os.environ.setdefault("PYTHONUNBUFFERED", "1")
 
 url = REPO_URL
 try:  # optional: private fork -> add a Kaggle secret named GITHUB_TOKEN

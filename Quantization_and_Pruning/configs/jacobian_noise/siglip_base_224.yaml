@@ -10,16 +10,16 @@ backbone:
 
 data:
   dataset: vision.imagenet1k_256
-  num_train: 48000         # streamed subset of ImageNet train
+  num_train: 16000         # streamed subset of ImageNet train (= 500 steps x 32, one pass)
   num_calib: 256           # first 256 images of the stream, reserved for PTQ calibration
   seed: 0
   prompt: "a photo of a {}."
 
 train:
-  max_steps: 1500          # ~1 epoch over num_train at batch 32
+  max_steps: 500           # reported setting (Kaggle T4, ~14 min per run)
   batch_size: 32
   grad_accum: 1
-  lr: 1.0e-5
+  lr: 5.0e-7               # the paper's LR; 1e-5 cost 16 points of FP16 zero-shot accuracy in our pilot
   weight_decay: 0.01
   warmup_steps: 100
   grad_clip: 1.0

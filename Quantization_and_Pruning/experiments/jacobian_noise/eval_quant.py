@@ -170,6 +170,7 @@ def main(argv=None):
     set_seed(int(ecfg.get("seed", 0)))
     device = pick_device(ecfg.get("device", "auto"))
     dtype = eval_dtype(cfg["eval"].get("dtype", "auto"), device)
+    print(f"[eval_quant] task={task} device={device} ({env_metadata(device)['device']}) dtype={dtype}")
     out_dir = ecfg["output_dir"]
     os.makedirs(out_dir, exist_ok=True)
 

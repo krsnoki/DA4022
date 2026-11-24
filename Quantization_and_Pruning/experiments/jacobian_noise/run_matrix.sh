@@ -15,6 +15,7 @@
 #   EVAL_PRETRAINED  1 also evaluates the original backbone                [1]
 #   EXTRA_TRAIN / EXTRA_EVAL  extra "--set" overrides, e.g. EXTRA_TRAIN="train.max_steps=200"
 set -euo pipefail
+export USE_TF=${USE_TF:-0}   # transformers must not import TensorFlow (Kaggle images ship it)
 cd "$(dirname "$0")/../../.."
 
 MODEL=${MODEL:-siglip224}

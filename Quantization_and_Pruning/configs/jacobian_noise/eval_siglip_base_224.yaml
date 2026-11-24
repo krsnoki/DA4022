@@ -15,7 +15,7 @@ data:
   prompt: "a photo of a {}."
   image_size: 224
 quant:
-  tags: [FP16, W8A8, W6A6, W5A5, W4A4, W4A4QK4]   # the paper's SigLIP bit-widths (+ Q/K quant)
+  tags: [FP16, W6A6, W5A5, W4A4]   # reported setting; W8A8 / W4A4QK4 are also supported
   weight_method: rtn
   calib_samples: 256       # GPTQ only: train-stream images [0, 256), disjoint from fine-tuning images
   percdamp: 0.01
@@ -27,7 +27,7 @@ eval:
   dtype: auto
   jacobian_diagnostics: true
   siglip:
-    num_eval: 10000        # seeded subset of the 50k validation images
+    num_eval: 5000         # seeded subset of the 50k validation images (same subset for every model)
     batch_size: 64
 latency:
   enabled: true

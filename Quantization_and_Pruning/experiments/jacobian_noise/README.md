@@ -90,13 +90,34 @@ Notes:
 - The Kaggle GPU type (T4 vs P100) is chosen in the kernel's settings page. Record it; it appears in every results row anyway.
 - Never run the noise and baseline arms of a comparison with different configs. Only `noise.*` and `experiment.seed` should differ.
 
-### Rough budget (estimates, not measured yet)
-| Job | Estimate on a T4 |
+### Measured cost (Kaggle Tesla T4)
+| Job | Measured |
 |---|---|
-| SigLIP-224 fine-tune, 1500 steps × 32 images (streamed) | ~0.5–1 h |
-| SigLIP-224 eval, 6 bit settings × 10k val images | ~0.5 h |
-| Qwen2.5-0.5B fine-tune, 1000 steps × 8 sequences | ~0.5–1 h |
-| Qwen2.5-0.5B eval, 6 settings, WikiText-2 only | ~0.3 h |
-| + lm-eval 7 tasks × 500 examples per setting | +1–2 h |
+| SigLIP-224 fine-tune, 500 steps × 32 images | ~14 min (≈1.6 s/step) |
+| SigLIP-224 eval, 4 bit settings × 5k val images | ~11 min per checkpoint |
+| Reported job below (8 fine-tunes + 9 evaluations, 2 GPUs) | ~2 h wall time |
 
-Replace these with measured times once the first jobs finish.
+Qwen2.5-0.5B has not been run on GPU yet; expect roughly 0.5–1 h per fine-tune and 0.3 h per WikiText-2 evaluation.
+
+Newer PyTorch reports bf16 as supported on the T4, so training and evaluation run in bf16 there (recorded in the `dtype` column). The "FP16" tag means "not quantized".
+
+## 4. Reproducing the reported SigLIP results
+
+The reported tables in [`reported/siglip224/`](reported/siglip224/) come from one Kaggle notebook with 2× T4: seed 0 on GPU 0 and seed 1 on GPU 1, using the default `siglip_base_224.yaml` / `eval_siglip_base_224.yaml` settings (LR 5e-7, 500 steps, 16k train images, 5k val images, FP16/W6A6/W5A5/W4A4).
+
+```bash
+R=Quantization_and_Pruning/experiments/jacobian_noise/run_matrix.sh
+run_seed () {  # $1 = gpu, $2 = seed, $3 = also evaluate the pretrained model
+  CUDA_VISIBLE_DEVICES=$1 MODEL=siglip224 SEEDS=$2 MODES="none jacobian uniform_matched" \
+    EVAL_PRETRAINED=$3 OUT=outputs/out_s$2 bash $R
+  CUDA_VISIBLE_DEVICES=$1 MODEL=siglip224 SEEDS=$2 MODES="jacobian" \
+    EVAL_PRETRAINED=0 OUT=outputs/out_s$2 EXTRA_TRAIN="noise.alpha=4" bash $R
+}
+run_seed 0 0 1 > s0.log 2>&1 &
+run_seed 1 1 0 > s1.log 2>&1 &
+wait
+cp outputs/out_s0/eval/results.csv merged.csv && tail -n +2 outputs/out_s1/eval/results.csv >> merged.csv
+python Quantization_and_Pruning/experiments/jacobian_noise/summarize.py --results merged.csv --out summary
+```
+
+The reported run passed the same values as `--set` overrides on commit `0a24904`, before they became the config defaults. Note that `experiment.seed` changes only the noise RNG; add `data.seed=<seed>` to `EXTRA_TRAIN` to vary the data order as well.
