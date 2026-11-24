@@ -27,14 +27,14 @@ export HF_HUB_ENABLE_HF_TRANSFER=0 TOKENIZERS_PARALLELISM=false PYTHONUNBUFFERED
 PY="${PYTHON:-python3}"
 
 echo "=== [1/6] installing dependencies ==="
-$PY -m pip install -q --upgrade pip
+$PY -m pip install -q --upgrade pip || echo "pip upgrade skipped"
 $PY -m pip install -q -r "$HERE/requirements-gpu.txt"
 if [ "$BACKEND" != "hf" ] && [ -z "${SKIP_VLLM_INSTALL:-}" ]; then
   if ! $PY -c "import vllm" 2>/dev/null; then
     $PY -m pip install -q vllm || { echo "vLLM install failed -> using transformers backend"; BACKEND=hf; }
   fi
 fi
-$PY -c "import torch; assert torch.cuda.is_available(), 'CUDA not available'; print('torch', torch.__version__, torch.cuda.get_device_name(0))"
+if [ -z "${ALLOW_CPU:-}" ]; then $PY -c "import torch; assert torch.cuda.is_available(), 'CUDA not available'; print('torch', torch.__version__, torch.cuda.get_device_name(0))"; fi
 
 MODELS=$($PY -c "import yaml,sys; print(' '.join(m['id'] for m in yaml.safe_load(open('$CONFIG'))['models']))")
 SMALLEST=$(echo "$MODELS" | awk '{print $1}')

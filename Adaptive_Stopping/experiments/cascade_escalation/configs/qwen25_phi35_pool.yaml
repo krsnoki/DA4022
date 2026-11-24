@@ -50,7 +50,7 @@ sweep:
            correctness_tokenprob, benefit_tokenprob, random]
 
 live:                      # real bs=1 cascade run for latency / peak memory
-  datasets: {mmlu: 200, triviaqa: 200, math_hard: 40}
+  datasets: {mmlu: 200, triviaqa: 200, math_hard: 20}
   budget_fractions: [0.25, 0.5, 0.75]
   score: mean_negentropy
   warmup: 3
