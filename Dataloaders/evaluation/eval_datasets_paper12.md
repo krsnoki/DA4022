@@ -1,7 +1,7 @@
 # Dataloader — Evaluation Datasets (Paper #12)
 
 > Registered for: Paper #12 — Rethinking Layer Redundancy
-> Registered by: <!-- YOUR NAME HERE e.g. John Doe (@johndoe) -->
+> Registered by: Raghul Parthasarathy (RaghulParthasarathy) <!-- YOUR NAME HERE e.g. John Doe (@johndoe) -->
 
 ## Datasets Used for Evaluation
 
