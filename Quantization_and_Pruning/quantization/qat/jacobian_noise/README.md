@@ -10,6 +10,18 @@
 - **Dataset IDs and split:** `text.alpaca.train` (fine-tuning), `text.wikitext2_raw.test` (PPL), `text.wikitext2_raw.train` (GPTQ calibration), `vision.imagenet1k_256.train` (SigLIP fine-tuning + calibration, disjoint), `vision.imagenet1k_256.validation` (evaluation). See `Dataloaders/registry.yaml`.
 - **Hardware assumptions:** training needs one CUDA GPU with 16 GB (reported results: Kaggle Tesla T4). Tests and smoke runs need only CPU.
 
+## Contributors
+
+Developed as a DA4022 course project by:
+
+| Name | Contribution |
+|---|---|
+| Takshay Bansal | Led the implementation of the noise controller and the Hugging Face attention backend. Ran the Kaggle GPU experiments, and set up the GitHub fork and pull request. |
+| Ayanna Mondal | Analysed the paper and derived the closed-form softmax-Jacobian norm and noise schedule used in the implementation. Wrote the paper card's research summary. |
+| Shirshendu Sengupta | Built the simulated quantization tooling (fake-quant W/A/QK and GPTQ) and the evaluation script for the bit-width sweep. |
+| Swastik Pramanik | Wrote the training scripts for SigLIP and Qwen2.5 and the dataset/backbone registry entries, and tuned the learning rate in the pilot runs. |
+| Youkta Mandavkar | Wrote the CPU test suite, analysed the results (including the uniform-noise ablation), and prepared the documentation and result tables. |
+
 ## Research summary
 
 ### Problem
