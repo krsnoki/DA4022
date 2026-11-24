@@ -64,7 +64,10 @@ class HFGenerator:
         self.tokenizer = tokenizer or AutoTokenizer.from_pretrained(model_id, revision=revision)
         if model is None:
             torch_dtype = getattr(torch, dtype) if self.device != "cpu" else torch.float32
-            model = AutoModelForCausalLM.from_pretrained(model_id, dtype=torch_dtype, revision=revision)
+            try:
+                model = AutoModelForCausalLM.from_pretrained(model_id, dtype=torch_dtype, revision=revision)
+            except TypeError:  # older transformers
+                model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch_dtype, revision=revision)
         self.model = model.to(self.device).eval()
         self.eos = eos_ids(self.tokenizer, getattr(self.model, "generation_config", None))
         pad = self.tokenizer.pad_token_id
@@ -216,3 +219,40 @@ class VLLMGenerator:
         for r in res:
             r["gpu_s"] = dt * (r["n_out"] + 1) / w
         return res
+
+
+def build_tiny_model(seed: int = 0):
+    """A tiny random Qwen2 model + character tokenizer built fully offline.
+
+    Used only by CPU smoke tests (model id ``tiny-random``); outputs are
+    meaningless but exercise the full generation/scoring/grading path.
+    """
+    import torch
+    from tokenizers import Tokenizer, decoders, models, pre_tokenizers
+    from transformers import PreTrainedTokenizerFast, Qwen2Config, Qwen2ForCausalLM
+
+    chars = list("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,?:!\n{}\\$()+-=*/'\"_|")
+    vocab = {"<pad>": 0, "<|im_end|>": 1, "<|im_start|>": 2, "<unk>": 3}
+    for c in chars:
+        vocab.setdefault(c, len(vocab))
+    tk = Tokenizer(models.WordLevel(vocab, unk_token="<unk>"))
+    tk.pre_tokenizer = pre_tokenizers.Split("", "isolated")
+    tk.decoder = decoders.Fuse()
+    tok = PreTrainedTokenizerFast(tokenizer_object=tk, pad_token="<pad>", eos_token="<|im_end|>",
+                                  unk_token="<unk>", additional_special_tokens=["<|im_start|>"])
+    tok.chat_template = ("{% for m in messages %}<|im_start|>{{ m['content'] }}<|im_end|>{% endfor %}"
+                         "{% if add_generation_prompt %}<|im_start|>{% endif %}")
+    torch.manual_seed(seed)
+    cfg = Qwen2Config(vocab_size=len(vocab), hidden_size=32, intermediate_size=64, num_hidden_layers=2,
+                      num_attention_heads=4, num_key_value_heads=2, max_position_embeddings=2048,
+                      eos_token_id=1, pad_token_id=0)
+    return Qwen2ForCausalLM(cfg), tok
+
+
+def load_hf_generator(model_id: str, dtype: str = "bfloat16", top_k: int = 15, revision=None, device=None):
+    """HFGenerator factory that also understands ``tiny-random[-<seed>]`` ids."""
+    if model_id.startswith("tiny-random"):
+        seed = int(model_id.split("-")[-1]) if model_id.count("-") >= 2 else 0
+        model, tok = build_tiny_model(seed)
+        return HFGenerator(model_id, model=model, tokenizer=tok, device=device or "cpu", top_k=top_k)
+    return HFGenerator(model_id, dtype=dtype, top_k=top_k, revision=revision, device=device)

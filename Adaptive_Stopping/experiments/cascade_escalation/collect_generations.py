@@ -34,6 +34,8 @@ from Dataloaders.evaluation import cascade_benchmarks as bench  # noqa: E402
 def hub_metadata(model_id: str) -> dict:
     """Resolved commit sha and safetensors parameter count from the Hub (best effort)."""
     out = {}
+    if model_id.startswith("tiny-random"):
+        return {"hub_error": "offline test model"}
     try:
         from huggingface_hub import HfApi, get_safetensors_metadata
 
@@ -45,7 +47,7 @@ def hub_metadata(model_id: str) -> dict:
 
 
 def make_generator(model_id: str, backend: str, cfg: dict, revision=None):
-    if backend in ("auto", "vllm"):
+    if backend in ("auto", "vllm") and not model_id.startswith("tiny-random"):
         try:
             from generation import VLLMGenerator
 
@@ -55,20 +57,20 @@ def make_generator(model_id: str, backend: str, cfg: dict, revision=None):
             if backend == "vllm":
                 raise
             print(f"[collect] vLLM unavailable ({e!r}); falling back to transformers", flush=True)
-    from generation import HFGenerator
+    from generation import load_hf_generator
 
-    return HFGenerator(model_id, dtype=cfg.get("dtype", "bfloat16"), top_k=cfg.get("top_k_logprobs", 15),
-                       revision=revision)
+    return load_hf_generator(model_id, dtype=cfg.get("dtype", "bfloat16"), top_k=cfg.get("top_k_logprobs", 15),
+                             revision=revision)
 
 
 def default_batch_size(n_params: int, max_new_tokens: int) -> int:
+    """HF-backend batch size (vLLM schedules its own batches). Qwen2.5/Phi-3.5 KV
+    caches are small, so these fit a 24 GB GPU even at 1024 new tokens."""
     if n_params < 2e9:
-        bs = 64
-    elif n_params < 5e9:
-        bs = 32
-    else:
-        bs = 16
-    return bs if max_new_tokens <= 256 else max(4, bs // 2)
+        return 96
+    if n_params < 5e9:
+        return 64
+    return 32
 
 
 def main(argv=None) -> int:
