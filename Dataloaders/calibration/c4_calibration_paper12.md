@@ -1,7 +1,7 @@
 # Dataloader — C4 Calibration Split (Paper #12)
 
 > Registered for: Paper #12 — Rethinking Layer Redundancy
-> Registered by: <!-- YOUR NAME HERE e.g. John Doe (@johndoe) -->
+> Registered by: Jash Vaidya
 
 ## Dataset Card
 
