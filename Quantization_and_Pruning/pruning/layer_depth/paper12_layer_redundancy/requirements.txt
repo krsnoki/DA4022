@@ -2,7 +2,7 @@
 # Install ONLY what you need for this module.
 # Do NOT install everything if you are only running smoke tests.
 #
-# Registered by: <!-- YOUR NAME HERE e.g. John Doe (@johndoe) -->
+# Registered by: Divyam Kulshrestha
 #
 # Install with:
 #   pip install -r requirements.txt
