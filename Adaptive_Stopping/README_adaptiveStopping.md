@@ -152,7 +152,7 @@ Live batch-size-1 run (RTX 4090):
 
 ### Result-row schema
 
-One row per (benchmark, score, policy class, split seed, budget), following the [`Performance_Metrics` report format](../Performance_Metrics/README_metrics.md#required-report-format). The first 24 columns are the shared header; the rest are cascade-specific. An empty header-only template is in [`Performance_Metrics/results/cascade_escalation_schema.csv`](../Performance_Metrics/results/cascade_escalation_schema.csv).
+Summary rows in `Performance_Metrics/results/cascade_escalation.csv` are area-averaged over the 500-budget grid and the 50 splits, one per (benchmark, cost_unit, score, policy class), with `budget_index` = `all (area)`. Measured live batch-size-1 rows are added alongside them. Per-budget detail lives in `results/cascade/sweep/` (`summary.csv`, `depth_gains.csv`, `theory.csv`, `models.csv`, `curves.npz`, `plots/*.png`). Columns follow the [`Performance_Metrics` report format](../Performance_Metrics/README_metrics.md#required-report-format). The first 24 columns are the shared header; the rest are cascade-specific. An empty header-only template is in [`Performance_Metrics/results/cascade_escalation_schema.csv`](../Performance_Metrics/results/cascade_escalation_schema.csv).
 
 ```text
 experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,split,seed,device,framework_version,dtype,batch_size,input_length,output_length,quality_metric,quality_value,latency_median_ms,latency_p95_ms,throughput,peak_memory_mb,energy_j,status,notes,policy_class,score_name,model_sequence,thresholds,budget_index,budget,cost_unit,mean_cost,escalation_rate,mean_models_called,effective_depth,n_cal,n_test,threshold_grid
@@ -165,7 +165,7 @@ experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,sp
 | `backbone_id` | Models in the selected policy joined with `>`, cheapest first (e.g. `llm.qwen2.5-0.5b-instruct>llm.qwen2.5-7b-instruct`) |
 | `backbone_revision` | Matching HF revisions joined with `>` |
 | `dataset_id` / `split` | Benchmark ID / `test` (the held-out half; selection always uses `cal`) |
-| `seed` | Calibration/test split seed (42 to 91) |
+| `seed` | Calibration/test split seed (42 to 91) for per-split rows; empty for area-averaged rows |
 | `batch_size` | Generation batch size for offline rows; `1` for live rows |
 | `quality_metric` / `quality_value` | `accuracy` / test accuracy in [0, 1] |
 | `latency_*`, `throughput`, `peak_memory_mb` | Filled for live rows only; empty with a `notes` entry for offline rows |
@@ -175,7 +175,7 @@ experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,sp
 | `score_name` | One of the five confidence scores; empty for baselines |
 | `model_sequence` | Model slugs of the frozen policy, `>`-joined |
 | `thresholds` | Thresholds per non-terminal stage, `;`-joined (`-inf` = never escalate, `inf` = always escalate) |
-| `budget_index` / `budget` | Index into the 500-budget grid / the budget value in `cost_unit` |
+| `budget_index` / `budget` | Index into the 500-budget grid and the budget in `cost_unit`, or `all (area)` with an empty budget for area-averaged rows |
 | `cost_unit` | `flop_proxy` or `gpu_seconds` |
 | `mean_cost` | Test mean cost per query in `cost_unit` |
 | `escalation_rate` | Fraction of test queries that left the first stage |

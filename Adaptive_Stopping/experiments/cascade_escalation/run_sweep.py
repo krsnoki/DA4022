@@ -334,7 +334,7 @@ def main(argv=None) -> int:
                     "method": "cascade_escalation" if row["policy_class"].startswith("S") else row["policy_class"],
                     "commit": git_commit(), "backbone_id": "+".join(table.models), "backbone_revision": "see generations/meta",
                     "dataset_id": f"{ds} (upstream prompts @3872d8a, n={table.n}, seed={cfg.get('seed')})",
-                    "split": f"stratified 50/50 cal/test x{len(res)}", "seed": f"{sw.get('split_seed0', 42)}..{sw.get('split_seed0', 42) + len(res) - 1}",
+                    "split": f"stratified 50/50 cal/test x{len(res)} (seeds {sw.get('split_seed0', 42)}..{sw.get('split_seed0', 42) + len(res) - 1})", "seed": "",
                     "device": "offline analysis (generations: see live/meta)", "framework_version": "",
                     "dtype": cfg.get("dtype"), "batch_size": "", "input_length": "", "output_length": "",
                     "quality_metric": "test accuracy, area-averaged over normalised budget",
