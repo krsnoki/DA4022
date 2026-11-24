@@ -4,7 +4,7 @@
 - **Primary module:** `Quantization_and_Pruning/` (quantization-aware fine-tuning, `quantization/qat/`)
 - **Secondary modules:** `Attention/` (the method modifies pre-softmax attention logits); `Performance_Metrics/` (result rows)
 - **Owner / reviewer:** @TakshayBansal
-- **Status:** `partial`. Implementation and CPU tests are complete; SigLIP-B/16-224 GPU results are reported below (2 seeds, Kaggle T4). The Qwen2.5 pipeline is implemented and CPU-tested but has no GPU results yet.
+- **Status:** `partial-reproduction` (results labelled `partial` / `approximate`). Implementation and CPU tests are complete; SigLIP-B/16-224 GPU results are reported below (2 seeds, Kaggle T4). The Qwen2.5 pipeline is implemented and CPU-tested but has no GPU results yet.
 - **Upstream code / licence:** **not found**. No code link on arXiv, OpenReview or the authors' pages (checked 2026-11-13). This is an independent re-implementation from the paper text.
 - **Backbone IDs:** `multimodal.siglip_base_p16_224`, `multimodal.siglip_base_p16_384`, `text.qwen2_5_0_5b.base` (optional `text.qwen2_5_1_5b.base`); tests use `test.tiny_qwen2.random`, `test.tiny_siglip.random`
 - **Dataset IDs and split:** `text.alpaca.train` (fine-tuning), `text.wikitext2_raw.test` (PPL), `text.wikitext2_raw.train` (GPTQ calibration), `vision.imagenet1k_256.train` (SigLIP fine-tuning + calibration, disjoint), `vision.imagenet1k_256.validation` (evaluation). See `Dataloaders/registry.yaml`.
@@ -67,7 +67,9 @@ The LLM results in the paper are mixed. The paper also contains no ablation agai
 - **Input contract:** any Hugging Face model whose attention modules have `q_proj`/`k_proj` and dispatch through `ALL_ATTENTION_FUNCTIONS`. Tested on Qwen2 (causal, GQA, padding) and SigLIP (vision and text towers) with transformers 4.57.6. `include=` restricts noise to a sub-model, e.g. `"vision_model"`.
 - **Output contract:** in `eval()` mode, or with `mode: none`, outputs equal eager attention exactly (tested). In `train()` mode, noise is added per query row. The attention-probability output is the noisy softmax.
 - **Configuration:** `Quantization_and_Pruning/configs/jacobian_noise/*.yaml`. The `noise:` block maps 1:1 to `JacobianNoiseConfig`.
-- **Reproduction command:** see `Quantization_and_Pruning/experiments/jacobian_noise/README.md`.
+- **Baseline:** the same fine-tuning run with `noise.mode: none` (same backbone, data, seed, resolution, batch size and evaluation settings; only `noise.*` differs), plus the unmodified pretrained checkpoint (`EVAL_PRETRAINED=1`).
+- **Reproduction command** (one seed, all modes, train + eval + summary; the reported table runs it for seeds 0 and 1 and adds `noise.alpha=4`, see [experiments README §4](../../../experiments/jacobian_noise/README.md#4-reproducing-the-reported-siglip-results)):
+  `MODEL=siglip224 SEEDS=0 MODES="none jacobian uniform_matched" bash Quantization_and_Pruning/experiments/jacobian_noise/run_matrix.sh`
 - **Tests:** `python -m pytest Quantization_and_Pruning/tests -q` (CPU, ~15 s).
 
 ```python
@@ -94,7 +96,7 @@ detach_jacobian_noise(model)              # restores the previous attention impl
 
 ### Local results: SigLIP-B/16-224, ImageNet zero-shot top-1 (%)
 
-Status `partial` / `approximate`. Mean ± std over 2 seeds; 5,000 seeded validation images, the same for every model. Weights: per-channel symmetric RTN; activations: per-token asymmetric RTN; quantization is simulated. Fine-tuning: 500 steps × 32 images, LR 5e-7, identical for every row except `noise.*`. Commit `0a24904`, Kaggle Tesla T4, torch 2.11 / transformers 4.57.6, bf16. Raw rows: [`reported/siglip224/results.csv`](../../../experiments/jacobian_noise/reported/siglip224/results.csv); tables: [`summary.md`](../../../experiments/jacobian_noise/reported/siglip224/summary.md).
+Status `partial` / `approximate`. Mean ± std over 2 seeds; 5,000 seeded validation images, the same for every model. Weights: per-channel symmetric RTN; activations: per-token asymmetric RTN; quantization is simulated. Fine-tuning: 500 steps × 32 images, LR 5e-7, identical for every row except `noise.*`. Commit `0a24904`, Kaggle Tesla T4, torch 2.11 / transformers 4.57.6, bf16. Per-run resolved configs, environment, σ history and training logs: [`reported/siglip224/runs/`](../../../experiments/jacobian_noise/reported/siglip224/runs/). Raw rows: [`reported/siglip224/results.csv`](../../../experiments/jacobian_noise/reported/siglip224/results.csv); tables: [`summary.md`](../../../experiments/jacobian_noise/reported/siglip224/summary.md).
 
 | Training | FP16 | W6A6 | W5A5 | W4A4 |
 |---|---:|---:|---:|---:|
@@ -121,10 +123,10 @@ Status `partial` / `approximate`. Mean ± std over 2 seeds; 5,000 seeded validat
 | Source | Quality | Latency (median, batch 32) | Throughput | Peak memory | Energy | Notes |
 |---|---:|---:|---:|---:|---:|---|
 | Paper-reported | see "Expected behaviour" | n/a | n/a | n/a | n/a | 8×A100, 3B LLMs, SigLIP-384 |
-| Local, unquantized | table above | 467–529 ms | not_measured | 825 MB | not_measured | T4, bf16, image tower only |
-| Local, simulated W/A quant | table above | 612–685 ms | not_measured | 1236 MB | not_measured | quant-dequant overhead; not real low-bit speed |
+| Local, unquantized | table above | 467–529 ms | 60–68 img/s (derived) | 825 MB | not_measured | T4, bf16, image tower only |
+| Local, simulated W/A quant | table above | 612–685 ms | 47–52 img/s (derived) | 1236 MB | not_measured | quant-dequant overhead; not real low-bit speed |
 
-Noise is training-only, so a noise-trained checkpoint has exactly the baseline's inference cost. Latency is measured on a separate batch of 32 random images (`latency.batch_size`); peak memory is over the evaluation pass (batch 64, the `batch_size` column of `results.csv`). Training cost: ~14 min per 500-step run plus ~11 min of evaluation per checkpoint on one T4.
+Noise is training-only, so a noise-trained checkpoint has exactly the baseline's inference cost. Throughput is derived from the measured latency (32 images ÷ median latency), not measured separately. Energy was not measured (no power sensor access on Kaggle). Latency is measured on a separate batch of 32 random images (`latency.batch_size`); peak memory is over the evaluation pass (batch 64, the `batch_size` column of `results.csv`). Training cost: ~14 min per 500-step run plus ~11 min of evaluation per checkpoint on one T4.
 
 CPU sanity check of the evaluation pipeline (pretrained weights, no fine-tuning, *tiny subsets*, status `cpu-check`, not a result):
 
@@ -149,6 +151,21 @@ CPU sanity check of the evaluation pipeline (pretrained weights, no fine-tuning,
 - **Hyperparameters changed for budget:** SigLIP uses the paper's LR 5e-7 but LR warm-up 100 instead of 500 steps. The (untested on GPU) Qwen config uses LR 1e-5 and sequence length 512 instead of 2048. All settings are identical across noise modes.
 - **ImageNet:** a public 256-px parquet copy is streamed. Absolute accuracies can differ slightly from full-resolution ImageNet; baseline and method share the pipeline.
 - **Gradient checkpointing** replays the same noise, because torch restores the RNG state (tested). A custom `noise.seed` generator is therefore disallowed with checkpointing.
+
+## Assets, licences and downloads
+
+Nothing is committed except code, configs and small result files (about 200 KB in `experiments/jacobian_noise/reported/`). All assets are downloaded automatically from the Hugging Face Hub on first use, at the commit revisions pinned in `Backbones/registry.yaml` (`revision`) and `Dataloaders/registry.yaml` (`version`). A pinned commit hash identifies the exact file contents, so it serves as the checksum.
+
+| Asset | Hub ID @ revision | Licence / terms |
+|---|---|---|
+| SigLIP-B/16-224 | `google/siglip-base-patch16-224` @ `7fd15f06…` | Apache-2.0 |
+| SigLIP-B/16-384 | `google/siglip-base-patch16-384` @ `41aec1c8…` | Apache-2.0 |
+| Qwen2.5-0.5B / 1.5B | `Qwen/Qwen2.5-0.5B` @ `060db649…`, `Qwen/Qwen2.5-1.5B` @ `8faed761…` | Apache-2.0 |
+| ImageNet-1k (256 px) | `benjamin-paine/imagenet-1k-256x256` @ `1bd04004…` | ImageNet terms: non-commercial research only |
+| Alpaca | `tatsu-lab/alpaca` @ `dce01c9b…` | CC-BY-NC-4.0 |
+| WikiText-2 | `Salesforce/wikitext` (wikitext-2-raw-v1) @ `b08601e0…` | CC-BY-SA-3.0 / GFDL |
+
+Set `HF_HOME` to choose the cache location. ImageNet is streamed, not stored.
 
 ## Reproduction checklist
 

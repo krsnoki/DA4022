@@ -28,7 +28,7 @@ Quantization_and_Pruning/
 
 | Method | Code | Status | Shared primitives added |
 |---|---|---|---|
-| Jacobian-guided Noise Injection ([paper card](quantization/qat/jacobian_noise/README.md)) | `quantization/qat/jacobian_noise/` | `partial`: CPU-tested; SigLIP-224 GPU results reported | `quantization/activation/fake_quant.py` (simulated W/A/QK quantization), `quantization/weight_only/gptq.py` (GPTQ) |
+| Jacobian-guided Noise Injection ([paper card](quantization/qat/jacobian_noise/README.md)) | `quantization/qat/jacobian_noise/` | `partial-reproduction`: CPU-tested; SigLIP-224 GPU results reported | `quantization/activation/fake_quant.py` (simulated W/A/QK quantization), `quantization/weight_only/gptq.py` (GPTQ) |
 
 Run the module's tests with `python -m pytest Quantization_and_Pruning/tests -q`. Experiment instructions: [`experiments/jacobian_noise/README.md`](experiments/jacobian_noise/README.md).
 
