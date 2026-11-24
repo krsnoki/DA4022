@@ -70,6 +70,10 @@ Report task quality against a no-stopping baseline; average and tail latency whe
 
 Implementation of *Is Escalation Worth It? A Decision-Theoretic Characterization of LLM Cascades* (Dylan Bouchard, ICML 2026 AdaptFM workshop, [arXiv 2605.06350](https://arxiv.org/abs/2605.06350)). Full details, differences from the paper and licences are in the [paper card](methods/cascade_escalation/PAPER_CARD.md).
 
+### Team
+
+Team: [Jigsaw442](https://github.com/Jigsaw442) (fork owner), [Boxbob](https://github.com/Boxbob), [paraskatiyar](https://github.com/paraskatiyar), [Sumit-Singatia-2027](https://github.com/Sumit-Singatia-2027).
+
 ### Method summary
 
 A cascade is a stopping rule over a sequence of models instead of over layers or tokens. Models are ordered cheapest first. Each model answers the query and produces a confidence score from the log-probabilities of that same answer. If the score is at or above the stage's threshold the cascade stops and returns that answer; otherwise the query escalates to the next model, and the last model always answers. Cost is the sum over every model called.

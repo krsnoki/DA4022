@@ -10,6 +10,10 @@
 - **Dataset IDs and split:** MMLU, TriviaQA and MATH (levels 3 to 5), using the paper's exact upstream prompt parquet files (SHA-256 checked against `llm-cascade-frontiers@3872d8a`). 2,000 queries per benchmark, subsampled with seed 2026. The paper's SimpleQA and LiveCodeBench are skipped because they need an LLM judge or code execution. Each benchmark is split 50 times into stratified calibration/test halves (seeds 42 to 91).
 - **Hardware assumptions:** generation on 1x NVIDIA RTX 4090 (24 GB), bf16, greedy decoding, top-15 log-probs, one model resident at a time; the offline policy search is CPU-only NumPy and needs no GPU.
 
+## Team
+
+Team: [Jigsaw442](https://github.com/Jigsaw442) (fork owner), [Boxbob](https://github.com/Boxbob), [paraskatiyar](https://github.com/paraskatiyar), [Sumit-Singatia-2027](https://github.com/Sumit-Singatia-2027).
+
 ## Research summary
 
 ### Problem
