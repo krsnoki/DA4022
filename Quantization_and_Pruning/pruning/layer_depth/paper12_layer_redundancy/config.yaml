@@ -1,0 +1,41 @@
+# Experiment Configuration — Paper #12: Rethinking Layer Redundancy
+# Pin every value here. Do not hardcode values inside scripts.
+
+model:
+  model_id: "meta-llama/Llama-2-7b-hf"
+  revision: "main"
+  dtype: "float16"           # float32 for CPU-only runs
+
+calibration:
+  seed: 42
+  n_samples: 128             # number of calibration examples
+  batch_size: 4
+  max_length: 512
+
+  perplexity:
+    dataset: "allenai/c4"
+    dataset_split: "train"
+    dataset_revision: "en"
+
+  task_likelihood_margin:
+    dataset: "hellaswag"
+    dataset_split: "validation"
+
+pruning:
+  budget: 7                  # k: number of layers to remove
+
+evaluation:
+  perplexity_dataset: "wikitext"
+  perplexity_dataset_name: "wikitext-2-raw-v1"
+  perplexity_split: "test"
+  downstream_tasks:
+    - "hellaswag"
+    - "boolq"
+
+hardware:
+  device: "cuda"             # set to "cpu" for smoke tests
+  num_workers: 2
+
+output:
+  results_dir: "results/"
+  log_level: "INFO"
