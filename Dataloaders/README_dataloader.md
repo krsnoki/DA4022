@@ -43,6 +43,14 @@ Every dataset adapter should state:
 
 Quantization, pruning, and some cache policies may require calibration examples. Calibration data must not silently draw from the held-out test split. Record the exact calibration sample count and seed. When a method is calibration-free, set `calibration_dataset: null` explicitly in its experiment config.
 
+## Causal language model batches
+
+`TokenBatch` carries `input_ids` as `int64[B,T]` and `attention_mask` as `bool[B,T]`. The current loaders emit full-length windows with all-true masks. The last batch may have fewer rows. `TokenBatch.to(device)` moves both tensors together.
+
+The [dataset registry](registry.yaml) pins WikiText2 raw train for calibration and WikiText2 test, PTB test and English C4 validation for evaluation. `make_calibration_batches()` joins nonempty rows with blank lines and tokenizes the resulting text without added special tokens. It samples distinct window starts with a local RNG. Use `CalibrationSet.save(path)` in the run directory and `CalibrationSet.load(path)` to replay the exact tokens. Pass the registered tokenizer revision when building the manifest.
+
+`make_evaluation_batches()` emits non-overlapping, complete windows. The English C4 entry streams documents in source order and tokenizes each document separately, with a blank-line prefix after the first document. It stops after 128 complete windows. `make_synthetic_batches()` derives independent streams from the `calibration` and `evaluation` split names and seed, with no tokenizer or dataset download.
+
 ## Suggested dataset registry entry
 
 ```yaml
