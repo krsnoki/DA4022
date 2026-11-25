@@ -306,13 +306,13 @@ def main() -> None:
     parser.add_argument(
         "--variants",
         nargs="+",
-        default=["unmodified", "rtn", "aaac_s128"],
+        default=["unmodified", "rtn_asym", "aaac_s128_paperinit", "aaac_s16_paperinit"],
         choices=[
             "unmodified", "rtn", "rtn_asym",
             "aaac_s128", "aaac_s16", "aaac_s128_paperinit", "aaac_s16_paperinit",
         ],
-        help="rtn = symmetric grid; rtn_asym = min/max zero-point grid; "
-        "*_paperinit = codebook init from the paper's Eq. 9-10",
+        help="rtn_asym = min/max zero-point INT4 (matches the paper's RTN); rtn = symmetric grid; "
+        "*_paperinit = codebook init from the paper's Eq. 9-10; aaac_s128 / aaac_s16 = first-version init",
     )
     parser.add_argument("--output-json", type=Path, default=Path("Quantization_and_Pruning/quantization/aaac/results/aaac_benchmark_results.json"))
     args = parser.parse_args()

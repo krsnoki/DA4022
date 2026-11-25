@@ -23,10 +23,11 @@ class AAACConfig:
     scale_dtype     storage dtype of the per-group scales. Normalisation uses the
                     *rounded* scale so that encode and decode agree exactly.
     codebook_dtype  storage dtype of the two final tables (paper: BF16).
-    init_method     "split" (default): importance-weighted mid-point quantiles of the
-                    peaky / flat halves of the selection groups.
-                    "paper": the paper's Eq. 9-10, plain quantiles of all normalised
-                    weights, T0 at i/15 and T1 at delta + (1 - delta) i/15, delta = 1/30.
+    init_method     "paper" (default): the paper's Eq. 9-10, plain quantiles of all
+                    normalised weights, T0 at i/15 and T1 at delta + (1 - delta) i/15,
+                    delta = 1/30.
+                    "split": importance-weighted mid-point quantiles of the peaky /
+                    flat halves of the selection groups (first version; +0.25 PPL).
     chunk_elements  upper bound on the size of the temporary ``[rows, in, 16]``
                     distance tensor used by nearest-neighbour search. Results do
                     not depend on it; it only trades speed for peak memory.
@@ -39,7 +40,7 @@ class AAACConfig:
     scale_dtype: torch.dtype = torch.float16
     codebook_dtype: torch.dtype = torch.bfloat16
     chunk_elements: int = 1 << 24
-    init_method: str = "split"
+    init_method: str = "paper"
 
     def __post_init__(self) -> None:
         for name in ("group_size", "selection_size", "chunk_elements"):

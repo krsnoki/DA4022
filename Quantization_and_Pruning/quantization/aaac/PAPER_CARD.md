@@ -4,7 +4,7 @@
 - **Primary module:** `Quantization_and_Pruning/quantization/aaac/`
 - **Secondary modules:** `Backbones/Generative_Pretrained/` (loader), `Dataloaders/calibration/` (C4 sampling, activation energy), `Dataloaders/wikitext2.py` (evaluation windows), `Performance_Metrics/` (result rows)
 - **Owner / reviewer:** <GitHub handles>
-- **Status:** partial-reproduction
+- **Status:** tested
 - **Issue:** #<issue number>
 - **Upstream code / licence:** not found. Implemented from the paper (§§3–4, Algorithm 1).
 - **Backbone IDs:** `Qwen/Qwen2.5-0.5B` @ `060db6499f32faf8b98477b0a26969ef7d8b9987`
@@ -20,7 +20,7 @@ Standard 4-bit weight quantization (RTN, AWQ, GPTQ) maps every weight group onto
 Each quantized layer learns two small 16-entry codebooks instead of using a fixed grid. Weights are split into groups of g = 128 and divided by the group's absmax scale. Every selection group of S weights picks whichever codebook gives the lower reconstruction error, where each input column is weighted by its calibration activation energy I[k] = Σ_t X[t,k]². The codebooks are then refined with weighted Lloyd (k-means) updates: 3 outer rounds of re-selection × 10 inner updates. When S = g, the codebook choice is stored in the sign bit of the scale, which is always positive. So the only extra storage is the two BF16 tables, 64 bytes per layer.
 
 ### Expected behaviour
-Paper-reported (Table 2, g = 128, W4A16, WikiText-2 perplexity, Qwen2.5-0.5B): FP16 13.07, RTN 15.54, AWQ 15.01, AAAC S = 128 14.47, AAAC S = 16 14.27. The paper reports quantization in minutes on one GPU (under 2 minutes for a 7B model on an H100) and no extra memory beyond the model. It does not give a quantization time for Qwen2.5-0.5B.
+Paper-reported (Table 2, g = 128, W4A16, WikiText-2 perplexity, Qwen2.5-0.5B): FP16 13.07, RTN 15.54, AWQ 15.01, AAAC S = 128 14.47, AAAC S = 16 14.27. Codebooks are initialised from plain quantiles of the normalised weights (Eq. 9–10). The paper reports quantization in minutes on one GPU (under 2 minutes for a 7B model on an H100) and no extra memory beyond the model. It does not give a quantization time for Qwen2.5-0.5B.
 
 ## Implementation
 
@@ -28,44 +28,56 @@ Paper-reported (Table 2, g = 128, W4A16, WikiText-2 perplexity, Qwen2.5-0.5B): F
 - **Output contract (per quantized layer):** packed indices `uint8 [out, in/2]` (two 4-bit indices per byte); codebooks `bfloat16 [2, 16]`; scales `float16 [out, in/g]` (sign = selector when S = g); selector bitset `uint8` when S < g. `AAACLinear` rebuilds `abs(scale) × table[selector][index]` and runs a dense linear layer. Biases, embeddings, norms and `lm_head` are unchanged.
 - **Quantized layers:** all 168 `nn.Linear` layers inside the 24 decoder layers (q, k, v, o, gate, up, down). `embed_tokens` and `lm_head` (tied) stay in FP16.
 - **Configuration:** `Quantization_and_Pruning/quantization/aaac/benchmark_config.json`
-- **Reproduction command:** `python -m Quantization_and_Pruning.quantization.aaac.benchmark` (from the repo root; see the folder README quickstart)
-- **Tests:** `python -m pytest -q` (68 tests, CPU only, no downloads; `tests/test_aaac_smoke.py` runs the whole pipeline on a tiny random Qwen2)
+- **Reproduction command:** `python -m Quantization_and_Pruning.quantization.aaac.benchmark` (from the repo root; runs unmodified, `rtn_asym`, `aaac_s128_paperinit`, `aaac_s16_paperinit`; see the folder README quickstart)
+- **Tests:** `python -m pytest -q` (77 tests, CPU only, no downloads; `tests/test_aaac_smoke.py` runs the whole pipeline on a tiny random Qwen2)
 
 ## Results
 
-Quality is WikiText-2 test perplexity over 146 non-overlapping 2,048-token windows (298,862 predicted tokens), computed from the total next-token loss. Latency is one forward pass (prefill) over a single 2,048-token window, batch 1, 2 warm-up and 10 timed runs. Memory is in MiB.
+Quality is WikiText-2 test perplexity over 146 non-overlapping 2,048-token windows (298,862 predicted tokens), computed from the total next-token loss, FP16 evaluation. Latency is one forward pass (prefill) over one 2,048-token window, batch 1, 2 warm-up and 10 timed runs. Memory is in MiB.
 
 | Source | Quality (PPL ↓) | Latency median / p95 (ms) | Throughput (tok/s) | Peak memory (MiB) | Energy | Notes |
 |---|---:|---:|---:|---:|---:|---|
 | Paper, FP16 | 13.07 | | | | | Table 2 |
 | Paper, RTN | 15.54 | | | | | Table 2 |
-| Paper, AWQ | 15.01 | | | | | Table 2 |
 | Paper, AAAC S = 128 | 14.47 | | | | | Table 2 |
 | Paper, AAAC S = 16 | 14.27 | | | | | Table 2 |
-| Local, unmodified (FP16) | 13.07 | 1471.9 / 1482.2 | 1391 | 7171 | not measured | matches paper |
-| Local, RTN INT4 g = 128 | 18.16 | 1972.8 / 2057.4 | 1038 | 7360 | not measured | symmetric grid, see below |
-| Local, AAAC g = 128, S = 128 | 15.01 | 2443.8 / 2914.6 | 838 | 7600 | not measured | +0.54 vs paper |
+| Local, unmodified (FP16) | **13.07** | 147.6 / 148.5 | 13,877 | 5713 | not measured | matches paper |
+| Local, RTN INT4 g = 128 (zero-point) | **15.54** | 253.4 / 254.1 | 8,081 | 5745 | not measured | matches paper |
+| Local, AAAC g = 128, S = 128 | **14.76** | 320.1 / 320.8 | 6,399 | 6049 | not measured | +0.29 vs paper |
+| Local, AAAC g = 128, S = 16 | **14.37** | 327.9 / 329.2 | 6,245 | 6073 | not measured | +0.10 vs paper |
+
+The paper's conclusions hold on these numbers: AAAC beats RTN at both settings (−0.78 and −1.17 PPL; paper −1.07 and −1.27), AAAC S = 128 beats the paper's AWQ figure (15.01), and S = 16 beats S = 128.
 
 Storage and quantization cost (measured):
 
 | Variant | Quantized layer bytes | Total checkpoint | Quantization time |
 |---|---:|---:|---:|
 | Unmodified | – | 988,065,536 B (942.3 MiB) | – |
-| RTN | 184,504,320 B (indices 178,913,280 + scales 5,591,040) | 456,916,736 B (435.8 MiB) | 3.3 s |
-| AAAC S = 128 | 184,515,072 B (same + codebooks 10,752 = 168 × 64) | 456,927,488 B (435.8 MiB) | 1006.7 s (CPU fit) |
+| RTN zero-point | 187,299,840 B (indices 178,913,280 + FP16 scales 5,591,040 + uint8 zero points 2,795,520) | 459,712,256 B (438.4 MiB) | 0.3 s |
+| AAAC S = 128 | 184,515,072 B (indices + scales + codebooks 10,752 = 168 × 64; selector in the scale sign) | 456,927,488 B (435.8 MiB) | 974.9 s (CPU fit) |
+| AAAC S = 16 | 187,310,592 B (as above + selector bitset 2,795,520) | 459,723,008 B (438.4 MiB) | 1006.3 s (CPU fit) |
 
-The remaining 272,412,416 B in both quantized checkpoints is the FP16 embedding (tied with `lm_head`), which is not quantized.
+The remaining 272,412,416 B in each quantized checkpoint is the FP16 embedding (tied with `lm_head`), which is not quantized.
 
-Environment of the measured run: macOS 27 (arm64), Apple Silicon MPS, Python 3.9.6, torch 2.8.0, transformers 4.57.6. Raw output: `results/full_results_s128.json`.
+Environment: Apple Silicon Mac, MPS evaluation in FP16, AAAC fit on CPU, Python 3.12, torch 2.15.0, transformers 4.57.6, datasets 3.6.0. Raw output: `results/full_results_paper_options.json`.
+
+### How we got here (first version → paper-matching version)
+
+The first full run used two choices the paper does not spell out. Matching them to the paper closed most of the gap:
+
+| Change | Before | After | Paper |
+|---|---:|---:|---:|
+| RTN: symmetric absmax grid (−7..7) → asymmetric min/max with zero point | 18.16 | 15.54 | 15.54 |
+| AAAC S = 128: weighted peaky/flat split init → paper Eq. 9–10 quantile init | 15.01 | 14.76 | 14.47 |
+
+Both earlier versions are still available (`rtn`, `aaac_s128`, `aaac_s16` variants; `AAACConfig(init_method="split")`), and their raw output is in `results/full_results_s128.json` (measured on a different Mac, Python 3.9, torch 2.8.0, so its timings are not comparable).
 
 ## Differences and limitations
 
-- **RTN baseline is weaker than the paper's.** Ours is symmetric absmax INT4 with the same scales and layers as AAAC (levels −7..7; code −8 is stored but never used). We get 18.16 against the paper's 15.54. The paper's RTN is probably an asymmetric min/max grid with a zero point, which uses all 16 levels, but we have not confirmed this. So our RTN → AAAC gain (−3.15 PPL) overstates the gain the paper reports (−1.07). Compare our AAAC with the paper's AAAC, not with our RTN.
-- **AAAC is 0.54 PPL worse than the paper** (15.01 vs 14.47). The paper leaves several details open, and our choices may differ from the authors': scale rule (FP16 absmax), codebook initialisation (weighted quantiles of a peaky/flat split), error weighting in normalised space, and tie rules (see the folder README §3.6). Evaluation also ran in FP16 on MPS. We have not tested which of these causes the gap.
-- **Hardware differs.** We used MPS + CPU, not CUDA. The 1,007 s quantization time is a CPU fit and is not comparable to the paper's GPU timings.
-- **Latency and throughput come from the dense reference runtime.** `AAACLinear` rebuilds the full weight matrix on every forward pass, so AAAC and RTN are slower than FP16 here. This says nothing about native INT4 kernels, which we did not build.
-- **Peak memory can't be compared across variants.** On MPS it is `max(driver allocated, process peak RSS)`, and peak RSS is a lifetime maximum. All three variants ran in one process, so each value includes the ones before it.
-- **S = 16 was not run on the full model.** It is implemented and tested (codec, fit, smoke test) but has no measured perplexity.
+- **AAAC is still 0.29 (S = 128) and 0.10 (S = 16) PPL above the paper.** FP16 and RTN match exactly, so the evaluation protocol and baseline are right; the remaining gap is inside the AAAC fit. The paper leaves the scale formula, quantile interpolation method and tie-breaking unspecified. We use FP16 group absmax scales, linear-interpolated quantiles and lowest-index / table-0 ties. We have not tested which of these causes the gap.
+- **Hardware differs.** Evaluation ran on Apple MPS in FP16 and the fit on CPU, not on an H100. Perplexity is essentially hardware-independent here (our FP16 and RTN match to 0.01), but the ~16-minute CPU fit time is not comparable to the paper's GPU timings.
+- **Latency and throughput come from the dense reference runtime.** `AAACLinear` and `RTNLinear` rebuild the full weight matrix on every forward pass, so both are slower than FP16 here. This says nothing about native INT4 kernels, which we did not build.
+- **Peak memory can't be compared across variants.** On MPS it is `max(driver allocated, process peak RSS)`, and peak RSS is a lifetime maximum. All variants ran in one process, so each value includes the ones before it.
 - **The WikiText-2 dataset revision is not pinned.**
 - **Energy was not measured.**
 
@@ -73,7 +85,7 @@ Environment of the measured run: macOS 27 (arm64), Apple Silicon MPS, Python 3.9
 
 - [x] Exact paper link and version verified (arXiv v2)
 - [x] Base model and dataset revisions pinned (model and C4; WikiText-2 not pinned)
-- [x] Baseline runs on the same setup (same eval tokens, scales and layers)
-- [x] Tests and seed handling added (68 CPU tests; calibration seed 42; deterministic fit)
+- [x] Baseline runs on the same setup (same eval tokens and layers; FP16 and RTN match the paper)
+- [x] Tests and seed handling added (77 CPU tests; calibration seed 42; deterministic fit)
 - [x] Resource and quality metrics reported (energy not measured)
 - [x] Licence/data terms checked (no upstream code; Qwen2.5 Apache-2.0; C4 ODC-BY; WikiText CC BY-SA)

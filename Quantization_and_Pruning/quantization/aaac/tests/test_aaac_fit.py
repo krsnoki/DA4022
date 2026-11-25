@@ -10,6 +10,7 @@ from Quantization_and_Pruning.quantization.aaac import (
     fit_aaac_layer,
     fit_aaac_model,
     initial_codebooks,
+    paper_initial_codebooks,
     normalize_weight,
 )
 
@@ -66,7 +67,7 @@ def test_final_selectors_and_indices_are_recomputed_with_the_bf16_tables():
     assert torch.equal(fit.selectors, sel) and torch.equal(fit.indices, idx)
     assert fit.objective_history[-1] == pytest.approx(err.double().sum().item())
     # with the identity update the BF16 tables are exactly the rounded initial tables
-    assert torch.equal(fit.codebooks, initial_codebooks(u, imp, 16).to(torch.bfloat16))
+    assert torch.equal(fit.codebooks, paper_initial_codebooks(u).to(torch.bfloat16))
 
 
 def test_update_fn_is_called_outer_times_inner_with_current_selectors():

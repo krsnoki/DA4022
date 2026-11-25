@@ -1,7 +1,7 @@
 """End-to-end CPU smoke test for the whole AAAC pipeline.
 
 calibration hooks -> AAAC fit -> 4-bit packing -> AAACLinear model -> perplexity,
-with the RTN baseline on the same layers and scales.
+with the asymmetric (zero-point) INT4 RTN baseline on the same layers.
 
 Uses a tiny randomly initialised Qwen2 model, so it needs no downloads and runs
 in a few seconds on CPU. It checks that the pieces connect, not paper accuracy.
@@ -107,7 +107,7 @@ def test_end_to_end_pipeline(setup, selection_size):
     # fit -> pack -> swap in AAACLinear
     fits = fit_aaac_model(model, energy, AAACConfig(group_size=GROUP, selection_size=selection_size))
     aaac = replace_linear_layers_with_aaac(copy.deepcopy(model), fits)
-    rtn = quantize_model_rtn(copy.deepcopy(model), targets.keys(), group_size=GROUP)
+    rtn = quantize_model_rtn(copy.deepcopy(model), targets.keys(), group_size=GROUP, asymmetric=True)
 
     # every target layer swapped, nothing else touched
     aaac_mods = dict(aaac.named_modules())

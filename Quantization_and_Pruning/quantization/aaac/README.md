@@ -22,10 +22,11 @@ python -m pytest -q
 #    (a pre-computed file is already in results/, so this step is optional)
 python -m Quantization_and_Pruning.quantization.aaac.run_calibration
 
-# 3. benchmark: unmodified vs RTN vs AAAC (S = 128) on WikiText-2
+# 3. benchmark on WikiText-2: unmodified, RTN (zero-point), AAAC S = 128 and S = 16
+#    (~35 min on an Apple Silicon Mac; the AAAC fits run on CPU unless CUDA is available)
 python -m Quantization_and_Pruning.quantization.aaac.benchmark
 
-# quick partial run (label results "partial")
+# quick check on 2 windows (numbers will not match the full run)
 python -m Quantization_and_Pruning.quantization.aaac.benchmark --max-windows 2
 ```
 
@@ -41,7 +42,7 @@ If the model download hangs, prefix the command with
 | `config.py`, `scaling.py`, `codebook_init.py`, `assignment.py`, `fit.py` | Member 2A | scaling, quantile init, weighted assignment, fit driver |
 | `lloyd.py` | Member 2B | weighted Lloyd update, BF16 finalisation |
 | `codec.py`, `linear.py` | Member 3 | 4-bit packing, selector encoding, `AAACLinear` |
-| `rtn.py`, `benchmark.py`, `benchmark_config.json`, `Dataloaders/wikitext2.py` | Member 4 | RTN baseline, WikiText-2 perplexity and timing |
+| `rtn.py`, `benchmark.py`, `benchmark_config.json`, `Dataloaders/wikitext2.py` | Member 4 | RTN baseline (symmetric and zero-point), WikiText-2 perplexity and timing |
 | `run_calibration.py` | Member 1 | writes `results/qwen25_05b_c4_activation_energy.pt` |
 | `results/` | | calibration energies and measured benchmark JSON |
 
@@ -125,7 +126,15 @@ the importance of input column `k`, shared by every output row.
 * `quantile_codebook`: 16 quantiles at the bin mid-points `p = (j + 0.5) / 16`, so
   each codeword starts with 1/16 of the importance mass.
 
-### 3.3 Initial codebook construction (`codebook_init.py::initial_codebooks`)
+### 3.3 Initial codebook construction
+
+**Default (`init_method="paper"`, `paper_initial_codebooks`):** the paper's Eq. 9–10.
+Both tables are plain quantiles of all normalised weights in the layer:
+`T0[i] = Q(i/15)` spans min..max, and `T1[i] = Q(δ + (1 − δ) i/15)` with δ = 1/30 is
+shifted half a step and ends at the max. On Qwen2.5-0.5B this gives 14.76 PPL at
+S = 128, against 15.01 for the alternative below.
+
+**Alternative (`init_method="split"`, `initial_codebooks`):** the first version, described next.
 
 1. For every selection group (S contiguous weights of a row), compute the
    importance-weighted mean `|u|`. If the group's importance sums to 0, use the
@@ -162,7 +171,8 @@ The group takes the table with the smaller `E_c`.
 
 ```
 scales, U   = scaling                                   (3.1)
-C           = initial_codebooks(U, I, S)   float32       (3.2, 3.3)
+C           = paper_initial_codebooks(U)  float32       (3.3; default)
+              or initial_codebooks(U, I, S)               (3.2, 3.3; init_method="split")
 repeat outer_iters (3):
     selectors = assign_selection_groups(U, I, C, S)      (3.4)
     repeat inner_iters (10):
@@ -188,6 +198,7 @@ indices   = encode_indices(U, C_bf16, selectors, S)      re-run encoding
 | Tensor layout | `W[out, in]`, groups run along `in` (contiguous within a row) |
 | Scale rule | group absmax, FP16, strictly positive, all-zero group → `finfo(fp16).tiny` |
 | Error weights | `I[k]` in normalised space (not multiplied by `scale²`) |
+| Initialisation | paper Eq. 9–10 quantiles (default); weighted split as an option |
 | Codeword tie | lowest index |
 | Table tie | table 0 |
 | Table dtype | float32 while fitting, BF16 when stored |
@@ -262,6 +273,7 @@ python -m pytest Quantization_and_Pruning/quantization/aaac/tests -q
 | `test_aaac_codec_and_integration.py` | exact 4-bit round trip, selector round trip for S = g and S < g, all-zero group convention, exact packed byte counts, bit-exact parity with the fit and model integration |
 | `test_aaac_rtn.py` | RTN packing bytes and reconstruction, same target layers as AAAC |
 | `test_aaac_smoke.py` | end-to-end on a tiny random Qwen2 (no downloads): calibration, fit, packing, model swap, exact byte counts, AAAC < RTN weighted error, perplexity for all three variants |
+| `test_aaac_paper_options.py` | Eq. 9–10 init matches the equations, deterministic fits with it; zero-point RTN error ≤ half a step, uses all 16 codes, zero points counted in storage |
 
 `tests/aaac_helpers.py` holds the stand-ins `keep_tables` (no-op update) and
 `round_tables` (plain BF16 cast), used to test the pipeline independently of `lloyd.py`.
