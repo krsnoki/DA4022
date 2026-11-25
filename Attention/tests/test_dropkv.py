@@ -11,6 +11,7 @@ import torch
 
 from Attention.methods.kv_eviction import perturbation as pert
 from Attention.methods.kv_eviction.scoring import (
+    attention_output_shift,
     attention_probs,
     dropkv_scores,
     dropkv_scores_naive,
@@ -136,6 +137,26 @@ def test_gather_positions():
     assert torch.equal(out[1, 0, 1], x[1, 0, 4])
 
 
+# ---------------------------------------------------------------- output shift
+
+def test_output_shift_matches_lemma1():
+    q, k, v = random_qkv(b=1, h=1, w=1, n=12, d=8, seed=2)
+    q, k, v = q.double(), k.double(), v.double()
+    keep = torch.tensor([[[0, 2, 3, 6, 7, 10, 11]]])
+    evicted = [1, 4, 5, 8, 9]
+    p = torch.softmax(k[0, 0] @ q[0, 0, 0] / 8**0.5, dim=0)
+    expected = pert.eviction_loss(p, v[0, 0], evicted) / (p @ v[0, 0]).norm()
+    got = attention_output_shift(q, k, v, keep)
+    assert got.shape == (1, 1, 1)
+    assert torch.allclose(got[0, 0, 0].double(), expected, rtol=1e-4)
+
+
+def test_output_shift_is_zero_when_nothing_is_evicted():
+    q, k, v = random_qkv()
+    keep = torch.arange(40).expand(2, 3, 40)
+    assert attention_output_shift(q, k, v, keep).abs().max() < 1e-5
+
+
 # ---------------------------------------------------------------- theory
 
 def _cone_instance(seed, n=14, d=8):
@@ -243,3 +264,17 @@ def test_eviction_shrinks_cache(tiny_model, prompt, method):
     assert info["kv_bytes"] * 4 == info["kv_bytes_full"]
     tokens, _ = generate(tiny_model, prompt, max_new_tokens=5, method=method, budget=0.25)
     assert len(tokens) == 5
+
+
+def test_compress_cache_reports_output_shift(tiny_model, prompt):
+    from Attention.methods.kv_eviction.eviction import QueryRecorder, compress_cache
+
+    rec = QueryRecorder(tiny_model, 8)
+    with torch.no_grad():
+        cache = tiny_model(input_ids=prompt, use_cache=True).past_key_values
+    rec.remove()
+    shifts = []
+    kept = compress_cache(cache, rec.queries, "dropkv", budget=0.25, shift_out=shifts)
+    assert kept == 12
+    assert len(shifts) == 2                                   # one value per layer
+    assert all(s >= 0 and s == s for s in shifts)             # finite, non-negative

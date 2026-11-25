@@ -18,7 +18,7 @@ layers receive `position_embeddings=(cos, sin)` and expose `q_proj`.
 
 import torch
 
-from .scoring import METHODS, gather_positions, select_keep_indices
+from .scoring import METHODS, attention_output_shift, gather_positions, select_keep_indices
 
 
 def _rotate_half(x):
@@ -106,11 +106,15 @@ def cache_nbytes(cache):
     return total
 
 
-def compress_cache(cache, queries, method="dropkv", budget=0.1, window=8, kernel_size=11, generator=None):
+def compress_cache(cache, queries, method="dropkv", budget=0.1, window=8, kernel_size=11, generator=None,
+                   shift_out=None):
     """Evict positions from every layer of `cache` in place.
 
     queries : {layer index: [B, Hq, W, D]} from QueryRecorder.
     budget  : fraction of positions kept per head.
+    shift_out : optional list. If given, the mean relative attention-output
+              shift of each layer is appended to it (used for analysis only,
+              it costs one extra attention pass per layer).
     Returns the number of positions kept per head.
     """
     score_fn = METHODS[method]
@@ -129,6 +133,8 @@ def compress_cache(cache, queries, method="dropkv", budget=0.1, window=8, kernel
         else:
             scores = score_fn(q, k, v, q_pos=q_pos)
         keep = select_keep_indices(scores, n_keep, window, kernel_size, pool=(method != "random"))
+        if shift_out is not None:
+            shift_out.append(attention_output_shift(q, k, v, keep, q_pos).mean().item())
         _set_kv(cache, i, gather_positions(k, keep), gather_positions(v, keep))
     return n_keep
 

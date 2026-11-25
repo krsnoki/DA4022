@@ -1,5 +1,6 @@
 from .scoring import (
     METHODS,
+    attention_output_shift,
     attention_probs,
     dropkv_scores,
     dropkv_scores_naive,
@@ -11,6 +12,7 @@ from .scoring import (
 
 __all__ = [
     "METHODS",
+    "attention_output_shift",
     "attention_probs",
     "dropkv_scores",
     "dropkv_scores_naive",

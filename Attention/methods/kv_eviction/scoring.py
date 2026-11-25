@@ -106,3 +106,22 @@ def select_keep_indices(scores, n_keep, window, kernel_size=11, pool=True):
 def gather_positions(x, keep):
     """x : [B, H, N, D], keep : [B, H, n_keep] -> [B, H, n_keep, D]."""
     return x.gather(2, keep.unsqueeze(-1).expand(-1, -1, -1, x.shape[-1]))
+
+
+def attention_output_shift(q, k, v, keep, q_pos=None, eps=1e-8):
+    """Relative change of the attention output of every window query when only
+    the positions in `keep` stay in the cache:
+
+        ||a_kept - a_full|| / ||a_full||
+
+    a_kept renormalises the attention over the kept positions, which is what
+    the model does once the other positions are gone (Lemma 1).
+    keep : [B, H, n_keep]. Returns [B, H, W].
+    """
+    q, k, v = q.float(), k.float(), v.float()
+    p = attention_probs(q, k, q_pos)                                  # [B, H, W, N]
+    a_full = torch.matmul(p, v)
+    p_kept = p.gather(-1, keep.unsqueeze(-2).expand(-1, -1, p.shape[-2], -1))
+    p_kept = p_kept / p_kept.sum(dim=-1, keepdim=True)
+    a_kept = torch.matmul(p_kept, gather_positions(v, keep))
+    return (a_kept - a_full).norm(dim=-1) / (a_full.norm(dim=-1) + eps)
