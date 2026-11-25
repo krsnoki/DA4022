@@ -79,3 +79,53 @@ def read_jsonl(path: Path) -> List[Dict]:
 
 def generation_path(out_dir: Path, dataset: str, slug: str) -> Path:
     return Path(out_dir) / "generations" / dataset / f"{slug}.jsonl.gz"
+
+
+def partial_path(out_dir: Path, dataset: str, slug: str) -> Path:
+    """Checkpoint file for an unfinished (model, dataset); not read by the sweep."""
+    return Path(out_dir) / "generations" / dataset / f"{slug}.partial.jsonl"
+
+
+def load_partial(path: Path, header: Dict) -> List[Dict]:
+    """Rows saved by earlier, interrupted runs.
+
+    The first line is a header; if it does not match ``header`` (different
+    generation settings) the checkpoint is discarded. A line cut short by a
+    crash is dropped, and the file is rewritten clean so appends stay valid.
+    """
+    path = Path(path)
+    if not path.exists():
+        return []
+    rows, head = [], None
+    with open(path) as f:
+        for i, line in enumerate(f):
+            try:
+                obj = json.loads(line)
+            except json.JSONDecodeError:
+                break  # torn final write
+            if i == 0:
+                head = obj.get("_header")
+            else:
+                rows.append(obj)
+    if head != header:
+        path.unlink()
+        return []
+    with open(path, "w") as f:
+        f.write(json.dumps({"_header": header}) + "\n")
+        for r in rows:
+            f.write(json.dumps(r) + "\n")
+    return rows
+
+
+def append_partial(path: Path, header: Dict, rows: Iterable[Dict]) -> None:
+    """Append finished rows durably (flush + fsync) to the checkpoint file."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    new = not path.exists()
+    with open(path, "a") as f:
+        if new:
+            f.write(json.dumps({"_header": header}) + "\n")
+        for r in rows:
+            f.write(json.dumps(r) + "\n")
+        f.flush()
+        os.fsync(f.fileno())

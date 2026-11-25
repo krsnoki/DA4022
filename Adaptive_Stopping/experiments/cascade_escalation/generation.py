@@ -135,17 +135,30 @@ class HFGenerator:
         ids = [chat_token_ids(self.tokenizer, p) for p in prompts]
         order = sorted(range(len(ids)), key=lambda i: len(ids[i]))
         results: List[Optional[Dict]] = [None] * len(ids)
-        for b in range(0, len(order), batch_size):
-            idx = order[b:b + batch_size]
-            self._sync()
-            t0 = time.perf_counter()
-            res = self.generate_ids([ids[i] for i in idx], max_new_tokens)
-            self._sync()
-            dt = time.perf_counter() - t0
+        bs, b = max(1, int(batch_size)), 0
+        while b < len(order):
+            idx = order[b:b + bs]
+            try:
+                self._sync()
+                t0 = time.perf_counter()
+                res = self.generate_ids([ids[i] for i in idx], max_new_tokens)
+                self._sync()
+                dt = time.perf_counter() - t0
+            except self.torch.cuda.OutOfMemoryError:
+                # e.g. Phi-3.5 (no GQA) at 1024 new tokens: halve and keep the smaller size.
+                if bs == 1:
+                    raise
+                res = None
+                self.torch.cuda.empty_cache()
+                bs = max(1, bs // 2)
+                print(f"[hf] CUDA OOM -> batch size {bs}", flush=True)
+                continue
             w = sum(r["n_out"] + 1 for r in res)
             for i, r in zip(idx, res):
                 r["gpu_s"] = dt * (r["n_out"] + 1) / w
                 results[i] = r
+            b += len(idx)
+        self.last_batch_size = bs
         return results  # type: ignore[return-value]
 
     def generate_one_timed(self, prompt: str, max_new_tokens: int) -> Dict:

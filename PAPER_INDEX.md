@@ -13,7 +13,7 @@ This is an engineering-oriented shortlist from the [official AdaptFM accepted-pa
 - [Fixed-Point Reasoners: Stable and Adaptive Deep Looped Models](https://openreview.net/forum?id=s66nL9PEw1) — adaptive depth/looped computation, not necessarily early exit.
 - [Learning Adaptive LLM Decoding](https://openreview.net/forum?id=14yhYy9m7S) — adaptive decoding policy.
 - [Resource-Adaptive Foundation Model Reasoning via Semantic Coverage](https://openreview.net/forum?id=suD1tqogTd) — input-adaptive reasoning budget.
-- [Is Escalation Worth It? A Decision-Theoretic Characterization of LLM Cascades](https://arxiv.org/abs/2605.06350) — confidence-thresholded model cascades (stop at the first model that is confident enough); cross-listed with Profiling/systems for cost-quality frontiers. **Implemented:** [paper card](Adaptive_Stopping/methods/cascade_escalation/PAPER_CARD.md). Link is arXiv until the OpenReview forum ID is verified against the official list.
+- [Is Escalation Worth It? A Decision-Theoretic Characterization of LLM Cascades](https://openreview.net/forum?id=MfWD7bOKiF) — confidence-thresholded model cascades (stop at the first model that is confident enough); cross-listed with Profiling/systems for cost-quality frontiers. **Implemented:** [paper card](Adaptive_Stopping/methods/cascade_escalation/PAPER_CARD.md). arXiv: [2605.06350](https://arxiv.org/abs/2605.06350).
 
 ## Attention, context and token efficiency
 
@@ -93,7 +93,7 @@ This is an engineering-oriented shortlist from the [official AdaptFM accepted-pa
 - [Staircase Streaming for Low-Latency Multi-Agent Inference](https://openreview.net/forum?id=9VqvhSZwN6) — latency and serving.
 - [StreamAttention: Energy-Efficient and High-Utilization Attention on Systolic Hardware](https://openreview.net/forum?id=SRQuPOMzkX) — hardware mapping.
 - [Layout and Fusion Trade-offs for Mixture-of-Experts Inference under Single-Node Tensor Parallelism](https://openreview.net/forum?id=y2sY80Q3fh) — kernel/runtime design.
-- [Is Escalation Worth It? A Decision-Theoretic Characterization of LLM Cascades](https://arxiv.org/abs/2605.06350) — budget-constrained cost vs. accuracy frontiers for multi-model serving; primary entry under Adaptive stopping.
+- [Is Escalation Worth It? A Decision-Theoretic Characterization of LLM Cascades](https://openreview.net/forum?id=MfWD7bOKiF) — budget-constrained cost vs. accuracy frontiers for multi-model serving; primary entry under Adaptive stopping.
 
 ## LoRA and parameter-efficient adaptation
 
