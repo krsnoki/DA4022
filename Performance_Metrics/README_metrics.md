@@ -70,3 +70,15 @@ Unknown/not-measured quantities should be empty/null plus a `status` or notes en
 ## Benchmark anti-patterns
 
 Do not compare different checkpoints, input lengths, quantization settings, warm-up policies, or batch sizes and attribute the whole difference to a method. Do not report GPU utilization alone as speed. Do not mix paper-reported numbers with locally reproduced numbers without marking the source.
+
+## Results: AAAC (Qwen2.5-0.5B, WikiText-2)
+
+Measured rows for [AAAC](../Quantization_and_Pruning/quantization/aaac/PAPER_CARD.md). All variants use identical evaluation tokens (146 non-overlapping 2,048-token windows). Latency is one prefill forward pass over one window (2 warm-up, 10 timed runs). Peak memory on MPS is `max(driver allocated, process peak RSS)` in MiB and accumulates across variants run in one process, so do not compare it between rows. Throughput and latency come from a dense dequantization reference runtime, not native INT4 kernels.
+
+```text
+experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,split,seed,device,framework_version,dtype,batch_size,input_length,output_length,quality_metric,quality_value,latency_median_ms,latency_p95_ms,throughput,peak_memory_mb,energy_j,status,notes
+aaac-qwen05b-unmodified,arxiv:2605.08692v2,unmodified,269389d,Qwen/Qwen2.5-0.5B,060db6499f32faf8b98477b0a26969ef7d8b9987,wikitext/wikitext-2-raw-v1,test,42,Apple Silicon MPS,torch 2.15.0 / transformers 4.57.6,float16,1,2048,0,perplexity,13.0702,147.588,148.528,13876.51 tok/s,5712.69,,reproduced,"baseline; matches paper 13.07; checkpoint 988065536 B; energy not_measured"
+aaac-qwen05b-rtn-asym-g128,arxiv:2605.08692v2,rtn-int4-zero-point,269389d,Qwen/Qwen2.5-0.5B,060db6499f32faf8b98477b0a26969ef7d8b9987,wikitext/wikitext-2-raw-v1,test,42,Apple Silicon MPS,torch 2.15.0 / transformers 4.57.6,float16 + int4 g128,1,2048,0,perplexity,15.5420,253.434,254.120,8081.01 tok/s,5744.69,,reproduced,"matches paper 15.54; quant 0.3 s; packed 187299840 B; energy not_measured"
+aaac-qwen05b-aaac-g128-s128,arxiv:2605.08692v2,aaac,269389d,Qwen/Qwen2.5-0.5B,060db6499f32faf8b98477b0a26969ef7d8b9987,wikitext/wikitext-2-raw-v1,test,42,Apple Silicon MPS,torch 2.15.0 / transformers 4.57.6,float16 + int4 g128 S128,1,2048,0,perplexity,14.7589,320.054,320.823,6398.92 tok/s,6048.69,,approximate,"paper 14.47; Eq. 9-10 init; C4 calib 4x2048 seed 42; fit 974.9 s on CPU; packed 184515072 B; energy not_measured"
+aaac-qwen05b-aaac-g128-s16,arxiv:2605.08692v2,aaac,269389d,Qwen/Qwen2.5-0.5B,060db6499f32faf8b98477b0a26969ef7d8b9987,wikitext/wikitext-2-raw-v1,test,42,Apple Silicon MPS,torch 2.15.0 / transformers 4.57.6,float16 + int4 g128 S16,1,2048,0,perplexity,14.3716,327.937,329.187,6245.10 tok/s,6072.69,,approximate,"paper 14.27; Eq. 9-10 init; C4 calib 4x2048 seed 42; fit 1006.3 s on CPU; packed 187310592 B; energy not_measured"
+```
