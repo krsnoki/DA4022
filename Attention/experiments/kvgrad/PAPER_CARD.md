@@ -5,7 +5,7 @@
 - **Secondary modules:** `Performance_Metrics/` (latency and memory protocol)
 - **Owner / reviewer:** mathangiVS (team members: sanjayganeshprabu, teja123git, Vipulsoc, kvdhruv) / reviewer: TBD
 - **Tracking issue:** krsnoki/DA4022#8
-- **Status:** `baseline-ready` (benchmark harness tested; full runs and own score implementation pending)
+- **Status:** `implementing` (benchmark harness and our score implementation tested; full baseline and ablation runs in progress)
 - **Upstream code / licence:** NVIDIA kvpress, https://github.com/NVIDIA/kvpress, Apache-2.0. Version `0.5.5` already ships `KVgradPress` (`kvpress/presses/kvgrad_press.py`), which implements the paper's final score, Eq. (8). The intermediate scores of the paper's ablation, Eqs. (6) and (7), are not in kvpress. No separate code release by the authors was found.
 - **Backbone IDs:** `Qwen/Qwen3-0.6B`, Hugging Face revision `c1899de289a04d12100db370d81485cdf75e47ca` (pinned in the config)
 - **Dataset IDs and split:** `simonjegou/ruler`, `data_dir=4096`, split `test` (RULER as packaged by kvpress, 13 tasks x 500 examples, ~4K-token contexts); per-task stratified sample with seed 42
@@ -43,6 +43,21 @@ entry that matters to a single probe is not averaged away. The lowest-scoring fr
 (`compression_ratio`) is evicted across all layers and heads.
 
 ### Expected behaviour
+
+Score-variant ablation for Qwen3-0.6B reported in the paper's appendix Table 4 (RULER, 10% of the
+examples, string match):
+
+| Variant | 8:1 | 16:1 | 32:1 |
+|---|---:|---:|---:|
+| `taylor_sum`, Eq. (6) | 73.15 | 54.51 | 24.37 |
+| `taylor_max` | 72.24 | 55.83 | 24.45 |
+| `bound_sum`, Eq. (7) summed | 72.33 | 55.96 | 36.32 |
+| `bound_max`, Eq. (8) KVgrad | 69.66 | 57.21 | 40.20 |
+
+For this small model the variants are close at 8:1 and separate at 16:1 and 32:1, where the magnitude-aware
+max (KVgrad) is best; hence the ablation is run at 8:1, 16:1 and 32:1.
+
+Main comparison:
 Paper-reported RULER string match for Qwen3-0.6B (macro average over the 13 tasks, **computed by us from
 the paper's appendix Table 7**; the paper reports per-task values):
 
@@ -64,8 +79,18 @@ at inference; it is out of scope here.
 - **Configuration:** `Attention/experiments/kvgrad/configs/ruler4k_qwen3_0.6b.yaml` (model, dtype, attention backend, sample size, seed, presses, compression ratios 0.5 / 0.75 / 0.875).
 - **Reproduction command:**
   `python Attention/experiments/kvgrad/run_ruler.py --config Attention/experiments/kvgrad/configs/ruler4k_qwen3_0.6b.yaml --output_dir <dir>`
-- **Tests:** `python -m pytest Attention/tests/test_kvgrad_run_ruler_smoke.py -q` (CPU, tiny random Qwen3, no downloads; 3 tests pass locally and on Colab).
-- **Own score implementation (Eqs. 6-8) and its tests:** planned, not yet written.
+- **Own implementation:** [`Attention/methods/context_compression/kvgrad/`](../../methods/context_compression/kvgrad/README.md).
+  `scores.py` computes the four score variants of the paper's ablation (Eqs. 6, 7 summed, max-Taylor, Eq. 8)
+  from the replay quantities; `press.py` (`KVgradVariantsPress`) plugs them into kvpress's replay and eviction,
+  with an optional cache so one replay serves all variants and ratios. Benchmark names: `kvgrad_taylor_sum`,
+  `kvgrad_taylor_max`, `kvgrad_bound_sum`, `kvgrad_bound_max`.
+- **Ablation configuration:** `configs/ruler4k_qwen3_0.6b_ablation.yaml` (the four variants at 8:1, 16:1, 32:1).
+- **Tests:** `python -m pytest Attention/tests -q` (CPU, tiny random Qwen3, no downloads; 12 tests):
+  - Eq. (6): Taylor terms summed over probes and heads equal $v \cdot \nabla_v \Phi$ from autograd (float64, rtol 1e-10).
+  - Eq. (7): the magnitude bound holds for every probe and entry.
+  - Reference check: our `bound_max` reproduces kvpress's `KVgradPress` scores (rtol 1e-5, atol 1e-7) and evicts exactly the same KV pairs, with one and with several replay chunks; through `run_ruler.py` it gives identical answers.
+  - Score cache: cached scores evict exactly what a fresh press evicts, for every variant and ratio.
+  - Benchmark script: end-to-end run of all presses, output schema, scoring function, resuming.
 
 ## Results
 
@@ -109,7 +134,8 @@ Observations from the dry run (to be confirmed with the full run):
 
 - **Partial reproduction:** one model (Qwen3-0.6B of the paper's four), RULER only (no LongBench), a stratified subset of RULER instead of all 6,500 examples used by the paper, three compression ratios (the paper also reports 16:1 and 32:1).
 - **Precision and hardware:** fp32 on a T4; the paper ran Qwen3-0.6B on an RTX A5000 and does not state its precision. Absolute latencies are not comparable to the paper.
-- **Upstream implementation:** the KVgrad numbers above use kvpress's `KVgradPress`, not code written in this repository.
+- **Upstream implementation:** the baseline KVgrad numbers use kvpress's `KVgradPress`; our own `kvgrad_bound_max` computes identical scores (tested) and is used for the ablation. Replay, hooks and eviction are reused from kvpress; the score computation is ours.
+- **Ablation latency:** in the ablation run, configurations after the first reuse cached scores, so their latency excludes scoring (flagged in `summary.csv`); KVgrad's real latency comes from the baseline run.
 - **Memory:** kvpress masks evicted entries, so no real memory saving is measured; theoretical kept-cache size is reported instead.
 - **Latency scope:** includes tokenisation and generation of the task's answer length; not a pure prefill benchmark.
 - **Not reproduced:** KVgrad (MLP) surrogate, time-to-first-token figure, larger models.
@@ -121,6 +147,6 @@ Observations from the dry run (to be confirmed with the full run):
 - [x] Exact paper link and version verified
 - [x] Base model revision pinned (`c1899de289a04d12100db370d81485cdf75e47ca`); dataset revision not pinned (`simonjegou/ruler` loaded at its latest version; sampled row ids are saved per run)
 - [x] Baseline runs on the same setup (same sampled rows for every method)
-- [x] Tests and seed handling added (CPU smoke test; seed 42; saved sample ids)
+- [x] Tests and seed handling added (12 CPU tests incl. comparison with kvpress's reference implementation; seed 42; saved sample ids)
 - [x] Resource and quality metrics reported (latency, peak memory, quality; energy marked not measured)
 - [x] Licence/data terms checked (kvpress Apache-2.0; RULER via kvpress Hugging Face dataset)

@@ -133,9 +133,50 @@ are indicative only.
 **Cost estimate for the full run** (all 10 configurations ≈ 130 s of GPU time per sampled example):
 20 per task ≈ 9.4 h, 10 per task ≈ 4.7 h, 8 per task ≈ 3.8 h.
 
+## Full baseline run (started 2026-11-25)
+
+- Decided: 10 examples per task (130 rows), all 10 baseline configurations in one Colab command (resumable),
+  pinned model revision. Config committed as `per_task: 10` (commit `fcbfc14`).
+- Work handed over to a second team member, who started the run on their own Colab / Drive at 16:38 UTC
+  (`kvgrad_results/phase2_full`, code at commit `80ff1aa`, clean). Environment identical to the dry run.
+- Colab offered no GPU for a while before the run; Kaggle (30 free T4 hours/week, background runs) was noted as
+  a fallback.
+- Note: commit `80ff1aa` changed one word in the course file `Attention/README_attention.md`
+  ("Implement" -> "implement"); to be reverted before the pull request so the PR only touches KVgrad files.
+
+## Phase 3: our implementation of the score variants (2026-11-25)
+
+**Added:**
+
+- `Attention/methods/context_compression/kvgrad/`: `scores.py` (the four score variants of the paper's
+  ablation: Eq. 6 `taylor_sum`, `taylor_max`, Eq. 7 summed `bound_sum`, Eq. 8 `bound_max`), `press.py`
+  (`KVgradVariantsPress`, built on kvpress's KVgrad replay and eviction, with a score cache), README with
+  inputs/outputs as required by `Attention/README_attention.md`.
+- `run_ruler.py`: presses `kvgrad_bound_max`, `kvgrad_bound_sum`, `kvgrad_taylor_max`, `kvgrad_taylor_sum`,
+  option `share_scores`, column `scoring_cached` and flag in `summary.csv`. Existing presses unchanged.
+- `configs/ruler4k_qwen3_0.6b_ablation.yaml`: the four variants at 8:1, 16:1, 32:1 (where the paper's Table 4
+  shows the variants separating for Qwen3-0.6B).
+- Tests (12 in total, CPU): `test_kvgrad_variants.py` and an end-to-end variants test in the smoke test; the
+  tiny-model builder moved to `Attention/tests/_kvgrad_tiny_model.py`.
+
+**Verification:** our Eq. (8) reproduces kvpress's `KVgradPress` scores within rtol 1e-5 / atol 1e-7 and evicts
+exactly the same KV pairs (one and several replay chunks); Eq. (6) equals the autograd value of
+$v \cdot \nabla_v \Phi$ to rtol 1e-10; the Eq. (7) bound holds elementwise.
+
+**Problems and fixes.**
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Taylor scores differed from the float64 reference by ~1e-7 | the gradient was always cast to float32 | promote only half-precision gradients |
+| Untimed warm-up would put the first example's scores in the cache | warm-up used the shared-cache press | warm-up uses a press without cache |
+| Variants test saw cached scores inside the first configuration | toy dataset reused identical contexts across tasks (cache correctly hit) | toy contexts made unique per row |
+
+**Ablation cost estimate:** first configuration ~20 s per example (one replay for all four variants), the other
+11 ~3.5 s per example; about 2 h for 130 rows.
+
 ## Next steps
 
-1. Decide the full-run size (proposed: 10 per task, run in three Colab sessions: `no_press kvzip`, `kvzip_plus`, `kvgrad`) and run it with the pinned model revision.
-2. Implement the score variants Eqs. (6), (7), (8) in `Attention/`, with tests comparing our Eq. (8) to kvpress's `KVgradPress` on a tiny model.
-3. Ablation run on Qwen3-0.6B; final `summary.csv` and plots committed.
-4. Complete `PAPER_CARD.md`, link it from `PAPER_INDEX.md`, open the pull request.
+1. Finish the full baseline run (`phase2_full`), commit its `summary.csv`, update the paper card.
+2. Phase 4: run `configs/ruler4k_qwen3_0.6b_ablation.yaml` into the same output folder; commit results and plots.
+3. Phase 5: revert the change to `Attention/README_attention.md`, complete `PAPER_CARD.md`, add result rows to
+   `Performance_Metrics/README_metrics.md`, link the card from `PAPER_INDEX.md`, open the pull request (`Closes #8`).

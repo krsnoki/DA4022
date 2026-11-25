@@ -20,28 +20,9 @@ import pytest
 torch = pytest.importorskip("torch")
 pytest.importorskip("kvpress")
 
+from _kvgrad_tiny_model import WORDS, make_tiny_model
+
 SCRIPT = Path(__file__).resolve().parents[1] / "experiments" / "kvgrad" / "run_ruler.py"
-WORDS = [
-    "the",
-    "grass",
-    "is",
-    "green",
-    "sky",
-    "blue",
-    "sun",
-    "yellow",
-    "here",
-    "we",
-    "go",
-    "there",
-    "and",
-    "back",
-    "again",
-    "secret",
-    "passkey",
-    "number",
-    "is",
-]
 
 
 def _load_script():
@@ -51,54 +32,12 @@ def _load_script():
     return module
 
 
-def _make_tiny_model(path: Path) -> None:
-    from tokenizers import Tokenizer, models, pre_tokenizers, trainers
-    from transformers import PreTrainedTokenizerFast, Qwen3Config, Qwen3ForCausalLM
-
-    tokenizer = Tokenizer(models.BPE(unk_token="<unk>"))
-    tokenizer.pre_tokenizer = pre_tokenizers.Whitespace()
-    trainer = trainers.BpeTrainer(vocab_size=300, special_tokens=["<unk>", "<bos>", "<eos>"])
-    corpus = [" ".join(WORDS)] * 20 + [str(i) for i in range(100)] + ["Repeat the previous context : ? ."]
-    tokenizer.train_from_iterator(corpus, trainer)
-    hf_tokenizer = PreTrainedTokenizerFast(
-        tokenizer_object=tokenizer, unk_token="<unk>", bos_token="<bos>", eos_token="<eos>"
-    )
-    hf_tokenizer.save_pretrained(path)
-
-    config = Qwen3Config(
-        vocab_size=hf_tokenizer.vocab_size,
-        hidden_size=64,
-        intermediate_size=128,
-        num_hidden_layers=2,
-        num_attention_heads=4,
-        num_key_value_heads=2,
-        head_dim=16,
-        max_position_embeddings=2048,
-        bos_token_id=hf_tokenizer.bos_token_id,
-        eos_token_id=hf_tokenizer.eos_token_id,
-        pad_token_id=hf_tokenizer.eos_token_id,
-        tie_word_embeddings=False,
-        attention_bias=True,
-        rope_theta=1_000_000.0,
-    )
-    torch.manual_seed(0)
-    model = Qwen3ForCausalLM(config)
-    # kvpress evicts a KV pair by replacing its key with a "fake key" that every query ignores, which
-    # requires the queries of a head to lie in a common half-space. Trained LLMs satisfy this; random
-    # weights do not. A bias on the slowest-rotating RoPE dimension (index head_dim/2 - 1) reproduces it.
-    with torch.no_grad():
-        for layer in model.model.layers:
-            bias = torch.zeros_like(layer.self_attn.q_proj.bias)
-            bias[config.head_dim // 2 - 1 :: config.head_dim] = 10.0
-            layer.self_attn.q_proj.bias.copy_(bias)
-    model.save_pretrained(path)
-
-
 def _make_toy_ruler(path: Path) -> None:
     rows = []
-    for task in ["niah_single_1", "qa_1"]:
+    for t, task in enumerate(["niah_single_1", "qa_1"]):
         for i in range(3):
-            context = " ".join(WORDS * 4) + f" the secret number is {10 + i} " + " ".join(WORDS * 4)
+            # every row has a different context (the score cache is keyed by the context)
+            context = " ".join(WORDS * (4 + t)) + f" the secret number is {10 + i} " + " ".join(WORDS * 4)
             rows.append(
                 {
                     "context": context,
@@ -115,7 +54,7 @@ def _make_toy_ruler(path: Path) -> None:
 @pytest.fixture(scope="module")
 def tiny_setup(tmp_path_factory):
     root = tmp_path_factory.mktemp("kvgrad_smoke")
-    _make_tiny_model(root / "model")
+    make_tiny_model(root / "model")
     _make_toy_ruler(root / "toy_ruler.parquet")
     return root
 
@@ -191,3 +130,50 @@ def test_config_rejects_unknown_press():
     run_ruler = _load_script()
     with pytest.raises(ValueError, match="Unknown press"):
         run_ruler.load_config(["--presses", "not_a_press"])
+
+
+def test_run_ruler_kvgrad_variants_share_scores(tiny_setup):
+    """Our variant presses run through the script; the first configuration replays each context once and
+    every later configuration reuses those scores. Our bound_max must answer exactly like kvpress's kvgrad."""
+    run_ruler = _load_script()
+    run_ruler.SCORE_CACHE.clear()
+    out_dir = tiny_setup / "results_variants"
+    argv = [
+        "--model",
+        str(tiny_setup / "model"),
+        "--data_file",
+        str(tiny_setup / "toy_ruler.parquet"),
+        "--device",
+        "cpu",
+        "--per_task",
+        "2",
+        "--presses",
+        "kvgrad",
+        "kvgrad_bound_max",
+        "kvgrad_bound_sum",
+        "kvgrad_taylor_max",
+        "kvgrad_taylor_sum",
+        "--compression_ratios",
+        "0.5",
+        "0.75",
+        "--warmup",
+        "1",
+        "--output_dir",
+        str(out_dir),
+    ]
+    summary = pd.read_csv(run_ruler.main(argv))
+    assert len(summary) == 10
+
+    def metrics(name):
+        return json.loads((out_dir / name / "metrics.json").read_text())
+
+    assert metrics("kvgrad_bound_max_cr0.500")["scoring_cached_fraction"] == 0.0  # replayed every context
+    for name in ["kvgrad_bound_max_cr0.750", "kvgrad_taylor_sum_cr0.500", "kvgrad_taylor_sum_cr0.750"]:
+        assert metrics(name)["scoring_cached_fraction"] == 1.0  # reused the scores, no replay
+    assert metrics("kvgrad_cr0.500")["scoring_cached_fraction"] == 0.0  # kvpress press: never cached
+
+    for ratio in ["0.500", "0.750"]:
+        ours = pd.read_csv(out_dir / f"kvgrad_bound_max_cr{ratio}" / "predictions.csv").sort_values("row_id")
+        ref = pd.read_csv(out_dir / f"kvgrad_cr{ratio}" / "predictions.csv").sort_values("row_id")
+        assert ours["predicted_answer"].tolist() == ref["predicted_answer"].tolist()
+    assert summary["notes"].str.contains("scores reused without replay").sum() == 7

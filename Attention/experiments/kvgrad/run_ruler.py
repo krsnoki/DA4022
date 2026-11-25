@@ -36,6 +36,7 @@ import json
 import platform
 import re
 import subprocess
+import sys
 import time
 from datetime import datetime, timezone
 from importlib.metadata import PackageNotFoundError, version
@@ -48,6 +49,7 @@ import torch
 import yaml
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+ATTENTION_DIR = SCRIPT_DIR.parents[1]  # makes Attention/methods importable
 
 DEFAULTS: dict[str, Any] = {
     "model": "Qwen/Qwen3-0.6B",
@@ -66,6 +68,7 @@ DEFAULTS: dict[str, Any] = {
     "warmup": 1,
     "max_new_tokens": None,  # None = use each task's default from the dataset
     "save_every": 10,
+    "share_scores": True,  # KVgrad variants: replay each context once and reuse the scores of all variants
     "output_dir": "results",
     "status": "partial",
     "notes": "",
@@ -164,18 +167,43 @@ def _kvgrad(ratio: float):
     return KVgradPress(compression_ratio=ratio)
 
 
-# Same definitions as PRESS_REGISTRY in kvpress/evaluation/evaluate_registry.py (v0.5.5).
+# Scores of our KVgrad variants, shared by every configuration of one run (see KVgradVariantsPress).
+SCORE_CACHE: dict = {}
+
+
+def _kvgrad_variant(variant: str):
+    def build(ratio: float, share_scores: bool = True):
+        if str(ATTENTION_DIR) not in sys.path:
+            sys.path.insert(0, str(ATTENTION_DIR))
+        from methods.context_compression.kvgrad import KVgradVariantsPress
+
+        cache = SCORE_CACHE if share_scores else None
+        return KVgradVariantsPress(compression_ratio=ratio, variant=variant, score_cache=cache)
+
+    return build
+
+
+# Baselines: same definitions as PRESS_REGISTRY in kvpress/evaluation/evaluate_registry.py (v0.5.5).
+# kvgrad_*: our implementation of the paper's score variants (Attention/methods/context_compression/kvgrad).
 PRESS_BUILDERS = {
     "no_press": None,
     "kvzip": _kvzip,
     "kvzip_plus": _kvzip_plus,
     "kvgrad": _kvgrad,
+    "kvgrad_bound_max": _kvgrad_variant("bound_max"),  # Eq. (8), KVgrad
+    "kvgrad_bound_sum": _kvgrad_variant("bound_sum"),  # Eq. (7) summed over probes (w/o PSP)
+    "kvgrad_taylor_max": _kvgrad_variant("taylor_max"),  # signed Taylor terms, max over probes (w/o MAS)
+    "kvgrad_taylor_sum": _kvgrad_variant("taylor_sum"),  # Eq. (6), first-order Taylor (w/o both)
 }
 
 
-def build_press(name: str, ratio: float):
+def build_press(name: str, ratio: float, share_scores: bool = True):
     builder = PRESS_BUILDERS[name]
-    return None if builder is None else builder(ratio)
+    if builder is None:
+        return None
+    if name.startswith("kvgrad_"):
+        return builder(ratio, share_scores)
+    return builder(ratio)
 
 
 # --------------------------------------------------------------------------------------------
@@ -301,6 +329,8 @@ def run_example(pipe, timer: DecodeTimer, row: pd.Series, press, config: dict[st
         "decode_ms": timer.seconds * 1000,
         "peak_memory_mb": torch.cuda.max_memory_allocated() / 2**20 if device.startswith("cuda") else np.nan,
         "output_tokens": len(pipe.tokenizer(answer, add_special_tokens=False).input_ids),
+        # True when a KVgrad variant reused cached scores (no replay), so this latency excludes scoring
+        "scoring_cached": getattr(press, "last_scoring_cached", None),
     }
 
 
@@ -382,7 +412,14 @@ def summarise(predictions: pd.DataFrame, ratio: float, bytes_per_token: int) -> 
         ),
         "output_tokens_median": int(predictions["output_tokens"].median()),
         "examples_per_s": round(float(len(predictions) / (total.sum() / 1000)), 4),
+        "scoring_cached_fraction": round(float(_cached_fraction(predictions)), 3),
     }
+
+
+def _cached_fraction(predictions: pd.DataFrame) -> float:
+    if "scoring_cached" not in predictions:
+        return 0.0
+    return float(predictions["scoring_cached"].map(lambda v: str(v).lower() == "true").mean())
 
 
 def run_configuration(
@@ -401,10 +438,11 @@ def run_configuration(
     todo = sample[~sample["row_id"].isin(done_ids)]
     print(f"[run ] {run_dir.name}: {len(done_ids)} done, {len(todo)} to go")
 
-    press = build_press(press_name, ratio)
+    press = build_press(press_name, ratio, config["share_scores"])
     timer = DecodeTimer(pipe, config["device"])
+    warmup_press = build_press(press_name, ratio, share_scores=False)  # must not fill the score cache
     for _ in range(config["warmup"] if len(todo) else 0):  # untimed warm-up, result discarded
-        run_example(pipe, timer, sample.iloc[0], press, config)
+        run_example(pipe, timer, sample.iloc[0], warmup_press, config)
 
     records = done.to_dict("records") if len(done) else []
     for i, (_, row) in enumerate(todo.iterrows(), start=1):
@@ -461,6 +499,12 @@ def write_summary(out_dir: Path, config: dict[str, Any], env: dict[str, Any], mo
                     f"prefill+compress median {m['prefill_compress_median_ms']} ms; decode median {m['decode_median_ms']} ms; "
                     f"throughput in examples/s; latency = full pipeline call incl. tokenisation; "
                     f"attn={cfg['attn_implementation']}; energy not measured"
+                    + (
+                        f"; scores reused without replay for {m['scoring_cached_fraction']:.0%} of examples, "
+                        "so latency excludes scoring for those (quality unaffected)"
+                        if m.get("scoring_cached_fraction", 0) > 0
+                        else ""
+                    )
                 ),
             }
         )
