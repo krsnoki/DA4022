@@ -1,0 +1,37 @@
+{
+  "python": "3.11.7",
+  "platform": "macOS-15.7.7-arm64-arm-64bit",
+  "torch": "2.15.0",
+  "transformers": "5.23.0",
+  "device": "arm",
+  "device_type": "cpu",
+  "dtype": "float32",
+  "config": {
+    "backbone_id": "text.qwen2_5_0_5b_instruct.self_supervised",
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "dataset_id": "text.passkey_retrieval.synthetic",
+    "calibration_dataset": null,
+    "seed": 0,
+    "num_samples": 20,
+    "context_tokens": [
+      2000,
+      4000
+    ],
+    "methods": [
+      "dropkv",
+      "snapkv",
+      "random"
+    ],
+    "budgets": [
+      0.3,
+      0.1,
+      0.05,
+      0.02,
+      0.01
+    ],
+    "window": 8,
+    "kernel_size": 11,
+    "output_dir": "Attention/experiments/dropkv/results_perturbation"
+  }
+}

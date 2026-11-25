@@ -1,0 +1,10 @@
+# Packages used by the DropKV experiments. Install torch the way the PyTorch
+# selector recommends for your machine (CPU or CUDA), then the rest.
+# Versions we ran with: torch 2.14.1 (Colab T4) and 2.15.0 (MacBook CPU),
+# transformers 5.23.0. Only transformers 5.23.0 was tested. The cache code
+# also handles the older key_cache layout, but that path was not run.
+torch
+transformers
+pyyaml
+pytest
+matplotlib   # only for make_plots.py
