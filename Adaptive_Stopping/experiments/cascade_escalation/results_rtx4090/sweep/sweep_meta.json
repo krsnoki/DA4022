@@ -1,0 +1,50 @@
+{
+  "sweep": {
+    "n_splits": 50,
+    "split_seed0": 42,
+    "cal_fraction": 0.5,
+    "n_budgets": 500,
+    "max_depth": 5,
+    "grid_sizes": {
+      "2": null,
+      "3": 128,
+      "4": 40,
+      "5": 16
+    },
+    "costs": [
+      "flops",
+      "gpu_time"
+    ],
+    "scores": [
+      "mean_negentropy",
+      "min_negentropy",
+      "prob_margin",
+      "min_prob",
+      "length_norm",
+      "correctness_tokenprob",
+      "benefit_tokenprob",
+      "random"
+    ]
+  },
+  "scores": [
+    "mean_negentropy",
+    "min_negentropy",
+    "prob_margin",
+    "min_prob",
+    "length_norm",
+    "correctness_tokenprob",
+    "benefit_tokenprob",
+    "random"
+  ],
+  "costs": [
+    "flops",
+    "gpu_time"
+  ],
+  "datasets": [
+    "mmlu",
+    "triviaqa",
+    "math_hard"
+  ],
+  "commit": "c2fe8200e0488d000fab91af22fa898ecfe41186",
+  "runtime_s": 2191.4906606674194
+}

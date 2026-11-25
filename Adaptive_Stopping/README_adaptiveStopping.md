@@ -136,23 +136,33 @@ pytest Adaptive_Stopping/tests -q
 
 ### Results
 
-_TODO: fill in from `Performance_Metrics/results/cascade_escalation.csv` after the GPU run._
+Status: **partial reproduction** (open models on 1x RTX 4090 instead of the paper's API models; FLOP-proxy and GPU-time costs instead of USD). Full tables, plots and run metadata: [`experiments/cascade_escalation/results_rtx4090/`](experiments/cascade_escalation/results_rtx4090/); details and caveats in the [paper card](methods/cascade_escalation/PAPER_CARD.md#results).
 
 Paper reference (Table 1, mean-negentropy score, API models): `S_2 - S_1` = +3.93 pp MMLU, +5.72 pp TriviaQA, +2.80 pp MATH; `S_3 - S_2` negative in 38 of 45 cases.
 
-| Benchmark | Score | Always-small acc. | Always-large acc. | Best `S_1` acc. at mid budget | Best `S_2` acc. at mid budget | `S_2 - S_1` (pp, mean ± sd over 50 splits) | `S_3 - S_2` (pp) | Score AUROC (small model) |
-|---|---|---:|---:|---:|---:|---:|---:|---:|
-| MMLU | mean_negentropy | _TODO_ | _TODO_ | _TODO_ | _TODO_ | _TODO_ | _TODO_ | _TODO_ |
-| TriviaQA | mean_negentropy | _TODO_ | _TODO_ | _TODO_ | _TODO_ | _TODO_ | _TODO_ | _TODO_ |
-| MATH (L3-5) | mean_negentropy | _TODO_ | _TODO_ | _TODO_ | _TODO_ | _TODO_ | _TODO_ | _TODO_ |
+Ours (cost = FLOP proxy, score = mean negentropy, test accuracy area-averaged over 500 budgets, mean over 50 splits):
 
-Live batch-size-1 run (RTX 4090):
+| Benchmark | Score | Always-small acc. | Always-large acc. | `S_1` acc. (area) | `S_2` acc. (area) | `S_2 - S_1` (pp, mean ± sd over 50 splits) | `S_3 - S_2` (pp) | Score AUROC (small model) |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| MMLU | mean_negentropy | 40.1% | 71.0% | 59.7% | 62.3% | +2.54 ± 0.46 | −0.04 | 0.62 |
+| TriviaQA | mean_negentropy | 0.1% | 51.2% | 36.8% | 40.6% | +3.75 ± 0.37 | −0.01 | n/a (small model ~never correct) |
+| MATH (L3-5) | mean_negentropy | 25.1% | 62.7% | 47.6% | 50.9% | +3.34 ± 0.38 | +0.002 | 0.72 |
+
+Across 7 informative scores × 3 benchmarks × 2 cost measures, `S_2 - S_1` is +1.7 to +6.1 pp, and `S_3`/`S_4`/`S_5 - S_2` is ≤ 0 in 122 of 126 comparisons (the rest ≤ +0.002 pp): the paper's main finding, that cascades deeper than two models rarely pay, reproduces.
+
+Live batch-size-1 run (RTX 4090, Qwen2.5-0.5B → Qwen2.5-7B, MMLU, 200 test queries; both models resident):
 
 | Configuration | Accuracy | Latency median (ms) | Latency p95 (ms) | Mean models called | Peak memory (MB) |
 |---|---:|---:|---:|---:|---:|
-| Always-small | _TODO_ | _TODO_ | _TODO_ | 1.00 | _TODO_ |
-| Always-large | _TODO_ | _TODO_ | _TODO_ | 1.00 | _TODO_ |
-| Best `S_2` cascade | _TODO_ | _TODO_ | _TODO_ | _TODO_ | _TODO_ |
+| Always-small | 38.0% | 42 | 46 | 1.00 | 15,560 |
+| Always-large | 57.5% | 54 | 77 | 1.00 | 15,656 |
+| `S_2` cascade, 25% budget | 46.5% | 43 | 119 | 1.24 | 15,616 |
+| `S_2` cascade, 50% budget | 53.0% | 93 | 120 | 1.54 | 15,627 |
+| `S_2` cascade, 75% budget | 58.5% | 96 | 128 | 1.79 | 15,656 |
+
+The cascade cuts compute (3.02 vs 3.36 TFLOPs/query at slightly higher accuracy) but not batch-1 latency: on one GPU the 7B model is bandwidth-bound and nearly as fast as the 0.5B model on short answers, so running both on escalated queries is slower. Peak memory is for both models loaded; weights alone are 0.95 GB (0.5B) and 14.6 GB (7B). TriviaQA and MATH live rows are in [`live_summary.csv`](experiments/cascade_escalation/results_rtx4090/live/live_summary.csv).
+
+![MMLU accuracy vs budget](experiments/cascade_escalation/results_rtx4090/plots/accuracy_vs_budget_mmlu_flops.png)
 
 ### Result-row schema
 

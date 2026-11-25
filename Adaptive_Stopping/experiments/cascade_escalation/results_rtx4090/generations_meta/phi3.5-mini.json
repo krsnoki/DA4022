@@ -1,0 +1,79 @@
+{
+  "model_id": "microsoft/Phi-3.5-mini-instruct",
+  "slug": "phi3.5-mini",
+  "config_num_parameters": 3821079552,
+  "license": "mit",
+  "revision": "2fe192450127e6a83f7441aef6e3ca586c338b77",
+  "hub_parameter_count": 3821079552,
+  "environment": {
+    "python": "3.12.16",
+    "platform": "Linux-6.5.0-18-generic-x86_64-with-glibc2.39",
+    "commit": "80d5fa0158c8a63761ce3d79e894590d71728c1c",
+    "torch": "2.14.0+cu130",
+    "cuda_available": true,
+    "cuda_runtime": "13.0",
+    "device": "NVIDIA GeForce RTX 4090",
+    "device_memory_mb": 24083,
+    "transformers": "5.22.2",
+    "vllm": "0.34.0",
+    "numpy": "2.3.5",
+    "pandas": "3.1.1",
+    "nvidia_driver": "595.58.03"
+  },
+  "load_s": 184.15047970274463,
+  "backend": "vllm",
+  "num_parameters_used_for_flops": 3821079552,
+  "datasets": {
+    "mmlu": {
+      "n": 2000,
+      "accuracy": 0.6545,
+      "wall_s": 21.030785906128585,
+      "max_new_tokens": 16,
+      "batch_size": 64,
+      "backends": [
+        "vllm"
+      ],
+      "rows_from_checkpoint": 0,
+      "truncated_frac": 0.846,
+      "mean_n_in": 145.1005,
+      "mean_n_out": 14.131,
+      "peak_memory_allocated_mb": 0.0,
+      "device_memory_used_mb": 21346.4375,
+      "memory_note": "vLLM pre-allocates gpu_memory_utilization of device memory; use live run for peak memory"
+    },
+    "triviaqa": {
+      "n": 2000,
+      "accuracy": 0.453,
+      "wall_s": 8.759744226466864,
+      "max_new_tokens": 48,
+      "batch_size": 64,
+      "backends": [
+        "vllm"
+      ],
+      "rows_from_checkpoint": 0,
+      "truncated_frac": 0.0305,
+      "mean_n_in": 47.3135,
+      "mean_n_out": 6.3175,
+      "peak_memory_allocated_mb": 0.0,
+      "device_memory_used_mb": 21346.4375,
+      "memory_note": "vLLM pre-allocates gpu_memory_utilization of device memory; use live run for peak memory"
+    },
+    "math_hard": {
+      "n": 2000,
+      "accuracy": 0.3395,
+      "wall_s": 269.2860631663352,
+      "max_new_tokens": 1024,
+      "batch_size": 64,
+      "backends": [
+        "vllm"
+      ],
+      "rows_from_checkpoint": 0,
+      "truncated_frac": 0.0405,
+      "mean_n_in": 100.7225,
+      "mean_n_out": 383.0025,
+      "peak_memory_allocated_mb": 0.0,
+      "device_memory_used_mb": 21346.4375,
+      "memory_note": "vLLM pre-allocates gpu_memory_utilization of device memory; use live run for peak memory"
+    }
+  }
+}

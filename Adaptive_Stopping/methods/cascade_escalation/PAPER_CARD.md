@@ -1,12 +1,12 @@
 # Paper implementation card: Is Escalation Worth It? A Decision-Theoretic Characterization of LLM Cascades
 
-- **Paper / OpenReview:** Dylan Bouchard, ICML 2026 AdaptFM workshop. arXiv: <https://arxiv.org/abs/2605.06350> (implemented against v2, 2026-10-05). OpenReview forum: _TODO: copy the forum link from the [official accepted-paper list](https://adaptfm.gitlab.io/accepted-papers); it could not be fetched from the build sandbox._ Note: the upstream repository README uses the earlier title "Is Escalation Worth It? On the Depth of LLM Cascades"; both titles refer to the same arXiv ID.
+- **Paper / OpenReview:** Dylan Bouchard, ICML 2026 AdaptFM workshop. arXiv: <https://arxiv.org/abs/2605.06350> (implemented against v2, 2026-10-05). OpenReview forum: <https://openreview.net/forum?id=MfWD7bOKiF> (linked from the [official accepted-paper list](https://adaptfm.gitlab.io/accepted-papers), Poster Session 1). Note: the upstream repository README uses the earlier title "Is Escalation Worth It? On the Depth of LLM Cascades"; both titles refer to the same arXiv ID.
 - **Primary module:** `Adaptive_Stopping/` (a cascade is a per-query stopping rule over a sequence of models: stop at the first model whose confidence clears its threshold).
 - **Secondary modules:** `Performance_Metrics/` (cost/quality frontiers, budget-constrained evaluation); `Backbones/` (model pool); `Dataloaders/` (benchmark prompts).
 - **Owner / reviewer:** @Jigsaw442
-- **Status:** implementing
+- **Status:** partial-reproduction (qualitative findings reproduced on an open-model pool; absolute numbers not comparable to the paper's API-model results)
 - **Upstream code / licence:** <https://github.com/dylanbouchard/llm-cascade-frontiers> at commit `3872d8a`, Apache-2.0. Upstream ships scripts and cached numerical results only, not raw model responses. Its `src/data/prompts/*.parquet` files contain the paper's exact MMLU, TriviaQA and MATH prompts. Our code is a clean reimplementation; no upstream code is copied.
-- **Backbone IDs:** `llm.qwen2.5-0.5b-instruct`, `llm.qwen2.5-1.5b-instruct`, `llm.qwen2.5-3b-instruct`, `llm.qwen2.5-7b-instruct`, `llm.phi-3.5-mini-instruct` (proposed IDs; Hugging Face repos `Qwen/Qwen2.5-{0.5B,1.5B,3B,7B}-Instruct` and `microsoft/Phi-3.5-mini-instruct`). _TODO: pin revisions once the GPU run records them._
+- **Backbone IDs:** `llm.qwen2.5-0.5b-instruct`, `llm.qwen2.5-1.5b-instruct`, `llm.qwen2.5-3b-instruct`, `llm.qwen2.5-7b-instruct`, `llm.phi-3.5-mini-instruct` (proposed IDs; Hugging Face repos `Qwen/Qwen2.5-{0.5B,1.5B,3B,7B}-Instruct` and `microsoft/Phi-3.5-mini-instruct`). Revisions used (Hub commit SHAs recorded by the run): Qwen2.5-0.5B `7ae5576`, 1.5B `989aa79`, 3B `aa8e725`, 7B `a09a354`, Phi-3.5-mini `2fe1924` (full SHAs in [`results_rtx4090/generations_meta/`](../../experiments/cascade_escalation/results_rtx4090/generations_meta/)).
 - **Dataset IDs and split:** MMLU, TriviaQA and MATH (levels 3 to 5), using the paper's exact upstream prompt parquet files (SHA-256 checked against `llm-cascade-frontiers@3872d8a`). 2,000 queries per benchmark, subsampled with seed 2026. The paper's SimpleQA and LiveCodeBench are skipped because they need an LLM judge or code execution. Each benchmark is split 50 times into stratified calibration/test halves (seeds 42 to 91).
 - **Hardware assumptions:** generation on 1x NVIDIA RTX 4090 (24 GB), bf16, greedy decoding, top-15 log-probs, one model resident at a time; the offline policy search is CPU-only NumPy and needs no GPU.
 
@@ -56,14 +56,40 @@ Code layout (on branch `cascade-escalation`):
 
 ## Results
 
-| Source | Quality | Latency | Throughput | Peak memory | Energy | Notes |
+Run on 1x RTX 4090 (24 GB), vLLM 0.34.0 for generation (greedy, bf16, top-15 log-probs), transformers 5.24.1 for the live batch-size-1 runs, 2026-11-24/25. The GPU run used commit `80d5fa0` (the merged code plus a teammate's `run_gpu.sh` fixes for the rented box); those changes are included in this repository's history. Offline protocol: 50 stratified calibration/test splits (seeds 42 to 91), 500 budgets per split, policy classes S1 to S5. All raw tables and plots: [`experiments/cascade_escalation/results_rtx4090/`](../../experiments/cascade_escalation/results_rtx4090/).
+
+**Quality vs. compute (offline, cost = FLOP proxy, score = mean negentropy, test accuracy area-averaged over the budget grid, mean over 50 splits).**
+
+| Benchmark | Always-small (Qwen2.5-0.5B) | Always-large (Qwen2.5-7B) | Random router | S1 best single model | S2 cascade | S2 − S1 (pp) | S3 − S2 (pp) | S5 − S2 (pp) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| MMLU | 40.1% | 71.0% | 54.5% | 59.7% | 62.3% | +2.54 ± 0.46 | −0.04 | −0.04 |
+| TriviaQA | 0.1% | 51.2% | 23.6% | 36.8% | 40.6% | +3.75 ± 0.37 | −0.01 | −0.01 |
+| MATH (L3-5) | 25.1% | 62.7% | 42.6% | 47.6% | 50.9% | +3.34 ± 0.38 | +0.002 | +0.002 |
+| Paper (Table 1, API models) | | | | | | MMLU +3.93, TriviaQA +5.72, MATH +2.80 | MMLU −0.05, TriviaQA +0.05, MATH −0.08 | |
+
+Across all 7 informative scores × 3 benchmarks × 2 cost measures (42 cases per depth), S2 − S1 ranges from +1.73 to +6.06 pp (an uninformative random score gives +1.07 to +2.92 pp, i.e. part of the gain is just mixing two models). Going deeper almost never helps: S3/S4/S5 − S2 is ≤ 0 in 122 of 126 comparisons, and the 4 positive cases are each ≤ +0.002 pp. This matches the paper's headline ("depth beyond two rarely pays").
+
+**Measured live cascade (batch size 1, Qwen2.5-0.5B → Qwen2.5-7B, both resident, thresholds frozen from split-0 calibration at 25/50/75% of the cost range).**
+
+| Source | Quality | Latency (median / p95) | Throughput | Peak memory | Energy | Notes |
 |---|---:|---:|---:|---:|---:|---|
-| Paper-reported | `S_2 - S_1`: MMLU +3.93, TriviaQA +5.72, MATH +2.80 pp | not reported | not reported | not reported | not reported | Table 1, mean-negentropy; API models; cost in USD; mean over 50 splits |
-| Local baseline (always-small, Qwen2.5-0.5B) | _TODO_ | _TODO_ | _TODO_ | _TODO_ | not_measured | RTX 4090, bf16 |
-| Local baseline (always-large, Qwen2.5-7B) | _TODO_ | _TODO_ | _TODO_ | _TODO_ | not_measured | RTX 4090, bf16 |
-| Local baseline (random router) | _TODO_ | _TODO_ | n/a | n/a | not_measured | expected-value line between small and large |
-| Local method (best `S_2`) | _TODO_ | _TODO_ | _TODO_ | _TODO_ | not_measured | best score per benchmark |
-| Local method (best `S_5`) | _TODO_ | _TODO_ | _TODO_ | _TODO_ | not_measured | |
+| Paper-reported | S2 − S1 = +3.93 / +5.72 / +2.80 pp (MMLU / TriviaQA / MATH) | not reported | not reported | not reported | not reported | API models, USD cost |
+| Local baseline: always-small, MMLU (n=200) | 38.0% | 42 / 46 ms | 19.8 q/s | 15,560 MB* | not_measured | 0.22 TFLOPs/query |
+| Local baseline: always-large, MMLU | 57.5% | 54 / 77 ms | 16.9 q/s | 15,656 MB* | not_measured | 3.36 TFLOPs/query |
+| Local method: cascade@0.75, MMLU | 58.5% (79% escalated) | 96 / 128 ms | 10.2 q/s | 15,656 MB | not_measured | 3.02 TFLOPs/query |
+| Local baseline: always-large, TriviaQA | 49.5% | 93 / 187 ms | 9.6 q/s | 15,550 MB* | not_measured | |
+| Local method: cascade@0.75, TriviaQA | 27.5% (69% escalated) | 466 / 959 ms | 2.0 q/s | 15,546 MB | not_measured | small model is verbose and nearly always wrong |
+| Local baseline: always-large, MATH (n=20) | 65.0% | 10.4 / 22.9 s | 0.08 q/s | 15,613 MB* | not_measured | |
+| Local method: cascade@0.75, MATH | 60.0% (80% escalated) | 20.1 / 33.3 s | 0.05 q/s | 15,613 MB | not_measured | |
+
+\* Both models stay loaded for all live configurations, so peak memory is that of an L+H deployment (weights: 0.95 GB small + 14.6 GB large). A single-model deployment needs only its own weights.
+
+Key takeaways:
+
+- **Escalation pays in compute, not in batch-1 latency.** The cascade saves FLOPs at matched accuracy, but on a single RTX 4090 the 7B model is memory-bandwidth-bound and answers short questions almost as fast as the 0.5B model. Running both models sequentially on escalated queries therefore *increases* end-to-end latency (MMLU median 54 → 96 ms at 79% escalation). The paper's cost model (API price per token) has no such effect.
+- **Depth > 2 does not help**, under both cost measures and all scores (see above).
+- **Prop. 3.2 holds on real data:** the directly integrated gain over random escalation equals p·[Γ(U_L) − Γ(U_H)] to numerical precision for every score with continuous values ([`theory.csv`](../../experiments/cascade_escalation/results_rtx4090/sweep/theory.csv)).
+- **TriviaQA small model.** Qwen2.5-0.5B answers in full sentences, so the paper's strict normalised exact-match grader scores it at 0.1%. Under GPU-time cost the cheapest model is Qwen2.5-1.5B instead (31.5%), giving S2 − S1 = +2.3 to +3.8 pp.
 
 ## Differences and limitations
 
@@ -78,9 +104,9 @@ Code layout (on branch `cascade-escalation`):
 
 ## Reproduction checklist
 
-- [ ] Exact paper link and version verified (arXiv v2 done; OpenReview link TODO)
-- [ ] Base model and dataset revisions pinned
-- [ ] Baseline runs on the same setup
-- [ ] Tests and seed handling added (split seeds 42 to 91)
-- [ ] Resource and quality metrics reported
+- [x] Exact paper link and version verified (arXiv v2; OpenReview forum MfWD7bOKiF)
+- [x] Base model and dataset revisions pinned (model SHAs above; prompts SHA-256 checked)
+- [x] Baseline runs on the same setup (always-small, always-large, random router; same splits and budgets)
+- [x] Tests and seed handling added (split seeds 42 to 91; 31 CPU tests)
+- [x] Resource and quality metrics reported (energy not measured)
 - [x] Licence/data terms checked (upstream Apache-2.0; dataset records keep their original licences; Qwen2.5 Apache-2.0 except 3B under the Qwen Research licence; Phi-3.5-mini MIT)
