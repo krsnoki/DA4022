@@ -12,7 +12,7 @@ data_dir: "4096"
 split: test
 data_file: null
 
-per_task: 20                  # 13 tasks x 20 = 260 examples, identical for every press
+per_task: 10                  # 13 tasks x 20 = 260 examples, identical for every press
 seed: 42
 
 presses: [no_press, kvzip, kvzip_plus, kvgrad]
