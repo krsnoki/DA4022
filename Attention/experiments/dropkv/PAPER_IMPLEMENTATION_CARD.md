@@ -40,9 +40,10 @@ None of these numbers were measured by us. Our local numbers are in the Results 
 
 - **Input contract:** queries of the observation window `q [B, H, W, D]`, cached keys and values `k, v [B, H, N, D]`, any float dtype (scoring is done in float32). In the Hugging Face path the queries are recorded by forward hooks on each attention layer (`q_proj` output of the last `W` positions with RoPE applied) and grouped-query heads are folded onto their KV head. Batch size 1.
 - **Output contract:** scores `[B, H, N]` float32; kept indices `[B, H, n_keep]` sorted, always containing the last `W` positions; the cache is modified in place to keys/values of shape `[B, H, n_keep, D]`. Decoding continues with the original position ids.
-- **Configuration:** [`Attention/configs/dropkv/qwen2_5_0_5b.yaml`](../../configs/dropkv/qwen2_5_0_5b.yaml) (30% and 10% budgets) and [`qwen2_5_0_5b_low_budget.yaml`](../../configs/dropkv/qwen2_5_0_5b_low_budget.yaml) (5%, 2%, 1%). Important fields: `budgets` (fraction of positions kept per head), `window` (8), `kernel_size` (11), `methods`, `context_tokens`, `model_revision`.
+- **Configuration:** [`Attention/configs/dropkv/qwen2_5_0_5b.yaml`](../../configs/dropkv/qwen2_5_0_5b.yaml) (30% and 10% budgets) and [`qwen2_5_0_5b_low_budget.yaml`](../../configs/dropkv/qwen2_5_0_5b_low_budget.yaml) (5%, 2%, 1%); [`perturbation.yaml`](../../configs/dropkv/perturbation.yaml) for the perturbation run. Important fields: `budgets` (fraction of positions kept per head), `window` (8), `kernel_size` (11), `methods`, `context_tokens`, `model_revision`.
 - **Reproduction command:** `python -m Attention.experiments.dropkv.run_benchmark --config Attention/configs/dropkv/qwen2_5_0_5b.yaml`
-- **Tests:** `python -m pytest Attention/tests/test_dropkv.py -q` (CPU, no downloads)
+- **Output-perturbation command:** `python -m Attention.experiments.dropkv.run_perturbation --config Attention/configs/dropkv/perturbation.yaml` (CPU, about 20 minutes on a laptop)
+- **Tests:** `python -m pytest Attention/tests/test_dropkv.py -q` (CPU, no downloads, 26 tests)
 
 Code map:
 
@@ -52,7 +53,8 @@ Code map:
 | `Attention/methods/kv_eviction/eviction.py` | query recording hooks, cache compression, prefill and greedy decode on the compressed cache |
 | `Attention/methods/kv_eviction/perturbation.py` | Lemma 1, exact objective, brute-force optimum (used for checks) |
 | `Attention/tests/test_dropkv.py` | correctness tests |
-| `Attention/experiments/dropkv/run_benchmark.py` | benchmark driver |
+| `Attention/experiments/dropkv/run_benchmark.py` | benchmark driver (accuracy, latency, memory) |
+| `Attention/experiments/dropkv/run_perturbation.py` | output-perturbation driver (attention-output shift and next-token KL) |
 
 ## Results
 
@@ -89,10 +91,43 @@ Cost of the method at 4000 tokens:
 | KV cache (MB) | 46.95 | 4.70 | 4.70 |
 | Peak memory during decode (MB) | 2167.8 | 2124.8 | 2124.8 |
 
+### Output perturbation
+
+Measured with [`run_perturbation.py`](run_perturbation.py) on a MacBook CPU (Apple M1, 8 GB), float32, torch 2.15.0, transformers 5.23.0, 20 prompts per row. For every prompt the cache is built once and each method is applied to the same cache. `attn_shift` is the relative change of the attention output of the 8 window queries, `||a_kept - a_full|| / ||a_full||`, averaged over queries, heads and layers. `next_token_kl` is the KL divergence of the next-token distribution at the first decode step against the full cache. Lower is better for both. Raw rows: [`results_perturbation/perturbation.csv`](results_perturbation/perturbation.csv) and [`perturbation_per_layer.csv`](results_perturbation/perturbation_per_layer.csv).
+
+Prompts of about 4000 tokens (4006 after the chat template):
+
+| Budget | DropKV shift | SnapKV shift | Random shift | DropKV KL | SnapKV KL | Random KL | DropKV lower than SnapKV on (shift / KL) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 30% | 0.0302 | 0.0291 | 1.62 | 2e-05 | 1.8e-05 | 2.67 | 0% / 35% of prompts |
+| 10% | 0.0603 | 0.0588 | 2.38 | 5.8e-05 | 5.2e-05 | 8.15 | 0% / 20% of prompts |
+| 5% | 0.0802 | 0.0785 | 2.65 | 8.3e-05 | 8.2e-05 | 9.06 | 0% / 50% of prompts |
+| 2% | 0.121 | 0.116 | 2.92 | 0.000333 | 0.000407 | 11.5 | 0% / 45% of prompts |
+| 1% | 0.207 | 0.197 | 3.05 | 0.031 | 0.073 | 12.3 | 0% / 80% of prompts |
+
+Prompts of about 2000 tokens (2014 after the chat template):
+
+| Budget | DropKV shift | SnapKV shift | Random shift | DropKV KL | SnapKV KL | Random KL | DropKV lower than SnapKV on (shift / KL) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 30% | 0.0278 | 0.0269 | 1.59 | 9e-06 | 7e-06 | 2.3 | 0% / 30% of prompts |
+| 10% | 0.059 | 0.0571 | 2.4 | 3.2e-05 | 2.9e-05 | 8.22 | 0% / 35% of prompts |
+| 5% | 0.091 | 0.0883 | 2.7 | 0.000193 | 0.000216 | 11.2 | 0% / 55% of prompts |
+| 2% | 0.212 | 0.199 | 2.98 | 0.0106 | 0.13 | 12.7 | 0% / 70% of prompts |
+| 1% | 0.39 | 0.388 | 3.1 | 6.97 | 7.44 | 12.4 | 20% / 50% of prompts |
+
+Caveats: `attn_shift` is measured on the same window queries that were used for scoring, `next_token_kl` is not. Each row averages 20 synthetic prompts, so a difference of a few percent is small compared with the spread between prompts. KL values at 30% to 5% are of the order of 1e-5 to 1e-4 and are close to numerical noise.
+
+What the perturbation numbers show:
+
+- Both attention-guided rules change the output far less than random eviction, for example at 10% the shift is about 0.06 against 2.4 for random.
+- On the quantity that the paper derives its score from, the attention-output shift, DropKV is slightly **higher** than SnapKV in all 10 settings (2 context lengths x 5 budgets), by 0.5% to 6.5%. DropKV is lower on 0% of the prompts in 9 of the 10 settings and on 20% in the remaining one.
+- On next-token KL, DropKV has the lower mean in 5 of the 10 settings, mostly at the smallest budgets (for example 0.031 against 0.073 at 4000 tokens and 1%, and 0.011 against 0.130 at 2000 tokens and 2%). The share of prompts on which it is lower ranges from 20% to 80% with an average of 47%, which is no consistent difference.
+- Taken together, this experiment does not show the advantage of DropKV over SnapKV that the paper reports. We did not investigate why. Possible factors are the small model, the short contexts, the shared max-pooling and protected window, and the fact that the guarantee in the paper is for the exact single-query objective while our measurement averages over heads, layers and a multi-query window.
+
 What these numbers show, and what they do not:
 
 - Eviction guided by the window attention works on this task: the cache can be cut to 2% (46.95 MB to 0.94 MB) with no loss in accuracy, while random eviction at any budget destroys the answer.
-- **DropKV and SnapKV cannot be told apart here.** They have the same accuracy at every budget, including the point where both break (1%). The advantage over SnapKV reported in the paper is therefore not reproduced by this experiment. A single passkey that the final question attends to directly is too easy to separate an attention-only score from a value-aware one; that would need tasks such as RULER or LongBench at much longer contexts.
+- **DropKV and SnapKV cannot be told apart by accuracy.** They have the same accuracy at every budget, including the point where both break (1%). A single passkey that the final question attends to directly is too easy to separate an attention-only score from a value-aware one. The output-perturbation measurement above looks at the effect of eviction directly and does not show a consistent advantage of DropKV either, so the advantage over SnapKV reported in the paper is not reproduced by these experiments.
 - Scoring is not free: prefill is about 13% slower with DropKV and about 8% slower with SnapKV than with no eviction. The difference between the two is the value-residual term.
 - Decode latency did not improve. With a 0.5B model and a 4K prompt on a T4 the KV cache is under 50 MB, so decoding is not limited by cache size. The throughput gains in the paper come from 32K-128K contexts and large batches, which were not tested.
 - Peak memory during prefill does not change, because the whole prompt is processed before anything is evicted. Decode-time peak memory drops by 43 MB, which matches the reduction of the cache itself.
@@ -102,7 +137,7 @@ What these numbers show, and what they do not:
 
 - **Model scale:** Qwen2.5-0.5B-Instruct instead of the 7-8B models of the paper.
 - **Context length:** about 2K and 4K tokens instead of 16K-128K.
-- **Task:** synthetic passkey retrieval instead of RULER and LongBench, so quality numbers are not comparable with the paper's tables. On this task DropKV and SnapKV give identical accuracy, so the paper's improvement over SnapKV is not reproduced.
+- **Task:** synthetic passkey retrieval instead of RULER and LongBench, so quality numbers are not comparable with the paper's tables. On this task DropKV and SnapKV give identical accuracy, and the output-perturbation measurement shows no consistent advantage for DropKV, so the paper's improvement over SnapKV is not reproduced.
 - **Kernels:** the fused Triton kernels are not implemented. Our scoring uses the same `||a||^2 + ||v||^2 - 2<a, v>` expansion, which avoids the `[W, N, D]` temporary, but it still materialises the `[W, N]` attention weights. The 19.8x kernel speedup is therefore not reproduced.
 - **Baselines:** full cache, SnapKV and random only. AnDPro, CriticalKV, CAKE, PyramidKV, KeyDiff and the adaptive head budget variant (AdaDropKV) are not included.
 - **Memory:** eviction happens after the prompt has been processed once, so peak memory during prefill does not go down. The saving is in the resident KV cache and in decode-time memory, which are reported separately.
