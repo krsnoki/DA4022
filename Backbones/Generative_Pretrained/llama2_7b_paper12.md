@@ -1,7 +1,7 @@
 # Backbone Registration — LLaMA-2-7B
 
 > Registered for: Paper #12 — Rethinking Layer Redundancy
-> Registered by: Hemang Gautam (HemangGautam08) <!-- YOUR NAME HERE e.g. John Doe (@johndoe) -->
+> Registered by: Hemang Gautam (HemangGautam08)
 
 ## Model Card
 
