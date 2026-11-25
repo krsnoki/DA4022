@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Implement methods that reduce the cost of attention or the context processed by foundation models. This module covers sparse/linear/low-rank attention, conditional memory access, context compression, and token selection/merging. KV-cache policies may live here initially, but use `PAPER_INDEX.md` to cross-reference the paper and avoid duplicating a shared KV-cache utility if a dedicated module is later created.
+implement methods that reduce the cost of attention or the context processed by foundation models. This module covers sparse/linear/low-rank attention, conditional memory access, context compression, and token selection/merging. KV-cache policies may live here initially, but use `PAPER_INDEX.md` to cross-reference the paper and avoid duplicating a shared KV-cache utility if a dedicated module is later created.
 
 ## Suggested structure
 
