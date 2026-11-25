@@ -186,13 +186,14 @@ def run_variant(
     codebook_dtype = _resolve_dtype(cfg["codebook_dtype"])
 
     quant_time_s = 0.0
-    if variant_name == "rtn":
+    if variant_name in ("rtn", "rtn_asym"):
         t0 = time.perf_counter()
         quantize_model_rtn(
             model=model,
             target_layer_names=target_layers,
             group_size=cfg["group_size"],
             scale_dtype=scale_dtype,
+            asymmetric=(variant_name == "rtn_asym"),
         )
         _sync_device(device)
         quant_time_s = time.perf_counter() - t0
@@ -205,6 +206,7 @@ def run_variant(
             inner_iters=cfg["inner_iters"],
             scale_dtype=scale_dtype,
             codebook_dtype=codebook_dtype,
+            init_method="paper" if variant_name.endswith("_paperinit") else "split",
         )
         t0 = time.perf_counter()
         fits = {}
@@ -301,7 +303,17 @@ def main() -> None:
     )
     parser.add_argument("--dtype", type=str, default=None, choices=["float16", "bfloat16", "float32"])
     parser.add_argument("--max-windows", type=int, default=None, help="Override for partial smoke runs")
-    parser.add_argument("--variants", nargs="+", default=["unmodified", "rtn", "aaac_s128"])
+    parser.add_argument(
+        "--variants",
+        nargs="+",
+        default=["unmodified", "rtn", "aaac_s128"],
+        choices=[
+            "unmodified", "rtn", "rtn_asym",
+            "aaac_s128", "aaac_s16", "aaac_s128_paperinit", "aaac_s16_paperinit",
+        ],
+        help="rtn = symmetric grid; rtn_asym = min/max zero-point grid; "
+        "*_paperinit = codebook init from the paper's Eq. 9-10",
+    )
     parser.add_argument("--output-json", type=Path, default=Path("Quantization_and_Pruning/quantization/aaac/results/aaac_benchmark_results.json"))
     args = parser.parse_args()
 
@@ -330,7 +342,7 @@ def main() -> None:
 
     rows: list[dict[str, Any]] = []
     for variant in args.variants:
-        s_val = 128 if variant == "aaac_s128" else (16 if variant == "aaac_s16" else None)
+        s_val = 128 if variant.startswith("aaac_s128") else (16 if variant.startswith("aaac_s16") else None)
         print(f"\n>>> Running variant: {variant} (eval={device}, fit={fit_device}, dtype={model_dtype})")
         rows.append(
             run_variant(

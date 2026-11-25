@@ -1,7 +1,7 @@
 """AAAC: Activation-Aware Adaptive Codebooks for 4-bit LLM weight quantization."""
 
 from .assignment import assign_selection_groups, encode_indices, nearest_codeword
-from .codebook_init import initial_codebooks, quantile_codebook, weighted_quantiles
+from .codebook_init import initial_codebooks, paper_initial_codebooks, quantile_codebook, weighted_quantiles
 from .codec import (
     PackedAAACLayer,
     decode_scales_and_selectors,
@@ -17,7 +17,14 @@ from .codec import (
 from .config import NUM_CODEWORDS, NUM_TABLES, AAACConfig
 from .fit import AAACLayerFit, fit_aaac_layer, fit_aaac_model
 from .linear import AAACLinear, measure_model_storage_bytes, replace_linear_layers_with_aaac
-from .rtn import RTNLinear, quantize_model_rtn, quantize_weight_rtn_int4, reconstruct_rtn_weight
+from .rtn import (
+    RTNLinear,
+    quantize_model_rtn,
+    quantize_weight_rtn_int4,
+    quantize_weight_rtn_int4_asym,
+    reconstruct_rtn_weight,
+    reconstruct_rtn_weight_asym,
+)
 from .scaling import compute_group_scales, expand_group_scales, normalize_weight
 
 __all__ = [
@@ -39,6 +46,7 @@ __all__ = [
     "initial_codebooks",
     "measure_model_storage_bytes",
     "nearest_codeword",
+    "paper_initial_codebooks",
     "normalize_weight",
     "pack_aaac_fit",
     "pack_aaac_layer",
@@ -47,8 +55,10 @@ __all__ = [
     "quantile_codebook",
     "quantize_model_rtn",
     "quantize_weight_rtn_int4",
+    "quantize_weight_rtn_int4_asym",
     "reconstruct_aaac_weight",
     "reconstruct_rtn_weight",
+    "reconstruct_rtn_weight_asym",
     "replace_linear_layers_with_aaac",
     "unpack_int4_indices",
     "unpack_selector_bits",

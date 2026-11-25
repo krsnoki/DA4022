@@ -29,7 +29,7 @@ from torch import nn
 
 from . import lloyd
 from .assignment import assign_selection_groups, encode_indices
-from .codebook_init import initial_codebooks
+from .codebook_init import initial_codebooks, paper_initial_codebooks
 from .config import NUM_CODEWORDS, NUM_TABLES, AAACConfig
 from .scaling import compute_group_scales, expand_group_scales, normalize_weight
 
@@ -118,7 +118,10 @@ def fit_aaac_layer(
 
         scales = compute_group_scales(weight, g, cfg.scale_dtype)
         normalized = normalize_weight(weight, scales, g)
-        codebooks = initial_codebooks(normalized, importance, s)
+        if cfg.init_method == "paper":
+            codebooks = paper_initial_codebooks(normalized)
+        else:
+            codebooks = initial_codebooks(normalized, importance, s)
 
         history: list[float] = []
         for _ in range(cfg.outer_iters):

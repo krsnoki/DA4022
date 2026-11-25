@@ -142,6 +142,7 @@ def measure_model_storage_bytes(model: nn.Module) -> dict[str, int]:
     quantized_codebook_bytes = 0
     quantized_scale_bytes = 0
     quantized_selector_bytes = 0
+    quantized_zero_point_bytes = 0
     unquantized_param_bytes = 0
     quantized_layer_count = 0
 
@@ -159,6 +160,9 @@ def measure_model_storage_bytes(model: nn.Module) -> dict[str, int]:
             quantized_layer_count += 1
             quantized_weight_bytes += mod.packed_indices.numel() * mod.packed_indices.element_size()
             quantized_scale_bytes += mod.scales.numel() * mod.scales.element_size()
+            zp = getattr(mod, "zero_points", None)
+            if zp is not None:
+                quantized_zero_point_bytes += zp.numel() * zp.element_size()
 
     for param in model.parameters():
         key = (param.data_ptr(), param.numel() * param.element_size())
@@ -171,6 +175,7 @@ def measure_model_storage_bytes(model: nn.Module) -> dict[str, int]:
         + quantized_codebook_bytes
         + quantized_scale_bytes
         + quantized_selector_bytes
+        + quantized_zero_point_bytes
     )
     return {
         "quantized_layer_count": quantized_layer_count,
@@ -178,6 +183,7 @@ def measure_model_storage_bytes(model: nn.Module) -> dict[str, int]:
         "codebooks_bytes": quantized_codebook_bytes,
         "scales_bytes": quantized_scale_bytes,
         "selector_bitset_bytes": quantized_selector_bytes,
+        "zero_point_bytes": quantized_zero_point_bytes,
         "total_quantized_bytes": total_quantized_bytes,
         "unquantized_param_bytes": unquantized_param_bytes,
         "total_checkpoint_bytes": total_quantized_bytes + unquantized_param_bytes,

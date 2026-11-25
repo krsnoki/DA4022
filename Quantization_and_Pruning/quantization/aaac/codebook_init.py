@@ -135,6 +135,39 @@ def initial_codebooks(
     return torch.stack(tables)
 
 
+def paper_initial_codebooks(
+    normalized: torch.Tensor,
+    num_codewords: int = NUM_CODEWORDS,
+) -> torch.Tensor:
+    """The paper's initialisation (Eq. 9-10), float32 ``[2, num_codewords]``.
+
+    Both tables are plain (unweighted) quantiles of all normalised weights in the
+    layer, with linear interpolation:
+
+        T0[i] = Quantile(i / (M - 1))                       spans min .. max
+        T1[i] = Quantile(delta + (1 - delta) * i / (M - 1))  half-step shift, ends at max
+        delta = 1 / (2 (M - 1))
+
+    Uses a full sort instead of ``torch.quantile``, which has an input size limit.
+    """
+    if normalized.ndim != 2 or normalized.numel() == 0:
+        raise ValueError("normalized must be a non-empty [out, in] tensor")
+    if not torch.isfinite(normalized).all():
+        raise ValueError("normalized must be finite")
+    values = normalized.detach().reshape(-1).to(torch.float64).sort().values
+    n = values.numel()
+    steps = torch.arange(num_codewords, dtype=torch.float64, device=values.device) / (num_codewords - 1)
+    delta = 1.0 / (2 * (num_codewords - 1))
+    tables = []
+    for probs in (steps, delta + (1.0 - delta) * steps):
+        pos = probs.clamp(0.0, 1.0) * (n - 1)
+        lo = pos.floor().long()
+        hi = pos.ceil().long()
+        frac = pos - lo.to(torch.float64)
+        tables.append(values[lo] + frac * (values[hi] - values[lo]))
+    return torch.stack(tables).to(torch.float32)
+
+
 def _check_inputs(normalized: torch.Tensor, importance: torch.Tensor, selection_size: int) -> tuple[int, int]:
     if normalized.ndim != 2:
         raise ValueError("normalized must be 2-D [out, in]")
