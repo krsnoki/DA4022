@@ -261,6 +261,7 @@ python -m pytest Quantization_and_Pruning/quantization/aaac/tests -q
 | `test_aaac_lloyd.py` | weighted centroid vs plain mean, brute-force match, empty and zero-importance cells keep their value, determinism, chunk invariance, BF16 finalisation, stored indices match BF16 tables |
 | `test_aaac_codec_and_integration.py` | exact 4-bit round trip, selector round trip for S = g and S < g, all-zero group convention, exact packed byte counts, bit-exact parity with the fit and model integration |
 | `test_aaac_rtn.py` | RTN packing bytes and reconstruction, same target layers as AAAC |
+| `test_aaac_smoke.py` | end-to-end on a tiny random Qwen2 (no downloads): calibration, fit, packing, model swap, exact byte counts, AAAC < RTN weighted error, perplexity for all three variants |
 
 `tests/aaac_helpers.py` holds the stand-ins `keep_tables` (no-op update) and
 `round_tables` (plain BF16 cast), used to test the pipeline independently of `lloyd.py`.
