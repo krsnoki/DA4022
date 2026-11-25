@@ -4,7 +4,7 @@
 - **Modality:** text
 - **Architecture:** decoder-only transformer (`Qwen2ForCausalLM`), 24 layers, hidden size 896, 14 attention heads, 2 key/value heads (grouped-query attention), head dimension 64, rotary position embeddings
 - **Pretraining regime:** self_supervised
-- **Training objective/data:** next-token prediction followed by instruction tuning; training data details are not disclosed in the model card (unknown)
+- **Training objective/data:** next-token prediction pretraining followed by instruction tuning. We did not check the training data details, so they are recorded as unknown.
 - **Weights URI and exact revision:** https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct, revision `7ae557604adf67be50417f59c2c2f167def9a775`
 - **License/usage terms:** Apache-2.0 (from the model card)
 - **Tokenizer/processor revision:** tokenizer shipped in the same repository and revision; prompts use the model's chat template
