@@ -1,0 +1,39 @@
+coat:
+  backbone_id: TinyLlama/TinyLlama-1.1B-Chat-v1.0
+  device: cuda:0
+  dtype: float16
+  model_seed: 0
+  calibration_dataset: wikitext2
+  calibration_seed: 0
+  calibration_count: 128
+  calibration_seq_len: 512
+  batch_size: 1
+  rotation_seed: 0
+  logit_atol: 1.0
+  logit_rtol: 0.05
+  gptq:
+    block_size: 128
+    damp_percent: 0.01
+  runtime:
+    activation_bits: 4
+    kv_bits: 4
+
+revisions:
+  backbone: fe8a4ea1ffedaf415f4da2f062534de366a451e6
+  tokenizer: fe8a4ea1ffedaf415f4da2f062534de366a451e6
+  datasets:
+    wikitext2: b08601e04326c79dfdd32d625aee71d232d685c3
+  hadamard_44_sha256: 6077980593166a4bfd599208d9618ca4557c0addccf920cdde801753ea4a7f3d
+
+evaluation:
+  datasets: [wikitext2]
+  seq_len: 1024
+  batch_size: 1
+  seed: 0
+
+generation:
+  dataset: wikitext2
+  prompt_length: 512
+  decode_tokens: 128
+  warmups: 5
+  iterations: 30

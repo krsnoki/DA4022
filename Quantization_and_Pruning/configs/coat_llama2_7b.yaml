@@ -1,0 +1,85 @@
+coat:
+  backbone_id: meta-llama/Llama-2-7b-hf
+  device: cuda:0
+  dtype: float16
+  model_seed: 0
+  calibration_dataset: wikitext2
+  calibration_seed: 0
+  calibration_count: 128
+  calibration_seq_len: 2048
+  batch_size: 1
+  rotation_seed: 0
+  logit_atol: 0.005
+  logit_rtol: 0.005
+  gptq:
+    block_size: 128
+    damp_percent: 0.01
+  runtime:
+    activation_bits: 4
+    kv_bits: 4
+
+revisions:
+  backbone: 01c7f73d771dfac7d292323805ebc428287df4f9
+  tokenizer: 01c7f73d771dfac7d292323805ebc428287df4f9
+  datasets:
+    wikitext2: b08601e04326c79dfdd32d625aee71d232d685c3
+    ptb: 76870253cfca069477f06b7056af87f98490b6eb
+    c4_en: 1588ec454efa1a09f29cd18ddd04fe05fc8653a2
+  hadamard_172_sha256: 66cd19c8ae98afaf89df7699b232b24a5d6af15de96ed5a5ca8d84e68f2a38bb
+
+evaluation:
+  datasets: [wikitext2, ptb, c4_en]
+  seq_len: 2048
+  batch_size: 1
+  seed: 0
+  harness_version: '0.4.8'
+  tasks:
+    winogrande:
+      dataset_id: allenai/winogrande
+      revision: 01e74176c63542e6b0bcb004dcdea22d94fb67b5
+      split: validation
+    social_iqa:
+      dataset_id: allenai/social_i_qa
+      revision: 537a2ec8ec565adc0b70b70752893e59e024df26
+      split: validation
+      data_files:
+        train: default/train/0000.parquet
+        validation: default/validation/0000.parquet
+    piqa:
+      dataset_id: ybisk/piqa
+      revision: 142c51238b3ca2bc61e9a075913871b8b600e8e1
+      split: validation
+      data_files:
+        train: plain_text/train/0000.parquet
+        validation: plain_text/validation/0000.parquet
+    openbookqa:
+      dataset_id: allenai/openbookqa
+      revision: 388097ea7776314e93a529163e0fea805b8a6454
+      split: test
+    lambada_openai:
+      dataset_id: EleutherAI/lambada_openai
+      revision: 900124bf3b8235c6daf21033af9948b3f07346c4
+      split: test
+    hellaswag:
+      dataset_id: Rowan/hellaswag
+      revision: 218ec52e09a7e7462a5400043bb9a69a41d06b76
+      split: validation
+    arc_easy:
+      dataset_id: allenai/ai2_arc
+      revision: 210d026faf9955653af8916fad021475a3f00453
+      split: test
+    arc_challenge:
+      dataset_id: allenai/ai2_arc
+      revision: 210d026faf9955653af8916fad021475a3f00453
+      split: test
+    mmlu:
+      dataset_id: hails/mmlu_no_train
+      revision: b2e1ec9aa795adafe68e8e983248dbd4b52a1c60
+      split: test
+
+generation:
+  dataset: wikitext2
+  prompt_length: 2048
+  decode_tokens: 128
+  warmups: 5
+  iterations: 30
