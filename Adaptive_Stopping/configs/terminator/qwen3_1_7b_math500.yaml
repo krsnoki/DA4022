@@ -1,0 +1,51 @@
+# Settings used for the Qwen3-1.7B / MATH-500 run. The scripts take the same
+# values as command line defaults; see experiments/terminator/README.md.
+backbone:
+  id: Qwen/Qwen3-1.7B
+  revision: 70d244cc86ccca08cf5af4e1e306ecf908b1ad5e
+  dtype: float16          # T4 has no bf16
+  thinking: true          # chat template + explicit <think> token
+sampling:
+  temperature: 0.6
+  top_p: 0.95
+  top_k: 20
+  seed: 0                 # per-problem seed = f(seed, uid), see generate_traces.request_seed
+  max_thinking_tokens: 6000
+  max_answer_tokens: 1024     # at trace time; offline eval extends answers to 2048
+  exit_message: "\nI've run out of thinking tokens. I need to commit to a final answer."
+data:
+  train: {dataset: EleutherAI/hendrycks_math, split: train, n: 2000, seed: 0}   # 1,280 finished (Kaggle 12 h limit)
+  val_fraction: 0.1       # of the train traces, for model and threshold selection
+  test: {dataset: HuggingFaceH4/MATH-500, split: test, n: 500}
+probe:
+  layer_init: copy_of_last_decoder_layer
+  input: last_decoder_layer_output_pre_norm
+  head: rmsnorm_linear
+training:
+  epochs: 2
+  optimizer: adamw
+  lr: 2.0e-4
+  min_lr: 1.0e-6
+  betas: [0.9, 0.999]
+  eps: 1.0e-8
+  weight_decay: 0.01
+  effective_batch_traces: 16   # micro-batch 1, gradient accumulation 16
+  warmup_steps: min(100, total_steps // 10)
+  grad_clip: 1.0
+  loss: class_weighted_bce     # inverse-frequency weights
+  precision: base fp16, probe and optimizer fp32 (no autocast)
+  seed: 1337
+  selection: val_token_macro_f1
+policy:
+  thresholds: [0.5, 0.6, 0.7, 0.8, 0.9]
+  reference_threshold: 0.7
+  window: 10
+  rule: strict_majority      # more than half of the last 10 predictions above threshold
+baselines:
+  fixed_budget_tokens: mean thinking tokens of TERMINATOR at 0.7 on the test set
+  oracle: cut after the labelled first answer position
+latency:
+  n_problems: 30
+  data_seed: 1
+  batch_size: 1
+  hardware: Kaggle Tesla T4 16 GB
