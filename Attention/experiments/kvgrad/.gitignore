@@ -1,0 +1,8 @@
+﻿# Keep generated files and model weights out of git
+results/
+*.safetensors
+*.bin
+*.pt
+*.pth
+__pycache__/
+.ipynb_checkpoints/
