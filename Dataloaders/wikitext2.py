@@ -12,7 +12,7 @@ class EvalWindows:
     input_ids: torch.Tensor       # int64 [num_windows, seq_len]
     total_available_windows: int
     seq_len: int
-    is_partial: bool
+    is_subset: bool
     dataset_name: str
     dataset_config: str
     split: str
@@ -35,14 +35,14 @@ def load_wikitext2_eval_windows(
         raise ValueError(f"Not enough tokens ({encoded.numel()}) for seq_len={seq_len}")
 
     used_windows = total_available if max_windows is None else min(max_windows, total_available)
-    is_partial = used_windows < total_available
+    is_subset = used_windows < total_available
 
     trimmed = encoded[: used_windows * seq_len].reshape(used_windows, seq_len).contiguous()
     return EvalWindows(
         input_ids=trimmed,
         total_available_windows=total_available,
         seq_len=seq_len,
-        is_partial=is_partial,
+        is_subset=is_subset,
         dataset_name=dataset_name,
         dataset_config=dataset_config,
         split=split,

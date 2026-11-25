@@ -131,10 +131,9 @@ the importance of input column `k`, shared by every output row.
 **Default (`init_method="paper"`, `paper_initial_codebooks`):** the paper's Eq. 9–10.
 Both tables are plain quantiles of all normalised weights in the layer:
 `T0[i] = Q(i/15)` spans min..max, and `T1[i] = Q(δ + (1 − δ) i/15)` with δ = 1/30 is
-shifted half a step and ends at the max. On Qwen2.5-0.5B this gives 14.76 PPL at
-S = 128, against 15.01 for the alternative below.
+shifted half a step and ends at the max.
 
-**Alternative (`init_method="split"`, `initial_codebooks`):** the first version, described next.
+**Alternative (`init_method="split"`, `initial_codebooks`):** an importance-weighted variant, described next.
 
 1. For every selection group (S contiguous weights of a row), compute the
    importance-weighted mean `|u|`. If the group's importance sums to 0, use the
@@ -231,29 +230,6 @@ Per-cell sums use a stable sort plus cumulative sum instead of `bincount` /
 Sorts each table ascending and rounds it to BF16. The fit then re-runs group
 assignment and index encoding with the rounded tables, so stored indices always
 match stored tables.
-
-### Sanity numbers
-
-Member 2A ran this fit on **real Qwen2.5-0.5B layers** with the committed C4 energies and
-a throwaway Lloyd update (before `lloyd.py` was finished). The error is
-`Σ I[k] (W_hat − W)²`. RTN is symmetric INT4 (levels −7..7) with the same scales. `rtn.py` stores codes −8..7, but since |u| ≤ 1 code −8 is never used.
-
-| Layer | Shape | S | AAAC error | RTN error | RTN / AAAC |
-|-------|-------|---|-----------|-----------|-----------|
-| `layers.0.self_attn.k_proj` | 128 × 896 | 128 | 824 | 1106 | 1.3× |
-| `layers.0.self_attn.k_proj` | 128 × 896 | 16 | 728 | 1106 | 1.5× |
-| `layers.12.mlp.down_proj` | 896 × 4864 | 128 | 1641 | 2943 | 1.8× |
-| `layers.12.mlp.down_proj` | 896 × 4864 | 16 | 1423 | 2943 | 2.1× |
-| `layers.23.self_attn.o_proj` | 896 × 896 | 128 | 16210 | 33100 | 2.0× |
-| `layers.23.self_attn.o_proj` | 896 × 896 | 16 | 13290 | 33100 | 2.5× |
-
-* `objective_history` should go down every outer round, e.g. `layers.12.mlp.down_proj`
-  with S = 128 gave `[1.08e6, 5.76e5, 5.12e5, 4.86e5]`.
-* S = 16 should beat S = 128 on every layer.
-* Time on CPU: about 16 s for a `down_proj` layer and 2–3 s for an 896 × 896 layer.
-  Nearly all of it is the 30 calls to `encode_indices` inside the Lloyd loop. If you
-  need more speed, you can use `torch.searchsorted` on the sorted tables in place of
-  the 16-way `argmin`, but keep the lowest-index tie rule.
 
 ## 5. Tests
 

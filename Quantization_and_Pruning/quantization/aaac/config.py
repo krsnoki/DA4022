@@ -27,7 +27,7 @@ class AAACConfig:
                     normalised weights, T0 at i/15 and T1 at delta + (1 - delta) i/15,
                     delta = 1/30.
                     "split": importance-weighted mid-point quantiles of the peaky /
-                    flat halves of the selection groups (first version; +0.25 PPL).
+                    flat halves of the selection groups.
     chunk_elements  upper bound on the size of the temporary ``[rows, in, 16]``
                     distance tensor used by nearest-neighbour search. Results do
                     not depend on it; it only trades speed for peak memory.

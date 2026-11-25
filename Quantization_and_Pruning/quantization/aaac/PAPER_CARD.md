@@ -61,17 +61,6 @@ The remaining 272,412,416 B in each quantized checkpoint is the FP16 embedding (
 
 Environment: Apple Silicon Mac, MPS evaluation in FP16, AAAC fit on CPU, Python 3.12, torch 2.15.0, transformers 4.57.6, datasets 3.6.0. Raw output: `results/full_results_paper_options.json`.
 
-### How we got here (first version → paper-matching version)
-
-The first full run used two choices the paper does not spell out. Matching them to the paper closed most of the gap:
-
-| Change | Before | After | Paper |
-|---|---:|---:|---:|
-| RTN: symmetric absmax grid (−7..7) → asymmetric min/max with zero point | 18.16 | 15.54 | 15.54 |
-| AAAC S = 128: weighted peaky/flat split init → paper Eq. 9–10 quantile init | 15.01 | 14.76 | 14.47 |
-
-Both earlier versions are still available (`rtn`, `aaac_s128`, `aaac_s16` variants; `AAACConfig(init_method="split")`), and their raw output is in `results/full_results_s128.json` (measured on a different Mac, Python 3.9, torch 2.8.0, so its timings are not comparable).
-
 ## Differences and limitations
 
 - **AAAC is still 0.29 (S = 128) and 0.10 (S = 16) PPL above the paper.** FP16 and RTN match exactly, so the evaluation protocol and baseline are right; the remaining gap is inside the AAAC fit. The paper leaves the scale formula, quantile interpolation method and tie-breaking unspecified. We use FP16 group absmax scales, linear-interpolated quantiles and lowest-index / table-0 ties. We have not tested which of these causes the gap.

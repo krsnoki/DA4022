@@ -130,7 +130,7 @@ def evaluate_wikitext2_perplexity(
         "evaluated_tokens": total_tokens,
         "evaluated_windows": num_windows,
         "total_available_windows": eval_windows.total_available_windows,
-        "run_status": "partial" if eval_windows.is_partial else "full",
+        "run_status": "subset" if eval_windows.is_subset else "full",
     }
 
 
@@ -302,7 +302,7 @@ def main() -> None:
         help="Device for running fit_aaac_layer (CPU or CUDA recommended).",
     )
     parser.add_argument("--dtype", type=str, default=None, choices=["float16", "bfloat16", "float32"])
-    parser.add_argument("--max-windows", type=int, default=None, help="Override for partial smoke runs")
+    parser.add_argument("--max-windows", type=int, default=None, help="Evaluate only the first N windows (quick check)")
     parser.add_argument(
         "--variants",
         nargs="+",
@@ -312,7 +312,7 @@ def main() -> None:
             "aaac_s128", "aaac_s16", "aaac_s128_paperinit", "aaac_s16_paperinit",
         ],
         help="rtn_asym = min/max zero-point INT4 (matches the paper's RTN); rtn = symmetric grid; "
-        "*_paperinit = codebook init from the paper's Eq. 9-10; aaac_s128 / aaac_s16 = first-version init",
+        "*_paperinit = codebook init from the paper's Eq. 9-10; aaac_s128 / aaac_s16 = weighted split init",
     )
     parser.add_argument("--output-json", type=Path, default=Path("Quantization_and_Pruning/quantization/aaac/results/aaac_benchmark_results.json"))
     args = parser.parse_args()

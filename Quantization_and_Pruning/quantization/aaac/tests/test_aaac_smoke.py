@@ -63,7 +63,7 @@ def _eval_windows():
     g = torch.Generator().manual_seed(2)
     ids = torch.randint(0, VOCAB, (3, SEQ), generator=g)
     return EvalWindows(
-        input_ids=ids, total_available_windows=3, seq_len=SEQ, is_partial=False,
+        input_ids=ids, total_available_windows=3, seq_len=SEQ, is_subset=False,
         dataset_name="random", dataset_config="smoke", split="test",
     )
 
