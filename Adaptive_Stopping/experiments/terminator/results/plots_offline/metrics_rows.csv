@@ -1,0 +1,9 @@
+experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,split,seed,device,framework_version,dtype,batch_size,input_length,output_length,quality_metric,quality_value,latency_median_ms,latency_p95_ms,throughput,peak_memory_mb,energy_j,status,notes
+terminator-000-fixed_budget,terminator,fixed_budget,1c9acce,,,,,0,Tesla T4,,,,,,accuracy,0.804,,,,,,partial,"threshold=None, window=None, budget_tokens=1472, n=500, stop_rate=0.844; energy not_measured"
+terminator-001-no_stop,terminator,no_stop,1c9acce,,,,,0,Tesla T4,,,,,,accuracy,0.87,,,,,,partial,"threshold=None, window=None, budget_tokens=None, n=500, stop_rate=0.0; energy not_measured"
+terminator-002-oracle,terminator,oracle,1c9acce,,,,,0,Tesla T4,,,,,,accuracy,0.852,,,,,,partial,"threshold=None, window=None, budget_tokens=None, n=500, stop_rate=0.858; energy not_measured"
+terminator-003-terminator,terminator,terminator,1c9acce,,,,,0,Tesla T4,,,,,,accuracy,0.806,,,,,,partial,"threshold=0.5, window=10, budget_tokens=None, n=500, stop_rate=0.986; energy not_measured"
+terminator-004-terminator,terminator,terminator,1c9acce,,,,,0,Tesla T4,,,,,,accuracy,0.836,,,,,,partial,"threshold=0.6, window=10, budget_tokens=None, n=500, stop_rate=0.98; energy not_measured"
+terminator-005-terminator,terminator,terminator,1c9acce,,,,,0,Tesla T4,,,,,,accuracy,0.838,,,,,,partial,"threshold=0.7, window=10, budget_tokens=None, n=500, stop_rate=0.96; energy not_measured"
+terminator-006-terminator,terminator,terminator,1c9acce,,,,,0,Tesla T4,,,,,,accuracy,0.85,,,,,,partial,"threshold=0.8, window=10, budget_tokens=None, n=500, stop_rate=0.918; energy not_measured"
+terminator-007-terminator,terminator,terminator,1c9acce,,,,,0,Tesla T4,,,,,,accuracy,0.85,,,,,,partial,"threshold=0.9, window=10, budget_tokens=None, n=500, stop_rate=0.87; energy not_measured"

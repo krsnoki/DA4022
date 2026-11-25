@@ -1,0 +1,9 @@
+{
+  "val_no_stop_accuracy": 0.9219,
+  "tolerance": 0.01,
+  "selected_threshold": null,
+  "fixed_budget_tokens": 1472,
+  "reference_threshold": 0.7,
+  "max_answer_tokens": 2048,
+  "extended_no_stop_answers": 81
+}

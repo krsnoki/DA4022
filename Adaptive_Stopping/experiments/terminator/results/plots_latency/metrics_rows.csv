@@ -1,0 +1,3 @@
+experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,split,seed,device,framework_version,dtype,batch_size,input_length,output_length,quality_metric,quality_value,latency_median_ms,latency_p95_ms,throughput,peak_memory_mb,energy_j,status,notes
+terminator-000-no_stop,terminator,no_stop,1c9acce,,,,,0,Tesla T4,,,,,,accuracy,0.92,304537.22291899973,512874.68022159976,,4469.3388671875,,partial,"threshold=None, window=None, budget_tokens=None, n=25, stop_rate=0.0; energy not_measured"
+terminator-001-terminator,terminator,terminator,1c9acce,,,,,0,Tesla T4,,,,,,accuracy,0.84,107609.38127600003,339790.1187791994,,4710.6064453125,,partial,"threshold=0.7, window=10, budget_tokens=None, n=25, stop_rate=0.96; energy not_measured"

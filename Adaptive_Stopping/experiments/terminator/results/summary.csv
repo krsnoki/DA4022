@@ -1,0 +1,9 @@
+method,threshold,window,budget_tokens,n,accuracy,mean_thinking_tokens,compression,compression_per_sample,stop_rate,mean_answer_tokens
+no_stop,,,,500,0.87,3474.2,1.0,1.0,0.0,647.7
+terminator,0.5,10,,500,0.806,1200.3,0.3455,0.3326,0.986,610.8
+terminator,0.6,10,,500,0.836,1326.8,0.3819,0.3593,0.98,606.7
+terminator,0.7,10,,500,0.838,1472.5,0.4238,0.3898,0.96,596.6
+terminator,0.8,10,,500,0.85,1633.9,0.4703,0.4279,0.918,600.4
+terminator,0.9,10,,500,0.85,1848.2,0.532,0.487,0.87,606.5
+fixed_budget,,,1472,500,0.804,1426.9,0.4107,0.5548,0.844,678.9
+oracle,,,,500,0.852,1724.4,0.4963,0.4418,0.858,620.2

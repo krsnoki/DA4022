@@ -1,0 +1,9 @@
+# CPU tests and HF generation loop
+torch>=2.4
+transformers>=4.51,<5
+pytest
+# experiments
+datasets
+math-verify
+# trace generation and offline evaluation on GPU (Linux only)
+vllm

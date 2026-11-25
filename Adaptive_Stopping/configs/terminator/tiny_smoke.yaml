@@ -1,0 +1,20 @@
+# Tiny random Qwen3 used by the CPU tests (Adaptive_Stopping/tests/conftest.py).
+# Nothing is downloaded.
+backbone:
+  type: Qwen3ForCausalLM
+  vocab_size: 100           # 4 special tokens + printable ASCII + newline
+  hidden_size: 32
+  intermediate_size: 64
+  num_hidden_layers: 2
+  num_attention_heads: 4
+  num_key_value_heads: 2
+  head_dim: 8
+  attn_implementation: sdpa
+policy:
+  threshold: 0.7
+  window: 10
+generation:
+  temperature: 0.0          # greedy, so tests are deterministic
+  max_thinking_tokens: 50
+  max_answer_tokens: 4
+command: python -m pytest Adaptive_Stopping/tests -q
