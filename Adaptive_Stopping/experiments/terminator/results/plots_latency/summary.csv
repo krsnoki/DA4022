@@ -1,0 +1,3 @@
+method,threshold,window,budget_tokens,n,accuracy,mean_thinking_tokens,compression_rate,stop_rate,latency_median_s,latency_p95_s,peak_mem_mb
+no_stop,,,,25,0.92,4226.64,1.0,0.0,304.53722291899976,512.8746802215998,4469.3388671875
+terminator,0.7,10,,25,0.84,1605.08,0.3797531845626786,0.96,107.60938127600002,339.79011877919936,4710.6064453125
