@@ -1,0 +1,142 @@
+{
+  "hardware": {
+    "eval_device": "mps",
+    "fit_device": "cpu",
+    "gpu_name": "Apple Silicon MPS",
+    "cpu": "arm",
+    "os": "macOS-27.0-arm64-arm-64bit",
+    "python_version": "3.9.6",
+    "torch_version": "2.8.0",
+    "transformers_version": "4.57.6",
+    "cuda_version": null
+  },
+  "config": {
+    "model_id": "Qwen/Qwen2.5-0.5B",
+    "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+    "seed": 42,
+    "group_size": 128,
+    "selector_group_sizes": [
+      128
+    ],
+    "scale_dtype": "float16",
+    "codebook_dtype": "bfloat16",
+    "outer_iters": 3,
+    "inner_iters": 10,
+    "calibration": {
+      "dataset": "allenai/c4",
+      "num_windows": 4,
+      "seq_len": 2048,
+      "activation_energy_path": "qwen25_05b_c4_activation_energy.pt"
+    },
+    "evaluation": {
+      "dataset_name": "wikitext",
+      "dataset_config": "wikitext-2-raw-v1",
+      "split": "test",
+      "seq_len": 2048,
+      "batch_size": 1,
+      "max_windows": null
+    },
+    "timing": {
+      "warmup_steps": 2,
+      "repetitions": 10
+    }
+  },
+  "results": [
+    {
+      "variant": "unmodified",
+      "model_id": "Qwen/Qwen2.5-0.5B",
+      "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+      "model_dtype": "torch.float16",
+      "group_size": null,
+      "selection_size": null,
+      "run_status": "full",
+      "wikitext2_ppl": 13.0706,
+      "evaluated_windows": 146,
+      "evaluated_tokens": 298862,
+      "quantization_time_s": 0.0,
+      "median_latency_ms": 1471.874,
+      "p95_latency_ms": 1482.186,
+      "tokens_per_sec": 1391.42,
+      "peak_dense_runtime_memory_mb": 7170.67,
+      "packed_quantized_mb": 0.0,
+      "total_checkpoint_mb": 942.293,
+      "storage_breakdown_bytes": {
+        "quantized_layer_count": 0,
+        "packed_indices_bytes": 0,
+        "codebooks_bytes": 0,
+        "scales_bytes": 0,
+        "selector_bitset_bytes": 0,
+        "total_quantized_bytes": 0,
+        "unquantized_param_bytes": 988065536,
+        "total_checkpoint_bytes": 988065536
+      },
+      "energy_joules": "",
+      "energy_status": "unmeasured",
+      "runtime_note": "Dense dequantization reference runtime; packed bytes are accounted separately and throughput/memory do not establish native INT4 kernel acceleration."
+    },
+    {
+      "variant": "rtn",
+      "model_id": "Qwen/Qwen2.5-0.5B",
+      "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+      "model_dtype": "torch.float16",
+      "group_size": 128,
+      "selection_size": null,
+      "run_status": "full",
+      "wikitext2_ppl": 18.1647,
+      "evaluated_windows": 146,
+      "evaluated_tokens": 298862,
+      "quantization_time_s": 3.272,
+      "median_latency_ms": 1972.837,
+      "p95_latency_ms": 2057.434,
+      "tokens_per_sec": 1038.1,
+      "peak_dense_runtime_memory_mb": 7359.94,
+      "packed_quantized_mb": 175.957,
+      "total_checkpoint_mb": 435.75,
+      "storage_breakdown_bytes": {
+        "quantized_layer_count": 168,
+        "packed_indices_bytes": 178913280,
+        "codebooks_bytes": 0,
+        "scales_bytes": 5591040,
+        "selector_bitset_bytes": 0,
+        "total_quantized_bytes": 184504320,
+        "unquantized_param_bytes": 272412416,
+        "total_checkpoint_bytes": 456916736
+      },
+      "energy_joules": "",
+      "energy_status": "unmeasured",
+      "runtime_note": "Dense dequantization reference runtime; packed bytes are accounted separately and throughput/memory do not establish native INT4 kernel acceleration."
+    },
+    {
+      "variant": "aaac_s128",
+      "model_id": "Qwen/Qwen2.5-0.5B",
+      "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+      "model_dtype": "torch.float16",
+      "group_size": 128,
+      "selection_size": 128,
+      "run_status": "full",
+      "wikitext2_ppl": 15.0065,
+      "evaluated_windows": 146,
+      "evaluated_tokens": 298862,
+      "quantization_time_s": 1006.738,
+      "median_latency_ms": 2443.798,
+      "p95_latency_ms": 2914.607,
+      "tokens_per_sec": 838.04,
+      "peak_dense_runtime_memory_mb": 7599.94,
+      "packed_quantized_mb": 175.967,
+      "total_checkpoint_mb": 435.76,
+      "storage_breakdown_bytes": {
+        "quantized_layer_count": 168,
+        "packed_indices_bytes": 178913280,
+        "codebooks_bytes": 10752,
+        "scales_bytes": 5591040,
+        "selector_bitset_bytes": 0,
+        "total_quantized_bytes": 184515072,
+        "unquantized_param_bytes": 272412416,
+        "total_checkpoint_bytes": 456927488
+      },
+      "energy_joules": "",
+      "energy_status": "unmeasured",
+      "runtime_note": "Dense dequantization reference runtime; packed bytes are accounted separately and throughput/memory do not establish native INT4 kernel acceleration."
+    }
+  ]
+}

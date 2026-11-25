@@ -1,0 +1,29 @@
+{
+  "model_id": "Qwen/Qwen2.5-0.5B",
+  "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+  "seed": 42,
+  "group_size": 128,
+  "selector_group_sizes": [128],
+  "scale_dtype": "float16",
+  "codebook_dtype": "bfloat16",
+  "outer_iters": 3,
+  "inner_iters": 10,
+  "calibration": {
+    "dataset": "allenai/c4",
+    "num_windows": 4,
+    "seq_len": 2048,
+    "activation_energy_path": "qwen25_05b_c4_activation_energy.pt"
+  },
+  "evaluation": {
+    "dataset_name": "wikitext",
+    "dataset_config": "wikitext-2-raw-v1",
+    "split": "test",
+    "seq_len": 2048,
+    "batch_size": 1,
+    "max_windows": null
+  },
+  "timing": {
+    "warmup_steps": 2,
+    "repetitions": 10
+  }
+}
