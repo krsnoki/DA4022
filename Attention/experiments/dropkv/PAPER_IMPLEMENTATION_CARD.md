@@ -4,6 +4,7 @@
 - **Primary module:** `Attention/` (`Attention/methods/kv_eviction/`)
 - **Secondary modules:** `Dataloaders/synthetic/`, `Backbones/Generative_Pretrained/`, `Performance_Metrics/`
 - **Owner / reviewer:** Deval Singhal (@maidevalhoon). Team: Deval Singhal (230101035), Jayant Kumar (230101050), Sonal Mangesh Wagh (230108054), Sristi Vats (230122057), Shourya Veer Singh (230106069)
+- **Division of work:** [CONTRIBUTIONS.md](CONTRIBUTIONS.md)
 - **Status:** partial-reproduction
 - **Upstream code / licence:** https://github.com/AozhongZhang/DropKV (Apache-2.0). The method is also in NVIDIA kvpress as `DropKVPress`. We did not use either. Our code is plain PyTorch written from Algorithm 1 of the paper.
 - **Backbone IDs:** `text.qwen2_5_0_5b_instruct.self_supervised` ([model card](../../../Backbones/Generative_Pretrained/qwen2_5_0_5b_instruct.md))
