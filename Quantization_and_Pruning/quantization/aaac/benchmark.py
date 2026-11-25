@@ -19,7 +19,7 @@ import transformers
 from Backbones.Generative_Pretrained.qwen2_5 import MODEL_ID, MODEL_REVISION, load_qwen25_05b
 from Dataloaders.calibration.activation_energy import eligible_linear_modules
 from Dataloaders.calibration.layer_targets import iter_quantization_targets
-from Dataloaders.evaluation.wikitext2 import EvalWindows, load_wikitext2_eval_windows
+from Dataloaders.wikitext2 import EvalWindows, load_wikitext2_eval_windows
 from Quantization_and_Pruning.quantization.aaac.config import AAACConfig
 from Quantization_and_Pruning.quantization.aaac.fit import fit_aaac_layer
 from Quantization_and_Pruning.quantization.aaac.linear import (
