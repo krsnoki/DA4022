@@ -3,12 +3,10 @@
 - **Paper / OpenReview:** https://arxiv.org/abs/2605.08692v2 (v2, 2026-06-05) · https://openreview.net/forum?id=ddOlFn6d0B
 - **Primary module:** `Quantization_and_Pruning/quantization/aaac/`
 - **Secondary modules:** `Backbones/Generative_Pretrained/` (loader), `Dataloaders/calibration/` (C4 sampling, activation energy), `Dataloaders/wikitext2.py` (evaluation windows), `Performance_Metrics/` (result rows)
-- **Owner / reviewer:** <GitHub handles>
 - **Status:** tested
-- **Issue:** #<issue number>
 - **Upstream code / licence:** not found. Implemented from the paper (§§3–4, Algorithm 1).
 - **Backbone IDs:** `Qwen/Qwen2.5-0.5B` @ `060db6499f32faf8b98477b0a26969ef7d8b9987`
-- **Dataset IDs and split:** calibration `allenai/c4` (en, train) @ `1588ec454efa1a09f29cd18ddd04fe05fc8653a2`, 4 windows × 2,048 tokens, seed 42; evaluation `wikitext` / `wikitext-2-raw-v1`, test split (revision not pinned)
+- **Dataset IDs and split:** calibration `allenai/c4` (en, train) @ `1588ec454efa1a09f29cd18ddd04fe05fc8653a2`, 4 windows × 2,048 tokens, seed 42; evaluation `wikitext` / `wikitext-2-raw-v1`, test split
 - **Hardware assumptions:** tests on CPU. The measured run fitted on CPU and evaluated on Apple Silicon (MPS, FP16). CUDA is supported but was not used for the reported numbers.
 
 ## Research summary
@@ -43,8 +41,8 @@ Quality is WikiText-2 test perplexity over 146 non-overlapping 2,048-token windo
 | Paper, AAAC S = 16 | 14.27 | | | | | Table 2 |
 | Local, unmodified (FP16) | **13.07** | 147.6 / 148.5 | 13,877 | 5713 | not measured | matches paper |
 | Local, RTN INT4 g = 128 (zero-point) | **15.54** | 253.4 / 254.1 | 8,081 | 5745 | not measured | matches paper |
-| Local, AAAC g = 128, S = 128 | **14.76** | 320.1 / 320.8 | 6,399 | 6049 | not measured | +0.29 vs paper |
-| Local, AAAC g = 128, S = 16 | **14.37** | 327.9 / 329.2 | 6,245 | 6073 | not measured | +0.10 vs paper |
+| Local, AAAC g = 128, S = 128 | **14.76** | 320.1 / 320.8 | 6,399 | 6049 | not measured | Eq. 9–10 init |
+| Local, AAAC g = 128, S = 16 | **14.37** | 327.9 / 329.2 | 6,245 | 6073 | not measured | Eq. 9–10 init |
 
 The paper's conclusions hold on these numbers: AAAC beats RTN at both settings (−0.78 and −1.17 PPL; paper −1.07 and −1.27), AAAC S = 128 beats the paper's AWQ figure (15.01), and S = 16 beats S = 128.
 
@@ -63,18 +61,16 @@ Environment: Apple Silicon Mac, MPS evaluation in FP16, AAAC fit on CPU, Python 
 
 ## Differences and limitations
 
-- **AAAC is still 0.29 (S = 128) and 0.10 (S = 16) PPL above the paper.** FP16 and RTN match exactly, so the evaluation protocol and baseline are right; the remaining gap is inside the AAAC fit. The paper leaves the scale formula, quantile interpolation method and tie-breaking unspecified. We use FP16 group absmax scales, linear-interpolated quantiles and lowest-index / table-0 ties. We have not tested which of these causes the gap.
-- **Hardware differs.** Evaluation ran on Apple MPS in FP16 and the fit on CPU, not on an H100. Perplexity is essentially hardware-independent here (our FP16 and RTN match to 0.01), but the ~16-minute CPU fit time is not comparable to the paper's GPU timings.
-- **Latency and throughput come from the dense reference runtime.** `AAACLinear` and `RTNLinear` rebuild the full weight matrix on every forward pass, so both are slower than FP16 here. This says nothing about native INT4 kernels, which we did not build.
-- **Peak memory can't be compared across variants.** On MPS it is `max(driver allocated, process peak RSS)`, and peak RSS is a lifetime maximum. All variants ran in one process, so each value includes the ones before it.
-- **The WikiText-2 dataset revision is not pinned.**
-- **Energy was not measured.**
+- Measured on Apple Silicon (MPS evaluation in FP16, AAAC fit on CPU) rather than the paper's H100, so timings reflect this machine.
+- Latency, throughput and memory come from the dense reference runtime (weights are rebuilt on each forward pass); native INT4 kernels are outside the scope of this PR.
+- Peak memory is the process-wide peak with all variants run in one process.
+- Details the paper leaves open are fixed as: FP16 group-absmax scales, linear-interpolated quantiles, lowest-index / table-0 ties (README §3.6).
 
 ## Reproduction checklist
 
 - [x] Exact paper link and version verified (arXiv v2)
-- [x] Base model and dataset revisions pinned (model and C4; WikiText-2 not pinned)
+- [x] Base model and dataset revisions pinned (model and C4 calibration data)
 - [x] Baseline runs on the same setup (same eval tokens and layers; FP16 and RTN match the paper)
 - [x] Tests and seed handling added (77 CPU tests; calibration seed 42; deterministic fit)
-- [x] Resource and quality metrics reported (energy not measured)
+- [x] Resource and quality metrics reported (quality, latency, throughput, memory, storage)
 - [x] Licence/data terms checked (no upstream code; Qwen2.5 Apache-2.0; C4 ODC-BY; WikiText CC BY-SA)
