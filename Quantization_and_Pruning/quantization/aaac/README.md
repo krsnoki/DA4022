@@ -1,21 +1,49 @@
-# AAAC learning algorithm (Member 2)
+# AAAC: Activation-Aware Adaptive Codebooks (4-bit weight quantization)
 
-PyTorch reference implementation of the **fit** step of AAAC (*Activation-Aware
-Adaptive Codebooks for 4-bit LLM Weight Quantisation*, Algorithm 1). It turns one
-weight matrix plus its calibration importance into the pieces needed to store a
-4-bit layer.
+PyTorch reference implementation of AAAC (arXiv 2605.08692v2, Algorithm 1) for
+`Qwen/Qwen2.5-0.5B`, with a matched INT4 round-to-nearest (RTN) baseline and a
+WikiText-2 benchmark.
 
-Member 2's work is split between two people:
+## Quickstart
 
-| Part | Owner | Status | Files |
-|------|-------|--------|-------|
-| **2A** Row-wise scaling, quantile initialisation, weighted group assignment, initial codebook construction, deterministic fit function | Rahul Yadav | **done**, tested | `config.py`, `scaling.py`, `codebook_init.py`, `assignment.py`, `fit.py` |
-| **2B** Weighted Lloyd updates, keep empty centroids, BF16 finalisation (+ tests for empty cells and BF16 finalisation) | Vanshika | **TODO** | `lloyd.py` (two stubs to fill in) |
+Tested with Python 3.12 (Python 3.14 breaks `datasets==3.6.0` through `dill`).
+Run everything from the repository root.
 
-`fit_aaac_layer` already calls the two 2B functions with their final signatures, so
-once `lloyd.py` is filled in, the full fit runs with no other changes.
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install torch "transformers==4.57.6" "datasets==3.6.0" "numpy>=2" pytest
 
----
+# 1. tests (CPU, no downloads)
+python -m pytest -q
+
+# 2. calibration: 4 seeded 2,048-token C4 windows -> per-layer activation energy
+#    (a pre-computed file is already in results/, so this step is optional)
+python -m Quantization_and_Pruning.quantization.aaac.run_calibration
+
+# 3. benchmark: unmodified vs RTN vs AAAC (S = 128) on WikiText-2
+python -m Quantization_and_Pruning.quantization.aaac.benchmark
+
+# quick partial run (label results "partial")
+python -m Quantization_and_Pruning.quantization.aaac.benchmark --max-windows 2
+```
+
+If the model download hangs, prefix the command with
+`HF_HUB_DISABLE_XET=1 HF_HUB_DOWNLOAD_TIMEOUT=120`.
+
+## Files
+
+| File | Owner area | What it does |
+|------|-----------|--------------|
+| `Backbones/Generative_Pretrained/qwen2_5.py` | Member 1 | pinned Qwen2.5-0.5B loader |
+| `Dataloaders/calibration/` | Member 1 | C4 sampler, activation-energy hooks, layer targets |
+| `config.py`, `scaling.py`, `codebook_init.py`, `assignment.py`, `fit.py` | Member 2A | scaling, quantile init, weighted assignment, fit driver |
+| `lloyd.py` | Member 2B | weighted Lloyd update, BF16 finalisation |
+| `codec.py`, `linear.py` | Member 3 | 4-bit packing, selector encoding, `AAACLinear` |
+| `rtn.py`, `benchmark.py`, `benchmark_config.json`, `Dataloaders/wikitext2.py` | Member 4 | RTN baseline, WikiText-2 perplexity and timing |
+| `run_calibration.py` | Member 1 | writes `results/qwen25_05b_c4_activation_energy.pt` |
+| `results/` | | calibration energies and measured benchmark JSON |
 
 ## 1. Where the inputs come from (Aditya Jain)
 
@@ -25,7 +53,7 @@ from Dataloaders.calibration import iter_quantization_targets
 import torch
 
 model, tok = load_qwen25_05b(device="cpu", dtype=torch.float32)
-energy = torch.load("qwen25_05b_c4_activation_energy.pt")   # {layer name: FP32 [in]}
+energy = torch.load("Quantization_and_Pruning/quantization/aaac/results/qwen25_05b_c4_activation_energy.pt")   # {layer name: FP32 [in]}
 
 for t in iter_quantization_targets(model, energy):   # 168 layers, one at a time
     t.weight      # FP32 copy of W, shape [out, in]
@@ -43,10 +71,6 @@ fits = fit_aaac_model(model, energy, cfg)              # every eligible layer ->
 
 W_hat = fit.dequantize()                               # dense FP32 reference reconstruction [out, in]
 ```
-
-> Until Member 2B fills in `lloyd.py`, calling the fit with default settings raises
-> `NotImplementedError`. Tests run the pipeline by passing stand-ins
-> (`update_fn=`, `finalize_fn=`, see `tests/aaac_helpers.py`).
 
 ### What the fit returns (`AAACLayerFit`), the hand-off to Member 3 (codec)
 
@@ -142,8 +166,8 @@ C           = initial_codebooks(U, I, S)   float32       (3.2, 3.3)
 repeat outer_iters (3):
     selectors = assign_selection_groups(U, I, C, S)      (3.4)
     repeat inner_iters (10):
-        C = lloyd.weighted_lloyd_update(...)             <- Member 2B
-C = lloyd.finalize_codebooks(C, bfloat16)                <- Member 2B
+        C = lloyd.weighted_lloyd_update(...)
+C = lloyd.finalize_codebooks(C, bfloat16)                sort + round
 selectors = assign_selection_groups(U, I, C_bf16, S)     re-run with rounded tables
 indices   = encode_indices(U, C_bf16, selectors, S)      re-run encoding
 ```
@@ -177,50 +201,31 @@ both steps minimising the **same** objective, so the objective never goes up.
 
 ---
 
-## 4. Hand-off: what is left
+## 4. Weighted Lloyd update and BF16 finalisation (`lloyd.py`)
 
-Fill in the two functions in **`lloyd.py`**. Their docstrings hold the exact
-contract. In short:
+### `weighted_lloyd_update`
 
-### `weighted_lloyd_update(normalized, importance, codebooks, selectors, S, *, chunk_elements) -> [2,16] float32`
+1. Assign every weight to a cell (table c, entry j) with `encode_indices`, using
+   the same lowest-index tie rule as the rest of the fit.
+2. `new[c, j] = sum(I[k] * u) / sum(I[k])` over the weights in that cell,
+   accumulated in float64.
+3. Empty cells (no members, or zero total importance) keep their old value.
+4. Returns a new float32 `[2, 16]` tensor; the input is not modified.
 
-1. Assign every weight to a cell: `idx, _ = encode_indices(normalized, codebooks, selectors, S, chunk_elements=chunk_elements)`.
-   The weight's table is `selectors.repeat_interleave(S, dim=1)`.
-2. For each (table c, entry j): `new[c, j] = Σ I[k]·u / Σ I[k]` over the weights in that cell.
-3. **Empty cells** (no members, or total importance 0) **keep their old value**.
-4. Return a *new* tensor (do not modify `codebooks` in place). Accumulate in float64.
+Per-cell sums use a stable sort plus cumulative sum instead of `bincount` /
+`index_add_`, so the update is deterministic on CUDA as well as CPU.
 
-A simple deterministic way to do step 2 on CPU: flatten `key = table * 16 + idx`
-and use `torch.bincount(key, weights=..., minlength=32)` twice (numerator and
-denominator). Note that `bincount`/`index_add_` with weights is **not**
-deterministic on CUDA. On GPU, use a one-hot matmul or sort-based reduction, or run
-the update on CPU.
+### `finalize_codebooks`
 
-### `finalize_codebooks(codebooks, codebook_dtype=torch.bfloat16) -> [2,16] codebook_dtype`
+Sorts each table ascending and rounds it to BF16. The fit then re-runs group
+assignment and index encoding with the rounded tables, so stored indices always
+match stored tables.
 
-Round the tables to BF16 and return a new tensor. The fit itself already re-runs
-assignment and encoding with the rounded tables.
+### Sanity numbers
 
-### Tests you should add (e.g. `tests/test_aaac_lloyd.py`)
-
-* **Weighted centroid:** a hand-made example where the weighted mean differs from
-  the plain mean.
-* **Empty cells:** a table entry that no weight is nearest to, and a cell whose
-  members all have `I = 0`, both keep their old value.
-* **BF16 finalisation:** the output dtype is `bfloat16`, values equal
-  `tables.to(bfloat16)`, and `fit.indices` / `fit.selectors` match a fresh
-  `encode_indices` / `assign_selection_groups` on the BF16 tables.
-* **Determinism:** two calls give identical tensors.
-* `tests/test_aaac_fit.py::test_end_to_end_with_real_lloyd_update` is currently
-  **skipped**. It turns on automatically once `lloyd.py` stops raising
-  `NotImplementedError`, and checks that the objective does not increase across
-  outer iterations.
-
-### Sanity numbers to expect
-
-I ran this fit on **real Qwen2.5-0.5B layers** with the committed C4 energies and
-a simple throwaway weighted Lloyd update (not committed). The error is
-`Σ I[k] (W_hat − W)²`. RTN is symmetric INT4 (levels −7..7) using the same scales.
+Member 2A ran this fit on **real Qwen2.5-0.5B layers** with the committed C4 energies and
+a throwaway Lloyd update (before `lloyd.py` was finished). The error is
+`Σ I[k] (W_hat − W)²`. RTN is symmetric INT4 (levels −7..7) with the same scales. `rtn.py` stores codes −8..7, but since |u| ≤ 1 code −8 is never used.
 
 | Layer | Shape | S | AAAC error | RTN error | RTN / AAAC |
 |-------|-------|---|-----------|-----------|-----------|
@@ -239,10 +244,6 @@ a simple throwaway weighted Lloyd update (not committed). The error is
   need more speed, you can use `torch.searchsorted` on the sorted tables in place of
   the 16-way `argmin`, but keep the lowest-index tie rule.
 
-If your Lloyd update gives numbers in this range, it is very likely correct.
-
----
-
 ## 5. Tests
 
 From the repository root:
@@ -256,7 +257,10 @@ python -m pytest Quantization_and_Pruning/quantization/aaac/tests -q
 | `test_aaac_scaling.py` | absmax per contiguous group, all-zero groups get a positive scale, FP16 limits, exact reconstruction, validation |
 | `test_aaac_codebook_init.py` | weighted quantiles by hand, zero weights ignored, uniform fallback, 16 sorted entries, peaky/flat split, determinism |
 | `test_aaac_assignment.py` | **weighted** assignment flips with importance, tie → table 0 / lowest index, matches brute force, encoding uses the selected table, chunk-size invariance |
-| `test_aaac_fit.py` | output shapes/dtypes for S = 128 and S = 16, bit-identical reruns, final re-assignment with BF16 tables, update called 3 × 10 times, `dequantize`, whole-model driver, validation, end-to-end (skipped until 2B) |
+| `test_aaac_fit.py` | output shapes/dtypes for S = 128 and S = 16, bit-identical reruns, final re-assignment with BF16 tables, update called 3 × 10 times, `dequantize`, whole-model driver, validation, end-to-end objective never increases |
+| `test_aaac_lloyd.py` | weighted centroid vs plain mean, brute-force match, empty and zero-importance cells keep their value, determinism, chunk invariance, BF16 finalisation, stored indices match BF16 tables |
+| `test_aaac_codec_and_integration.py` | exact 4-bit round trip, selector round trip for S = g and S < g, all-zero group convention, exact packed byte counts, bit-exact parity with the fit and model integration |
+| `test_aaac_rtn.py` | RTN packing bytes and reconstruction, same target layers as AAAC |
 
 `tests/aaac_helpers.py` holds the stand-ins `keep_tables` (no-op update) and
-`round_tables` (plain BF16 cast), used so the pipeline can be tested before 2B lands.
+`round_tables` (plain BF16 cast), used to test the pipeline independently of `lloyd.py`.

@@ -36,7 +36,7 @@ def parse_args() -> argparse.Namespace:
         help="inference device (default: CUDA when available, otherwise CPU)",
     )
     parser.add_argument(
-        "--output", type=Path, default=Path("qwen25_05b_c4_activation_energy.pt"),
+        "--output", type=Path, default=Path("Quantization_and_Pruning/quantization/aaac/results/qwen25_05b_c4_activation_energy.pt"),
         help="output file for the energy dictionary",
     )
     return parser.parse_args()

@@ -12,7 +12,7 @@
     "dataset": "allenai/c4",
     "num_windows": 4,
     "seq_len": 2048,
-    "activation_energy_path": "qwen25_05b_c4_activation_energy.pt"
+    "activation_energy_path": "Quantization_and_Pruning/quantization/aaac/results/qwen25_05b_c4_activation_energy.pt"
   },
   "evaluation": {
     "dataset_name": "wikitext",

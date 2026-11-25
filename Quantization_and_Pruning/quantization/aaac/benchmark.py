@@ -302,7 +302,7 @@ def main() -> None:
     parser.add_argument("--dtype", type=str, default=None, choices=["float16", "bfloat16", "float32"])
     parser.add_argument("--max-windows", type=int, default=None, help="Override for partial smoke runs")
     parser.add_argument("--variants", nargs="+", default=["unmodified", "rtn", "aaac_s128"])
-    parser.add_argument("--output-json", type=Path, default=Path("aaac_benchmark_results.json"))
+    parser.add_argument("--output-json", type=Path, default=Path("Quantization_and_Pruning/quantization/aaac/results/aaac_benchmark_results.json"))
     args = parser.parse_args()
 
     cfg = json.loads(args.config.read_text())
