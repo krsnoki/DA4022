@@ -4,7 +4,10 @@ Benchmark scripts for the paper **KVgrad: Query-Agnostic KV Cache Eviction via G
 Importance Scoring** ([OpenReview](https://openreview.net/forum?id=cg1wTCJjjk), AdaptFM workshop, ICML 2026).
 Tracking issue: krsnoki/DA4022#8.
 
-Status: `partial` (work in progress).
+Status: `baseline-ready` (benchmark harness tested, dry run done; full runs and own score implementation in progress).
+
+- [`PAPER_CARD.md`](PAPER_CARD.md): paper implementation card (method, expected and measured results, limitations)
+- [`PROGRESS.md`](PROGRESS.md): log of what has been done, problems met and fixes, next steps
 
 ## What `run_ruler.py` measures
 
@@ -65,7 +68,8 @@ outputs, the summary schema, the scoring function and resuming.
 - Colab (Nov 2026): Python 3.13.16, torch 2.14.1+cu130, transformers 5.2.0, kvpress 0.5.5, Tesla T4 16 GB.
 - `standard-pipes` is required on Python 3.13, because kvpress 0.5.5 pins `fire<0.7`, which imports the
   removed `pipes` module.
-- fp32 is used because the T4 has no bf16; the paper ran bf16 on A100 / RTX A5000.
+- fp32 is used because the T4 has no bf16 (fp16 risks overflow); the paper ran Qwen3-0.6B on an RTX A5000 and does not state its precision.
 
-Results and model weights are not committed (see `.gitignore`); a summary table will be added
-when the runs are complete.
+Model weights and raw outputs are not committed (see `.gitignore`). Only small summary tables are:
+`dryrun/summary_2pertask_seed42.csv` (dry run, 2 examples per task); final results will be added when the
+full runs are complete.
