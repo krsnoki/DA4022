@@ -51,6 +51,13 @@ experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,sp
 
 Unknown/not-measured quantities should be empty/null plus a `status` or notes entry—never `0` unless zero was actually measured.
 
+## Result files
+
+| Method | Report | Status |
+|---|---|---|
+| AgentKV | [Five-example cloud pilot](results/agentkv_pilot/README.md) | Partial; synthetic evaluation, 35 episodes, no demonstrated advantage over recent-query eviction |
+| AgentKV | [512-token cap rerun and comparison](results/agentkv_pilot_512/README.md) | Partial; 35 episodes, no truncation, strict format failures remain; no demonstrated AgentKV advantage |
+
 ## Recommended plots
 
 - quality vs. latency;

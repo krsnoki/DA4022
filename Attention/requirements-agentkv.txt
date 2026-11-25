@@ -1,0 +1,4 @@
+# Install the appropriate CPU/CUDA build of torch separately (tested: 2.8.0).
+transformers==4.57.1
+numpy==2.3.4
+pytest==8.4.2

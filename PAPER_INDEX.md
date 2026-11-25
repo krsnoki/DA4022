@@ -68,7 +68,7 @@ This is an engineering-oriented shortlist from the [official AdaptFM accepted-pa
 
 - [DropKV: Decoupling Residual-Output Perturbation for Near-Optimal KV-Cache Eviction](https://openreview.net/forum?id=MqfNzH3TVH) — KV eviction.
 - [KVgrad: Query-Agnostic KV Cache Eviction via Gradient-based Global Importance Scoring](https://openreview.net/forum?id=cg1wTCJjjk) — KV eviction.
-- [AgentKV: Phase-Aware KV Eviction for Agentic LLMs](https://openreview.net/forum?id=s80e8otSxP) — phase-aware eviction.
+- [AgentKV: Phase-Aware KV Eviction for Agentic LLMs](https://openreview.net/forum?id=s80e8otSxP) — phase-aware eviction. [Implementation](Attention/methods/agentkv/README.md) · [Issue #27](https://github.com/krsnoki/DA4022/issues/27); CPU reference tested, initial synthetic GPU pilot completed.
 - [HYBRIDKV: Exploiting Head-Dominant Reconstruction for Efficient Query-Agnostic KV Cache Compression](https://openreview.net/forum?id=sWF4OAXw7u) — cache compression.
 - [Recency/Frequency Adaptive KV Caching for Large Language Model Serving](https://openreview.net/forum?id=WklS2q5SD9) — cache retention policy.
 - [Cache You Later: Post-Compression KV Repair for Long-Context Agentic LLM Inference](https://openreview.net/forum?id=LsrmZrp7tW) — repair after compression.
