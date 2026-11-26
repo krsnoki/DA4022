@@ -3,7 +3,7 @@
 - **Paper / OpenReview:** https://openreview.net/forum?id=9Joja0tx5c (AdaptFM Workshop at ICML 2026)
 - **Primary module:** `Adaptive_Stopping`
 - **Secondary modules:** `Backbones`, `Dataloaders`, `Performance_Metrics`
-- **Owner / reviewer:** `@Victorvkk38596`
+- **Owner / reviewer:** `@Victorvkk38596` (Vasudev Krishna)
 - **Team:** Vasudev Krishna, G Jayagiri, Uditya Shekhawat, Pranav Deshmukh, Arkaprava Paul, Harshit Goel, and T Chethan
 - **Status:** partial-reproduction
 - **Upstream code / licence:** https://github.com/allen4747/DIPA (placeholder repository with `README.md` only; no source code or licence published as of 2026-11-26)
@@ -77,7 +77,7 @@ Paper-reported values below are from Table 5 (`MATH-500`, `Qwen2.5-Math-1.5B-Ins
 - **No upstream implementation:** `https://github.com/allen4747/DIPA` contains only a `README.md` with no code or licence; this implementation is written from the paper specification.
 - **`DIPA(MGC)` input prior (`const`):** `MGC(O|x)` has no input-based proxy counterpart in Table 1, and its inverted score `1 / MGC >= 1.0` starts at `1.0` on `m = 1` attempt. Pairing `mgc` with `mql` (`20..100` tokens) drops a failed arm's difficulty by ~50x on the first pull and locks onto one problem, so `dipa_mgc` uses `input_proxy="const"` (`1.0`).
 - **Unspecified dynamic `lambda` proportionality constant:** Section 4.2 and Appendix E.7 specify `lambda proportional to |X|` without stating the exact proportionality constant. Setting `lambda = 1.0 * |X|` directly collapses DIPA into deterministic `Easy2Hard` at `N >= 100` (`lambda_t >= 57`). We implement scale-invariant `lambda_t = lambda_value * (|X| / N)` (default `lambda_value = 5.0` in `dipa.yaml`, matching Appendix E.7's `[1, 10]` scale) plus fixed `lambda` overrides via `--lambda-mode` / `--lambda-value`.
-- **Hardware, pool size, and wraparound:** Paper experiments ran on 8x H100 (80 GB) with `pool_size = 500` and budgets up to `32N`. Our single-L4 reproduction uses `pool_size = 32` up to `16N` (`status: partial`). For `dipa_mgl`, pool wraparound is `<= 1.8%` through `8N` and ~21% at `16N` (making `0.665` a conservative lower bound). For `dipa_mgc`, problems that repeatedly generate the same wrong answer produce high consensus (`MGC ~ 1.0`), causing heavier wraparound at `8N` (~32%) and `16N` (~56%) and a slight dip below `Uniform` at `16N` (`0.633` vs `0.637`).
+- **Hardware, pool size, and wraparound:** Paper experiments ran on 8x H100 (80 GB) with `pool_size = 500` and budgets up to `32N`. Our single-L4 reproduction uses `pool_size = 32` up to `16N` (`status: partial`). For `dipa_mgl`, pool wraparound is `0.00%` through `4N`, `1.47%` at `8N`, and `21.08%` at `16N` (making `0.665` a conservative lower bound). For `dipa_mgc`, problems that repeatedly generate the same wrong answer produce high consensus (`MGC ~ 1.0`), causing heavier wraparound at `4N` (`7.37%`), `8N` (`33.35%`), and `16N` (`56.23%`) and a slight dip below `Uniform` at `16N` (`0.633` vs `0.637`).
 - **Out-of-scope models and tasks:** `Llama3.1-8B` (gated), `LiveCodeBench` (requires sandboxed code execution), and `GPQADiamond` (requires 4B reward model `Skywork-Reward-V2-Qwen3-4B`) are deferred to follow-up work.
 - **Batch-level interface:** DIPA allocates budget across `N` instances jointly rather than making independent single-request early-exit decisions; the `StoppingPolicy` methods act as a wrapper around the batch allocator state.
 - **Energy:** Reported as `not_measured` because Colab L4 power-sensor telemetry was not sampled.
