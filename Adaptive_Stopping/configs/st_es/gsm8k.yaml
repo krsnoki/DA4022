@@ -1,0 +1,23 @@
+# ST-ES on GSM8K (partial reproduction of arXiv:2512.14332, AdaptFM @ ICML 2026).
+# Run everything with:
+#   python -m Adaptive_Stopping.experiments.st_es.run_all --config Adaptive_Stopping/configs/st_es/gsm8k.yaml
+paper_id: arxiv-2512.14332
+method: st_es
+backbone_id: text.deepseek-r1-distill-qwen-1.5b
+prompt_id: math_cot_boxed.v1
+seed: 42
+max_new_tokens: 4096          # paper: 32768; same cap for baseline and method
+sampling: {do_sample: true, temperature: 0.6, top_p: 0.95, top_k: 50}   # generation_config.json + HF default top_k
+calibration: {dataset_id: text.gsm8k.train, num_samples: 200, offset: 0}
+evaluation: {dataset_id: text.gsm8k.test, num_samples: 200, offset: 0}
+calibration_dataset: text.gsm8k.train
+step_delimiter: "\n\n"
+tagger: keyword_reasontype.v1  # approximate substitute for GPT-4o-mini + BERT step-taggers
+grid:
+  tags: all_except_other       # 13 ReasonType step types
+  deltas: [0, 20]              # inclusive range, as in the paper (Fig. 3)
+  step_counts: default         # Adaptive_Stopping.methods.step_tagging.calibration.DEFAULT_STEP_COUNTS
+targets: [0.85, 0.90, 0.95]    # fraction of standard accuracy kept on the calibration split
+exit_prompt_id: exit_boxed.v1
+answer_budget: 100             # tokens, greedy
+live: {num_samples: 30, targets: [0.90], kinds: [st_es]}
