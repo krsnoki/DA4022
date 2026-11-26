@@ -1,0 +1,95 @@
+# Kaggle notebook with 2x T4 (16 GB each, no bf16 -> dtype half).
+# GPU 1: aggregator (+ proposer 1, same model). GPU 0: the two other proposers.
+# Generated from default.yaml; only experiment name/output_dir and the servers' gpu,
+# gpu_memory_utilization and dtype differ.
+experiment:
+  name: staircase_moa_kaggle_2xT4
+  paper_id: arxiv-2510.05059
+  seed: 42
+  status: partial
+  output_dir: results/staircase_streaming/kaggle_2xT4
+  warmup_requests: 3
+backend:
+  type: openai_compat
+  host: 127.0.0.1
+  request_timeout_s: 600
+servers:
+  qwen2.5-1.5b-instruct:
+    hf_model: Qwen/Qwen2.5-1.5B-Instruct
+    revision: 989aa7980e4cf806f80c7fef2b1adb7bc71aa306
+    backbone_id: text.qwen2_5_1_5b_instruct
+    port: 8001
+    gpu: '1'
+    gpu_memory_utilization: 0.85
+    max_model_len: 8192
+    dtype: half
+  smollm2-1.7b-instruct:
+    hf_model: HuggingFaceTB/SmolLM2-1.7B-Instruct
+    revision: 31b70e2e869a7173562077fd711b654946d38674
+    backbone_id: text.smollm2_1_7b_instruct
+    port: 8002
+    gpu: '0'
+    gpu_memory_utilization: 0.5
+    max_model_len: 8192
+    dtype: half
+  qwen2.5-0.5b-instruct:
+    hf_model: Qwen/Qwen2.5-0.5B-Instruct
+    revision: 7ae557604adf67be50417f59c2c2f167def9a775
+    backbone_id: text.qwen2_5_0_5b_instruct
+    port: 8003
+    gpu: '0'
+    gpu_memory_utilization: 0.3
+    max_model_len: 8192
+    dtype: half
+vllm:
+  enable_prefix_caching: true
+  optional_args:
+  - --enable-prompt-tokens-details
+  extra_args: []
+  startup_timeout_s: 1200
+moa:
+  proposers:
+  - qwen2.5-1.5b-instruct
+  - smollm2-1.7b-instruct
+  - qwen2.5-0.5b-instruct
+  aggregator: qwen2.5-1.5b-instruct
+  proposer_max_tokens: 512
+  aggregator_max_tokens: 512
+  proposer_gen:
+    temperature: 0.7
+    top_p: 0.9
+  aggregator_gen:
+    temperature: 0.0
+staircase:
+  first_chunk_size: 8
+  second_chunk_size: 128
+  chunk_size: 256
+  aggregator_chunk_size: 128
+  redundancy: 2
+  prefix_cache: false
+benchmark:
+  prompt_sets:
+  - dataset_id: text.alpaca_eval.eval
+    num_samples: 32
+  - dataset_id: text.arena_hard_v0_1.eval
+    num_samples: 32
+  sweep:
+    first_chunk_size:
+    - 4
+    - 8
+    - 16
+    - 32
+    redundancy:
+    - 0
+    - 1
+    - 2
+  prefix_cache_variant: true
+  gpu_memory_sample_s: 0.5
+  sanity_prompts: 3
+quality:
+  enabled: true
+  dataset_id: text.gsm8k.test
+  num_samples: 50
+  methods:
+  - baseline
+  - staircase

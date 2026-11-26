@@ -1,0 +1,8 @@
+# GPU machine (Linux, NVIDIA) dependencies: everything in requirements.txt plus vLLM.
+# vLLM brings its own matching CUDA build of PyTorch.
+#
+# Pinned to the version tested on 2026-11-24: 1x RTX 4090 24 GB, driver 595.84,
+# Python 3.11.10 -> vllm 0.34.0, torch 2.14.0 (CUDA 13.0 build), transformers 5.22.2,
+# flashinfer-python 0.7.3. The full pip freeze is in the results tarball (pip_freeze.txt).
+-r requirements.txt
+vllm==0.34.0

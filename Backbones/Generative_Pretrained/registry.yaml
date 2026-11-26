@@ -1,0 +1,69 @@
+# Generative-pretrained backbone registry (text decoders used by Serving/staircase_streaming).
+# Values verified from https://huggingface.co/api/models/<id> and model cards on 2026-11-23.
+
+backbones:
+  text.qwen2_5_0_5b_instruct:
+    name: Qwen/Qwen2.5-0.5B-Instruct
+    modality: text
+    architecture: Qwen2ForCausalLM (model_type qwen2)
+    pretraining_regime: mixed      # self-supervised next-token pretraining + supervised/preference post-training
+    objective: "'Pretraining & Post-training' (model card; no further detail on the card)"
+    weights_source: huggingface
+    weights_uri: https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct
+    revision: 7ae557604adf67be50417f59c2c2f167def9a775
+    license: apache-2.0
+    gated: false
+    num_parameters: 494032768       # safetensors metadata (BF16)
+    weights_size_bytes: 988097824   # model.safetensors, BF16, single shard
+    input_spec:
+      tokenizer: bundled with the checkpoint at the same revision
+      context: "32,768 tokens context, 8,192 tokens generation (model card)"
+    preprocessing: tokenizer chat template (applied server-side by vLLM)
+    parent_backbone: unknown      # base checkpoint not recorded in fetched metadata
+    fine_tuning_dataset: unknown
+    supported_runtime: [vllm, transformers]
+    card: cards/qwen2_5_0_5b_instruct.md
+
+  text.qwen2_5_1_5b_instruct:
+    name: Qwen/Qwen2.5-1.5B-Instruct
+    modality: text
+    architecture: Qwen2ForCausalLM (model_type qwen2)
+    pretraining_regime: mixed      # self-supervised next-token pretraining + supervised/preference post-training
+    objective: "'Pretraining & Post-training' (model card; no further detail on the card)"
+    weights_source: huggingface
+    weights_uri: https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct
+    revision: 989aa7980e4cf806f80c7fef2b1adb7bc71aa306
+    license: apache-2.0
+    gated: false
+    num_parameters: 1543714304       # safetensors metadata (BF16)
+    weights_size_bytes: 3087467144   # model.safetensors, BF16, single shard
+    input_spec:
+      tokenizer: bundled with the checkpoint at the same revision
+      context: "32,768 tokens context, 8,192 tokens generation (model card)"
+    preprocessing: tokenizer chat template (applied server-side by vLLM)
+    parent_backbone: unknown      # base checkpoint not recorded in fetched metadata
+    fine_tuning_dataset: unknown
+    supported_runtime: [vllm, transformers]
+    card: cards/qwen2_5_1_5b_instruct.md
+
+  text.smollm2_1_7b_instruct:
+    name: HuggingFaceTB/SmolLM2-1.7B-Instruct
+    modality: text
+    architecture: LlamaForCausalLM (model_type llama)
+    pretraining_regime: mixed      # self-supervised next-token pretraining + supervised/preference post-training
+    objective: "base model trained on 11T tokens; instruct model via SFT then DPO on UltraFeedback (model card)"
+    weights_source: huggingface
+    weights_uri: https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct
+    revision: 31b70e2e869a7173562077fd711b654946d38674
+    license: apache-2.0
+    gated: false
+    num_parameters: 1711376384       # safetensors metadata (BF16)
+    weights_size_bytes: 3422777952   # model.safetensors, BF16, single shard
+    input_spec:
+      tokenizer: bundled with the checkpoint at the same revision
+      context: "unknown (not stated on the model card)"
+    preprocessing: tokenizer chat template (applied server-side by vLLM)
+    parent_backbone: unknown      # base checkpoint not recorded in fetched metadata
+    fine_tuning_dataset: unknown
+    supported_runtime: [vllm, transformers]
+    card: cards/smollm2_1_7b_instruct.md

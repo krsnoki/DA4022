@@ -1,0 +1,87 @@
+# Staircase streaming vs. baseline MoA, local vLLM servers on ONE NVIDIA GPU (>= 24 GB).
+# Run from the repo root:
+#   bash Serving/staircase_streaming/remote/run_all.sh Serving/staircase_streaming/configs/default.yaml
+# For a 16 GB GPU, raise the three gpu_memory_utilization values to 0.36 / 0.36 / 0.18.
+
+experiment:
+  name: staircase_moa_1gpu
+  paper_id: arxiv-2510.05059
+  seed: 42
+  status: partial
+  output_dir: results/staircase_streaming/default
+  warmup_requests: 3
+
+backend:
+  type: openai_compat
+  host: 127.0.0.1
+  request_timeout_s: 600
+
+# One vLLM server per distinct model. Keys are the logical model ids used below.
+# Revisions and registry ids verified from the Hugging Face API on 2026-11-23.
+servers:
+  qwen2.5-1.5b-instruct:
+    hf_model: Qwen/Qwen2.5-1.5B-Instruct
+    revision: 989aa7980e4cf806f80c7fef2b1adb7bc71aa306
+    backbone_id: text.qwen2_5_1_5b_instruct
+    port: 8001
+    gpu: "0"
+    gpu_memory_utilization: 0.30
+    max_model_len: 8192
+    dtype: auto            # bf16 on Ampere+; use "half" on T4/V100
+  smollm2-1.7b-instruct:
+    hf_model: HuggingFaceTB/SmolLM2-1.7B-Instruct
+    revision: 31b70e2e869a7173562077fd711b654946d38674
+    backbone_id: text.smollm2_1_7b_instruct
+    port: 8002
+    gpu: "0"
+    gpu_memory_utilization: 0.30
+    max_model_len: 8192
+    dtype: auto
+  qwen2.5-0.5b-instruct:
+    hf_model: Qwen/Qwen2.5-0.5B-Instruct
+    revision: 7ae557604adf67be50417f59c2c2f167def9a775
+    backbone_id: text.qwen2_5_0_5b_instruct
+    port: 8003
+    gpu: "0"
+    gpu_memory_utilization: 0.15
+    max_model_len: 8192
+    dtype: auto
+
+vllm:
+  enable_prefix_caching: true      # server-level, same for every method
+  optional_args: ["--enable-prompt-tokens-details"]   # reports cached prompt tokens; dropped if unsupported
+  extra_args: []                   # e.g. ["--enforce-eager"] if CUDA-graph memory is a problem
+  startup_timeout_s: 1200
+
+moa:
+  proposers: [qwen2.5-1.5b-instruct, smollm2-1.7b-instruct, qwen2.5-0.5b-instruct]
+  aggregator: qwen2.5-1.5b-instruct
+  proposer_max_tokens: 512
+  aggregator_max_tokens: 512
+  proposer_gen: {temperature: 0.7, top_p: 0.9}   # paper does not report sampling; our choice
+  aggregator_gen: {temperature: 0.0}
+
+staircase:            # paper Appendix A
+  first_chunk_size: 8
+  second_chunk_size: 128
+  chunk_size: 256
+  aggregator_chunk_size: 128
+  redundancy: 2
+  prefix_cache: false
+
+benchmark:
+  prompt_sets:        # paper: 64 + 64; reduced for runtime (recorded as a difference)
+    - {dataset_id: text.alpaca_eval.eval, num_samples: 32}
+    - {dataset_id: text.arena_hard_v0_1.eval, num_samples: 32}
+  sweep:
+    first_chunk_size: [4, 8, 16, 32]
+    redundancy: [0, 1, 2]
+  prefix_cache_variant: true
+  gpu_memory_sample_s: 0.5
+  sanity_prompts: 3
+
+quality:
+  enabled: true
+  dataset_id: text.gsm8k.test
+  num_samples: 50
+  methods: [baseline, staircase]
