@@ -65,3 +65,28 @@ For pruning, specify what is removed (weight, channel, head, layer, token, activ
 - Verify the actual runtime dtype/kernel; do not call a method INT4-speed if it dequantizes to FP16 before every operation.
 - Report sparsity and actual speed independently; unstructured sparsity may not accelerate standard dense kernels.
 - Keep calibration and evaluation datasets separate and record calibration seed/sample count.
+
+## Fault-robustness experiment
+
+The paper implementation card documents the reduced E4M11/E5M10/E8M7 fault
+sweep. From the repository root, install PyTorch and torchvision for your
+platform, then train a CIFAR-10 ResNet-18 checkpoint:
+
+```powershell
+python -m Quantization_and_Pruning.train_cifar10 --epochs 20 --seed 42 --device cuda --output artifacts/resnet18_cifar10.pt
+python -m Quantization_and_Pruning.run_fault_sweep --checkpoint artifacts/resnet18_cifar10.pt --format e4m11 --k 8 --bit-group exponent --trials 20 --images 2000 --seed 42 --device cuda --csv-output Performance_Metrics/results/fault_robustness.csv
+```
+
+The training command uses only the CIFAR-10 training split; the sweep downloads
+and evaluates the test split. Do not use test accuracy to select a
+checkpoint or tune training. The default experiment reports separate FP32,
+quantized-no-fault, and faulted rows. Latency is model-forward time per image;
+memory and energy are left blank because they are not measured. The local
+checkpoint is an experiment artifact and should not be committed.
+
+For an offline pipeline smoke test, the training helper and sweep can be tested
+with synthetic `TensorDataset` inputs:
+
+```powershell
+python -m pytest -q Quantization_and_Pruning/tests
+```
