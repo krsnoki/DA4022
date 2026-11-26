@@ -81,7 +81,7 @@ source .venv/bin/activate             # Linux/macOS
 python -m pip install --upgrade pip
 ```
 
-Install PyTorch using the command recommended by the [official PyTorch selector](https://pytorch.org/get-started/locally/) for your OS, Python version, and CPU/CUDA setup. Then install module-specific dependencies as documented by that module. Do not assume a CUDA implementation will run on CPU or on a different GPU architecture.
+Install PyTorch using command recommended by the [official PyTorch selector](https://pytorch.org/get-started/locally/) for your OS, Python version, and CPU/CUDA setup. Then install module-specific dependencies as documented by that module. Do not assume a CUDA implementation will run on CPU or on a different GPU architecture.
 
 Check local hardware before a benchmark:
 
