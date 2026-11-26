@@ -1,0 +1,15 @@
+# Step-Tagging Early-Stopping (ST-ES) experiments.
+# Install PyTorch first with the command from https://pytorch.org/get-started/locally/
+# for your CUDA/CPU setup (tested: torch 2.11.0+cu128, Python 3.12, Windows 11, RTX 4060 Laptop GPU).
+# Versions below are the ones the results were produced with.
+transformers==5.24.1      # v5 API: `dtype=`, `cache=` in generate(), DynamicCache.layers
+tokenizers==0.23.3
+huggingface_hub==2.4.0
+safetensors==0.8.0
+math-verify==0.9.0        # answer checking, as in the paper
+pandas==3.1.1             # parquet reading in the dataset loaders
+pyarrow==26.0.1
+pyyaml==6.0.4
+numpy==2.5.5
+matplotlib==3.11.2        # plots in make_report.py
+pytest==9.2.0
