@@ -3,7 +3,7 @@
 - **Paper / OpenReview:** https://openreview.net/forum?id=cg1wTCJjjk (AdaptFM workshop, ICML 2026; Kwak, Joo, Hwang, Byun, Moon, Seoul National University)
 - **Primary module:** `Attention/` (KV cache and long-context memory)
 - **Secondary modules:** `Performance_Metrics/` (latency and memory protocol)
-- **Team Members:** mathangiVS, sanjayganeshprabu, teja123git, Vipulsoc, kvdhruv)
+- **Team Members:** Mathangi Venkatraman Srinivasan - 230121037 (mathangiVS), Sanjay G - 230121049 (sanjayganeshprabu), Venkat Sai Teja Kalluri - 230121032 (teja123git), Vipul Sharma - 230103117 (Vipulsoc), Kondapi Venkata Dhruv 230122024 (kvdhruv)
 - **Tracking issue:** krsnoki/DA4022#8
 - **Status:** `partial-reproduction` (one model, RULER 4K subset, 2:1 to 32:1; main claim and ablation trend reproduced)
 - **Upstream code / licence:** NVIDIA kvpress, https://github.com/NVIDIA/kvpress, Apache-2.0. Version `0.5.5` already ships `KVgradPress` (`kvpress/presses/kvgrad_press.py`), which implements the paper's final score, Eq. (8). The intermediate scores of the paper's ablation, Eqs. (6) and (7), are not in kvpress. No separate code release by the authors was found.
