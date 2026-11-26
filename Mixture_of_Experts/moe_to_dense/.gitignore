@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+*.pt
+GITHUB_ISSUE_DRAFT.md
+results/staged-smoke/

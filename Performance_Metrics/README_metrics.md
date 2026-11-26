@@ -51,6 +51,19 @@ experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,sp
 
 Unknown/not-measured quantities should be empty/null plus a `status` or notes entry—never `0` unless zero was actually measured.
 
+### MoE-to-dense (DA4022 issue #31)
+
+[Implementation](../Mixture_of_Experts/moe_to_dense/) · [Experiment report](../Mixture_of_Experts/moe_to_dense/EXPERIMENT_REPORT.md) · [Machine-readable results](../Mixture_of_Experts/moe_to_dense/results/synthetic/metrics.csv) · [Issue #31](https://github.com/krsnoki/DA4022/issues/31)
+
+| Experiment | Perplexity (lower is better) | Parameters | Median latency (ms) | Throughput (tokens/s) | Peak CPU memory (MiB) | Energy | Status |
+|---|---:|---:|---:|---:|---:|---|---|
+| Unmodified top-k MoE teacher | 6.167 | 16,768 | 1.146 | 167,466 | 187.77 | not measured | partial-reproduction |
+| SF dense student + KD | 7.730 | 7,296 | 0.179 | 1,074,126 | 186.80 | not measured | partial-reproduction |
+| ACP dense student + KD | 7.379 | 7,296 | 0.167 | 1,152,115 | 186.60 | not measured | partial-reproduction |
+| DO-ACP dense student + KD | 7.378 | 7,296 | 0.161 | 1,191,437 | 186.97 | not measured | partial-reproduction |
+
+Measured on the same synthetic evaluation split (seed 4022, float32, CPU, PyTorch 2.8.0+cpu, batch 8, sequence length 24, three warmups and 30 measured forward passes). Peak memory is the OS-reported peak process working set, including startup and model loading. These are small-scale methodological results, not the paper's LLM benchmarks; latency includes unoptimized Python expert dispatch in the teacher.
+
 ## Recommended plots
 
 - quality vs. latency;

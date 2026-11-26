@@ -1,0 +1,129 @@
+{
+  "status": "small-scale methodological reproduction; not a paper-result reproduction",
+  "seed": 4022,
+  "software": {
+    "python": "3.12.2",
+    "torch": "2.8.0+cpu",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "hardware": {
+    "device": "CPU",
+    "torch_threads": 1,
+    "gpu_used": false
+  },
+  "data": {
+    "train_samples": 96,
+    "calibration_samples": 48,
+    "evaluation_samples": 48,
+    "sequence_length": 24,
+    "batch_size": 8
+  },
+  "teacher_training": {
+    "steps": 80,
+    "learning_rate": 0.003,
+    "loss_first": 4.3566694259643555,
+    "loss_last": 1.5437519550323486
+  },
+  "teacher": {
+    "perplexity": 6.16693726802416,
+    "parameters": 16768,
+    "parameter_bytes": 67072,
+    "latency_ms_median": 1.1464999988675117,
+    "throughput_tokens_per_second": 167466.2016481932,
+    "repeats": 30,
+    "peak_memory_mib": 187.765625,
+    "peak_memory_scope": "isolated process lifetime peak RSS/working set (includes startup, loading, warmup and inference)"
+  },
+  "students": {
+    "sf": {
+      "selected_experts": [
+        5,
+        0
+      ],
+      "groups": [
+        [
+          5
+        ],
+        [
+          0
+        ]
+      ],
+      "pre_distillation_perplexity": 14.713033545062954,
+      "post_distillation_perplexity": 7.729650549922791,
+      "pre_distillation_kl": 0.6105684638023376,
+      "post_distillation_kl": 0.12154362350702286,
+      "distillation_loss_first": 0.6493514180183411,
+      "distillation_loss_last": 0.12936942279338837,
+      "parameters": 7296,
+      "parameter_bytes": 29184,
+      "compression_ratio": 0.4351145038167939,
+      "latency_ms_median": 0.17874996410682797,
+      "throughput_tokens_per_second": 1074126.0898114266,
+      "repeats": 30,
+      "peak_memory_mib": 186.80078125,
+      "peak_memory_scope": "isolated process lifetime peak RSS/working set (includes startup, loading, warmup and inference)"
+    },
+    "acp": {
+      "selected_experts": [
+        6,
+        3
+      ],
+      "groups": [
+        [
+          6
+        ],
+        [
+          3
+        ]
+      ],
+      "pre_distillation_perplexity": 13.822774812153435,
+      "post_distillation_perplexity": 7.378792297880652,
+      "pre_distillation_kl": 0.5646200776100159,
+      "post_distillation_kl": 0.09469175338745117,
+      "distillation_loss_first": 0.574285089969635,
+      "distillation_loss_last": 0.09917255491018295,
+      "parameters": 7296,
+      "parameter_bytes": 29184,
+      "compression_ratio": 0.4351145038167939,
+      "latency_ms_median": 0.16664998838678002,
+      "throughput_tokens_per_second": 1152115.2918077908,
+      "repeats": 30,
+      "peak_memory_mib": 186.6015625,
+      "peak_memory_scope": "isolated process lifetime peak RSS/working set (includes startup, loading, warmup and inference)"
+    },
+    "do_acp": {
+      "selected_experts": [
+        6,
+        7
+      ],
+      "groups": [
+        [
+          6
+        ],
+        [
+          7
+        ]
+      ],
+      "pre_distillation_perplexity": 13.71628643445367,
+      "post_distillation_perplexity": 7.377602560357952,
+      "pre_distillation_kl": 0.582555890083313,
+      "post_distillation_kl": 0.09417255967855453,
+      "distillation_loss_first": 0.5782924294471741,
+      "distillation_loss_last": 0.09283804148435593,
+      "parameters": 7296,
+      "parameter_bytes": 29184,
+      "compression_ratio": 0.4351145038167939,
+      "latency_ms_median": 0.1611500047147274,
+      "throughput_tokens_per_second": 1191436.5149407485,
+      "repeats": 30,
+      "peak_memory_mib": 186.97265625,
+      "peak_memory_scope": "isolated process lifetime peak RSS/working set (includes startup, loading, warmup and inference)"
+    }
+  },
+  "limitations": [
+    "The teacher and dataset are synthetic; results do not measure natural-language ability.",
+    "No pretrained multi-billion-parameter checkpoint was downloaded or evaluated.",
+    "Peak CPU working set includes Python/PyTorch startup and model loading; small model differences may be obscured by runtime overhead.",
+    "Latency and throughput are local CPU medians and are not comparable to the paper's GPU results."
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "seed": 4022,
+  "torch_threads": 1,
+  "model": {
+    "vocab_size": 64,
+    "hidden_size": 32,
+    "intermediate_size": 16,
+    "num_experts": 8,
+    "top_k": 2
+  },
+  "data": {
+    "train_samples": 96,
+    "calibration_samples": 48,
+    "evaluation_samples": 48,
+    "sequence_length": 24,
+    "batch_size": 8
+  },
+  "teacher_training": {
+    "steps": 80,
+    "learning_rate": 0.003
+  },
+  "methods": [
+    "sf",
+    "acp",
+    "do_acp"
+  ],
+  "conversion": {
+    "selected_count": 2,
+    "group_count": 2,
+    "scaling": "uniform",
+    "lambda_reg": null
+  },
+  "distillation": {
+    "learning_rate": 0.002,
+    "steps": 50,
+    "gradient_accumulation_steps": 2,
+    "temperature": 1.0,
+    "checkpoint_every": 25
+  },
+  "benchmark_repeats": 30
+}
