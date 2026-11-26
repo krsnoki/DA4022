@@ -1,0 +1,13 @@
+# W4A4 Percentile baseline: one rule for every operator.
+# Per-tensor, best of p in {0.999, 0.9999, 0.99999} by MSE, two-sided over the 16 calibration images, static.
+method: percentile
+bits: {weight: 4, act: 4}          # weights: per output channel, min-max (all methods)
+calibration: {dataset_id: vision.nyuv2.calibration, num_images: 16, seed: 0}
+ops:
+  qkv:     {g: null, calib: percentile, mode: static}
+  matmul1: {g: null, calib: percentile, mode: static}
+  matmul2: {g: null, calib: percentile, mode: static}
+  proj:    {g: null, calib: percentile, mode: static}
+  fc1:     {g: null, calib: percentile, mode: static}
+  fc2:     {g: null, calib: percentile, mode: static}
+  conv:    {g: null, calib: percentile, mode: static}

@@ -1,0 +1,13 @@
+# W4A4 MinMax baseline: one rule for every operator.
+# Per-tensor, true min/max over the 16 calibration images, static.
+method: minmax
+bits: {weight: 4, act: 4}          # weights: per output channel, min-max (all methods)
+calibration: {dataset_id: vision.nyuv2.calibration, num_images: 16, seed: 0}
+ops:
+  qkv:     {g: null, calib: minmax, mode: static}
+  matmul1: {g: null, calib: minmax, mode: static}
+  matmul2: {g: null, calib: minmax, mode: static}
+  proj:    {g: null, calib: minmax, mode: static}
+  fc1:     {g: null, calib: minmax, mode: static}
+  fc2:     {g: null, calib: minmax, mode: static}
+  conv:    {g: null, calib: minmax, mode: static}

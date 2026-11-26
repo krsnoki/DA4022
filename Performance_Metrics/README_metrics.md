@@ -51,6 +51,14 @@ experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,sp
 
 Unknown/not-measured quantities should be empty/null plus a `status` or notes entry—never `0` unless zero was actually measured.
 
+### Result files
+
+One row per implemented paper. Each linked CSV follows the schema above, one row per configuration, with the unmodified baseline included.
+
+| Paper / method | Module | Status | Results |
+|---|---|---|---|
+| ORA-Q ([OpenReview](https://openreview.net/forum?id=oqacjavnry)) | `Quantization_and_Pruning/` | <status> | [results.csv](../Quantization_and_Pruning/experiments/ora_q/results.csv), [role report](../Quantization_and_Pruning/experiments/ora_q/role_report.json) |
+
 ## Recommended plots
 
 - quality vs. latency;

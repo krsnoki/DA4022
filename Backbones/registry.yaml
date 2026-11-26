@@ -1,0 +1,24 @@
+# Backbone registry. Experiments refer to these IDs. Fields: README_backbones.md.
+# Anything not verified is written as `unknown`; fill revision after your first run
+# (run_ora_q.py prints it and writes it into results.csv).
+
+vision.depth-anything-v2-small:
+  id: vision.depth-anything-v2-small
+  name: Depth Anything V2 Small (HF transformers port)
+  modality: vision
+  architecture: DPT head on a DINOv2 ViT-S/14 encoder (12 blocks, hidden 384, 6 heads)
+  pretraining_regime: mixed
+  objective: relative (affine-invariant) monocular depth; see the model card
+  weights_source: huggingface
+  weights_uri: https://huggingface.co/depth-anything/Depth-Anything-V2-Small-hf
+  hf_path: depth-anything/Depth-Anything-V2-Small-hf
+  revision: <fill from results.csv backbone_revision>
+  license: <copy from the model card>
+  num_parameters: <printed by get_model_metadata>
+  input_spec: {resize: 518 short side, keep aspect, multiple of 14, channels: 3, dtype: float32}
+  preprocessing: AutoImageProcessor from the same repository and revision
+  parent_backbone: DINOv2 ViT-S/14 (self-supervised)
+  fine_tuning_dataset: see the Depth Anything V2 paper / model card
+  loader: Backbones.Task_Finetuned.depth_anything_v2.load
+  card: Backbones/Task_Finetuned/depth_anything_v2_small.md
+  notes: Used by ORA-Q. Weights never modified; quantized variants are in-memory copies.

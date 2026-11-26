@@ -30,7 +30,6 @@ This is an engineering-oriented shortlist from the [official AdaptFM accepted-pa
 
 - [A Recipe for an Elastic Mixture: One Mixture-of-Experts for Every Resource Budget](https://openreview.net/forum?id=0stDFvtMGN) — elastic MoE capacity.
 - [TEAM: Temporal–Spatial Consistency Guided Expert Activation for MoE Diffusion Language Model Acceleration](https://openreview.net/forum?id=Zfgv1Sa7Ot) — dynamic expert activation.
-- [Structural Outlier aware post-training Quantization](https://openreview.net/forum?id=oqacjavnry) — outlier aware-quantization
 - [LExI: Layer-Adaptive Active Experts for Efficient MoE Inference](https://openreview.net/forum?id=oYiauQToKN) — layer-specific expert activation.
 - [MoSE: Mixture of Slimmable Experts for Efficient and Adaptive Language Models](https://openreview.net/forum?id=0yK6aZLoEF) — elastic expert capacity.
 - [DECO: Sparse Mixture-of-Experts with Dense-Comparable Performance on End-Side Devices](https://openreview.net/forum?id=YYycBS8yxj) — sparse MoE for edge devices.
@@ -63,6 +62,7 @@ This is an engineering-oriented shortlist from the [official AdaptFM accepted-pa
 - [SFPruner: Single-Forward Visual Token Subset Selection for Resource-Efficient Multimodal Foundation Model Inference](https://openreview.net/forum?id=d9H5uBnHeL) — visual token pruning.
 - [Modality-Aware Block Rotation for Vision-Language-Action Model Quantization](https://openreview.net/forum?id=07e99XvHxF) — VLA quantization.
 - [QJL is 1-bit Compressive Sensing: An Equivalence and Its Consequences for KV Cache Compression in LLMs](https://openreview.net/forum?id=B0N2TDGiOl) — KV-cache compression; cross-listed with Attention.
+- [Structural Outlier-Aware Post-Training Quantization for Monocular Depth Estimation (ORA-Q)](https://openreview.net/forum?id=oqacjavnry) — operator-role-aware 4-bit PTQ for Depth Anything; moved here from MoE (it is PTQ, not MoE). Implemented: `Quantization_and_Pruning/ORA_Q_PAPER_CARD.md`.
 
 ## KV cache and long-context memory
 

@@ -1,0 +1,34 @@
+# Dataset registry. Fields: README_dataloader.md. Unverified values are `unknown`.
+
+vision.nyuv2.test:
+  id: vision.nyuv2.test
+  name: NYU Depth V2 labeled, Eigen test split
+  modality: vision
+  task: monocular depth estimation (dense, metres)
+  source_url: https://cs.nyu.edu/~fergus/datasets/nyu_depth_v2.html
+  license: unknown
+  version: nyu_depth_v2_labeled.mat (sha256 <fill>), splits.mat (sha256 <fill>)
+  role: evaluation
+  split: test (testNdxs in splits.mat)
+  num_examples: 654
+  preprocessing_id: dav2.hf_processor; eval crop rows 45:471 cols 41:601; depth (0.001, 10] m
+  seed: null
+  labels_available: true
+  loader: Dataloaders.evaluation.nyuv2.load_nyu
+  card: Dataloaders/evaluation/nyuv2.md
+
+vision.nyuv2.calibration:
+  id: vision.nyuv2.calibration
+  name: NYU Depth V2 labeled, 16 calibration images from the Eigen train split
+  modality: vision
+  task: calibration (labels not used)
+  source_url: https://cs.nyu.edu/~fergus/datasets/nyu_depth_v2.html
+  license: unknown
+  role: calibration
+  split: train (trainNdxs in splits.mat), never test
+  num_examples: 16
+  sampling: numpy default_rng(seed).choice(train indices, 16, replace=False), sorted
+  seed: 0
+  labels_available: false
+  loader: Dataloaders.evaluation.nyuv2.sample_calibration + load_nyu
+  card: Dataloaders/evaluation/nyuv2.md
