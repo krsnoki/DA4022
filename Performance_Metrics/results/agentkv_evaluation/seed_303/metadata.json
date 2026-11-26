@@ -1,0 +1,39 @@
+{
+  "identity": {
+    "config": {
+      "model_id": "Qwen/Qwen3-0.6B",
+      "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+      "seed": 303,
+      "num_examples": 10,
+      "distractors": 72,
+      "budgets": [
+        256,
+        512,
+        1024
+      ],
+      "query_budget": 32,
+      "interval": 128,
+      "sink_tokens": 16,
+      "recent_tokens": 8,
+      "pool_kernel": 1,
+      "max_new_tokens": 512,
+      "prefill_chunk_size": 256,
+      "dtype": "float16",
+      "warmup_examples": 1,
+      "scoring_profile": "upstream_mean"
+    },
+    "source_sha256": "935778a060bf2620ca3df4d6c846b86b3461bb44f726cb36693e1d80dd199144",
+    "torch": "2.14.1+cu130",
+    "transformers": "4.57.1",
+    "python": "3.13.16",
+    "device": "Tesla T4"
+  },
+  "commit": "368db370fa85b4997b44c063b9b697ba34fb38f5",
+  "source_snapshot": {
+    "base_commit": "368db370fa85b4997b44c063b9b697ba34fb38f5",
+    "source_sha256": "935778a060bf2620ca3df4d6c846b86b3461bb44f726cb36693e1d80dd199144",
+    "note": "Includes working-tree changes; source hash identifies implementation, not base commit alone."
+  },
+  "commit_note": "Source hash identifies working-tree implementation; commit may be its base.",
+  "cuda_runtime": "13.0"
+}

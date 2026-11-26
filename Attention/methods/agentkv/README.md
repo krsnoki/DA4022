@@ -20,6 +20,13 @@ and candidate-normalization differences in the original reference implementation
 unprotected candidates. `reviewed_pilot.json` also uses its sink16/recent8 settings.
 This is a new experiment; do not merge its results with the existing pilots.
 Parser and serving differences remain documented; it is not a full upstream port.
+The [reviewed pilot and pretrained gate](../../../Performance_Metrics/results/agentkv_reviewed_pilot/README.md)
+completed successfully. The subsequent [frozen 210-episode evaluation](../../../Performance_Metrics/results/agentkv_evaluation/README.md)
+also completed with no runtime failures or truncation. Across its three fixed
+length strata, recent-query eviction scores above AgentKV at every budget; full
+cache is faster in this reference adapter. The five-example pilot differences
+were not general performance claims and are superseded for aggregate comparison
+by the larger evaluation.
 
 New diagnostics explain strict-score failures and record whether the first live
 response repeats the expected code. All policies retain the same primary metric.

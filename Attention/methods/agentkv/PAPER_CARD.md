@@ -9,7 +9,7 @@
 - **Supporting modules:** Backbones, Dataloaders, Performance_Metrics
 - **Team:** Yash Pratap Singh, Khushal Nagwal, Pranjal Kirar, Babita Verma, Aditya Raj
 - **Reviewer:** not assigned
-- **Status:** partial-reproduction (CPU reference tested; initial pretrained T4 pilot completed)
+- **Status:** partial-reproduction (CPU reference, pretrained numerical gate, and fixed T4 synthetic evaluation completed)
 - **Upstream:** https://github.com/LiuTaowen-Tony/agentkv; Apache-2.0 for AgentKV;
   upstream bundled components have their own licenses. No upstream code is vendored.
 - **Backbone:** Qwen/Qwen3-0.6B at c1899de289a04d12100db370d81485cdf75e47ca
@@ -49,6 +49,9 @@ caches alone do not establish a speedup: scoring and tensor gathers add overhead
 | Pretrained full-cache baseline | 4/5 exact match | 10.03 s median episode | 24.50 decode tokens/s | 1373.79 MB allocated | not measured | Five synthetic episodes; one final turn truncated |
 | Pretrained recent, B=512 | 4/5 exact match | 12.55 s median episode | 20.66 decode tokens/s | 1373.71 MB allocated | not measured | Five synthetic episodes |
 | Pretrained AgentKV, B=512 | 4/5 exact match | 11.95 s median episode | 20.73 decode tokens/s | 1373.71 MB allocated | not measured | Five synthetic episodes; one final turn truncated |
+| Reviewed evaluation, full cache | 20/30 exact match | 8.92 s median episode | 26.35 decode tokens/s | 1421.75 MB allocated | not measured | Three fixed synthetic length strata; no truncation |
+| Reviewed evaluation, recent B=512 | 17/30 exact match | 11.34 s median episode | 21.26 decode tokens/s | 1422.50 MB allocated | not measured | Same task/strata; no truncation |
+| Reviewed evaluation, AgentKV B=512 | 15/30 exact match | 11.37 s median episode | 21.28 decode tokens/s | 1422.50 MB allocated | not measured | Same task/strata; no truncation |
 
 No paper performance number is claimed as reproduced. The random model's
 outputs are not task-quality measurements. See the [complete pilot report and
@@ -68,9 +71,18 @@ runs remain separate; these five examples do not establish general superiority.
 
 The [subsequent fidelity review](FIDELITY_REVIEW.md) pins the upstream engine
 commit and distinguishes original `reference_v1` results from the new
-`upstream_mean` scoring option. The reviewed profile's GPU results are pending;
-it changes GQA reduction, candidate normalization and protection settings.
+`upstream_mean` scoring option. The [reviewed pilot](../../../Performance_Metrics/results/agentkv_reviewed_pilot/README.md)
+passed the pretrained numerical gate and completed 35 episodes without truncation.
+AgentKV scores 1/5, 5/5, 5/5 at budgets 256/512/1024, versus recent's 3/5, 4/5, 4/5.
+It changes GQA reduction, candidate normalization and protection settings.
 Do not attribute differences between profiles solely to phase awareness.
+
+The [fixed reviewed evaluation](../../../Performance_Metrics/results/agentkv_evaluation/README.md)
+contains 210 measured episodes across three context-length strata. It finds
+recent-query eviction above AgentKV at all three budgets (9/30 vs. 2/30 at 256,
+17/30 vs. 15/30 at 512, and 22/30 vs. 20/30 at 1024); full cache is faster. This
+is still a narrow synthetic retrieval task and does not establish broad method
+rankings.
 
 - Smaller model and synthetic scripted tool observations instead of full benchmarks.
 - Live answers, but tool calls/observations are supplied fixtures, not an autonomous agent.
@@ -84,8 +96,8 @@ Do not attribute differences between profiles solely to phase awareness.
 - Cache/query/protection budgets are explicit; peak memory can exceed retained-cache budget.
 - A no-eviction adapter equivalence check and multi-turn positional tests pass on
   tiny random Qwen3. Pretrained CUDA execution completed in the initial pilot;
-  these numerical equivalence tests have not been independently repeated on the
-  pretrained checkpoint.
+  the reviewed pilot also passed the tested pretrained no-eviction numerical
+  comparisons (maximum tested logit difference 0.0). This is not universal equivalence.
 
 ## Checklist
 
@@ -96,4 +108,5 @@ Do not attribute differences between profiles solely to phase awareness.
 - [x] CPU tests and offline smoke added
 - [x] Pretrained baseline runs on cloud hardware (initial five-example pilot)
 - [x] Resource and task-quality results recorded (pilot only)
-- [ ] Cloud reproduction independently verified
+- [x] Pretrained numerical integration gate passed on cloud hardware
+- [x] Fixed 30-example, three-stratum cloud evaluation completed and audited

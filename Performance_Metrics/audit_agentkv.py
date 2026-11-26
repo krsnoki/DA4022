@@ -15,12 +15,12 @@ def require(condition, message):
         raise ValueError(message)
 
 
-def audit(results_zip, source_zip, destination):
+def audit(results_zip, source_zip, destination, prefix=""):
     # Read only explicitly named files; do not extract arbitrary archive paths.
     with zipfile.ZipFile(results_zip) as archive:
-        manifest = json.loads(archive.read("manifest.json"))
-        summaries = json.loads(archive.read("summary.json"))
-        raw = archive.read("samples.jsonl")
+        manifest = json.loads(archive.read(prefix + "manifest.json"))
+        summaries = json.loads(archive.read(prefix + "summary.json"))
+        raw = archive.read(prefix + "samples.jsonl")
         rows = [json.loads(line) for line in raw.decode().splitlines()]
     identity = manifest["identity"]
     config = identity["config"]
@@ -53,7 +53,14 @@ def audit(results_zip, source_zip, destination):
             if method == "full":
                 require(row["cached_tokens"] == row["logical_tokens"] and row["compression_events"] == 0, "Full cache unexpectedly compressed")
             else:
-                require(row["compression_events"] > 0, "Compressed policy never evicted")
+                # A cache that never reaches its configured budget correctly has
+                # no compression events.  It must remain the unchanged logical
+                # cache in that case; longer samples must show an eviction.
+                require(
+                    row["compression_events"] > 0
+                    or (row["logical_tokens"] <= budget and row["cached_tokens"] == row["logical_tokens"]),
+                    "Compressed policy neither evicted nor fit within its budget",
+                )
                 for event in row["events"]:
                     if event["stage"] == "after_prefill":
                         require(event["cached_tokens"] <= budget, "Turn-boundary cache exceeds budget")
@@ -91,5 +98,6 @@ if __name__ == "__main__":
     parser.add_argument("--results", default="artifacts/agentkv-results.zip")
     parser.add_argument("--source", default="artifacts/agentkv-source.zip")
     parser.add_argument("--out", default="Performance_Metrics/results/agentkv_pilot")
+    parser.add_argument("--prefix", default="", help="Archive member prefix, e.g. seed_101/")
     args = parser.parse_args()
-    audit(args.results, args.source, args.out)
+    audit(args.results, args.source, args.out, args.prefix)
