@@ -5,7 +5,7 @@ datasets:
     task: mathematical_reasoning
     source_url: https://huggingface.co/datasets/HuggingFaceH4/MATH-500
     license: mit
-    version: "main (pin exact commit SHA on first Hugging Face load)"
+    version: "6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be"
     role: evaluation
     split: test
     preprocessing_id: dipa.math_cot_boxed.v1

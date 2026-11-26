@@ -85,7 +85,7 @@ Paper-reported values below are from Table 5 (`MATH-500`, `Qwen2.5-Math-1.5B-Ins
 ## Reproduction checklist
 
 - [x] Exact paper link and version verified
-- [ ] Base model and dataset revisions pinned (currently `revision: main`; exact immutable HF commit SHAs can be pinned in `Backbones/registry.yaml` and `Dataloaders/registry.yaml` if required)
+- [x] Base model and dataset revisions pinned (`Qwen/Qwen2.5-Math-1.5B-Instruct@aafeb0fc6f22`, `HuggingFaceH4/MATH-500@6e4ed1a2a79a` in `Backbones/registry.yaml`, `Dataloaders/registry.yaml`, and `configs/dipa.yaml`; both equal what `main` resolved to during the benchmark runs)
 - [x] Baseline runs on the same setup
 - [x] Tests and seed handling added (`157` CPU tests passing)
 - [x] Resource and quality metrics reported (`Performance_Metrics/results/dipa_math500_L4.csv`)

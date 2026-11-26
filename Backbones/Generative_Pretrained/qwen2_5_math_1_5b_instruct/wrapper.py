@@ -35,7 +35,7 @@ class BackboneConfig:
     """Loading and default generation configuration for Qwen2.5-Math-1.5B-Instruct."""
 
     model_id: str = "Qwen/Qwen2.5-Math-1.5B-Instruct"
-    revision: str = "main"
+    revision: str = "aafeb0fc6f22cbf0eaeed126eff8be45b0360a35"
     device: str = "auto"
     dtype: str = "float16"
     temperature: float = 0.7
@@ -66,7 +66,7 @@ def get_model_metadata() -> dict[str, Any]:
         ),
         "weights_source": "huggingface",
         "weights_uri": "https://huggingface.co/Qwen/Qwen2.5-Math-1.5B-Instruct",
-        "revision": "main (pin exact commit SHA on first Kaggle download)",
+        "revision": "aafeb0fc6f22cbf0eaeed126eff8be45b0360a35",
         "license": "apache-2.0",
         "num_parameters": 1540000000,
         "context_length": 32768,

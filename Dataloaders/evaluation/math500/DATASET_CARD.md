@@ -1,7 +1,7 @@
 # Dataset card: MATH-500 evaluation test split
 
 - **Dataset ID:** `math.math500.test` (`HuggingFaceH4/MATH-500`)
-- **Source URL / version:** https://huggingface.co/datasets/HuggingFaceH4/MATH-500 / `main` (pin exact commit SHA on first Hugging Face load)
+- **Source URL / version:** https://huggingface.co/datasets/HuggingFaceH4/MATH-500 / `6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be` (the commit `main` resolved to for the NVIDIA L4 benchmark runs; last upstream change 2025-12-15)
 - **License/access terms:** MIT (`mit`); public benchmark dataset via Hugging Face Datasets
 - **Modality/task:** text / `mathematical_reasoning`
 - **Role:** evaluation

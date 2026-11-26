@@ -7,7 +7,7 @@ models:
     objective: mathematical reasoning via chain-of-thought and tool-integrated reasoning
     weights_source: huggingface
     weights_uri: https://huggingface.co/Qwen/Qwen2.5-Math-1.5B-Instruct
-    revision: "main (pin exact commit SHA on first Kaggle download)"
+    revision: "aafeb0fc6f22cbf0eaeed126eff8be45b0360a35"
     license: apache-2.0
     num_parameters: 1540000000
     context_length: 32768
@@ -19,4 +19,5 @@ models:
     notes: >
       Math-specialized instruction-tuned causal LM. Target inference hardware is
       Kaggle Tesla T4 (16 GB VRAM) in float16 (or bfloat16 on Ampere+ GPUs).
-      Pin revision to the resolved Hugging Face commit SHA on first download.
+      Revision pinned to the Hugging Face commit SHA that `main` resolved to
+      for the NVIDIA L4 MATH-500 benchmark runs.

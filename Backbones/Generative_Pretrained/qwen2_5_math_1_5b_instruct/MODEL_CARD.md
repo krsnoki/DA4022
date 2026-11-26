@@ -5,9 +5,9 @@
 - **Architecture:** `Qwen2ForCausalLM`
 - **Pretraining regime:** `mixed` (self-supervised next-token pretraining followed by math instruction post-training)
 - **Training objective/data:** Mathematical reasoning via chain-of-thought (CoT) and tool-integrated reasoning (TIR); exact `fine_tuning_dataset` composition is `unknown` (not itemized in full upstream).
-- **Weights URI and exact revision:** `https://huggingface.co/Qwen/Qwen2.5-Math-1.5B-Instruct`, `revision: main` (pin exact commit SHA on first Kaggle download).
+- **Weights URI and exact revision:** `https://huggingface.co/Qwen/Qwen2.5-Math-1.5B-Instruct`, `revision: aafeb0fc6f22cbf0eaeed126eff8be45b0360a35` (the commit `main` resolved to for the NVIDIA L4 benchmark runs; last upstream change 2024-09-23).
 - **License/usage terms:** `apache-2.0`
-- **Tokenizer/processor revision:** Bundled `AutoTokenizer` from `Qwen/Qwen2.5-Math-1.5B-Instruct` at `revision: main` (pin exact commit SHA alongside model weights).
+- **Tokenizer/processor revision:** Bundled `AutoTokenizer` from `Qwen/Qwen2.5-Math-1.5B-Instruct` at the same pinned `revision: aafeb0fc6f22cbf0eaeed126eff8be45b0360a35`.
 - **Parent backbone (if fine-tuned):** `Qwen/Qwen2.5-Math-1.5B`
 - **Input/output contract:** `preprocess()` accepts a raw `str` or chat message list `list[dict[str, str]]` (context limit `32768` tokens) and returns `{"input_ids": ..., "attention_mask": ...}`. `forward()` returns causal LM outputs (`logits` over vocabulary). `generate()` returns `list[dict[str, Any]]` with keys `text`, `num_tokens`, `token_ids`, and `latency_ms` (max documented generation tokens `8192`; DIPA default `max_new_tokens=512`, `temperature=0.7`, `top_p=0.8`, `repetition_penalty=1.05`).
 - **Parameter count / weight size:** `1,540,000,000` parameters (`1.54B`), default `dtype: float16` (~3.08 GB raw FP16 weights).
@@ -44,6 +44,6 @@ Expected result: all tests pass, validating `BackboneConfig` invariants, `Backbo
 ## Caveats
 
 - **Target hardware:** Intended for Kaggle Tesla T4 (16 GB VRAM) in `float16` (or `bfloat16` on Ampere+ GPUs). Do not run full-scale `Qwen2.5-Math-1.5B-Instruct` sweeps on CPU.
-- **Unpinned floating branch:** `revision` is currently recorded as `main`; pin the resolved Hugging Face commit SHA in both `Backbones/registry.yaml` and experiment configs upon first Kaggle download.
+- **Pinned revision:** `revision` is pinned to `aafeb0fc6f22cbf0eaeed126eff8be45b0360a35` in `Backbones/registry.yaml`, `BackboneConfig`, and `Adaptive_Stopping/configs/dipa.yaml`. Rows in `Performance_Metrics/results/dipa_math500_L4.csv` record `backbone_revision = main`, which resolved to this SHA at run time.
 - **Domain specialization & unknown tuning corpus:** `Qwen2.5-Math-1.5B-Instruct` is a math-specialized checkpoint whose exact `fine_tuning_dataset` mixture is `unknown`; do not generalize math benchmark latency/quality to non-mathematical domains.
 - **Runtime dependency:** `load()` requires `torch` and `transformers`; `transformers` is not installed in the minimal local CPU test environment.

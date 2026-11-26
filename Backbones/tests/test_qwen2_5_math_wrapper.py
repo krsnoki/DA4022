@@ -157,7 +157,7 @@ class TestBackboneConfigAndMetadata:
     def test_valid_edge_configs_and_frozen_immutability(self) -> None:
         cfg = BackboneConfig(temperature=0.0, top_p=1.0, repetition_penalty=0.5, max_new_tokens=1)
         assert cfg.model_id == "Qwen/Qwen2.5-Math-1.5B-Instruct"
-        assert cfg.revision == "main"
+        assert cfg.revision == "aafeb0fc6f22cbf0eaeed126eff8be45b0360a35"
         assert cfg.dtype == "float16"
         with pytest.raises(FrozenInstanceError):
             cfg.temperature = 0.5  # type: ignore[misc]
@@ -187,7 +187,7 @@ class TestBackboneConfigAndMetadata:
             "objective": "mathematical reasoning via chain-of-thought and tool-integrated reasoning",
             "weights_source": "huggingface",
             "weights_uri": "https://huggingface.co/Qwen/Qwen2.5-Math-1.5B-Instruct",
-            "revision": "main (pin exact commit SHA on first Kaggle download)",
+            "revision": "aafeb0fc6f22cbf0eaeed126eff8be45b0360a35",
             "license": "apache-2.0",
             "num_parameters": 1540000000,
             "context_length": 32768,
@@ -453,8 +453,8 @@ class TestBackboneWrapperBehavior:
         assert fake_model.to_calls == ["cpu"]
         assert fake_tok.pad_token_id == fake_tok.eos_token_id
         assert calls["tokenizer"][0] == "Qwen/Qwen2.5-Math-1.5B-Instruct"
-        assert calls["tokenizer"][1]["revision"] == "main"
-        assert calls["model"][1]["revision"] == "main"
+        assert calls["tokenizer"][1]["revision"] == "aafeb0fc6f22cbf0eaeed126eff8be45b0360a35"
+        assert calls["model"][1]["revision"] == "aafeb0fc6f22cbf0eaeed126eff8be45b0360a35"
 
         with pytest.raises(ValueError, match="Unsupported dtype"):
             wrapper.load(dtype="int4")

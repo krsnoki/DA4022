@@ -225,7 +225,7 @@ def _load_default_backbone(
     config_dict: Mapping[str, Any],
     device: str | None = None,
     dtype: str | None = None,
-    backbone_revision: str = "main",
+    backbone_revision: str = "aafeb0fc6f22cbf0eaeed126eff8be45b0360a35",
 ) -> Any:
     """Lazy-import and load the Qwen2.5-Math-1.5B-Instruct backbone wrapper."""
     from Backbones.Generative_Pretrained.qwen2_5_math_1_5b_instruct import (
@@ -387,7 +387,7 @@ def evaluate_pool(
     device: str = "cpu",
     framework_version: str = "unknown",
     dtype: str = "unknown",
-    backbone_revision: str = "main",
+    backbone_revision: str = "aafeb0fc6f22cbf0eaeed126eff8be45b0360a35",
     peak_memory_mb: float | None = None,
     gen_batch_size: int = 1,
     reverify: bool = False,
@@ -638,7 +638,7 @@ def run_benchmark(
     status: str | None = None,
     device: str | None = None,
     dtype: str | None = None,
-    backbone_revision: str = "main",
+    backbone_revision: str = "aafeb0fc6f22cbf0eaeed126eff8be45b0360a35",
     backbone: Any = None,
     print_summary: bool = True,
 ) -> list[MetricsRow]:
@@ -882,7 +882,7 @@ def _build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--dtype", default=None, help="Dtype override (e.g. float16, bfloat16).")
     parser.add_argument(
         "--backbone-revision",
-        default="main",
+        default="aafeb0fc6f22cbf0eaeed126eff8be45b0360a35",
         help="Pinned Hugging Face model revision SHA or branch.",
     )
     return parser

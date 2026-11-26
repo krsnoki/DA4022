@@ -238,7 +238,7 @@ class TestLoadMath500OfflineAndSubsampling:
             sys.modules, "datasets", SimpleNamespace(load_dataset=fake_load_dataset)
         )
         items = load_math500(Math500LoaderConfig(num_samples=2, seed=42))
-        assert calls == [("HuggingFaceH4/MATH-500", "test", "main")]
+        assert calls == [("HuggingFaceH4/MATH-500", "test", "6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be")]
         assert len(items) == 2
         assert items[0]["metadata"]["split"] == "test"
 

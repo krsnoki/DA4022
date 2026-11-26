@@ -28,7 +28,7 @@ class Math500LoaderConfig:
     """Configuration for loading and deterministically subsampling MATH-500."""
 
     dataset_id: str = "HuggingFaceH4/MATH-500"
-    revision: str = "main"
+    revision: str = "6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be"
     split: str = "test"
     num_samples: int | None = None
     seed: int = 42
@@ -80,7 +80,7 @@ def get_dataset_metadata() -> dict[str, Any]:
         "task": "mathematical_reasoning",
         "source_url": "https://huggingface.co/datasets/HuggingFaceH4/MATH-500",
         "license": "mit",
-        "version": "main (pin exact commit SHA on first Hugging Face load)",
+        "version": "6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be",
         "role": "evaluation",
         "split": "test",
         "preprocessing_id": "dipa.math_cot_boxed.v1",
