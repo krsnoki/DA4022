@@ -33,6 +33,7 @@ class HFCausalLM:
         dtype: str = "float32",
         use_chat_template: bool = True,
         model_class: str = "AutoModelForCausalLM",
+        quantization: Optional[str] = None,
         model=None,
         tokenizer=None,
     ):
@@ -43,11 +44,20 @@ class HFCausalLM:
         self.model_id, self.revision, self.device, self.dtype = model_id, revision, device, dtype
         if tokenizer is None:
             tokenizer = transformers.AutoTokenizer.from_pretrained(model_id, revision=revision)
+        self.quantization = quantization
         if model is None:
             cls = getattr(transformers, model_class)
-            model = cls.from_pretrained(model_id, revision=revision, dtype=getattr(torch, dtype))
+            load_kw = dict(revision=revision, dtype=getattr(torch, dtype))
+            if quantization == "bnb-4bit":
+                load_kw["quantization_config"] = transformers.BitsAndBytesConfig(
+                    load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=getattr(torch, dtype))
+                load_kw["device_map"] = device
+            elif quantization is not None:
+                raise ValueError(f"unsupported quantization {quantization!r} (expected None or 'bnb-4bit')")
+            model = cls.from_pretrained(model_id, **load_kw)
         self.tok = tokenizer
-        self.model = model.to(device).eval()
+        self.model = model if quantization else model.to(device)
+        self.model.eval()
         self.use_chat_template = use_chat_template and getattr(tokenizer, "chat_template", None) is not None
         if self.tok.pad_token_id is None:
             self.tok.pad_token = self.tok.eos_token
@@ -79,7 +89,7 @@ class HFCausalLM:
     def get_model_metadata(self) -> dict:
         n_params = sum(p.numel() for p in self.model.parameters())
         return {"id": self.model_id, "revision": self.revision, "dtype": self.dtype, "device": self.device,
-                "num_parameters": n_params, "backend": "transformers",
+                "num_parameters": n_params, "backend": "transformers", "quantization": self.quantization,
                 "transformers_version": __import__("transformers").__version__,
                 "torch_version": self.torch.__version__}
 
