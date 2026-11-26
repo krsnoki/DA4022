@@ -1,0 +1,87 @@
+{
+  "source_matches_uploaded_bundle": true,
+  "result_zip_sha256": "939a09f86188578ff379aca17b5c3fae7f0095408c594e55204597de4fea0b84",
+  "record_count": 35,
+  "configuration_count": 7,
+  "checks": [
+    {
+      "method": "full",
+      "budget": null,
+      "correct": 4,
+      "total": 5,
+      "truncated_final_turns": 1,
+      "failed_sample_ids": [
+        "agent_memory_v1:42:1"
+      ]
+    },
+    {
+      "method": "recent",
+      "budget": 256,
+      "correct": 0,
+      "total": 5,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": [
+        "agent_memory_v1:42:0",
+        "agent_memory_v1:42:1",
+        "agent_memory_v1:42:2",
+        "agent_memory_v1:42:3",
+        "agent_memory_v1:42:4"
+      ]
+    },
+    {
+      "method": "agentkv",
+      "budget": 256,
+      "correct": 0,
+      "total": 5,
+      "truncated_final_turns": 1,
+      "failed_sample_ids": [
+        "agent_memory_v1:42:0",
+        "agent_memory_v1:42:1",
+        "agent_memory_v1:42:2",
+        "agent_memory_v1:42:3",
+        "agent_memory_v1:42:4"
+      ]
+    },
+    {
+      "method": "recent",
+      "budget": 512,
+      "correct": 4,
+      "total": 5,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": [
+        "agent_memory_v1:42:4"
+      ]
+    },
+    {
+      "method": "agentkv",
+      "budget": 512,
+      "correct": 4,
+      "total": 5,
+      "truncated_final_turns": 1,
+      "failed_sample_ids": [
+        "agent_memory_v1:42:3"
+      ]
+    },
+    {
+      "method": "recent",
+      "budget": 1024,
+      "correct": 4,
+      "total": 5,
+      "truncated_final_turns": 1,
+      "failed_sample_ids": [
+        "agent_memory_v1:42:1"
+      ]
+    },
+    {
+      "method": "agentkv",
+      "budget": 1024,
+      "correct": 4,
+      "total": 5,
+      "truncated_final_turns": 1,
+      "failed_sample_ids": [
+        "agent_memory_v1:42:1"
+      ]
+    }
+  ],
+  "note": "Validates exported records; does not rerun model inference or certify algorithm fidelity. Original manifest with pip freeze remains in the results ZIP."
+}

@@ -1,5 +1,12 @@
 # Attention, Context and Token Efficiency
 
+## Implementations in progress
+
+- [AgentKV reference implementation](methods/agentkv/README.md): phase-aware KV
+  eviction with a Qwen3 adapter, CPU tests, and cloud pilot runner. Tracked in
+  [issue #27](https://github.com/krsnoki/DA4022/issues/27). Pretrained numerical
+  validation and a fixed 210-episode synthetic T4 evaluation are complete.
+
 ## Purpose
 
 Implement methods that reduce the cost of attention or the context processed by foundation models. This module covers sparse/linear/low-rank attention, conditional memory access, context compression, and token selection/merging. KV-cache policies may live here initially, but use `PAPER_INDEX.md` to cross-reference the paper and avoid duplicating a shared KV-cache utility if a dedicated module is later created.

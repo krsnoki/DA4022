@@ -1,0 +1,116 @@
+{
+  "source_matches_uploaded_bundle": true,
+  "result_zip_sha256": "51b94f8fd74bb7f68371d0c398d8990403f14e629300948e55f11b5479347fdc",
+  "record_count": 70,
+  "configuration_count": 7,
+  "checks": [
+    {
+      "method": "full",
+      "budget": null,
+      "correct": 6,
+      "total": 10,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": [
+        "agent_memory_v1:101:2",
+        "agent_memory_v1:101:3",
+        "agent_memory_v1:101:6",
+        "agent_memory_v1:101:9"
+      ]
+    },
+    {
+      "method": "recent",
+      "budget": 256,
+      "correct": 2,
+      "total": 10,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": [
+        "agent_memory_v1:101:0",
+        "agent_memory_v1:101:1",
+        "agent_memory_v1:101:2",
+        "agent_memory_v1:101:3",
+        "agent_memory_v1:101:6",
+        "agent_memory_v1:101:7",
+        "agent_memory_v1:101:8",
+        "agent_memory_v1:101:9"
+      ]
+    },
+    {
+      "method": "agentkv",
+      "budget": 256,
+      "correct": 0,
+      "total": 10,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": [
+        "agent_memory_v1:101:0",
+        "agent_memory_v1:101:1",
+        "agent_memory_v1:101:2",
+        "agent_memory_v1:101:3",
+        "agent_memory_v1:101:4",
+        "agent_memory_v1:101:5",
+        "agent_memory_v1:101:6",
+        "agent_memory_v1:101:7",
+        "agent_memory_v1:101:8",
+        "agent_memory_v1:101:9"
+      ]
+    },
+    {
+      "method": "recent",
+      "budget": 512,
+      "correct": 2,
+      "total": 10,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": [
+        "agent_memory_v1:101:0",
+        "agent_memory_v1:101:1",
+        "agent_memory_v1:101:3",
+        "agent_memory_v1:101:5",
+        "agent_memory_v1:101:6",
+        "agent_memory_v1:101:7",
+        "agent_memory_v1:101:8",
+        "agent_memory_v1:101:9"
+      ]
+    },
+    {
+      "method": "agentkv",
+      "budget": 512,
+      "correct": 4,
+      "total": 10,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": [
+        "agent_memory_v1:101:0",
+        "agent_memory_v1:101:1",
+        "agent_memory_v1:101:2",
+        "agent_memory_v1:101:3",
+        "agent_memory_v1:101:7",
+        "agent_memory_v1:101:8"
+      ]
+    },
+    {
+      "method": "recent",
+      "budget": 1024,
+      "correct": 6,
+      "total": 10,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": [
+        "agent_memory_v1:101:2",
+        "agent_memory_v1:101:3",
+        "agent_memory_v1:101:6",
+        "agent_memory_v1:101:9"
+      ]
+    },
+    {
+      "method": "agentkv",
+      "budget": 1024,
+      "correct": 6,
+      "total": 10,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": [
+        "agent_memory_v1:101:2",
+        "agent_memory_v1:101:3",
+        "agent_memory_v1:101:6",
+        "agent_memory_v1:101:9"
+      ]
+    }
+  ],
+  "note": "Validates exported records; does not rerun model inference or certify algorithm fidelity. Original manifest with pip freeze remains in the results ZIP."
+}

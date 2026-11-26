@@ -1,0 +1,238 @@
+{
+  "passed": true,
+  "atol": 0.02,
+  "rtol": 0.01,
+  "no_eviction": [
+    {
+      "mode": "full",
+      "max_logit_absolute_error": 0.0,
+      "cache_matches": true
+    },
+    {
+      "mode": "recent",
+      "max_logit_absolute_error": 0.0,
+      "cache_matches": true
+    },
+    {
+      "mode": "agentkv",
+      "max_logit_absolute_error": 0.0,
+      "cache_matches": true
+    }
+  ],
+  "compressed_continuation": {
+    "logical_tokens": 61,
+    "cached_tokens": 8,
+    "kv_bytes": 917504,
+    "query_buffer_bytes": 917504,
+    "position_bytes": 14336,
+    "representatives_per_layer": {
+      "0": 8,
+      "1": 8,
+      "2": 8,
+      "3": 8,
+      "4": 8,
+      "5": 8,
+      "6": 8,
+      "7": 8,
+      "8": 8,
+      "9": 8,
+      "10": 8,
+      "11": 8,
+      "12": 8,
+      "13": 8,
+      "14": 8,
+      "15": 8,
+      "16": 8,
+      "17": 8,
+      "18": 8,
+      "19": 8,
+      "20": 8,
+      "21": 8,
+      "22": 8,
+      "23": 8,
+      "24": 8,
+      "25": 8,
+      "26": 8,
+      "27": 8
+    },
+    "representatives_by_phase": {
+      "0": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "1": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "2": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "3": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "4": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "5": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "6": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "7": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "8": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "9": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "10": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "11": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "12": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "13": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "14": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "15": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "16": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "17": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "18": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "19": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "20": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "21": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "22": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "23": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "24": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "25": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "26": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      },
+      "27": {
+        "think": 2,
+        "act": 2,
+        "tool": 2,
+        "others": 2
+      }
+    },
+    "compression_events": 4,
+    "eviction_seconds": 0.3958095190000108
+  },
+  "scope": "Same-input numerical checks and finite compressed continuation; not pretrained task accuracy or proof of algorithm fidelity.",
+  "smoke": false,
+  "model_id": "Qwen/Qwen3-0.6B",
+  "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "source_sha256": "935778a060bf2620ca3df4d6c846b86b3461bb44f726cb36693e1d80dd199144",
+  "torch": "2.14.1+cu130",
+  "device": "cuda:0"
+}

@@ -1,0 +1,86 @@
+[
+  {
+    "method": "agentkv",
+    "budget": 256,
+    "total": 30,
+    "correct": 2,
+    "truncated_turns": 0,
+    "decode_tokens_per_second": 20.876981548740407,
+    "median_seconds": 11.419090485999845,
+    "max_final_kv_mb": 43.58144,
+    "peak_gpu_mb": 1422.496768,
+    "first_response_mentions_expected": 30
+  },
+  {
+    "method": "agentkv",
+    "budget": 512,
+    "total": 30,
+    "correct": 15,
+    "truncated_turns": 0,
+    "decode_tokens_per_second": 21.280257252521995,
+    "median_seconds": 11.368389310500106,
+    "max_final_kv_mb": 73.285632,
+    "peak_gpu_mb": 1422.496768,
+    "first_response_mentions_expected": 30
+  },
+  {
+    "method": "agentkv",
+    "budget": 1024,
+    "total": 30,
+    "correct": 20,
+    "truncated_turns": 0,
+    "decode_tokens_per_second": 21.358803484060743,
+    "median_seconds": 11.29337354050017,
+    "max_final_kv_mb": 131.547136,
+    "peak_gpu_mb": 1422.496768,
+    "first_response_mentions_expected": 30
+  },
+  {
+    "method": "full",
+    "budget": null,
+    "total": 30,
+    "correct": 20,
+    "truncated_turns": 0,
+    "decode_tokens_per_second": 26.352528142819025,
+    "median_seconds": 8.924033068499966,
+    "max_final_kv_mb": 212.975616,
+    "peak_gpu_mb": 1421.753344,
+    "first_response_mentions_expected": 30
+  },
+  {
+    "method": "recent",
+    "budget": 256,
+    "total": 30,
+    "correct": 9,
+    "truncated_turns": 0,
+    "decode_tokens_per_second": 21.223257549992862,
+    "median_seconds": 11.987604385500276,
+    "max_final_kv_mb": 43.696128,
+    "peak_gpu_mb": 1422.496768,
+    "first_response_mentions_expected": 30
+  },
+  {
+    "method": "recent",
+    "budget": 512,
+    "total": 30,
+    "correct": 17,
+    "truncated_turns": 0,
+    "decode_tokens_per_second": 21.263679509465202,
+    "median_seconds": 11.338556820500003,
+    "max_final_kv_mb": 73.170944,
+    "peak_gpu_mb": 1422.496768,
+    "first_response_mentions_expected": 30
+  },
+  {
+    "method": "recent",
+    "budget": 1024,
+    "total": 30,
+    "correct": 22,
+    "truncated_turns": 0,
+    "decode_tokens_per_second": 20.89740934036347,
+    "median_seconds": 11.176572650499793,
+    "max_final_kv_mb": 131.547136,
+    "peak_gpu_mb": 1422.496768,
+    "first_response_mentions_expected": 30
+  }
+]

@@ -1,0 +1,79 @@
+{
+  "source_matches_uploaded_bundle": true,
+  "result_zip_sha256": "c1907da92c414716d6f137412ab92479ee6f835482d448634d030af203b0e27b",
+  "record_count": 35,
+  "configuration_count": 7,
+  "checks": [
+    {
+      "method": "full",
+      "budget": null,
+      "correct": 4,
+      "total": 5,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": [
+        "agent_memory_v1:42:1"
+      ]
+    },
+    {
+      "method": "recent",
+      "budget": 256,
+      "correct": 3,
+      "total": 5,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": [
+        "agent_memory_v1:42:0",
+        "agent_memory_v1:42:4"
+      ]
+    },
+    {
+      "method": "agentkv",
+      "budget": 256,
+      "correct": 1,
+      "total": 5,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": [
+        "agent_memory_v1:42:0",
+        "agent_memory_v1:42:2",
+        "agent_memory_v1:42:3",
+        "agent_memory_v1:42:4"
+      ]
+    },
+    {
+      "method": "recent",
+      "budget": 512,
+      "correct": 4,
+      "total": 5,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": [
+        "agent_memory_v1:42:4"
+      ]
+    },
+    {
+      "method": "agentkv",
+      "budget": 512,
+      "correct": 5,
+      "total": 5,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": []
+    },
+    {
+      "method": "recent",
+      "budget": 1024,
+      "correct": 4,
+      "total": 5,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": [
+        "agent_memory_v1:42:1"
+      ]
+    },
+    {
+      "method": "agentkv",
+      "budget": 1024,
+      "correct": 5,
+      "total": 5,
+      "truncated_final_turns": 0,
+      "failed_sample_ids": []
+    }
+  ],
+  "note": "Validates exported records; does not rerun model inference or certify algorithm fidelity. Original manifest with pip freeze remains in the results ZIP."
+}
