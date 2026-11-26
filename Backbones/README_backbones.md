@@ -59,6 +59,8 @@ Replace placeholders with verified values. Never guess licence, revision, parame
 
 ## Stable interface
 
+The [Llama registry and model card](Generative_Pretrained/LLAMA_MODEL_CARD.md) cover `llama.tiny.synthetic` for offline checks and `meta-llama/Llama-2-7b-hf` for Llama benchmarks. `load_llama()` returns the model, its tokenizer when available, and revision metadata.
+
 A backbone wrapper should ideally expose:
 
 - `load(config, device, dtype)`

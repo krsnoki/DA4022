@@ -1,0 +1,36 @@
+wikitext2:
+  source: Salesforce/wikitext
+  config: wikitext-2-raw-v1
+  revision: b08601e04326c79dfdd32d625aee71d232d685c3
+  text_field: text
+  license: [cc-by-sa-3.0, gfdl]
+  splits:
+    calibration: train
+    evaluation: test
+
+ptb:
+  source: https://raw.githubusercontent.com/wojzaremba/lstm/{revision}/data/ptb.{split}.txt
+  revision: 76870253cfca069477f06b7056af87f98490b6eb
+  format: text
+  text_field: text
+  license: https://catalog.ldc.upenn.edu/LDC99T42
+  splits:
+    evaluation: test
+
+c4_en:
+  source: allenai/c4
+  config: en
+  revision: 1588ec454efa1a09f29cd18ddd04fe05fc8653a2
+  text_field: text
+  license: odc-by
+  streaming: true
+  evaluation_windows: 128
+  splits:
+    evaluation: validation
+
+synthetic_causal_lm:
+  source: local
+  revision: v1
+  splits:
+    calibration: calibration
+    evaluation: evaluation
