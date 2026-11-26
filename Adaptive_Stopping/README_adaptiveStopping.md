@@ -36,8 +36,17 @@ Use one directory per method only once there is an owner. Avoid paper-specific c
 - [DIPA: Difficulty-Informed Probabilistic Allocation of Test-Time Compute via Training-Free Proxies](https://openreview.net/forum?id=9Joja0tx5c)
 - [Block-Level Recursion: Adaptive Test-Time Routing in Large Language Models](https://openreview.net/forum?id=hLFRcxXKxY)
 - [Learning Adaptive LLM Decoding](https://openreview.net/forum?id=14yhYy9m7S) — adaptive decoding policy.
+- A Tale of Two Temperatures: Simple, Efficient, and Diverse Sampling from Diffusion Language Models (ICML 2026) — tempered remasking (TLC/TCT) for diffusion LMs: adaptive, confidence-thresholded parallel decoding with a position temperature. **Implemented:** [`methods/tempered_remasking/`](methods/tempered_remasking/README.md).
 
 Browse all accepted work in the [official paper index](https://adaptfm.gitlab.io/accepted-papers). Paper assignment is based on subject matter and may be cross-listed.
+
+## Implemented methods
+
+| Method | Paper | Code | Config | Tests | Status |
+|---|---|---|---|---|---|
+| Tempered remasking (TLC / TCT) for diffusion LMs | A Tale of Two Temperatures (ICML 2026) | [`methods/tempered_remasking/`](methods/tempered_remasking/README.md) | `configs/tempered_remasking/paper.yaml` | `tests/test_tempered_remasking*.py` | `tested` (55 CPU tests; theory reproduced on toy model) |
+
+The sampler's termination logic implements the contract below as `tempered_remasking.DecodingStopPolicy` (stop on completion, EOS for AR, or an NFE budget).
 
 ## Shared method contract
 

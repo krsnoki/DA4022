@@ -1,0 +1,58 @@
+# Settings of "A Tale of Two Temperatures" (ICML 2026), Sec. 4 and App. E.
+# Values marked "paper" are stated in the paper; "assumption" marks choices the
+# paper does not state (documented in methods/tempered_remasking/README.md).
+
+paper_id: tale_of_two_temperatures_2026
+calibration_dataset: null          # method is training-free / calibration-free
+
+models:                            # register in Backbones/Generative_Pretrained before benchmarking
+  llada: {model_id: GSAI-ML/LLaDA-8B-Instruct, revision: null}      # paper; set a commit hash to pin the checkpoint
+  dream: {model_id: Dream-org/Dream-v0-Instruct-7B, revision: null}  # paper; set a commit hash to pin the checkpoint
+
+sampling:                          # Sec. 4.1 "Experimental setting"
+  gen_length: 256                  # paper: L = 256
+  block_length: 32                 # paper: semi-AR blocks of 32 tokens
+  token_temperature: 0.8           # paper: T_token = 0.8 (following d1)
+  steps: null                      # assumption: K = 1 token/step for LC/TLC/random (steps = L)
+  confidence_mode: sampled         # paper footnote 1 (LLaDA / Fast-dLLM reference behaviour)
+  empty_selection: resample        # assumption: TCT empty step -> redraw from same logits (no wasted NFE)
+  dtype: bfloat16
+
+presets:                           # policy settings
+  ar:     {policy: autoregressive}
+  lc:     {policy: low_confidence}                 # T_pos = 0
+  random: {policy: random}                         # T_pos = inf
+  tlc:    {policy: tlc, tpos: 1.0}                 # paper: fixed T_pos = 1 for TLC
+  ct:     {policy: confidence_threshold, threshold: 0.6}   # Fast-dLLM, paper: λ = 0.6
+  tct:    {policy: tct, threshold: 0.6, tpos: 0.1}         # paper: T_pos = 0.1, λ = 0.6
+
+datasets:
+  gsm8k:     {hf_id: openai/gsm8k, config: main, split: test, limit: 300}   # paper: N_test = 300 subset (which 300: assumption = first 300)
+  math500:   {hf_id: HuggingFaceH4/MATH-500, config: null, split: test, limit: null}
+  humaneval: {hf_id: openai/openai_humaneval, config: null, split: test, limit: null}
+  mbpp:      {hf_id: google-research-datasets/mbpp, config: full, split: test, limit: null}  # assumption: full/test split
+
+experiments:
+  fig2_tlc_passk:      {models: [llada, dream], datasets: [gsm8k, math500, humaneval, mbpp], presets: [ar, lc, random, tlc], n_samples: 64}
+  fig3_8_tct_passnfe:  {models: [llada, dream], datasets: [gsm8k, math500, humaneval, mbpp], presets: [ar, ct, tct], n_samples: 96}
+  fig4_9_test_time:    {models: [llada], datasets: [gsm8k, math500], presets: [ar, ct, tct], n_samples: 96, orm: nvidia/AceMath-7B-RM}
+  fig6_tpos_ablation:  {models: [llada], datasets: [humaneval], presets: [ar, lc, random], tlc_tpos: [0.1, 0.5, 1.0, 2.0], n_samples: 64}
+  fig7_ttoken_ablation: {models: [llada], datasets: [humaneval], presets: [ar, lc, tlc], token_temperatures: [0.3, 0.6, 0.8, 1.0, 1.2, 1.5], n_samples: 64}
+
+grpo:                              # Sec. 4.3 (d1 diffu-GRPO); RL hyper-parameters come from d1, not this paper
+  model: llada
+  datasets: [gsm8k, math500]
+  rollout_presets: [tct, ct, ar]   # paper
+  time_budget_hours: 72            # paper: 72 h on one node with 4xA100
+  p_mask_prompt: 0.15              # d1
+  beta: 0.04                       # d1
+  clip_eps: 0.2                    # assumption (standard GRPO)
+  num_generations: 6               # assumption (d1-style group size)
+  num_iterations: 1                # assumption (single policy update per rollout batch)
+  learning_rate: 3.0e-6            # assumption (d1-scale LoRA learning rate)
+  lora:                            # assumption: d1 trains LoRA adapters (see LoRA/)
+    r: 128
+    alpha: 64
+    dropout: 0.05
+    target_modules: [q_proj, k_proj, v_proj]   # LLaDA attention projections
+  eval: {token_temperature: 0.0, preset: ct, thresholds: [0.6, 0.8, 1.0]}   # paper: greedy CT, λ ∈ {0.6, 0.8, 1.0}
