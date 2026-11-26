@@ -1,0 +1,8 @@
+# Environment used for the KVgrad experiments (Google Colab, NVIDIA T4, Python 3.13.16).
+# Colab already provides torch 2.14.1+cu130; install the rest with:
+#   pip install -r Attention/experiments/kvgrad/requirements-colab.txt
+kvpress[eval]==0.5.5      # brings transformers>=4.56,<5.3 (5.2.0 was used), datasets, fire<0.7
+standard-pipes            # Python 3.13 removed `pipes`, which fire<0.7 still imports
+pyyaml
+pandas
+pytest

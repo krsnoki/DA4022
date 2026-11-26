@@ -1,0 +1,26 @@
+# KVgrad (AdaptFM @ ICML 2026) partial reproduction: RULER 4K on Qwen3-0.6B, single NVIDIA T4.
+# Used by: python run_ruler.py --config configs/ruler4k_qwen3_0.6b.yaml --output_dir <dir>
+
+model: Qwen/Qwen3-0.6B
+model_revision: c1899de289a04d12100db370d81485cdf75e47ca  # Hugging Face commit used for all runs (resolved in the dry run)
+dtype: float32                # T4 has no bf16 support; the paper does not state its precision (see paper card)
+attn_implementation: sdpa     # KVzip/KVgrad reject "eager"; FlashAttention-2 does not run on T4
+device: cuda:0
+
+dataset_id: simonjegou/ruler  # RULER as packaged by kvpress (13 tasks, 500 examples each at 4K)
+data_dir: "4096"
+split: test
+data_file: null
+
+per_task: 10                  # 13 tasks x 10 = 130 examples, identical for every press
+seed: 42
+
+presses: [no_press, kvzip, kvzip_plus, kvgrad]
+compression_ratios: [0.5, 0.75, 0.875]   # paper notation 2:1, 4:1, 8:1
+
+warmup: 1                     # untimed runs before timing each configuration
+max_new_tokens: null          # task defaults from the dataset
+save_every: 10
+output_dir: results
+status: partial
+notes: ""

@@ -1,0 +1,41 @@
+# KVgrad score-variant ablation (paper Table 1 / Table 4) with OUR implementation
+# (Attention/methods/context_compression/kvgrad), RULER 4K, Qwen3-0.6B, single NVIDIA T4.
+#
+# Run it into the SAME output folder as the baseline run, so it re-uses the same 130 sampled rows and
+# summary.csv holds baselines and ablation together:
+#   python run_ruler.py --config configs/ruler4k_qwen3_0.6b_ablation.yaml \
+#       --output_dir /content/drive/MyDrive/kvgrad_results/phase2_full
+#
+# Cost: the first configuration replays every context once (~20 s per example, ~45 min); its scores for all
+# four variants are cached in memory, so the other 11 configurations only redo eviction and decoding
+# (~3.5 s per example, ~7 min each). Total ~2 h. Latency of the cached configurations excludes scoring
+# (flagged in summary.csv); use the baseline run's "kvgrad" rows for KVgrad's real latency.
+
+model: Qwen/Qwen3-0.6B
+model_revision: c1899de289a04d12100db370d81485cdf75e47ca
+dtype: float32
+attn_implementation: sdpa
+device: cuda:0
+
+dataset_id: simonjegou/ruler
+data_dir: "4096"
+split: test
+data_file: null
+
+per_task: 10                  # same 130 rows as the baseline run (re-used from samples_10pertask_seed42.csv)
+seed: 42
+
+presses:
+  - kvgrad_bound_max          # Eq. (8): KVgrad (max over probes, magnitude-aware)
+  - kvgrad_bound_sum          # Eq. (7) summed over probes            (w/o probe-specific preservation)
+  - kvgrad_taylor_max         # signed Taylor terms, max over probes  (w/o magnitude-aware scoring)
+  - kvgrad_taylor_sum         # Eq. (6): first-order Taylor           (w/o both)
+compression_ratios: [0.875, 0.9375, 0.96875]   # paper notation 8:1, 16:1, 32:1
+share_scores: true
+
+warmup: 1
+max_new_tokens: null
+save_every: 10
+output_dir: results
+status: partial
+notes: ""
