@@ -65,6 +65,7 @@ Unknown/not-measured quantities should be empty/null plus a `status` or notes en
 - [GreenMoE: Exploiting Dynamic Load Imbalance for Energy-Efficient Long-Context MoE Training](https://openreview.net/forum?id=ShvjLjCOGB)
 - [Layout and Fusion Trade-offs for Mixture-of-Experts Inference under Single-Node Tensor Parallelism](https://openreview.net/forum?id=y2sY80Q3fh)
 - [EfficientRollout: System-Aware Self-Speculative Decoding for RL Rollouts](https://openreview.net/forum?id=uCthChFfbe)
+- [Is Escalation Worth It? A Decision-Theoretic Characterization of LLM Cascades](https://openreview.net/forum?id=MfWD7bOKiF) — budget-constrained cost/accuracy frontiers; implemented in `Adaptive_Stopping/` ([paper card](../Adaptive_Stopping/methods/cascade_escalation/PAPER_CARD.md)). Results (partial reproduction, RTX 4090): [`results/cascade_escalation.csv`](results/cascade_escalation.csv). Its result rows extend the required format above with cascade columns; see the [schema](../Adaptive_Stopping/README_adaptiveStopping.md#result-row-schema) and [`results/cascade_escalation_schema.csv`](results/cascade_escalation_schema.csv).
 - [official AdaptFM accepted-paper list](https://adaptfm.gitlab.io/accepted-papers) for StreamAttention, Prelude, Staircase Streaming, and other systems-focused papers.
 
 ## Benchmark anti-patterns
