@@ -112,6 +112,7 @@ def main(argv=None):
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--methods", default=None, help="comma-separated subset of the config's methods")
     ap.add_argument("--limit", type=int, default=None, help="use only the first N sampled questions")
+    ap.add_argument("--resume", action="store_true", help="keep finished questions in existing per-question files")
     args = ap.parse_args(argv)
 
     cfg = load_config(args.config)
@@ -134,9 +135,23 @@ def main(argv=None):
         method = build_method(name, cfg["methods"][name], backbone, budget, cfg["run_seed"])
         for w in items[: cfg.get("warmup_questions", 0)]:
             method.run(w)
-        recs = []
-        with open(out / f"per_question_{name}.jsonl", "w") as f:
-            for it in items:
+        recs, path = [], out / f"per_question_{name}.jsonl"
+        done = {}
+        if args.resume and path.exists():
+            for line in path.read_text().splitlines():
+                if line.strip():
+                    r = json.loads(line)
+                    done[r["question_id"]] = r
+        wanted = {it["question_id"] for it in items}
+        done = {k: v for k, v in done.items() if k in wanted}
+        with open(path, "w") as f:
+            for r in done.values():
+                f.write(json.dumps(r) + "\n")
+            f.flush()
+            for i, it in enumerate(items):
+                if it["question_id"] in done:
+                    recs.append(done[it["question_id"]])
+                    continue
                 res = method.run(it)
                 led = res.ledger
                 rec = {
@@ -149,7 +164,10 @@ def main(argv=None):
                     "violations": res.metadata.get("violations", []), "wall_time_s": res.wall_time_s,
                 }
                 f.write(json.dumps(rec) + "\n")
+                f.flush()
                 recs.append(rec)
+                print(f"[{name}] {i + 1}/{len(items)} pass={rec['pass']} tokens={rec['total_tokens']} "
+                      f"t={rec['wall_time_s']:.1f}s", flush=True)
         per_method[name] = recs
         n = len(recs) or 1
         lat = [r["wall_time_s"] * 1000 for r in recs]
