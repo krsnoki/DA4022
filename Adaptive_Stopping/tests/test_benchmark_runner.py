@@ -670,3 +670,47 @@ class TestBenchmarkRunnerAndEvaluation:
         assert len(cli_rows) == 2
         assert all(float(r["quality_value"]) == 1.0 for r in cli_rows)
         assert all("reverified=true" in r["notes"] for r in cli_rows)
+
+    @pytest.mark.parametrize("override", [None, "abc123"])
+    def test_dataset_revision_from_config_reaches_loader(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, override: str | None
+    ) -> None:
+        import yaml
+
+        cfg = yaml.safe_load(CONFIG_PATH.read_text(encoding="utf-8"))
+        assert cfg["dataset_revision"] == Math500LoaderConfig.revision
+        if override is None:
+            del cfg["dataset_revision"]
+        else:
+            cfg["dataset_revision"] = override
+        monkeypatch.setattr(
+            "Adaptive_Stopping.experiments.run_dipa_benchmark._load_yaml_config",
+            lambda _path: cfg,
+        )
+
+        seen: list[str] = []
+        records = load_math500(Math500LoaderConfig(local_jsonl_path=FIXTURE_PATH))
+
+        def _capturing_loader(config: Math500LoaderConfig) -> list[dict[str, Any]]:
+            seen.append(config.revision)
+            return records
+
+        monkeypatch.setattr(
+            "Adaptive_Stopping.experiments.run_dipa_benchmark.load_math500",
+            _capturing_loader,
+        )
+        run_benchmark(
+            config_path=CONFIG_PATH,
+            mode="mock",
+            local_jsonl=FIXTURE_PATH,
+            pool_size=2,
+            gen_batch_size=2,
+            pool_path=tmp_path / "pool.jsonl",
+            methods=("uniform",),
+            budget_multipliers=(1.0,),
+            seeds=(42,),
+            output_csv=None,
+            print_summary=False,
+        )
+        expected = override if override is not None else Math500LoaderConfig.revision
+        assert seen == [expected]

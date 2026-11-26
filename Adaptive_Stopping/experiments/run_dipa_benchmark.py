@@ -706,6 +706,9 @@ def run_benchmark(
         subsample_seed = resolved_seeds[0] if resolved_seeds else 42
         loader_cfg = Math500LoaderConfig(
             dataset_id=str(config_dict.get("dataset_id", "HuggingFaceH4/MATH-500")),
+            revision=str(
+                config_dict.get("dataset_revision", Math500LoaderConfig.revision)
+            ),
             split=str(config_dict.get("split", "test")),
             num_samples=num_samples,
             seed=subsample_seed,
