@@ -29,3 +29,12 @@ python -m Adaptive_Stopping.experiments.scps_mmlupro.report Adaptive_Stopping/ex
 ## Model and data versions
 
 The configs used `revision: null`, which resolves to the Hub's `main`. Both repositories were last modified long before the run, so the downloaded versions are `Qwen/Qwen3.5-4B@851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a` (last modified 2026-03-02) and `TIGER-Lab/MMLU-Pro@b189ec765aa7ed75c8acfea42df31fdae71f97be` (last modified 2026-05-02). The config now pins both.
+
+## Commit IDs
+
+The commit IDs recorded in `run_meta_*.json` and `results.csv` (`531a0f6`, `52e2f49`) are the IDs the branch had when the runs were made. The branch's commit messages were edited afterwards (trailer lines removed), which changes commit IDs but not file contents. They correspond to these commits:
+
+| Recorded ID | Commit subject |
+|---|---|
+| `531a0f6` | SCPS run script: --resume, per-question progress output |
+| `52e2f49` | SCPS experiment: option top-K control, per-method run metadata, multi-run summary |
