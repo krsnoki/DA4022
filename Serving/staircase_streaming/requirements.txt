@@ -1,0 +1,5 @@
+# Client-side / CPU dependencies (mock backend, tests, benchmark driver, plots).
+# Tested with Python 3.11.16 on Windows 11.
+PyYAML==6.0.4
+pytest==9.2.0
+matplotlib==3.11.2
