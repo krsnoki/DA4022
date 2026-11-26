@@ -174,9 +174,44 @@ $v \cdot \nabla_v \Phi$ to rtol 1e-10; the Eq. (7) bound holds elementwise.
 **Ablation cost estimate:** first configuration ~20 s per example (one replay for all four variants), the other
 11 ~3.5 s per example; about 2 h for 130 rows.
 
-## Next steps
+## Phase 4: main runs on an RTX 5050 laptop GPU (2026-11-25/26)
 
-1. Finish the full baseline run (`phase2_full`), commit its `summary.csv`, update the paper card.
-2. Phase 4: run `configs/ruler4k_qwen3_0.6b_ablation.yaml` into the same output folder; commit results and plots.
-3. Phase 5: revert the change to `Attention/README_attention.md`, complete `PAPER_CARD.md`, add result rows to
-   `Performance_Metrics/README_metrics.md`, link the card from `PAPER_INDEX.md`, open the pull request (`Closes #8`).
+**Why the hardware changed.** Colab stopped offering a GPU, and the Colab baseline run started at 16:38 UTC
+could not be continued. A team member's laptop with an **NVIDIA GeForce RTX 5050 Laptop GPU (8 GB)** was used
+instead. KVgrad needs ~9.2 GB in float32 (dry run), so all main runs use **bfloat16** (`--dtype bfloat16`),
+where it needs ~5 GB. Baseline and ablation therefore share one GPU and one precision.
+
+**Setup (Windows 11):** driver 592.27, Python 3.13.17, venv, `torch 2.14.1+cu130` (RTX 50-series needs
+compute capability 12.0 support), `pip install -r requirements-colab.txt`. 12 tests pass. A 13-question test
+run confirmed KVgrad's peak memory at 4.9 GB.
+
+**Runs:** baseline config, then ablation config, same output folder (`rtx5050_bf16`), 130 examples (10 per
+task), code at commit `686bd09`.
+
+**Problems and fixes.**
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| `getaddrinfo failed`, then `'NoneType' object has no attribute 'model_max_length'` | Wi-Fi drop; kvpress calls `AutoTokenizer.from_pretrained` (online) on every KVzip/KVgrad call | Re-ran the same command; finished configurations were skipped |
+| Offline mode (`HF_HUB_OFFLINE=1`) failed: `Couldn't find cache for simonjegou/ruler for config 'default-data_dir=4096'` | `datasets` looks up its cache under a different config name when `data_dir` is used | Ran online instead (a `--data_file` with the cached parquet also works) |
+| `git_commit` recorded as `686bd09-dirty` | `__pycache__` in `Attention/methods/...` not ignored | Added `Attention/methods/context_compression/kvgrad/.gitignore` |
+| KVzip 2:1 latency erratic (decode 0.8-30 s) | laptop in use during that configuration | Quality kept; latency marked as not citable |
+
+**Results** (full tables, figures and analysis in `PAPER_CARD.md`; rows in `results_rtx5050_bf16/summary.csv`):
+
+- At 8:1: KVgrad 75.1, KVzip 61.4, KVzip+ 63.2, no compression 79.3 (paper: 72.2 / 55.6 / 60.1 / 78.2).
+- Ablation: the full KVgrad score is best at 16:1 (63.3) and 32:1 (42.8), as in the paper; our Eq. (6)
+  variant is much weaker than reported (55.8 vs 73.2 at 8:1).
+- Our Eq. (8) vs kvpress's KVgrad at 8:1: 74.5 vs 75.1, 123/130 identical answers.
+- KVgrad's scoring costs ~2.9 s per question (~3.8x the prefill, ~1.9x KVzip) and 4,984 MB peak memory
+  (vs 2,871 MB for KVzip). Measured with the cached-score configurations as a control for kvpress's overhead.
+
+## Phase 5: write-up and submission (2026-11-26)
+
+- `make_plots.py` added: figures (`results_rtx5050_bf16/plots/`) and `per_task_scores.csv` from `summary.csv`.
+- Results committed: `summary.csv`, `per_task_scores.csv`, `env.json`, sampled row ids, three figures.
+- `PAPER_CARD.md` final (status `partial-reproduction`); README updated.
+- Course files: the accidental edit to `Attention/README_attention.md` (commit `80ff1aa`) restored to the
+  course version; `PAPER_INDEX.md` links the paper card; one KVgrad row and its no-compression baseline row
+  added to `Performance_Metrics/README_metrics.md` (workflow step 6 of the main README).
+- Next: open the pull request `mathangiVS/DA4022:kvgrad` -> `krsnoki/DA4022:main` with `Closes #8`.

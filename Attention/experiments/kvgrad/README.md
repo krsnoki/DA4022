@@ -4,7 +4,7 @@ Benchmark scripts for the paper **KVgrad: Query-Agnostic KV Cache Eviction via G
 Importance Scoring** ([OpenReview](https://openreview.net/forum?id=cg1wTCJjjk), AdaptFM workshop, ICML 2026).
 Tracking issue: krsnoki/DA4022#8.
 
-Status: `implementing` (benchmark harness and our score implementation tested; full baseline run and ablation run in progress).
+Status: `partial-reproduction`. Results, figures and limitations: [`PAPER_CARD.md`](PAPER_CARD.md); result files: [`results_rtx5050_bf16/`](results_rtx5050_bf16/).
 
 Our implementation of the scores lives in [`Attention/methods/context_compression/kvgrad/`](../../methods/context_compression/kvgrad/README.md).
 
@@ -91,6 +91,11 @@ python -m pytest Attention/tests -q
   removed `pipes` module.
 - fp32 is used because the T4 has no bf16 (fp16 risks overflow); the paper ran Qwen3-0.6B on an RTX A5000 and does not state its precision.
 
-Model weights and raw outputs are not committed (see `.gitignore`). Only small summary tables are:
-`dryrun/summary_2pertask_seed42.csv` (dry run, 2 examples per task); final results will be added when the
-full runs are complete.
+Model weights and raw outputs (`predictions.csv`) are not committed (see `.gitignore`). Committed: the dry run
+`dryrun/summary_2pertask_seed42.csv` (T4, float32, 2 per task) and the main runs in `results_rtx5050_bf16/`
+(RTX 5050 Laptop GPU, bfloat16, 10 per task): `summary.csv`, `per_task_scores.csv`, `env.json`, the sampled
+row ids and `plots/`. Regenerate figures with `python make_plots.py --results <output_dir>`.
+
+On an 8 GB GPU, use `--dtype bfloat16` (KVgrad needs ~9.2 GB in float32, ~5 GB in bfloat16). kvpress contacts
+Hugging Face on every KVzip/KVgrad call, so keep the machine online (a network drop stops the run; re-running
+the same command resumes it).

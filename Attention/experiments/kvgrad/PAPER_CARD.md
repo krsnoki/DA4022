@@ -5,11 +5,11 @@
 - **Secondary modules:** `Performance_Metrics/` (latency and memory protocol)
 - **Owner / reviewer:** mathangiVS (team members: sanjayganeshprabu, teja123git, Vipulsoc, kvdhruv) / reviewer: TBD
 - **Tracking issue:** krsnoki/DA4022#8
-- **Status:** `implementing` (benchmark harness and our score implementation tested; full baseline and ablation runs in progress)
+- **Status:** `partial-reproduction` (one model, RULER 4K subset, 2:1 to 32:1; main claim and ablation trend reproduced)
 - **Upstream code / licence:** NVIDIA kvpress, https://github.com/NVIDIA/kvpress, Apache-2.0. Version `0.5.5` already ships `KVgradPress` (`kvpress/presses/kvgrad_press.py`), which implements the paper's final score, Eq. (8). The intermediate scores of the paper's ablation, Eqs. (6) and (7), are not in kvpress. No separate code release by the authors was found.
 - **Backbone IDs:** `Qwen/Qwen3-0.6B`, Hugging Face revision `c1899de289a04d12100db370d81485cdf75e47ca` (pinned in the config)
 - **Dataset IDs and split:** `simonjegou/ruler`, `data_dir=4096`, split `test` (RULER as packaged by kvpress, 13 tasks x 500 examples, ~4K-token contexts); per-task stratified sample with seed 42
-- **Hardware assumptions:** single NVIDIA T4 (16 GB, 14.6 GB usable) on Google Colab; fp32 (T4 has no bf16); `sdpa` attention (FlashAttention-2 unsupported on T4, `eager` rejected by KVzip/KVgrad)
+- **Hardware:** main results on one NVIDIA GeForce RTX 5050 Laptop GPU (8 GB), driver 592.27, Windows 11, **bfloat16**; dry run on an NVIDIA T4 (Google Colab, fp32). `sdpa` attention (`eager` is rejected by KVzip/KVgrad; FlashAttention-2 not used)
 
 ## Research summary
 
@@ -76,9 +76,11 @@ at inference; it is out of scope here.
 
 - **Input contract:** a RULER example (`context`, `question`, `answer_prefix`, `max_new_tokens`); batch size 1; contexts of ~3.4K-4K tokens.
 - **Output contract:** generated answer string; per-example latency (total, prefill + compression, decode), peak GPU memory, input/output token counts; per-configuration `metrics.json`; `summary.csv` in the schema of `Performance_Metrics/README_metrics.md`.
-- **Configuration:** `Attention/experiments/kvgrad/configs/ruler4k_qwen3_0.6b.yaml` (model, dtype, attention backend, sample size, seed, presses, compression ratios 0.5 / 0.75 / 0.875).
-- **Reproduction command:**
-  `python Attention/experiments/kvgrad/run_ruler.py --config Attention/experiments/kvgrad/configs/ruler4k_qwen3_0.6b.yaml --output_dir <dir>`
+- **Configuration:** `Attention/experiments/kvgrad/configs/ruler4k_qwen3_0.6b.yaml` (baselines, ratios 0.5 / 0.75 / 0.875) and `configs/ruler4k_qwen3_0.6b_ablation.yaml` (score variants, 0.875 / 0.9375 / 0.96875); 10 examples per task, seed 42. The main runs override `dtype` with `--dtype bfloat16`.
+- **Reproduction commands** (from `Attention/experiments/kvgrad/`; same output folder so both runs share the sampled rows):
+  `python run_ruler.py --config configs/ruler4k_qwen3_0.6b.yaml --dtype bfloat16 --output_dir <dir>`
+  `python run_ruler.py --config configs/ruler4k_qwen3_0.6b_ablation.yaml --dtype bfloat16 --output_dir <dir>`
+  `python make_plots.py --results <dir>` (figures and per-task table)
 - **Own implementation:** [`Attention/methods/context_compression/kvgrad/`](../../methods/context_compression/kvgrad/README.md).
   `scores.py` computes the four score variants of the paper's ablation (Eqs. 6, 7 summed, max-Taylor, Eq. 8)
   from the replay quantities; `press.py` (`KVgradVariantsPress`) plugs them into kvpress's replay and eviction,
@@ -94,59 +96,124 @@ at inference; it is out of scope here.
 
 ## Results
 
-All local numbers so far are a **dry run** with 2 examples per task (26 examples). They check that the
-pipeline works and are too small for conclusions. Quality is RULER string match (macro over 13 tasks).
-Latency is the median wall time of one full pipeline call (tokenisation, prefill, compression, decoding),
-batch size 1, after one warm-up call. Peak memory is `torch.cuda.max_memory_allocated()`.
+**Main runs:** RTX 5050 Laptop GPU, bfloat16, Qwen3-0.6B (`c1899de`), RULER 4K, **130 examples (10 per task,
+13 tasks, seed 42), identical rows for every configuration**, batch size 1, one untimed warm-up per configuration,
+CUDA-synchronised timing of the full pipeline call (tokenisation, prefill, scoring/eviction, decoding).
+Machine-readable rows (one per configuration, schema of `Performance_Metrics/README_metrics.md`):
+[`results_rtx5050_bf16/summary.csv`](results_rtx5050_bf16/summary.csv); per-task scores:
+[`results_rtx5050_bf16/per_task_scores.csv`](results_rtx5050_bf16/per_task_scores.csv); environment:
+[`results_rtx5050_bf16/env.json`](results_rtx5050_bf16/env.json); sampled rows:
+[`results_rtx5050_bf16/samples_10pertask_seed42.csv`](results_rtx5050_bf16/samples_10pertask_seed42.csv).
 
-| Source | Method | Ratio | Quality | Latency (median) | Throughput | Peak memory | Energy | Notes |
-|---|---|---:|---:|---:|---:|---:|---:|---|
-| Paper-reported | no press | 0 | 78.2 | n/a | n/a | n/a | n/a | all 6,500 examples, RTX A5000, Table 7 macro |
-| Paper-reported | KVzip / KVzip+ / KVgrad | 0.875 | 55.6 / 60.1 / 72.2 | n/a | n/a | n/a | n/a | Table 7 macro |
-| Local baseline | no_press | 0 | 76.92 | 2,575 ms | ~0.39 ex/s | 4,271 MB | not measured | dry run, n=26 |
-| Local | kvzip | 0.5 / 0.75 / 0.875 | 71.79 / 64.74 / 55.19 | 11,612 / 11,689 / 11,564 ms | ~0.09 ex/s | 5,609 MB | not measured | dry run, n=26 |
-| Local | kvzip_plus | 0.5 / 0.75 / 0.875 | 75.64 / 75.00 / 56.73 | 12,591 / 12,487 / 12,409 ms | ~0.08 ex/s | 5,609 MB | not measured | dry run, n=26 |
-| Local | kvgrad (kvpress) | 0.5 / 0.75 / 0.875 | 75.64 / 75.64 / 75.96 | 18,376 / 18,357 / 18,706 ms | ~0.05 ex/s | 9,169 MB | not measured | dry run, n=26 |
+### Quality: KVgrad vs. baselines
 
-Machine-readable rows: [`dryrun/summary_2pertask_seed42.csv`](dryrun/summary_2pertask_seed42.csv).
+RULER string match, macro average over 13 tasks. Paper = macro average of appendix Table 7 (computed by us;
+all 6,500 examples, RTX A5000). Local = this repository's run (130 examples).
 
-Latency breakdown (dry run):
+| Compression | Source | No press | KVzip | KVzip+ | KVgrad |
+|---|---|---:|---:|---:|---:|
+| none | Paper / **Local** | 78.2 / **79.3** | | | |
+| 2:1 | Paper / **Local** | | 78.0 / **79.3** | 78.1 / **79.0** | 78.1 / **79.8** |
+| 4:1 | Paper / **Local** | | 68.5 / **71.4** | 72.7 / **75.2** | 77.1 / **79.8** |
+| 8:1 | Paper / **Local** | | 55.6 / **61.4** | 60.1 / **63.2** | 72.2 / **75.1** |
 
-| Method | Prefill + compression (median) | vs. no-compression prefill | Decode (median) |
-|---|---:|---:|---:|
-| no_press | 1,723 ms | 1.0x | 859 ms |
-| kvzip | ~9,970 ms | ~5.8x | ~1,270 ms |
-| kvzip_plus | ~10,900 ms | ~6.3x | ~1,310 ms |
-| kvgrad | ~16,750 ms | ~9.7x | ~1,270 ms |
+![Accuracy vs compression](results_rtx5050_bf16/plots/quality_vs_compression.png)
 
-(Averages of the medians over the three ratios; scoring cost does not depend on the ratio. Median context
-3,807 tokens, median answer 16-18 tokens.)
+**Reproduced:** KVgrad keeps no-compression accuracy at 2:1 and 4:1 and loses only 4.2 points at 8:1, while
+KVzip and KVzip+ lose 17.9 and 16.1 points. Gaps of 2-6 points to the paper's absolute numbers are within what
+130 examples (10 per task) can resolve.
 
-Observations from the dry run (to be confirmed with the full run):
+### Quality: score-variant ablation (our implementation)
 
-- The ordering at 8:1 matches the paper: KVzip (55.2) ≈ KVzip+ (56.7) far below KVgrad (76.0), which stays close to no compression (76.9).
-- Cost per example relative to no compression: KVzip ~4.5x, KVzip+ ~4.9x, KVgrad ~7.1x. Almost all of it is in the scoring step: prefill + compression takes ~5.8x (KVzip), ~6.3x (KVzip+) and ~9.7x (KVgrad) the plain prefill, so KVgrad's scoring costs ~1.7x KVzip's.
-- Decoding is ~1.5x *slower* with any press (~1.27-1.31 s vs 0.86 s for the same answer length): kvpress masks evicted keys by computing fake keys at every decoding step, so in this implementation compression adds decode work instead of saving it.
-- Peak memory: KVgrad needs ~9.2 GB vs ~5.6 GB for KVzip and ~4.3 GB without compression, because the backward pass stores activations.
-- Peak memory does not depend on the compression ratio. kvpress evicts by **masking** entries with fake keys rather than freeing them, so the measured peak reflects the scoring overhead, not cache savings. The theoretical KV cache is 224 KiB per token in fp32 (28 layers x 8 KV heads x 128 dims x 2 x 4 bytes), about 0.9 GB for a 4K context, of which a fraction `1 - ratio` would be kept.
+| Variant | Design choices | 8:1 Paper / **Local** | 16:1 Paper / **Local** | 32:1 Paper / **Local** |
+|---|---|---:|---:|---:|
+| `bound_max`, Eq. (8) KVgrad | max over probes + magnitude-aware | 69.66 / **74.53** | 57.21 / **63.27** | 40.20 / **42.77** |
+| `bound_sum`, Eq. (7) summed | magnitude-aware only | 72.33 / **75.53** | 55.96 / **52.04** | 36.32 / **24.71** |
+| `taylor_max` | max over probes only | 72.24 / **71.44** | 55.83 / **54.77** | 24.45 / **18.54** |
+| `taylor_sum`, Eq. (6) | neither | 73.15 / **55.77** | 54.51 / **38.28** | 24.37 / **15.69** |
+
+Paper = appendix Table 4, Qwen3-0.6B, 10% of RULER. No-compression reference: 79.3 (local).
+
+![Score-variant ablation](results_rtx5050_bf16/plots/ablation_score_variants.png)
+
+- **Reproduced:** at high compression (16:1, 32:1) the full KVgrad score is clearly best, and combining both
+  design choices beats either alone, as in the paper. At 8:1 the magnitude-aware variants are within one
+  point of each other (paper: all four within 3.5 points).
+- **Not reproduced:** our first-order Taylor score (Eq. 6) is much weaker at 8:1 (55.8 vs 73.2). Like kvpress,
+  we reduce per-query-head scores to the KV head with a max over the GQA group, and we evict the lowest
+  *signed* scores; the paper does not say how it aggregates GQA heads or handles the sign for this variant,
+  so this aggregation is the most likely cause. Left as an open question.
+- **Our Eq. (8) vs. kvpress's KVgrad (same 130 rows, 8:1):** 74.53 vs 75.09; 123 of 130 answers identical, the
+  other 7 differ mostly in formatting (`fwe`, `vt`, `niah_multivalue`). In float32 our scores and evictions are
+  identical to kvpress's (tested with explicit tolerances); in bfloat16 on GPU, rounding and non-deterministic
+  kernels can break near-ties among scores. We did not repeat runs to quantify run-to-run variation.
+
+### Latency and memory
+
+Medians per question (130 questions). "Eviction only" = our variant presses on cached scores (11 configurations):
+everything kvpress does for an evicting press except the scoring itself.
+
+| Configuration | Prefill + scoring/eviction | Decode | Total median / p95 | Peak memory allocated |
+|---|---:|---:|---:|---:|
+| No compression | 0.76 s | 1.06 s | 1.86 / 4.55 s | 2,194 MB |
+| KVzip, 8:1 | 4.32 s | 1.13 s | 5.56 / 8.31 s | 2,871 MB |
+| KVzip+, 8:1 | 4.66 s | 1.18 s | 5.97 / 8.80 s | 2,871 MB |
+| KVgrad, 8:1 | 5.67 s | 1.14 s | 7.05 / 10.86 s | 4,984 MB |
+| Eviction only, scores cached | 2.81 s | 1.19 s | 3.98 s | 2,229 MB |
+
+![Latency and memory](results_rtx5050_bf16/plots/latency_and_memory.png)
+
+- **Scoring cost** (prefill + scoring/eviction minus the "eviction only" control): KVzip ~1.5 s (~2.0x the
+  prefill), KVzip+ ~1.8 s (~2.4x), **KVgrad ~2.9 s (~3.8x the prefill, ~1.9x KVzip)**, in line with kvpress's own
+  estimates (KVzip 2-3x, KVgrad 3-4x the prefill).
+- **Peak memory:** KVgrad needs 4,984 MB vs 2,871 MB for KVzip and 2,194 MB without compression; the extra
+  ~2.1 GB over KVzip is the stored activations of the backward pass. Measured peak memory does **not** depend on
+  the compression ratio, because kvpress masks evicted entries instead of freeing them.
+- **Theoretical KV-cache size** (not measured): 112 KiB per token in bfloat16, so 416 MB at the median context
+  of 3,807 tokens; a real eviction backend would keep 52 MB at 8:1 and 13 MB at 32:1.
+- **Decoding is not faster** with compression (1.13-1.19 s vs 1.06 s): with masking, attention still reads the
+  full cache.
+- **Overhead in kvpress, not in the method:** every KVzip/KVgrad call reloads the tokenizer with
+  `AutoTokenizer.from_pretrained` (which contacts Hugging Face when online). It is included in all compressed
+  latencies above, and is most of the ~2 s difference between "eviction only" and no compression.
+- KVzip at 2:1 has an anomalous latency (median 11.9 s, decode up to 30 s) while its other ratios are ~5.5 s;
+  the laptop was in use during that configuration. Its quality is unaffected; its latency should not be cited.
+
+### Dry run (T4, float32, 2 examples per task)
+
+The earlier Colab dry run (26 examples) showed the same ordering: at 8:1 KVgrad 76.0, KVzip 55.2, KVzip+ 56.7,
+no compression 76.9; KVgrad peak memory 9.2 GB in float32. Rows:
+[`dryrun/summary_2pertask_seed42.csv`](dryrun/summary_2pertask_seed42.csv).
 
 ## Differences and limitations
 
-- **Partial reproduction:** one model (Qwen3-0.6B of the paper's four), RULER only (no LongBench), a stratified subset of RULER instead of all 6,500 examples used by the paper, three compression ratios (the paper also reports 16:1 and 32:1).
-- **Precision and hardware:** fp32 on a T4; the paper ran Qwen3-0.6B on an RTX A5000 and does not state its precision. Absolute latencies are not comparable to the paper.
-- **Upstream implementation:** the baseline KVgrad numbers use kvpress's `KVgradPress`; our own `kvgrad_bound_max` computes identical scores (tested) and is used for the ablation. Replay, hooks and eviction are reused from kvpress; the score computation is ours.
-- **Ablation latency:** in the ablation run, configurations after the first reuse cached scores, so their latency excludes scoring (flagged in `summary.csv`); KVgrad's real latency comes from the baseline run.
-- **Memory:** kvpress masks evicted entries, so no real memory saving is measured; theoretical kept-cache size is reported instead.
-- **Latency scope:** includes tokenisation and generation of the task's answer length; not a pure prefill benchmark.
-- **Not reproduced:** KVgrad (MLP) surrogate, time-to-first-token figure, larger models.
-- **Environment workaround:** Colab's Python 3.13 removed `pipes`, which `fire<0.7` (required by kvpress 0.5.5) imports; fixed with the `standard-pipes` backport.
-- **Sample size:** the dry run has 2 examples per task, so per-task scores move in steps of 50 points; only the full run should be cited.
+- **Partial reproduction:** one model (Qwen3-0.6B of the paper's four), RULER 4K only (no LongBench),
+  130 of 6,500 examples (10 per task); per-task scores move in steps of 10 points.
+- **Hardware and precision:** a laptop RTX 5050 in bfloat16 (8 GB; float32 KVgrad needs ~9.2 GB and does not
+  fit). The paper ran Qwen3-0.6B on an RTX A5000 and does not state its precision. Absolute latencies are not
+  comparable with the paper and include kvpress's per-call tokenizer reload.
+- **What is ours:** the score computation for all four variants, their press, the benchmark harness and the
+  tests. Replay, hooks and eviction come from kvpress 0.5.5; the baseline `kvgrad` rows use kvpress's
+  `KVgradPress`.
+- **Ablation latency:** configurations after the first reuse cached scores, so their latency excludes scoring
+  (flagged in `summary.csv`); KVgrad's real latency is the baseline `kvgrad` row.
+- **Memory:** kvpress masks evicted entries, so no real memory saving is measured; the theoretical kept-cache
+  size is reported instead.
+- **Eq. (6) variant** underperforms the paper's number (see above).
+- **Single runs:** no repeated runs or confidence intervals; bfloat16 GPU runs are not bit-reproducible.
+- **`commit` field** in `summary.csv` reads `686bd09-dirty`: Python created a `__pycache__` folder that was not
+  yet ignored; the code was unchanged (now ignored).
+- **Not reproduced:** KVgrad (MLP) surrogate, time-to-first-token figure, larger models, LongBench.
+- **Environment notes:** Colab's Python 3.13 needs the `standard-pipes` backport (kvpress 0.5.5 pins
+  `fire<0.7`); on the laptop, a network drop crashed a run because kvpress contacts Hugging Face on every call
+  (re-running resumed it).
+- **Energy:** not measured.
 
 ## Reproduction checklist
 
 - [x] Exact paper link and version verified
-- [x] Base model revision pinned (`c1899de289a04d12100db370d81485cdf75e47ca`); dataset revision not pinned (`simonjegou/ruler` loaded at its latest version; sampled row ids are saved per run)
-- [x] Baseline runs on the same setup (same sampled rows for every method)
+- [x] Base model revision pinned (`c1899de289a04d12100db370d81485cdf75e47ca`); dataset revision not pinned (`simonjegou/ruler` at its latest version; the sampled row ids are committed)
+- [x] Baseline runs on the same setup (same 130 rows, same settings, no press)
 - [x] Tests and seed handling added (12 CPU tests incl. comparison with kvpress's reference implementation; seed 42; saved sample ids)
-- [x] Resource and quality metrics reported (latency, peak memory, quality; energy marked not measured)
-- [x] Licence/data terms checked (kvpress Apache-2.0; RULER via kvpress Hugging Face dataset)
+- [x] Resource and quality metrics reported (latency split prefill/decode, median and p95, peak memory, quality; energy not measured)
+- [x] Licence/data terms checked (kvpress Apache-2.0; RULER via kvpress's Hugging Face dataset; no weights or data committed)

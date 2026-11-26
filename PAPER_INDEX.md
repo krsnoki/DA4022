@@ -67,7 +67,7 @@ This is an engineering-oriented shortlist from the [official AdaptFM accepted-pa
 ## KV cache and long-context memory
 
 - [DropKV: Decoupling Residual-Output Perturbation for Near-Optimal KV-Cache Eviction](https://openreview.net/forum?id=MqfNzH3TVH) — KV eviction.
-- [KVgrad: Query-Agnostic KV Cache Eviction via Gradient-based Global Importance Scoring](https://openreview.net/forum?id=cg1wTCJjjk) — KV eviction.
+- [KVgrad: Query-Agnostic KV Cache Eviction via Gradient-based Global Importance Scoring](https://openreview.net/forum?id=cg1wTCJjjk) — KV eviction. Implementation: [paper card](Attention/experiments/kvgrad/PAPER_CARD.md) (`partial-reproduction`, #8).
 - [AgentKV: Phase-Aware KV Eviction for Agentic LLMs](https://openreview.net/forum?id=s80e8otSxP) — phase-aware eviction.
 - [HYBRIDKV: Exploiting Head-Dominant Reconstruction for Efficient Query-Agnostic KV Cache Compression](https://openreview.net/forum?id=sWF4OAXw7u) — cache compression.
 - [Recency/Frequency Adaptive KV Caching for Large Language Model Serving](https://openreview.net/forum?id=WklS2q5SD9) — cache retention policy.
