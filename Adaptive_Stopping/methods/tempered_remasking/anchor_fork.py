@@ -1,4 +1,4 @@
-"""A toy masked "dLLM" that satisfies the anchor-fork degeneracy *exactly*.
+"""A synthetic masked "dLLM" that satisfies the anchor-fork degeneracy *exactly*.
 
 This makes the idealised model of Sec. 3.1 / Appendix D concrete and
 executable with the *same* sampler used for real dLLMs, so that the theory
@@ -31,7 +31,7 @@ import torch
 
 from .theory import binary_entropy, inverse_binary_entropy, lc_fork_entropy, ar_fork_entropy
 
-__all__ = ["AnchorForkToyModel", "MASK", "FORK_A", "FORK_B", "ANCHOR_A", "ANCHOR_B", "FILL_X", "FILL_Y", "VOCAB_SIZE"]
+__all__ = ["AnchorForkModel", "MASK", "FORK_A", "FORK_B", "ANCHOR_A", "ANCHOR_B", "FILL_X", "FILL_Y", "VOCAB_SIZE"]
 
 MASK, FORK_A, FORK_B, ANCHOR_A, ANCHOR_B, FILL_X, FILL_Y = range(7)
 VOCAB_SIZE = 7
@@ -39,8 +39,8 @@ _NEG = -1.0e4  # effectively zero probability, but finite (keeps p·log p = 0)
 
 
 @dataclass
-class AnchorForkToyModel:
-    """Callable toy model (``ids [B, N] -> logits [B, N, V]``).
+class AnchorForkModel:
+    """Callable synthetic model (``ids [B, N] -> logits [B, N, V]``).
 
     Args:
         length: number of generated positions L (positions are 0-based within

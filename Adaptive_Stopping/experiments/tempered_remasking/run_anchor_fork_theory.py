@@ -1,16 +1,16 @@
 """CPU experiment: the anchor-fork model of Sec. 3.1 / Appendix D, end to end.
 
-Runs the *real* sampler on :class:`~tempered_remasking.toy.AnchorForkToyModel`
+Runs the *real* sampler on :class:`~tempered_remasking.anchor_fork.AnchorForkModel`
 and compares against exact dynamic-programming values:
 
 1. Expected fork entropy vs T_pos for TLC (Prop. D.4), with the Lemma D.3
    bounds, LC (Remark D.5) and AR (Prop. D.9).
 2. Semantic entropy of samples (Cor. D.7).
-3. Toy pass@k and pass@NFE where the "correct" solution is the one the
+3. pass@k and pass@NFE where the "correct" solution is the one the
    anchors bias the model *against* (the Fig. 1 scenario), for AR, LC, TLC,
    random, CT and TCT.
 
-    python Adaptive_Stopping/experiments/tempered_remasking/run_toy_theory.py --out toy_results.json
+    python Adaptive_Stopping/experiments/tempered_remasking/run_anchor_fork_theory.py --out anchor_fork_results.json
 """
 
 from __future__ import annotations
@@ -25,13 +25,13 @@ import common  # noqa: F401  (sets sys.path)
 from tempered_remasking import SamplerConfig, build_policy, generate
 from tempered_remasking import metrics as M
 from tempered_remasking import theory as th
-from tempered_remasking.toy import FORK_B, AnchorForkToyModel
+from tempered_remasking.anchor_fork import FORK_B, AnchorForkModel
 
 
-def build_model(length: int = 32, fork: int = 2) -> AnchorForkToyModel:
+def build_model(length: int = 32, fork: int = 2) -> AnchorForkModel:
     # Fig. 1-like: an early fork ("import ?????") and several confident anchors later on.
     anchors = {6: (0.99, 0.12), 11: (0.985, 0.12), 17: (0.98, 0.1), 23: (0.975, 0.1), 29: (0.97, 0.08)}
-    return AnchorForkToyModel(length=length, fork_position=fork, anchors=anchors, filler_confidence=0.9)
+    return AnchorForkModel(length=length, fork_position=fork, anchors=anchors, filler_confidence=0.9)
 
 
 def run(model, policy, n, seed, token_temperature=1.0, block_length=None, confidence_mode="max"):
@@ -45,7 +45,7 @@ def run(model, policy, n, seed, token_temperature=1.0, block_length=None, confid
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=20000, help="Monte Carlo samples per setting")
-    ap.add_argument("--problems", type=int, default=50, help="toy 'problems' (seeds) for pass@k")
+    ap.add_argument("--problems", type=int, default=50, help="'problems' (seeds) for pass@k")
     ap.add_argument("--k-max", type=int, default=64)
     ap.add_argument("--block-length", type=int, default=8, help="semi-AR block size for the pass@k study")
     ap.add_argument("--confidence-modes", nargs="+", default=["max", "sampled"])
@@ -86,7 +86,7 @@ def main():
               f"NFE={baselines[name]['mean_nfe']:.2f}")
     out["baselines"] = baselines
 
-    # ---- 3: toy pass@k / pass@NFE (correct = minority solution FORK_B) ---------------
+    # ---- 3: pass@k / pass@NFE (correct = minority solution FORK_B) ---------------
     settings = {"ar": build_policy("ar"), "lc": build_policy("lc"), "random": build_policy("random"),
                 "tlc(T=1)": build_policy("tlc", tpos=1.0), "ct(λ=0.6)": build_policy("ct", threshold=0.6),
                 "tct(T=0.1,λ=0.6)": build_policy("tct", threshold=0.6, tpos=0.1)}
@@ -94,9 +94,9 @@ def main():
     # formal analysis) and "sampled" (footnote 1; the paper's experiments). Under
     # "sampled", a fork that drew its minority value has lower confidence, which
     # biases confidence-ordered commits towards the majority value.
-    out["toy_pass_at_nfe"] = {}
+    out["pass_at_nfe"] = {}
     for mode in args.confidence_modes:
-        print(f"\nToy pass@k (correct = minority fork value), block_length={args.block_length}, T_token=0.8, confidence={mode}")
+        print(f"\npass@k (correct = minority fork value), block_length={args.block_length}, T_token=0.8, confidence={mode}")
         passk = {}
         for name, pol in settings.items():
             correct, nfes = [], []
@@ -108,7 +108,7 @@ def main():
             curve = M.pass_at_nfe_curve(correct, nfes)
             passk[name] = curve
             print(f"{name:>17}: " + "  ".join(f"k={c['k']}:{c['pass']:.3f}@{c['nfe']:.0f}NFE" for c in curve if c["k"] in (1, 4, 16, 64)))
-        out["toy_pass_at_nfe"][mode] = passk
+        out["pass_at_nfe"][mode] = passk
 
     if args.out:
         with open(args.out, "w", encoding="utf-8") as f:

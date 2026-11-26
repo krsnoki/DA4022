@@ -32,7 +32,7 @@ MASK = 0
 
 
 class RandomLogitModel(torch.nn.Module):
-    """Deterministic toy dLLM: logits depend on position and on the tokens present."""
+    """Deterministic small dLLM: logits depend on position and on the tokens present."""
 
     def __init__(self, vocab: int = 11, seq_len: int = 40, seed: int = 0, eos: int = None, eos_from: int = None):
         super().__init__()

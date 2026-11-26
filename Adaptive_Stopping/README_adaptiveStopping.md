@@ -44,7 +44,7 @@ Browse all accepted work in the [official paper index](https://adaptfm.gitlab.io
 
 | Method | Paper | Code | Config | Tests | Status |
 |---|---|---|---|---|---|
-| Tempered remasking (TLC / TCT) for diffusion LMs | A Tale of Two Temperatures (ICML 2026) | [`methods/tempered_remasking/`](methods/tempered_remasking/README.md) | `configs/tempered_remasking/paper.yaml` | `tests/test_tempered_remasking*.py` | `tested` (55 CPU tests; theory reproduced on toy model) |
+| Tempered remasking (TLC / TCT) for diffusion LMs | A Tale of Two Temperatures (ICML 2026) | [`methods/tempered_remasking/`](methods/tempered_remasking/README.md) | `configs/tempered_remasking/paper.yaml` | `tests/test_tempered_remasking*.py` | `tested` (55 CPU tests; theory reproduced on the anchor-fork model) |
 
 The sampler's termination logic implements the contract below as `tempered_remasking.DecodingStopPolicy` (stop on completion, EOS for AR, or an NFE budget).
 
