@@ -39,3 +39,7 @@ The official [accepted-paper list](https://adaptfm.gitlab.io/accepted-papers) is
 Document expert count, top-k routing, capacity factor, auxiliary routing losses, expert placement, routing dtype, distributed strategy, and any assumptions about batch/sequence shape. The output should include routing diagnostics where feasible: token-to-expert assignments, dropped tokens, per-expert load, and number of active experts.
 
 Benchmarks must report quality, end-to-end latency, throughput, peak memory, active/total experts, routing overhead, and communication costs for distributed variants. Do not equate fewer active parameters with faster wall-clock execution without measuring it on supported hardware.
+
+## Implementations
+
+- [`moe_to_dense/`](moe_to_dense/) — modular expert scoring, grouping/merging, dense SwiGLU conversion, forward-KL distillation, tests, and a hardware-feasible synthetic reproduction of *Pruning and Distilling Mixture-of-Experts into Dense Language Models*.
