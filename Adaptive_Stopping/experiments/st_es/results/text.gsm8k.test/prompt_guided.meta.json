@@ -1,0 +1,41 @@
+{
+  "variants": {
+    "pguided_user_zs.v1": [
+      "P(0)user",
+      "zero-shot user instruction (replaces the CoT/boxed directive)"
+    ],
+    "pguided_system_zs.v1": [
+      "P(0)system",
+      "zero-shot system prompt + standard user prompt"
+    ],
+    "pguided_system_fs1.v1": [
+      "P(1)system",
+      "system prompt with 1 example + standard user prompt"
+    ],
+    "pguided_system_fs3.v1": [
+      "P(3)system",
+      "system prompt with 3 examples + standard user prompt"
+    ]
+  },
+  "scorer": "math_verify.answer_section.v1",
+  "traces": {
+    "pguided_user_zs.v1": {
+      "file": "pguided_user_zs.v1_n200_o0_s42_cap4096.jsonl",
+      "sha256": "368051332fa43d9437c0ea3022728fce8f8c1c76e2b5c78d0907954b85800d89"
+    },
+    "pguided_system_zs.v1": {
+      "file": "pguided_system_zs.v1_n200_o0_s42_cap4096.jsonl",
+      "sha256": "a10c6b0095ba608f10056bd46724108f245e7fab6a42ed2d243919e9c66af997"
+    },
+    "pguided_system_fs1.v1": {
+      "file": "pguided_system_fs1.v1_n200_o0_s42_cap4096.jsonl",
+      "sha256": "15010c2241de0e7994d3b19f7da5698de4c936e2d7bb11f3ae51a54cae194194"
+    },
+    "pguided_system_fs3.v1": {
+      "file": "pguided_system_fs3.v1_n200_o0_s42_cap4096.jsonl",
+      "sha256": "97b54cc132d42db8251434227ea32c1de79ce5c65aa56bc0d1049d557ab12130"
+    }
+  },
+  "standard_traces": "math_cot_boxed.v1_n200_o0_s42_cap4096.jsonl",
+  "ci": "paired bootstrap, 2000 resamples, seed 0"
+}

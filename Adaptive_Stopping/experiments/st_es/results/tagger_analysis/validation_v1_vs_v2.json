@@ -1,0 +1,252 @@
+{
+  "v1": {
+    "tagger": "keyword_reasontype.v1",
+    "n_steps": 99,
+    "exact_agreement": 0.40404040404040403,
+    "mean_binary_macro_f1": 0.6421834847937872,
+    "per_tag": {
+      "problem_restatement": {
+        "support": 7,
+        "predicted": 6,
+        "precision": 0.3333333333333333,
+        "recall": 0.2857142857142857,
+        "f1": 0.30769230769230765,
+        "binary_macro_f1": 0.6295218295218296,
+        "binary_accuracy": 0.9090909090909091
+      },
+      "context_repetition": {
+        "support": 5,
+        "predicted": 1,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "binary_macro_f1": 0.484375,
+        "binary_accuracy": 0.9393939393939394
+      },
+      "definition_recall": {
+        "support": 8,
+        "predicted": 1,
+        "precision": 1.0,
+        "recall": 0.125,
+        "f1": 0.2222222222222222,
+        "binary_macro_f1": 0.5925925925925926,
+        "binary_accuracy": 0.9292929292929293
+      },
+      "formula_substitution": {
+        "support": 19,
+        "predicted": 22,
+        "precision": 0.5909090909090909,
+        "recall": 0.6842105263157895,
+        "f1": 0.6341463414634148,
+        "binary_macro_f1": 0.7693024700947646,
+        "binary_accuracy": 0.8484848484848485
+      },
+      "symbolic_transformation": {
+        "support": 7,
+        "predicted": 12,
+        "precision": 0.16666666666666666,
+        "recall": 0.2857142857142857,
+        "f1": 0.2105263157894737,
+        "binary_macro_f1": 0.5633637165539548,
+        "binary_accuracy": 0.8484848484848485
+      },
+      "edge_case": {
+        "support": 6,
+        "predicted": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "binary_macro_f1": 0.484375,
+        "binary_accuracy": 0.9393939393939394
+      },
+      "pattern_recognition": {
+        "support": 4,
+        "predicted": 1,
+        "precision": 1.0,
+        "recall": 0.25,
+        "f1": 0.4,
+        "binary_macro_f1": 0.6922279792746114,
+        "binary_accuracy": 0.9696969696969697
+      },
+      "verification": {
+        "support": 9,
+        "predicted": 9,
+        "precision": 0.3333333333333333,
+        "recall": 0.3333333333333333,
+        "f1": 0.3333333333333333,
+        "binary_macro_f1": 0.6333333333333333,
+        "binary_accuracy": 0.8787878787878788
+      },
+      "heuristics": {
+        "support": 6,
+        "predicted": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "binary_macro_f1": 0.484375,
+        "binary_accuracy": 0.9393939393939394
+      },
+      "exploration": {
+        "support": 7,
+        "predicted": 6,
+        "precision": 0.8333333333333334,
+        "recall": 0.7142857142857143,
+        "f1": 0.7692307692307692,
+        "binary_macro_f1": 0.8765072765072764,
+        "binary_accuracy": 0.9696969696969697
+      },
+      "interpretation": {
+        "support": 4,
+        "predicted": 4,
+        "precision": 0.25,
+        "recall": 0.25,
+        "f1": 0.25,
+        "binary_macro_f1": 0.6092105263157894,
+        "binary_accuracy": 0.9393939393939394
+      },
+      "self_talk": {
+        "support": 7,
+        "predicted": 19,
+        "precision": 0.3157894736842105,
+        "recall": 0.8571428571428571,
+        "f1": 0.46153846153846156,
+        "binary_macro_f1": 0.6900715563506261,
+        "binary_accuracy": 0.8585858585858586
+      },
+      "final_conclusion": {
+        "support": 10,
+        "predicted": 7,
+        "precision": 0.8571428571428571,
+        "recall": 0.6,
+        "f1": 0.7058823529411764,
+        "binary_macro_f1": 0.8391290217744556,
+        "binary_accuracy": 0.9494949494949495
+      }
+    }
+  },
+  "v2": {
+    "tagger": "keyword_reasontype.v2",
+    "n_steps": 99,
+    "exact_agreement": 0.3838383838383838,
+    "mean_binary_macro_f1": 0.6299543824830995,
+    "per_tag": {
+      "problem_restatement": {
+        "support": 7,
+        "predicted": 6,
+        "precision": 0.3333333333333333,
+        "recall": 0.2857142857142857,
+        "f1": 0.30769230769230765,
+        "binary_macro_f1": 0.6295218295218296,
+        "binary_accuracy": 0.9090909090909091
+      },
+      "context_repetition": {
+        "support": 5,
+        "predicted": 2,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "binary_macro_f1": 0.481675392670157,
+        "binary_accuracy": 0.9292929292929293
+      },
+      "definition_recall": {
+        "support": 8,
+        "predicted": 1,
+        "precision": 1.0,
+        "recall": 0.125,
+        "f1": 0.2222222222222222,
+        "binary_macro_f1": 0.5925925925925926,
+        "binary_accuracy": 0.9292929292929293
+      },
+      "formula_substitution": {
+        "support": 19,
+        "predicted": 18,
+        "precision": 0.6111111111111112,
+        "recall": 0.5789473684210527,
+        "f1": 0.5945945945945946,
+        "binary_macro_f1": 0.7507134463656202,
+        "binary_accuracy": 0.8484848484848485
+      },
+      "symbolic_transformation": {
+        "support": 7,
+        "predicted": 7,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "binary_macro_f1": 0.46195652173913043,
+        "binary_accuracy": 0.8585858585858586
+      },
+      "edge_case": {
+        "support": 6,
+        "predicted": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "binary_macro_f1": 0.484375,
+        "binary_accuracy": 0.9393939393939394
+      },
+      "pattern_recognition": {
+        "support": 4,
+        "predicted": 1,
+        "precision": 1.0,
+        "recall": 0.25,
+        "f1": 0.4,
+        "binary_macro_f1": 0.6922279792746114,
+        "binary_accuracy": 0.9696969696969697
+      },
+      "verification": {
+        "support": 9,
+        "predicted": 13,
+        "precision": 0.3076923076923077,
+        "recall": 0.4444444444444444,
+        "f1": 0.3636363636363637,
+        "binary_macro_f1": 0.6420454545454546,
+        "binary_accuracy": 0.8585858585858586
+      },
+      "heuristics": {
+        "support": 6,
+        "predicted": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "binary_macro_f1": 0.484375,
+        "binary_accuracy": 0.9393939393939394
+      },
+      "exploration": {
+        "support": 7,
+        "predicted": 7,
+        "precision": 0.7142857142857143,
+        "recall": 0.7142857142857143,
+        "f1": 0.7142857142857143,
+        "binary_macro_f1": 0.8462732919254659,
+        "binary_accuracy": 0.9595959595959596
+      },
+      "interpretation": {
+        "support": 4,
+        "predicted": 4,
+        "precision": 0.25,
+        "recall": 0.25,
+        "f1": 0.25,
+        "binary_macro_f1": 0.6092105263157894,
+        "binary_accuracy": 0.9393939393939394
+      },
+      "self_talk": {
+        "support": 7,
+        "predicted": 24,
+        "precision": 0.25,
+        "recall": 0.8571428571428571,
+        "f1": 0.3870967741935483,
+        "binary_macro_f1": 0.636662159551864,
+        "binary_accuracy": 0.8080808080808081
+      },
+      "final_conclusion": {
+        "support": 10,
+        "predicted": 8,
+        "precision": 0.875,
+        "recall": 0.7,
+        "f1": 0.7777777777777777,
+        "binary_macro_f1": 0.8777777777777778,
+        "binary_accuracy": 0.9595959595959596
+      }
+    }
+  }
+}

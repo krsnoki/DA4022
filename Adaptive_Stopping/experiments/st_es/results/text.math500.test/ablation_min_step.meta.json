@@ -1,0 +1,17 @@
+{
+  "ks": [
+    "none",
+    "8",
+    "16",
+    "32",
+    "64"
+  ],
+  "definition": "|s_i| > k generated tokens, delimiter included; k=none = split at every \\n\\n",
+  "protocol": "per k: calibrate on the calibration split (full grid), evaluate the selected configs on the test split",
+  "tagger": "keyword_reasontype.v1",
+  "traces": {
+    "calibration": "math_cot_boxed.v1_n150_o0_s42_cap8192.jsonl",
+    "evaluation": "math_cot_boxed.v1_n150_o0_s42_cap8192.jsonl"
+  },
+  "config": "Adaptive_Stopping/configs/st_es/math500.yaml"
+}
