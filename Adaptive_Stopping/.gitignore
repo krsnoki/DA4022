@@ -1,0 +1,8 @@
+# ST-ES generation caches, replay outputs and downloaded validation data are never committed.
+# By default they are written outside the repository (ST_ES_RUN_DIR, default ../st_es_runs).
+st_es_runs/
+**/cache/
+*.jsonl
+!experiments/st_es/results/*.jsonl
+__pycache__/
+.pytest_cache/
