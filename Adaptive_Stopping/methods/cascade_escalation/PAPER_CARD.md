@@ -41,9 +41,9 @@ Locally we expect the same qualitative picture with open models: `S_2 > S_1` at 
 - **Reproduction command:**
   1. GPU generation (RTX 4090): `bash Adaptive_Stopping/experiments/cascade_escalation/run_gpu.sh` writes `results/cascade/generations/<dataset>/<slug>.jsonl.gz`, `results/cascade/meta/<slug>.json` and the live batch-size-1 run under `results/cascade/live/`.
   2. Offline sweep (CPU): `python Adaptive_Stopping/experiments/cascade_escalation/run_sweep.py --config Adaptive_Stopping/experiments/cascade_escalation/configs/qwen25_phi35_pool.yaml --results results/cascade` writes `results/cascade/sweep/*.csv`, plots, and the summary `Performance_Metrics/results/cascade_escalation.csv`.
-- **Tests:** `pytest Adaptive_Stopping/tests -q`
+- **Tests:** `pytest Adaptive_Stopping/tests -q` (needs numpy, pandas, pyyaml, pytest; the MATH symbolic-equivalence test also needs sympy and antlr4-python3-runtime==4.11.1, and the live-cascade tests need torch, otherwise they are skipped)
 
-Code layout (on branch `cascade-escalation`):
+Code layout:
 
 | Path | Contents |
 |---|---|

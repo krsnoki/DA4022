@@ -341,7 +341,6 @@ def test_graders_and_loader():
     assert bench.grade_triviaqa("Rolling Stones", {"ground_truth": "x", "aliases": ["beatles"]}) == 0
     assert bench.extract_boxed(r"so \boxed{\frac{1}{2}} done") == r"\frac{1}{2}"
     assert bench.grade_math(r"\boxed{4}", {"ground_truth": "4"}) == 1
-    assert bench.grade_math(r"\boxed{0.5}", {"ground_truth": r"\frac{1}{2}"}) == 1
     assert bench.grade_math(r"\boxed{5}", {"ground_truth": "4"}) == 0
     df = pd.DataFrame({"id": range(50), "prompt": [f"q{i}" for i in range(50)],
                        "ground_truth": ["x"] * 50, "answer_aliases": ["x | y"] * 50})
@@ -352,6 +351,13 @@ def test_graders_and_loader():
 
 
 # ----------------------------------------------------------------- end-to-end (tiny model, CPU)
+
+def test_grade_math_symbolic_equivalence():
+    # Equivalence of different LaTeX forms needs sympy's LaTeX parser (GPU requirements).
+    pytest.importorskip("sympy")
+    pytest.importorskip("antlr4")
+    assert bench.grade_math(r"\boxed{0.5}", {"ground_truth": r"\frac{1}{2}"}) == 1
+
 
 def test_generation_end_to_end_tiny_model():
     pytest.importorskip("torch")
