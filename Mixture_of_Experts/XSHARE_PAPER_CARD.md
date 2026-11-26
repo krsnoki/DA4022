@@ -6,6 +6,7 @@
 - **Primary module:** `Mixture_of_Experts/`
 - **Secondary modules:** `Backbones/` (wrapper, registry, model card), `Dataloaders/` (GSM8K loader, registry, dataset card), `Performance_Metrics/` (result schema)
 - **Owner / reviewer:** @AyushWani11 / not assigned
+- **Team and contributions:** Shravya Lanka, Freya Shingala, Sharanya M, Sanjeev, Aishwarya, Ayush Wani. Who did what: [XSHARE_CONTRIBUTIONS.md](XSHARE_CONTRIBUTIONS.md)
 - **Issue:** https://github.com/krsnoki/DA4022/issues/5
 - **Status:** partial-reproduction
 - **Upstream code / licence:** none found. Checked the paper text, the arXiv page, the ICML page and GitHub on 2026-11-17. Reimplemented from the paper.
