@@ -43,7 +43,7 @@ class ArmState:
 
 @dataclass(frozen=True)
 class AllocationConfig:
-    """Hyperparameters controlling DIPA and baseline budget allocators."""
+    """Allocation settings, with the total budget measured in generation attempts."""
 
     total_budget: int
     input_proxy: str = "mql"
