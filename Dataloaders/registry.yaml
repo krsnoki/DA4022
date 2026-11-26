@@ -1,0 +1,101 @@
+# Dataset registry (source of truth for dataset ids used by experiment configs).
+# Licence, revision, size and sha256 values were verified on 2026-11-23 from the
+# Hugging Face / GitHub APIs and by downloading the pinned files.
+# Loader: Dataloaders/evaluation/text_prompts.py
+
+datasets:
+  text.alpaca_eval.eval:
+    name: AlpacaEval evaluation set (805 instructions)
+    modality: text
+    task: instruction_following
+    source_url: https://huggingface.co/datasets/tatsu-lab/alpaca_eval
+    license: cc-by-nc-4.0
+    version: 2edc6fad8be6b14ea7230aabfd08188da6b8b814
+    role: benchmark
+    split: eval
+    num_examples: 805
+    preprocessing_id: raw_text.v1
+    seed: 42
+    labels_available: false
+    card: evaluation/cards/alpaca_eval.md
+    download:
+      url: https://huggingface.co/datasets/tatsu-lab/alpaca_eval/resolve/2edc6fad8be6b14ea7230aabfd08188da6b8b814/alpaca_eval.json
+      sha256: d92b92c51e8f1962a21193abe74e6f727c2bc8286035f4041505ff38a7c3ae51
+      format: json
+      prompt_field: instruction
+      id_field: null              # records have no id; the 0-based index is used
+      reference_field: null
+
+  text.arena_hard_v0_1.eval:
+    name: Arena-Hard-Auto v0.1 questions (500 prompts)
+    modality: text
+    task: instruction_following
+    source_url: https://huggingface.co/datasets/lmarena-ai/arena-hard-auto
+    license: apache-2.0
+    version: 15f3746e21432264ce9b453999bde4f3c946d2e6
+    role: benchmark
+    split: eval
+    num_examples: 500
+    preprocessing_id: raw_text.v1
+    seed: 42
+    labels_available: false
+    card: evaluation/cards/arena_hard_v0_1.md
+    download:
+      url: https://huggingface.co/datasets/lmarena-ai/arena-hard-auto/resolve/15f3746e21432264ce9b453999bde4f3c946d2e6/data/arena-hard-v0.1/question.jsonl
+      sha256: 7ed52dc0ffea3ddc5a44393658d30288e11ce5307da981e0a010170b3c3037ce
+      format: jsonl
+      prompt_field: prompt
+      id_field: uid
+      reference_field: null
+
+  text.gsm8k.test:
+    name: GSM8K test split (1319 problems)
+    modality: text
+    task: math_word_problems
+    source_url: https://github.com/openai/grade-school-math
+    license: mit
+    version: 3101c7d5072418e28b9008a6636bde82a006892c   # GitHub commit (same data as HF openai/gsm8k "main")
+    role: test
+    split: test
+    num_examples: 1319
+    preprocessing_id: raw_text.v1
+    seed: 42
+    labels_available: true
+    card: evaluation/cards/gsm8k.md
+    download:
+      url: https://raw.githubusercontent.com/openai/grade-school-math/3101c7d5072418e28b9008a6636bde82a006892c/grade_school_math/data/test.jsonl
+      sha256: 3730d312f6e3440559ace48831e51066acaca737f6eabec99bccb9e4b3c39d14
+      format: jsonl
+      prompt_field: question
+      id_field: null
+      reference_field: answer     # full solution; final answer follows "####"
+
+  synthetic.prompts:
+    name: Synthetic instruction prompts (offline smoke tests only)
+    modality: text
+    task: smoke_test
+    source_url: null
+    license: n/a (generated)
+    version: synthetic.prompts.v1
+    role: synthetic
+    split: synthetic
+    num_examples: 64
+    preprocessing_id: raw_text.v1
+    seed: 42
+    labels_available: false
+    generator: prompts
+
+  synthetic.arithmetic:
+    name: Synthetic arithmetic word problems with references (offline smoke tests only)
+    modality: text
+    task: smoke_test
+    source_url: null
+    license: n/a (generated)
+    version: synthetic.arithmetic.v1
+    role: synthetic
+    split: synthetic
+    num_examples: 64
+    preprocessing_id: raw_text.v1
+    seed: 42
+    labels_available: true
+    generator: arithmetic

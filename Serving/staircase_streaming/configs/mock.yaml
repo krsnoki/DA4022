@@ -1,0 +1,52 @@
+# Dry run of the whole benchmark on the CPU mock backend (no GPU, no downloads).
+#   python -m Serving.staircase_streaming.run_benchmark --config Serving/staircase_streaming/configs/mock.yaml
+# Numbers produced with this config are NOT results; they only exercise the pipeline.
+
+experiment:
+  name: staircase_moa_mock
+  paper_id: arxiv-2510.05059
+  seed: 42
+  status: mock_dry_run
+  output_dir: results/staircase_streaming/mock
+  warmup_requests: 1
+
+backend:
+  type: mock
+  request_timeout_s: 60
+
+mock_models:          # MockModelSpec fields; proposers differ in speed like heterogeneous models
+  qwen-1.5b-like: {base_latency_s: 0.010, prefill_s_per_token: 0.00002, decode_s_per_token: 0.0015, answer_tokens: 300}
+  smollm-1.7b-like: {base_latency_s: 0.015, prefill_s_per_token: 0.00002, decode_s_per_token: 0.0020, answer_tokens: 350}
+  qwen-0.5b-like: {base_latency_s: 0.005, prefill_s_per_token: 0.00001, decode_s_per_token: 0.0008, answer_tokens: 250}
+
+moa:
+  proposers: [qwen-1.5b-like, smollm-1.7b-like, qwen-0.5b-like]
+  aggregator: qwen-1.5b-like
+  proposer_max_tokens: 512
+  aggregator_max_tokens: 512
+  proposer_gen: {}
+  aggregator_gen: {}
+
+staircase:
+  first_chunk_size: 8
+  second_chunk_size: 128
+  chunk_size: 256
+  aggregator_chunk_size: 128
+  redundancy: 2
+  prefix_cache: false
+
+benchmark:
+  prompt_sets:
+    - {dataset_id: synthetic.prompts, num_samples: 4}
+  sweep:
+    first_chunk_size: [4, 8, 16, 32]
+    redundancy: [0, 1, 2]
+  prefix_cache_variant: true
+  gpu_memory_sample_s: 0.5
+  sanity_prompts: 2
+
+quality:
+  enabled: true
+  dataset_id: synthetic.arithmetic
+  num_samples: 4
+  methods: [baseline, staircase]
