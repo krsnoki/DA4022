@@ -23,6 +23,8 @@ _PI_MACRO_RE = re.compile(r"\\pi")
 _MUL_MACRO_RE = re.compile(r"\\(?:cdot(?!s)|times)")
 _UNSUPPORTED_SYMPY_TOKENS = (r"\begin", r"\end", "=", "<", ">", ";")
 _MAX_SYMPY_LEN = 128
+_REL_TOL = 1e-6
+_ABS_TOL = 1e-9
 
 
 def _find_matching_brace(text: str, open_idx: int) -> int | None:
@@ -332,9 +334,9 @@ def _sympy_equivalent(canon_a: str, canon_b: str) -> bool:
                 and math.isfinite(val_b.imag)
             ):
                 return math.isclose(
-                    val_a.real, val_b.real, rel_tol=1e-6, abs_tol=1e-9
+                    val_a.real, val_b.real, rel_tol=_REL_TOL, abs_tol=_ABS_TOL
                 ) and math.isclose(
-                    val_a.imag, val_b.imag, rel_tol=1e-6, abs_tol=1e-9
+                    val_a.imag, val_b.imag, rel_tol=_REL_TOL, abs_tol=_ABS_TOL
                 )
     except Exception:
         return False
@@ -358,7 +360,7 @@ def _expressions_equivalent(norm_gen: str, norm_gt: str) -> bool:
     if gt_num is None:
         gt_num = _parse_numeric(canon_gt)
     if gen_num is not None and gt_num is not None:
-        return math.isclose(gen_num, gt_num, rel_tol=1e-6, abs_tol=1e-9)
+        return math.isclose(gen_num, gt_num, rel_tol=_REL_TOL, abs_tol=_ABS_TOL)
 
     seq_gen = _split_top_level_sequence(canon_gen)
     seq_gt = _split_top_level_sequence(canon_gt)
