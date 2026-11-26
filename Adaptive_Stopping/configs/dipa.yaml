@@ -1,0 +1,24 @@
+backbone_id: Qwen/Qwen2.5-Math-1.5B-Instruct
+backbone_revision: aafeb0fc6f22cbf0eaeed126eff8be45b0360a35
+dataset_id: HuggingFaceH4/MATH-500
+dataset_revision: 6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be
+split: test
+
+prompt_template:
+  system: "Please reason step by step, and put your final answer within \\boxed{}."
+  user: "{problem}"
+
+generation:
+  temperature: 0.7
+  top_p: 0.8
+  repetition_penalty: 1.05
+  max_new_tokens: 512
+
+allocation:
+  input_proxy: mql
+  gen_proxy: mgl
+  lambda_mode: dynamic
+  lambda_value: 5.0
+  min_difficulty: 1.0e-6
+  seeds: [42, 43, 44]
+  budget_multipliers: [0.5, 1, 2, 4, 8, 16]
