@@ -62,19 +62,20 @@ tokens as well as the original tool observation. This experiment cannot isolate
 retention of the original tool-response keys. The new diagnostic exposes that
 limitation; it does not alter the strict primary score.
 
-## Decision and next experiment
+## Decision and completed follow-up
 
-The operational/integration gates pass, and no pilot truncation remains. Proceed
-with the previously prepared evaluation configs without tuning on new results:
-seeds 101/202/303, 10 examples each, 24/48/72 distractors respectively, all seven
-method/budget configurations. This is 210 measured episodes plus warm-ups.
-Keep per-length strata and report the narrow synthetic task family honestly.
-Do not treat these three data seeds as repeated stochastic decoding trials.
+The operational/integration gates pass, and no pilot truncation remains. The
+previously prepared evaluation completed without tuning: seeds 101/202/303, 10
+examples each, 24/48/72 distractors respectively, and all seven method/budget
+configurations. This is 210 measured episodes plus warm-ups. See the
+[fixed evaluation report](../agentkv_evaluation/README.md). Keep per-length
+strata and report the narrow synthetic task family honestly. Do not treat these
+three data seeds as repeated stochastic decoding trials.
 
-The evaluation notebook embeds the exact reviewed source archive, reruns the
-pretrained integration gate, and invokes its existing `run_suite` entrypoint.
-No algorithm, prompt or scoring changes are introduced between this pilot and
-the larger evaluation. Previous results and source archives stay unchanged.
+The evaluation notebook embedded the exact reviewed source archive, reran the
+pretrained integration gate, and invoked its existing `run_suite` entrypoint.
+No algorithm, prompt or scoring changes were introduced between this pilot and
+the larger evaluation. Previous results and source archives remain unchanged.
 
 ## Artifacts
 

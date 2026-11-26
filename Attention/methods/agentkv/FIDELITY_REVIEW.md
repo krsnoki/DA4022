@@ -67,21 +67,23 @@ cover phase parsing, FIFO state, compaction and positional handling.
 K/V tensors against unmodified Hugging Face Qwen3 for the same forced inputs.
 It checks next-token argmax, uses declared tolerances, and then checks finite
 continuation after forced compression plus phase-buffer activity. Its random-model
-CPU mode has passed; pretrained execution of this new gate is still pending.
+CPU mode and reviewed pretrained Tesla T4 execution passed; the tested
+no-eviction maximum logit difference was 0.0.
 
 ## Evaluation protocol
 
-The next notebook first runs the pretrained gate, then the reviewed profile's
-five-example pilot at the 512-token output cap. This is required because the
-review identified material scoring differences. It does not automatically launch
-the longer evaluation before the new pilot is inspected.
+The reviewed notebook ran the pretrained gate and then the reviewed profile's
+five-example pilot at the 512-token output cap. This separated the scoring-profile
+change from the fixed larger evaluation.
 
 Prepared evaluation: 10 examples each at seeds 101/202/303 with 24/48/72
 distractors, respectively; seven method/budget configurations, 210 episodes.
-The seeds generate different data, not multiple stochastic decoding runs.
-This varies context length within one synthetic task family. Keep per-stratum
-results; do not describe it as a diverse agent benchmark or isolate seed effects
-from length effects. No settings are selected using those evaluation results.
+The completed export passed audit and is reported by stratum in
+`Performance_Metrics/results/agentkv_evaluation/`. The seeds generate different
+data, not multiple stochastic decoding runs. This varies context length within
+one synthetic task family. Do not describe it as a diverse agent benchmark or
+isolate seed effects from length effects. No settings were selected using those
+evaluation results.
 
 Primary exact match is unchanged. Extra diagnostics count truncation, missing
 final delimiters and incorrect final answers, and record whether the first live

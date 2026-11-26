@@ -15,7 +15,7 @@
 - **Backbone:** Qwen/Qwen3-0.6B at c1899de289a04d12100db370d81485cdf75e47ca
 - **Dataset:** synthetic.agent_memory.v1, seeded generated evaluation episodes
 - **Calibration dataset:** null; no training or learned calibration
-- **Hardware:** CPU float32 for correctness; CUDA cloud pilot planned in float16
+- **Hardware:** CPU float32 correctness checks; completed Tesla T4 float16 cloud runs
 
 ## Research summary
 

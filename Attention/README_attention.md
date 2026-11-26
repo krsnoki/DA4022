@@ -4,7 +4,8 @@
 
 - [AgentKV reference implementation](methods/agentkv/README.md): phase-aware KV
   eviction with a Qwen3 adapter, CPU tests, and cloud pilot runner. Tracked in
-  [issue #27](https://github.com/krsnoki/DA4022/issues/27). Initial synthetic T4 pilot results available; broader evaluation pending.
+  [issue #27](https://github.com/krsnoki/DA4022/issues/27). Pretrained numerical
+  validation and a fixed 210-episode synthetic T4 evaluation are complete.
 
 ## Purpose
 
