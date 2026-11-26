@@ -6,7 +6,7 @@
   modality: multimodal            # causal language model with a vision encoder; used text-only here
   architecture: qwen3_5
   pretraining_regime: mixed       # self-supervised pre-training + post-training (model card: "Pre-training & Post-training")
-  objective: next-token prediction pre-training followed by post-training (details: model card / Qwen3.5 blog)
+  objective: "next-token prediction pre-training followed by post-training (details: model card and Qwen3.5 blog)"
   weights_source: huggingface
   weights_uri: https://huggingface.co/Qwen/Qwen3.5-9B
   revision: unpinned              # latest commit seen on the Hub file page: c202236 (short hash); pin the full hash
@@ -58,3 +58,41 @@
   fine_tuning_dataset: null
   wrappers: [mock_mcq_lm.MockMCQBackbone]
   notes: Tests and controller microbenchmarks only.
+
+- id: text.qwen3_5_4b.post_trained
+  name: Qwen3.5-4B
+  modality: multimodal            # same family layout as Qwen3.5-9B; used text-only here
+  architecture: qwen3_5
+  pretraining_regime: mixed
+  objective: next-token prediction pre-training followed by post-training
+  weights_source: huggingface
+  weights_uri: https://huggingface.co/Qwen/Qwen3.5-4B
+  revision: unpinned
+  license: apache-2.0
+  num_parameters: 4B (family naming, rounded)
+  input_spec:
+    dtype: bfloat16 compute, NF4 weights (bitsandbytes) in scps_mmlupro_qwen35_4b_bnb4.yaml
+  preprocessing: tokenizer chat template, enable_thinking=False
+  parent_backbone: unknown
+  fine_tuning_dataset: unknown
+  wrappers: [hf_causal_lm.HFCausalLM]
+  notes: Scaled-down substitute for Qwen3.5-9B on 4 GB GPUs.
+
+- id: text.qwen3_5_2b.post_trained
+  name: Qwen3.5-2B
+  modality: multimodal
+  architecture: qwen3_5
+  pretraining_regime: mixed
+  objective: next-token prediction pre-training followed by post-training
+  weights_source: huggingface
+  weights_uri: https://huggingface.co/Qwen/Qwen3.5-2B
+  revision: unpinned
+  license: apache-2.0
+  num_parameters: 2B (family naming, rounded)
+  input_spec:
+    dtype: bfloat16 compute, NF4 weights (bitsandbytes)
+  preprocessing: tokenizer chat template, enable_thinking=False
+  parent_backbone: unknown
+  fine_tuning_dataset: unknown
+  wrappers: [hf_causal_lm.HFCausalLM]
+  notes: Fallback if Qwen3.5-4B does not fit in GPU memory.
