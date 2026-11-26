@@ -1,0 +1,6 @@
+variant,paper_name,n,accuracy,mean_tokens,saved_pct,acc_diff_vs_standard,ci95_low,ci95_high,hit_token_cap
+standard,Standard,200,0.83,1785.79,0.0,,,,28
+pguided_user_zs.v1,P(0)user,200,0.82,1037.17,41.9209,-0.01,-0.065,0.045,12
+pguided_system_zs.v1,P(0)system,200,0.84,1244.24,30.3255,0.01,-0.04,0.065,14
+pguided_system_fs1.v1,P(1)system,200,0.855,1230.125,31.1159,0.025,-0.025,0.08,9
+pguided_system_fs3.v1,P(3)system,200,0.825,1272.565,28.7394,-0.005,-0.06,0.05,17

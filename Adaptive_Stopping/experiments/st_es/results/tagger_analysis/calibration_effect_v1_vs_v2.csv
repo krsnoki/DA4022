@@ -1,0 +1,17 @@
+dataset,tagger,target,config,other_share_calibration,cal_accuracy,cal_mean_tokens,test_accuracy,test_mean_tokens,test_saved_pct,test_standard_accuracy
+text.gsm8k.test,v1,0.85,st_es:verification:0,0.1656,0.8,676.8,0.815,779.3,56.36,0.83
+text.gsm8k.test,v1,0.9,st_es:verification:0,0.1656,0.8,676.8,0.815,779.3,56.36,0.83
+text.gsm8k.test,v1,0.95,st_es:exploration:0,0.1656,0.86,850.4,0.83,921.8,48.38,0.83
+text.gsm8k.test,v1,tag_histogram,"{""formula_substitution"": 2253, ""self_talk"": 1155, ""other"": 1037, ""verification"": 568, ""exploration"": 484, ""problem_restatement"": 270, ""symbolic_transformation"": 151, ""interpretation"": 138, ""final_conclusion"": 73, ""context_repetition"": 61, ""definition_recall"": 27, ""pattern_recognition"": 23, ""edge_case"": 22}",,,,,,,
+text.gsm8k.test,v2,0.85,st_es:verification:1,0.0996,0.84,767.8,0.825,856.4,52.04,0.83
+text.gsm8k.test,v2,0.9,st_es:verification:1,0.0996,0.84,767.8,0.825,856.4,52.04,0.83
+text.gsm8k.test,v2,0.95,st_es:verification:1,0.0996,0.84,767.8,0.825,856.4,52.04,0.83
+text.gsm8k.test,v2,tag_histogram,"{""formula_substitution"": 1976, ""self_talk"": 1241, ""verification"": 834, ""other"": 624, ""exploration"": 558, ""problem_restatement"": 321, ""interpretation"": 308, ""context_repetition"": 157, ""symbolic_transformation"": 94, ""final_conclusion"": 83, ""definition_recall"": 29, ""edge_case"": 19, ""pattern_recognition"": 18}",,,,,,,
+text.math500.test,v1,0.85,st_es:self_talk:3,0.2643,0.7333,1301.5,0.72,1310.6,64.67,0.8067
+text.math500.test,v1,0.9,st_es:self_talk:4,0.2643,0.7667,1528.9,0.7267,1490.8,59.81,0.8067
+text.math500.test,v1,0.95,st_es:self_talk:6,0.2643,0.8267,1869.7,0.7667,1757.1,52.63,0.8067
+text.math500.test,v1,tag_histogram,"{""formula_substitution"": 3703, ""other"": 3635, ""self_talk"": 2132, ""symbolic_transformation"": 1798, ""verification"": 666, ""exploration"": 553, ""interpretation"": 445, ""problem_restatement"": 276, ""edge_case"": 179, ""definition_recall"": 137, ""context_repetition"": 80, ""pattern_recognition"": 76, ""final_conclusion"": 73, ""heuristics"": 1}",,,,,,,
+text.math500.test,v2,0.85,st_es:verification:1,0.1892,0.7267,1268.7,0.7,1303.4,64.86,0.8067
+text.math500.test,v2,0.9,st_es:formula_substitution:9,0.1892,0.7667,1861.5,0.74,2260.9,39.05,0.8067
+text.math500.test,v2,0.95,st_es:exploration:1,0.1892,0.8067,1992.0,0.7467,1799.4,51.5,0.8067
+text.math500.test,v2,tag_histogram,"{""self_talk"": 3429, ""formula_substitution"": 3015, ""other"": 2602, ""symbolic_transformation"": 1268, ""verification"": 983, ""interpretation"": 829, ""exploration"": 615, ""problem_restatement"": 319, ""context_repetition"": 203, ""edge_case"": 170, ""definition_recall"": 161, ""final_conclusion"": 97, ""pattern_recognition"": 63}",,,,,,,
