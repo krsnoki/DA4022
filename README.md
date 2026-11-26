@@ -1,7 +1,7 @@
 
 # AdaptFM-DA4022: Resource-Adaptive Deep Learning
 
-This repository is a **research and engineering library** for implementing and comparing methods that make deep-learning inference adapt to hardware, latency, memory, energy, or quality constraints. AdaptFM workshop papers are used as research starting points; the repository is responsible for a common implementation interface, reproducibility, and comparable benchmarks.
+This repo is a **research and engineering library** for implementing and comparing methods that make deep-learning inference adapt to hardware, latency, memory, energy, or quality constraints. AdaptFM workshop papers are used as research starting points; the repository is responsible for a common implementation interface, reproducibility, and comparable benchmarks.
 
 > **Design rule:** backbones, data pipelines, adaptation methods, and metrics are separate concepts. Do not put all of them into a paper-specific folder.
 
@@ -139,6 +139,7 @@ AdaptFM-DA4022/
 ```
 
 Only create code directories when they have an owner and a concrete implementation. Empty scaffolding is not a contribution by itself.
+
 
 ## Source of paper list
 
