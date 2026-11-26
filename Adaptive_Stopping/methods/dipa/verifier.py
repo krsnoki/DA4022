@@ -129,13 +129,16 @@ def _unwrap_text_macros(s: str) -> str:
         pos = match.start()
 
 
+def _skip_whitespace(s: str, idx: int) -> int:
+    while idx < len(s) and s[idx].isspace():
+        idx += 1
+    return idx
+
+
 def _read_braced_group(s: str, start: int) -> tuple[str, int] | None:
     """Read a balanced ``{...}`` group starting at or after ``start``."""
-    idx = start
-    n = len(s)
-    while idx < n and s[idx].isspace():
-        idx += 1
-    if idx >= n or s[idx] != "{":
+    idx = _skip_whitespace(s, start)
+    if idx >= len(s) or s[idx] != "{":
         return None
     close_idx = _find_matching_brace(s, idx)
     if close_idx is None:
@@ -145,10 +148,8 @@ def _read_braced_group(s: str, start: int) -> tuple[str, int] | None:
 
 def _read_latex_arg(s: str, start: int) -> tuple[str, int] | None:
     """Read one LaTeX argument: braced group, single macro, or single alnum char."""
-    idx = start
+    idx = _skip_whitespace(s, start)
     n = len(s)
-    while idx < n and s[idx].isspace():
-        idx += 1
     if idx >= n:
         return None
     if s[idx] == "{":
@@ -186,9 +187,7 @@ def _normalize_shorthand_macros(s: str) -> str:
             continue
 
         if s.startswith(r"\sqrt", i) and (i + 5 == n or not s[i + 5].isalpha()):
-            j = i + 5
-            while j < n and s[j].isspace():
-                j += 1
+            j = _skip_whitespace(s, i + 5)
             opt = ""
             if j < n and s[j] == "[":
                 close_bracket = s.find("]", j + 1)

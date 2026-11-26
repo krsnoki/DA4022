@@ -198,15 +198,22 @@ def _input_mql(
     return float(max(1, length))
 
 
+def _sequence_loss_score(
+    model: Any, input_ids: Any, torch_mod: Any, functional: Any
+) -> float:
+    """Return mean next-token loss, with a unit fallback for short sequences."""
+    with torch_mod.no_grad():
+        loss = _sequence_cross_entropy(model, input_ids, functional)
+    return float(loss.item()) if loss is not None else 1.0
+
+
 def _input_ment(
     instance: ProblemInstance, model: Any = None, tokenizer: Any = None
 ) -> float:
     torch_mod, functional = _import_torch()
     device = _model_device(model, torch_mod)
     input_ids, _ = _encode_sequence(tokenizer, instance.prompt, None, torch_mod, device)
-    with torch_mod.no_grad():
-        loss = _sequence_cross_entropy(model, input_ids, functional)
-    return float(loss.item()) if loss is not None else 1.0
+    return _sequence_loss_score(model, input_ids, torch_mod, functional)
 
 
 def _input_mgn(
@@ -288,9 +295,7 @@ def _gen_ment(
         full_ids, _ = _encode_sequence(
             tokenizer, instance.prompt, attempt, torch_mod, device
         )
-        with torch_mod.no_grad():
-            loss = _sequence_cross_entropy(model, full_ids, functional)
-        return float(loss.item()) if loss is not None else 1.0
+        return _sequence_loss_score(model, full_ids, torch_mod, functional)
 
     return _mean_over_attempts(attempts, _per_attempt)
 

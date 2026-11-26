@@ -102,10 +102,10 @@ class BudgetAllocator(StoppingPolicy):
         budget_used: int,
     ) -> AllocationReport:
         num_instances = len(arms)
-        num_solved = sum(1 for arm in arms if arm.solved)
-        coverage = (num_solved / num_instances) if num_instances > 0 else 0.0
         solved_ids = [arm.instance.instance_id for arm in arms if arm.solved]
         unsolved_ids = [arm.instance.instance_id for arm in arms if not arm.solved]
+        num_solved = len(solved_ids)
+        coverage = num_solved / num_instances if num_instances else 0.0
         return AllocationReport(
             method=self.method_name,
             total_budget=self.config.total_budget,
