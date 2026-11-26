@@ -19,25 +19,24 @@ cache. Query-agnostic eviction removes cache entries once, using only the contex
 cache can be reused for any later question. Existing query-agnostic scores (KVzip, KVzip+) judge an entry
 only by its contribution to the attention output **in its own layer**, ignoring how that contribution
 propagates through later layers to the model's final representation.
-
 ### Method
 Like KVzip, KVgrad appends a "Repeat the previous context:" prompt followed by a copy of the context, and
-uses these replay tokens $p \in P$ as probes. With $A^{\ell}_{p,c}$ the attention from probe $p$ to cache
-entry $c$ at layer $\ell$, $v^{\ell}_{c}$ its value vector, $W^{\ell}_{O}$ the output projection and
-$a^{\ell}_{p} = \sum_{t} A^{\ell}_{p,t}\, v^{\ell}_{t} W^{\ell}_{O}$ the attention output, the scores compared in
+uses these replay tokens $`p \in P`$ as probes. With $`A^{\ell}_{p,c}`$ the attention from probe $`p`$ to cache
+entry $`c`$ at layer $`\ell`$, $`v^{\ell}_{c}`$ its value vector, $`W^{\ell}_{O}`$ the output projection and
+$`a^{\ell}_{p} = \sum_{t} A^{\ell}_{p,t}\, v^{\ell}_{t} W^{\ell}_{O}`$ the attention output, the scores compared in
 this project are:
 
 | Score | Definition | Paper |
 |---|---|---|
-| KVzip | $S_{\ell,c} = \max_{p} A^{\ell}_{p,c}$ | Eq. (3) |
-| KVzip+ | $S_{\ell,c} = \max_{p} A^{\ell}_{p,c}\, \lVert v^{\ell}_{c} W^{\ell}_{O}\rVert_2 \,/\, \lVert x^{\ell}_{p}\rVert_2$ | Eq. (4) |
-| First-order Taylor | $\sum_{p} A^{\ell}_{p,c}\,\big(v^{\ell}_{c} W^{\ell}_{O}\big)\cdot \nabla_{a^{\ell}_{p}}\Phi$ | Eq. (6) |
-| Magnitude-aware bound | $\lvert T^{\ell}_{p,c}\rvert \le A^{\ell}_{p,c}\,\lVert v^{\ell}_{c} W^{\ell}_{O}\rVert_2\,\lVert \nabla_{a^{\ell}_{p}}\Phi\rVert_2$ | Eq. (7) |
-| **KVgrad** | $S_{\ell,c} = \max_{p}\, A^{\ell}_{p,c}\,\lVert v^{\ell}_{c} W^{\ell}_{O}\rVert_2\,\lVert \nabla_{a^{\ell}_{p}}\Phi\rVert_2$ | **Eq. (8)** |
+| KVzip | $`S_{\ell,c} = \max_{p} A^{\ell}_{p,c}`$ | Eq. (3) |
+| KVzip+ | $`S_{\ell,c} = \max_{p} A^{\ell}_{p,c}\, \lVert v^{\ell}_{c} W^{\ell}_{O}\rVert_2 \,/\, \lVert x^{\ell}_{p}\rVert_2`$ | Eq. (4) |
+| First-order Taylor | $`\sum_{p} A^{\ell}_{p,c}\,\big(v^{\ell}_{c} W^{\ell}_{O}\big)\cdot \nabla_{a^{\ell}_{p}}\Phi`$ | Eq. (6) |
+| Magnitude-aware bound | $`\lvert T^{\ell}_{p,c}\rvert \le A^{\ell}_{p,c}\,\lVert v^{\ell}_{c} W^{\ell}_{O}\rVert_2\,\lVert \nabla_{a^{\ell}_{p}}\Phi\rVert_2`$ | Eq. (7) |
+| **KVgrad** | $`S_{\ell,c} = \max_{p}\, A^{\ell}_{p,c}\,\lVert v^{\ell}_{c} W^{\ell}_{O}\rVert_2\,\lVert \nabla_{a^{\ell}_{p}}\Phi\rVert_2`$ | **Eq. (8)** |
 
-Here $\Phi = \sum_{p} \lVert x^{L+1}_{p} \rVert_2^2$ summarises the final hidden states, so
-$\nabla_{a^{\ell}_{p}}\Phi$ (one backward pass) measures how much the output depends on layer $\ell$'s
-attention output at probe $p$. Eq. (6) is the first-order estimate of removing $v^{\ell}_{c}$; Eq. (7) keeps only
+Here $`\Phi = \sum_{p} \lVert x^{L+1}_{p} \rVert_2^2`$ summarises the final hidden states, so
+$`\nabla_{a^{\ell}_{p}}\Phi`$ (one backward pass) measures how much the output depends on layer $`\ell`$'s
+attention output at probe $`p`$. Eq. (6) is the first-order estimate of removing $`v^{\ell}_{c}`$; Eq. (7) keeps only
 magnitudes because raw gradient directions are noisy; Eq. (8) replaces the sum over probes by a max so an
 entry that matters to a single probe is not averaged away. The lowest-scoring fraction of entries
 (`compression_ratio`) is evicted across all layers and heads.
