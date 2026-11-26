@@ -13,6 +13,7 @@ This is an engineering-oriented shortlist from the [official AdaptFM accepted-pa
 - [Fixed-Point Reasoners: Stable and Adaptive Deep Looped Models](https://openreview.net/forum?id=s66nL9PEw1) — adaptive depth/looped computation, not necessarily early exit.
 - [Learning Adaptive LLM Decoding](https://openreview.net/forum?id=14yhYy9m7S) — adaptive decoding policy.
 - [Resource-Adaptive Foundation Model Reasoning via Semantic Coverage](https://openreview.net/forum?id=suD1tqogTd) — input-adaptive reasoning budget.
+- A Tale of Two Temperatures: Simple, Efficient, and Diverse Sampling from Diffusion Language Models (ICML 2026) — tempered remasking (TLC/TCT) for diffusion LMs; adaptive parallel decoding that preserves sample diversity. Primary: `Adaptive_Stopping/methods/tempered_remasking/`; cross-lists `Performance_Metrics/` (pass@k, pass@NFE) and `LoRA/` (d1 GRPO adapters).
 
 ## Attention, context and token efficiency
 
