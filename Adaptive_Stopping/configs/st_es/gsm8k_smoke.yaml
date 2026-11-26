@@ -1,0 +1,28 @@
+# Small end-to-end check of the whole ST-ES pipeline (about 10 minutes on an 8 GB GPU).
+# Same settings as gsm8k.yaml, on 20 calibration / 20 evaluation problems and 3 live requests.
+# Results are NOT comparable to the main run (tiny subsets); this only checks that every stage runs.
+# Use a separate run directory. make_report writes to results/smoke_gsm8k/ and adds no metrics rows:
+#   python -m Adaptive_Stopping.experiments.st_es.run_all --config Adaptive_Stopping/configs/st_es/gsm8k_smoke.yaml --run-dir <tmp>
+#   python -m Adaptive_Stopping.experiments.st_es.make_report --config Adaptive_Stopping/configs/st_es/gsm8k_smoke.yaml --run-dir <tmp>
+report_name: smoke_gsm8k
+write_metrics: false
+paper_id: arxiv-2512.14332
+method: st_es
+backbone_id: text.deepseek-r1-distill-qwen-1.5b
+prompt_id: math_cot_boxed.v1
+seed: 42
+max_new_tokens: 4096
+sampling: {do_sample: true, temperature: 0.6, top_p: 0.95, top_k: 50}
+calibration: {dataset_id: text.gsm8k.train, num_samples: 20, offset: 0}
+evaluation: {dataset_id: text.gsm8k.test, num_samples: 20, offset: 0}
+calibration_dataset: text.gsm8k.train
+step_delimiter: "\n\n"
+tagger: keyword_reasontype.v1
+grid:
+  tags: all_except_other
+  deltas: [0, 20]
+  step_counts: default
+targets: [0.85, 0.90, 0.95]
+exit_prompt_id: exit_boxed.v1
+answer_budget: 100
+live: {num_samples: 3, targets: [0.90], kinds: [st_es]}
