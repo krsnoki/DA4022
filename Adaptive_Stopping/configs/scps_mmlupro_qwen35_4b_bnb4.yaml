@@ -3,14 +3,14 @@
 # Paper settings: Table 8 and Appendix H.2 of the SCPS paper.
 experiment_id: scps_mmlupro_qwen35_4b_bnb4_hf
 paper_id: openreview.suD1tqogTd
-report_status: approximate      # plug-in surrogate replaces the unreleased learned bundle
+report_status: approximate      # plug-in surrogate, Qwen3.5-4B NF4 instead of Qwen3.5-9B bf16
 calibration_dataset: null       # training-free surrogate, no calibration split used
 warmup_questions: 1             # run once and discard before timing
 
 backbone:
   type: hf
   id: Qwen/Qwen3.5-4B
-  revision: null                # PIN a full commit hash before reporting results
+  revision: 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a   # Hub main on 2026-11-26 (last modified 2026-03-02)
   dtype: bfloat16
   device: cuda
   kwargs:
@@ -20,7 +20,7 @@ backbone:
 dataset:
   id: text.mmlu_pro.test
   split: test
-  revision: null                # PIN the dataset commit before reporting results
+  revision: b189ec765aa7ed75c8acfea42df31fdae71f97be   # Hub main on 2026-11-26 (last modified 2026-05-02)
   local_path: null              # or a local .jsonl/.parquet export of the test split
   num_questions: 256
   seed: 47

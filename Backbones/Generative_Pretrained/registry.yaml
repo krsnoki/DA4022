@@ -67,7 +67,7 @@
   objective: next-token prediction pre-training followed by post-training
   weights_source: huggingface
   weights_uri: https://huggingface.co/Qwen/Qwen3.5-4B
-  revision: unpinned
+  revision: 851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
   license: apache-2.0
   num_parameters: 4B (family naming, rounded)
   input_spec:
@@ -76,7 +76,7 @@
   parent_backbone: unknown
   fine_tuning_dataset: unknown
   wrappers: [hf_causal_lm.HFCausalLM]
-  notes: Scaled-down substitute for Qwen3.5-9B on 4 GB GPUs.
+  notes: Scaled-down substitute for Qwen3.5-9B on 4 GB GPUs; used for the reported SCPS run. Model card MODEL_CARD_qwen3_5_4b.md.
 
 - id: text.qwen3_5_2b.post_trained
   name: Qwen3.5-2B

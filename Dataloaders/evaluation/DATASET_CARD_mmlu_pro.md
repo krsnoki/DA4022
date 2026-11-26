@@ -1,12 +1,12 @@
 # Dataset card: MMLU-Pro
 
 - **Dataset ID:** `text.mmlu_pro.test`
-- **Source URL / version:** https://huggingface.co/datasets/TIGER-Lab/MMLU-Pro, revision not pinned yet (set `dataset.revision` to a full commit hash before reporting)
+- **Source URL / version:** https://huggingface.co/datasets/TIGER-Lab/MMLU-Pro at `b189ec765aa7ed75c8acfea42df31fdae71f97be` (Hub `main` on 2026-11-26; last modified 2026-05-02), pinned in `scps_mmlupro_qwen35_4b_bnb4.yaml`
 - **License/access terms:** MIT (dataset card)
 - **Modality/task:** text, multiple-choice question answering (up to 10 options)
 - **Role:** benchmark
 - **Split:** `test` (`validation` has 70 rows and is not used by SCPS)
-- **Number of examples:** 12,032 questions in total per the dataset card's discipline table; the Hub viewer shows the test split as "12k rows" (rounded) and validation as 70 rows
+- **Number of examples:** test 12,032 and validation 70 (confirmed by `datasets` when loading the pinned revision); SCPS uses a 256-question sample
 - **Fields/labels:** `question_id` (int), `question` (str), `options` (list of 10 str, padded with `"N/A"`), `answer` (letter), `answer_index` (0 to 9), `cot_content`, `category` (14 classes), `src`
 - **Preprocessing ID/version:** `mmlu_pro.strip_na.v1` (remove trailing `"N/A"` padding; letters and `answer_index` unchanged)
 - **Tokenizer/processor revision:** not applicable at load time; prompts are tokenized by the backbone wrapper
@@ -20,12 +20,12 @@ modality: text
 task: multiple_choice_qa
 source_url: https://huggingface.co/datasets/TIGER-Lab/MMLU-Pro
 license: MIT
-version: unknown            # pin the Hub commit
+version: b189ec765aa7ed75c8acfea42df31fdae71f97be
 role: evaluation
 split: test
 preprocessing_id: mmlu_pro.strip_na.v1
 seed: 47
-num_examples: 256           # sampled; full split size unverified beyond "12k rows"
+num_examples: 256           # sampled from 12,032
 labels_available: true
 notes: The SCPS paper's 256 held-out IDs are not public, so this sample differs from the paper's.
 ```

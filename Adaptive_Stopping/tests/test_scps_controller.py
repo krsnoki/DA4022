@@ -185,3 +185,30 @@ def test_run_script_separate_invocations_and_summary(tmp_path):
     assert len((tmp_path / "per_question_scps.jsonl").read_text().splitlines()) == 6
     lines = (tmp_path / "results.csv").read_text().splitlines()
     assert len(lines) == 1 + 3
+
+
+def test_report_renders_from_summary(tmp_path, capsys):
+    from Adaptive_Stopping.experiments.scps_mmlupro import report, run
+
+    cfg = "Adaptive_Stopping/configs/scps_synthetic_smoke.yaml"
+    run.main(["--config", cfg, "--out-dir", str(tmp_path), "--limit", "5",
+              "--methods", "scps,self_consistency,option_topk"])
+    capsys.readouterr()
+    report.main([str(tmp_path)])
+    text = capsys.readouterr().out
+    assert "| SCPS |" in text and "Paired bootstrap" in text and "Gold in top-K" in text
+
+
+def test_reported_run_summary_matches_per_question_files():
+    """The committed summary must be reproducible from the committed per-question files."""
+    import json
+    from pathlib import Path
+
+    from Adaptive_Stopping.experiments.scps_mmlupro import run
+
+    d = Path("Adaptive_Stopping/experiments/scps_mmlupro/reported_runs/qwen35_4b_bnb4_rtx3050")
+    s = json.loads((d / "summary.json").read_text(encoding="utf-8"))
+    for m, v in s["methods"].items():
+        recs = [json.loads(x) for x in (d / f"per_question_{m}.jsonl").read_text(encoding="utf-8").splitlines() if x]
+        assert run.method_summary(recs)["pass_count"] == v["pass_count"]
+        assert len(recs) == 256 and v["budget_violations"] == 0

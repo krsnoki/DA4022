@@ -24,4 +24,4 @@ Expose model loading and generation, but keep dataset prompts and batches in `Da
 | `mock_mcq_lm.py` | none | synthetic sampler for tests |
 | `factory.py` | | builds a wrapper from an experiment config block |
 
-Registry entries: `registry.yaml`. Model card: `MODEL_CARD_qwen3_5_9b.md`.
+Registry entries: `registry.yaml`. Model cards: `MODEL_CARD_qwen3_5_9b.md` (paper setting), `MODEL_CARD_qwen3_5_4b.md` (reported run).
