@@ -153,3 +153,35 @@ def test_config_from_dict_rejects_unknown_keys():
     cfg = SCPSConfig.from_dict({"sample_sizes": [1, 2]})
     assert cfg.sample_sizes == (1, 2)
     assert dataclasses.replace(cfg, max_rounds=3).max_rounds == 3
+
+
+def test_option_topk_control(items):
+    from Adaptive_Stopping.baselines.option_topk import OptionTopK, OptionTopKConfig
+
+    res = OptionTopK(MockMCQBackbone(items), PAPER_BUDGET, OptionTopKConfig(k=3)).run(items[0])
+    probs = res.metadata["record_extra"]["root_probs"]
+    assert len(res.completions) == 3 and res.ledger["rollouts"] == 0 and res.ledger["decode_tokens"] == 0
+    top = sorted(probs, key=lambda a: -probs[a])[:3]
+    assert res.answers == top
+    none = OptionTopK(NoScoreMockBackbone(items), PAPER_BUDGET).run(items[0])
+    assert none.completions == [] and none.stop_reason == "no_option_scores"
+
+
+def test_run_script_separate_invocations_and_summary(tmp_path):
+    import json
+
+    from Adaptive_Stopping.experiments.scps_mmlupro import run
+
+    cfg = "Adaptive_Stopping/configs/scps_synthetic_smoke.yaml"
+    run.main(["--config", cfg, "--out-dir", str(tmp_path), "--limit", "6", "--methods", "scps,option_topk"])
+    run.main(["--config", cfg, "--out-dir", str(tmp_path), "--limit", "6", "--methods", "self_consistency", "--resume"])
+    s = json.loads((tmp_path / "summary.json").read_text())
+    assert set(s["methods"]) == {"scps", "option_topk", "self_consistency"}
+    assert s["paired_vs_scps"]["self_consistency"]["n"] == 6
+    assert s["option_topk_control"]["n"] == 6 and 0 <= s["option_topk_control"]["matched_k_pass"] <= 1
+    assert (tmp_path / "run_meta_scps.json").exists()
+    # resume keeps finished questions and does not duplicate them
+    run.main(["--config", cfg, "--out-dir", str(tmp_path), "--limit", "6", "--methods", "scps", "--resume"])
+    assert len((tmp_path / "per_question_scps.jsonl").read_text().splitlines()) == 6
+    lines = (tmp_path / "results.csv").read_text().splitlines()
+    assert len(lines) == 1 + 3

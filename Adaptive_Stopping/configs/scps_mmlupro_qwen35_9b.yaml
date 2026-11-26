@@ -64,3 +64,5 @@ methods:
     horizon: 64
     semantic_pruning: true
     overlap_threshold: 0.75
+  option_topk:
+    k: 8

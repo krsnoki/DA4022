@@ -51,6 +51,7 @@ methods:
     repeat_penalty: 0.25
   self_consistency:
     temperature: 0.6
+    samples_per_call: 4         # 16 samples in one batch runs out of memory on a 4 GB GPU
   tree_prefix:
     temperature: 0.6
     beam: 2
@@ -63,3 +64,5 @@ methods:
     horizon: 64
     semantic_pruning: true
     overlap_threshold: 0.75
+  option_topk:
+    k: 8

@@ -69,7 +69,8 @@ def test_portfolio_metrics():
 
 
 def test_schema_matches_metrics_readme():
-    text = (REPO / "Performance_Metrics" / "README_metrics.md").read_text()
+    # explicit UTF-8 and CRLF normalization: Windows checkouts default to cp1252 and CRLF
+    text = (REPO / "Performance_Metrics" / "README_metrics.md").read_text(encoding="utf-8").replace("\r\n", "\n")
     header = re.search(r"```text\n(experiment_id[^\n]*)\n```", text).group(1)
     assert header.split(",") == COLUMNS
 
