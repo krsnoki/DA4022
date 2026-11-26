@@ -1,6 +1,7 @@
 # COAT: COrrelation-Aware Orthogonal Transform for LLM Quantization
 
 - **Paper / OpenReview** Indranil Patra, Azhar Yousuf, Manu Mathew and Chandra Sekhar Seelamantula, 2026. [AdaptFM paper entry](https://openreview.net/forum?id=6JGbm48VoG) · [Paper PDF](https://openreview.net/pdf/00398473d87c76f95dace60f68c2caf0abb298b2.pdf)
+- **Method version** COAT W4A4KV4, 2026 paper, clean-room PyTorch v1 (packed INT4 storage and FP16 GPU compute).
 - **Primary module** `Quantization_and_Pruning/`
 - **Secondary modules** `Backbones/`, `Dataloaders/` and `Performance_Metrics/`
 - **Owner / reviewer** Unassigned
