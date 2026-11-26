@@ -9,7 +9,7 @@ Status: `partial-reproduction`. Results, figures and limitations: [`PAPER_CARD.m
 Our implementation of the scores lives in [`Attention/methods/context_compression/kvgrad/`](../../methods/context_compression/kvgrad/README.md).
 
 - [`PAPER_CARD.md`](PAPER_CARD.md): paper implementation card (method, expected and measured results, limitations)
-- [`PROGRESS.md`](PROGRESS.md): log of what has been done, problems met and fixes, next steps
+
 
 ## What `run_ruler.py` measures
 
