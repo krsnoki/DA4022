@@ -186,6 +186,8 @@ def main(argv=None):
     rows = []
     device = summary["environment"].get("device_name") or meta.get("device") or summary["environment"]["processor"]
     framework = ";".join(f"{k}={meta[k]}" for k in meta if k.endswith("_version")) or None
+    framework = f"python={summary['environment']['python']}" + (f";{framework}" if framework else "")
+    r3 = lambda x: None if x is None else round(x, 3)
     mem_val = mem["cuda_peak_allocated_mb"] if mem["cuda_peak_allocated_mb"] is not None else mem["process_peak_rss_mb"]
     mem_label = "cuda_peak_allocated" if mem["cuda_peak_allocated_mb"] is not None else "process_peak_rss"
     for name, s in summary["methods"].items():
@@ -196,11 +198,11 @@ def main(argv=None):
             device=device, framework_version=framework, dtype=meta.get("dtype"), batch_size=1,
             input_length=round(s["mean_prompt_tokens"], 2), output_length=round(s["mean_decode_tokens"], 2),
             quality_metric=f"portfolio_pass@{budget.max_rollouts}", quality_value=round(s["pass_at_n"], 4),
-            latency_median_ms=s["latency_median_ms"], latency_p95_ms=s["latency_p95_ms"],
-            throughput=s["decode_tokens_per_s"], peak_memory_mb=mem_val, energy_j=None,
+            latency_median_ms=r3(s["latency_median_ms"]), latency_p95_ms=r3(s["latency_p95_ms"]),
+            throughput=r3(s["decode_tokens_per_s"]), peak_memory_mb=r3(mem_val), energy_j=None,
             status=cfg["report_status"],
             notes=(f"n={len(items)}; mean_total_tokens={s['mean_total_tokens']:.2f} (decode+aux); "
-                   f"unique={s['mean_unique_answers']:.3f}; dup_tok={s['mean_dup_token_frac']}; "
+                   f"unique={s['mean_unique_answers']:.3f}; dup_tok={r3(s['mean_dup_token_frac'])}; "
                    f"majority_acc={s['majority_accuracy']:.4f}; latency=per-question wall clock; "
                    f"throughput=decode tok/s; memory={mem_label} for whole process (shared across methods); "
                    f"energy not_measured"),
