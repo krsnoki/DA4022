@@ -1,0 +1,117 @@
+# Dataset registry. Experiment configs refer to these IDs instead of
+# re-implementing loaders. Field meanings: README_dataloader.md.
+# Revisions, licences and split sizes were read from the Hugging Face Hub
+# (API + dataset cards at the pinned revision) on 2026-11-25. Anything not
+# stated by an official source is written as `unknown`.
+#
+# Note: open PR #7 (XShare) also proposes an entry `text.gsm8k.test` for the
+# same HF revision. If both land, the two entries must be merged into one.
+
+text.gsm8k.train:
+  id: text.gsm8k.train
+  name: GSM8K train split
+  modality: text
+  task: grade-school math word problems with a numeric final answer
+  source_url: https://huggingface.co/datasets/openai/gsm8k
+  hf_path: openai/gsm8k
+  hf_config: main
+  license: mit
+  version: 740312add88f781978c0658806c59bc2815b9866  # HF dataset revision
+  role: calibration
+  split: train
+  files: [main/train-00000-of-00001.parquet]
+  num_examples: 7473
+  fields: {question: question, answer: "answer (final number after '####')"}
+  gold_format: number
+  sampling: >-
+    random.Random(seed).shuffle over row indices of the pinned split, then
+    take rows [offset, offset + num_samples)
+  seed: 42
+  preprocessing_id: math_cot_boxed.v1
+  labels_available: true
+  loader: Dataloaders.evaluation.gsm8k_math.load_math_reasoning
+  card: Dataloaders/evaluation/gsm8k_math.md
+  notes: Calibration only (ST-ES threshold selection). Never used for final evaluation.
+
+text.gsm8k.test:
+  id: text.gsm8k.test
+  name: GSM8K test split
+  modality: text
+  task: grade-school math word problems with a numeric final answer
+  source_url: https://huggingface.co/datasets/openai/gsm8k
+  hf_path: openai/gsm8k
+  hf_config: main
+  license: mit
+  version: 740312add88f781978c0658806c59bc2815b9866
+  role: test
+  split: test
+  files: [main/test-00000-of-00001.parquet]
+  num_examples: 1319
+  fields: {question: question, answer: "answer (final number after '####')"}
+  gold_format: number
+  sampling: same as text.gsm8k.train
+  seed: 42
+  preprocessing_id: math_cot_boxed.v1
+  labels_available: true
+  loader: Dataloaders.evaluation.gsm8k_math.load_math_reasoning
+  card: Dataloaders/evaluation/gsm8k_math.md
+  notes: Held-out evaluation only. Never used for calibration.
+
+text.math.train:
+  id: text.math.train
+  name: MATH (Hendrycks et al.) train split, all 7 subjects
+  modality: text
+  task: competition mathematics with a LaTeX final answer
+  source_url: https://huggingface.co/datasets/EleutherAI/hendrycks_math
+  hf_path: EleutherAI/hendrycks_math
+  hf_config: [algebra, counting_and_probability, geometry, intermediate_algebra, number_theory, prealgebra, precalculus]
+  license: mit
+  version: 21a5633873b6a120296cce3e2df9d5550074f4a3
+  role: calibration
+  split: train
+  files:  # concatenated in this order
+    - algebra/train-00000-of-00001.parquet
+    - counting_and_probability/train-00000-of-00001.parquet
+    - geometry/train-00000-of-00001.parquet
+    - intermediate_algebra/train-00000-of-00001.parquet
+    - number_theory/train-00000-of-00001.parquet
+    - prealgebra/train-00000-of-00001.parquet
+    - precalculus/train-00000-of-00001.parquet
+  num_examples: 7500  # sum over the 7 subject configs; checked by the loader at run time
+  fields: {question: problem, answer: "solution (gold = content of the last \\boxed{...})", level: level, subject: type}
+  gold_format: latex
+  sampling: >-
+    subjects concatenated in the order of hf_config, then the same seeded
+    shuffle as text.gsm8k.train
+  seed: 42
+  preprocessing_id: math_cot_boxed.v1
+  labels_available: true
+  loader: Dataloaders.evaluation.gsm8k_math.load_math_reasoning
+  card: Dataloaders/evaluation/gsm8k_math.md
+  notes: >-
+    Calibration only. MATH-500 is drawn from the MATH *test* split, so this
+    train split does not overlap with text.math500.test.
+
+text.math500.test:
+  id: text.math500.test
+  name: MATH-500
+  modality: text
+  task: competition mathematics with a LaTeX final answer
+  source_url: https://huggingface.co/datasets/HuggingFaceH4/MATH-500
+  hf_path: HuggingFaceH4/MATH-500
+  hf_config: null
+  license: unknown  # the HF card states no licence; the subset comes from openai/prm800k and the MATH dataset (MIT)
+  version: 6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be
+  role: test
+  split: test
+  files: [test.jsonl]
+  num_examples: 500
+  fields: {question: problem, answer: answer, level: level, subject: subject}
+  gold_format: latex
+  sampling: same as text.gsm8k.train
+  seed: 42
+  preprocessing_id: math_cot_boxed.v1
+  labels_available: true
+  loader: Dataloaders.evaluation.gsm8k_math.load_math_reasoning
+  card: Dataloaders/evaluation/gsm8k_math.md
+  notes: Held-out evaluation only. Subset of the MATH test split chosen in "Let's Verify Step by Step".
