@@ -1,0 +1,22 @@
+# Dependencies for the XShare implementation (Mixture_of_Experts/routing/xshare,
+# execution_layouts/xshare_hf.py, experiments/xshare) and the loaders it uses.
+# These are the exact versions every reported result was produced with
+# (Python 3.12.3, Ubuntu 24.04, NVIDIA driver 570.211).
+#
+# Install PyTorch first, from the index matching your CUDA setup. Results were
+# produced with the CUDA 12.9 build:
+#   pip install "torch==2.13.0" --index-url https://download.pytorch.org/whl/cu129
+# Then:
+#   pip install -r Mixture_of_Experts/requirements-xshare.txt
+#
+# The core selection code and its unit tests need only torch and pytest.
+
+transformers==5.19.0
+datasets==5.2.0
+huggingface_hub==2.4.0
+tokenizers==0.23.3
+safetensors==0.8.0
+numpy==2.5.5
+PyYAML==6.0.3
+matplotlib==3.11.2
+pytest==9.2.0

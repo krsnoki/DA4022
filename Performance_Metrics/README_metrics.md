@@ -51,6 +51,14 @@ experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,sp
 
 Unknown/not-measured quantities should be empty/null plus a `status` or notes entry—never `0` unless zero was actually measured.
 
+### Result files
+
+One row per implemented paper. Each linked CSV follows the schema above, with one row per configuration and the unmodified baseline included.
+
+| Paper / method | Module | Status | Results |
+|---|---|---|---|
+| XShare ([OpenReview](https://openreview.net/forum?id=KmY5XUgEYe)) | `Mixture_of_Experts/` | partial-reproduction | [main sweep](../Mixture_of_Experts/experiments/xshare/results/gsm8k/results.csv), [overhead controls](../Mixture_of_Experts/experiments/xshare/results/gsm8k_overhead/results.csv) |
+
 ## Recommended plots
 
 - quality vs. latency;
