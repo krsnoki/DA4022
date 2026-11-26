@@ -3,8 +3,7 @@
 - **Paper / OpenReview:** https://openreview.net/forum?id=9Joja0tx5c (AdaptFM Workshop at ICML 2026)
 - **Primary module:** `Adaptive_Stopping`
 - **Secondary modules:** `Backbones`, `Dataloaders`, `Performance_Metrics`
-- **Owner / reviewer:** `@Victorvkk38596` (Vasudev Krishna)
-- **Team:** Vasudev Krishna, G Jayagiri, Uditya Shekhawat, Pranav Deshmukh, Arkaprava Paul, Harshit Goel, and T Chethan
+- **Team:** Vasudev Krishna (`@Victorvkk38596`) - 230102113, G Jayagiri, Uditya Shekhawat, Pranav Deshmukh, Arkaprava Paul, Harshit Goel, and T Chethan
 - **Status:** partial-reproduction
 - **Upstream code / licence:** https://github.com/allen4747/DIPA (placeholder repository with `README.md` only; no source code or licence published as of 2026-11-26)
 - **Backbone IDs:** `llm.qwen2_5_math_1_5b_instruct.generative` (`Qwen/Qwen2.5-Math-1.5B-Instruct`, Apache-2.0, `Backbones/registry.yaml`). Deferred out of initial PR scope: `Qwen2.5-1.5B-Instruct` (non-verifiable GPQA-Diamond), `Llama3.1-8B` (gated).
