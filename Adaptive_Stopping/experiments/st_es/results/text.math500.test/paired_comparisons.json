@@ -1,0 +1,67 @@
+{
+  "method": "paired bootstrap over the same held-out problems, 2000 resamples, seed 0; diff = accuracy(a) - accuracy(b)",
+  "st_es_vs_step_count": {
+    "0.85": {
+      "st_es": "st_es:self_talk:3",
+      "step_count": "step_count:40",
+      "diff": -0.013333333333333334,
+      "ci_low": -0.06666666666666667,
+      "ci_high": 0.04666666666666667,
+      "n": 150,
+      "a_only": 8,
+      "b_only": 10
+    },
+    "0.9": {
+      "st_es": "st_es:self_talk:4",
+      "step_count": "step_count:60",
+      "diff": -0.05333333333333334,
+      "ci_low": -0.10666666666666667,
+      "ci_high": -0.006666666666666667,
+      "n": 150,
+      "a_only": 4,
+      "b_only": 12
+    },
+    "0.95": {
+      "st_es": "st_es:self_talk:6",
+      "step_count": "step_count:70",
+      "diff": -0.02,
+      "ci_low": -0.06666666666666667,
+      "ci_high": 0.02,
+      "n": 150,
+      "a_only": 4,
+      "b_only": 7
+    }
+  },
+  "config_vs_standard": {
+    "st_es:self_talk:3@0.85": {
+      "acc_diff_vs_standard": -0.0867,
+      "ci95_low": -0.1467,
+      "ci95_high": -0.0333
+    },
+    "st_es:self_talk:4@0.9": {
+      "acc_diff_vs_standard": -0.08,
+      "ci95_low": -0.14,
+      "ci95_high": -0.0267
+    },
+    "st_es:self_talk:6@0.95": {
+      "acc_diff_vs_standard": -0.04,
+      "ci95_low": -0.0933,
+      "ci95_high": 0.0067
+    },
+    "step_count:40@0.85": {
+      "acc_diff_vs_standard": -0.0733,
+      "ci95_low": -0.1333,
+      "ci95_high": -0.0133
+    },
+    "step_count:60@0.9": {
+      "acc_diff_vs_standard": -0.0267,
+      "ci95_low": -0.0733,
+      "ci95_high": 0.02
+    },
+    "step_count:70@0.95": {
+      "acc_diff_vs_standard": -0.02,
+      "ci95_low": -0.0667,
+      "ci95_high": 0.02
+    }
+  }
+}

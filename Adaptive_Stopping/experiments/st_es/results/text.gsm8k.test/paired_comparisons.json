@@ -1,0 +1,67 @@
+{
+  "method": "paired bootstrap over the same held-out problems, 2000 resamples, seed 0; diff = accuracy(a) - accuracy(b)",
+  "st_es_vs_step_count": {
+    "0.85": {
+      "st_es": "st_es:verification:0",
+      "step_count": "step_count:14",
+      "diff": 0.065,
+      "ci_low": 0.02,
+      "ci_high": 0.115,
+      "n": 200,
+      "a_only": 17,
+      "b_only": 4
+    },
+    "0.9": {
+      "st_es": "st_es:verification:0",
+      "step_count": "step_count:16",
+      "diff": 0.02,
+      "ci_low": -0.02,
+      "ci_high": 0.065,
+      "n": 200,
+      "a_only": 11,
+      "b_only": 7
+    },
+    "0.95": {
+      "st_es": "st_es:exploration:0",
+      "step_count": "step_count:20",
+      "diff": -0.01,
+      "ci_low": -0.045,
+      "ci_high": 0.025,
+      "n": 200,
+      "a_only": 5,
+      "b_only": 7
+    }
+  },
+  "config_vs_standard": {
+    "st_es:verification:0@0.85": {
+      "acc_diff_vs_standard": -0.015,
+      "ci95_low": -0.055,
+      "ci95_high": 0.02
+    },
+    "st_es:verification:0@0.9": {
+      "acc_diff_vs_standard": -0.015,
+      "ci95_low": -0.055,
+      "ci95_high": 0.02
+    },
+    "st_es:exploration:0@0.95": {
+      "acc_diff_vs_standard": 0.0,
+      "ci95_low": -0.03,
+      "ci95_high": 0.035
+    },
+    "step_count:14@0.85": {
+      "acc_diff_vs_standard": -0.08,
+      "ci95_low": -0.13,
+      "ci95_high": -0.03
+    },
+    "step_count:16@0.9": {
+      "acc_diff_vs_standard": -0.035,
+      "ci95_low": -0.075,
+      "ci95_high": 0.005
+    },
+    "step_count:20@0.95": {
+      "acc_diff_vs_standard": 0.01,
+      "ci95_low": -0.03,
+      "ci95_high": 0.05
+    }
+  }
+}

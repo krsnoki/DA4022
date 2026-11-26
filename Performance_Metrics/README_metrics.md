@@ -51,6 +51,31 @@ experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,sp
 
 Unknown/not-measured quantities should be empty/null plus a `status` or notes entry—never `0` unless zero was actually measured.
 
+### Result files
+
+| Paper / method | File | Rows |
+|---|---|---|
+| Step-Tagging Early-Stopping (ST-ES), `Adaptive_Stopping/` | [`results/st_es.csv`](results/st_es.csv) | Replay rows (quality and generated tokens on held-out subsets, no runtime) and live rows (measured latency, throughput and peak memory at batch size 1), each with its no-stopping baseline. The paper's prompt-guided baselines are in `results/st_es_prompt_guided.csv`. Details: [`Adaptive_Stopping/methods/step_tagging/PAPER_CARD.md`](../Adaptive_Stopping/methods/step_tagging/PAPER_CARD.md). |
+
+#### ST-ES rows (schema fields; every field of each row is in `results/st_es.csv`)
+
+Backbone `text.deepseek-r1-distill-qwen-1.5b` @ `ad9f0ae`, seed 42, bf16, RTX 4060 Laptop GPU 8 GB, quality = Math-Verify pass@1. ST-ES uses the configuration calibrated for 90% of standard accuracy on the train split. Replay rows have no runtime fields; live rows are measured at batch size 1 on the first 30 (GSM8K) or 10 (MATH-500) test problems. Energy: `not_measured`.
+
+| experiment_id | dataset_id | quality_value | latency_median_ms | latency_p95_ms | throughput | peak_memory_mb | status |
+|---|---|---:|---:|---:|---:|---:|---|
+| `st_es-text.gsm8k.test-replay-standard` (baseline) | text.gsm8k.test (n=200) | 0.830 | | | | | partial |
+| `st_es-text.gsm8k.test-replay-st_es@0.90` | text.gsm8k.test (n=200) | 0.815 | | | | | approximate |
+| `st_es-text.gsm8k.test-live-standard` (baseline) | text.gsm8k.test (n=30) | 0.900 | 45229.3 | 123128.0 | 27.6 tok/s | 3599.1 | partial |
+| `st_es-text.gsm8k.test-live-st_es@0.90` | text.gsm8k.test (n=30) | 0.700 | 21504.1 | 85181.4 | 27.4 tok/s | 3599.1 | approximate |
+| `st_es-text.math500.test-replay-standard` (baseline) | text.math500.test (n=150) | 0.807 | | | | | partial |
+| `st_es-text.math500.test-replay-st_es@0.90` | text.math500.test (n=150) | 0.727 | | | | | approximate |
+| `st_es-text.math500.test-live-standard` (baseline) | text.math500.test (n=10) | 0.700 | 71286.8 | 375400.3 | 23.8 tok/s | 3798.9 | partial |
+| `st_es-text.math500.test-live-st_es@0.90` | text.math500.test (n=10) | 0.800 | 50566.9 | 79347.7 | 27.5 tok/s | 3547.6 | approximate |
+
+The live accuracies come from 30 and 10 problems and are not accuracy estimates; use the replay rows for quality.
+
+Shared quality scorers live in [`quality/`](quality/): `math_answer.py` checks math final answers with Math-Verify.
+
 ## Recommended plots
 
 - quality vs. latency;

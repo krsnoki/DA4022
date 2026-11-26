@@ -1,0 +1,73 @@
+{
+  "dataset_id": "text.gsm8k.test",
+  "num_samples": 30,
+  "seed": 42,
+  "max_new_tokens": 4096,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.6,
+    "top_p": 0.95,
+    "top_k": null
+  },
+  "batch_size": 1,
+  "warmup_requests": 1,
+  "timing_scope": "prompt token IDs on GPU -> final answer tokens; excludes tokenisation and model load; includes tagging and the forced answer; CUDA-synchronised wall clock",
+  "memory_scope": "torch.cuda.max_memory_allocated / max_memory_reserved, reset per request",
+  "scorer": "math_verify.answer_section.v1",
+  "backbone": {
+    "backbone_id": "text.deepseek-r1-distill-qwen-1.5b",
+    "hf_path": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+    "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+    "license": "mit",
+    "dtype": "bfloat16",
+    "device": "cuda",
+    "transformers_version": "5.24.1",
+    "torch_version": "2.11.0+cu128",
+    "num_parameters_counted": 1777088000,
+    "attn_implementation": "sdpa",
+    "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "gpu_total_memory_mb": 8188,
+    "cuda_runtime": "12.8"
+  },
+  "selected_from": "<run_dir>/replay/text.gsm8k.train/math_cot_boxed.v1_n200_o0_s42_cap4096/grid/selected.json",
+  "wall_s": 2617.415462732315,
+  "policies": {
+    "standard": {
+      "config": null,
+      "n": 30,
+      "accuracy": 0.9,
+      "mean_generated_tokens": 1564.3,
+      "latency_mean_s": 56.72780838334778,
+      "latency_median_s": 45.22927150002215,
+      "latency_p95_s": 123.12803474500542,
+      "ttft_median_s": 0.04368055006489158,
+      "decode_tokens_per_s": 27.5755408957275,
+      "policy_time_total_s": 0.0,
+      "policy_time_per_step_ms": 0.0,
+      "stop_rate": 0.0,
+      "peak_allocated_mb_max": 3599.0693359375,
+      "peak_reserved_mb_max": 4064.0
+    },
+    "st_es@0.90:st_es:verification:0": {
+      "config": {
+        "kind": "st_es",
+        "tag": "verification",
+        "delta": 0,
+        "k": null
+      },
+      "n": 30,
+      "accuracy": 0.7,
+      "mean_generated_tokens": 834.0333333333333,
+      "latency_mean_s": 30.492884323311348,
+      "latency_median_s": 21.50408330000937,
+      "latency_p95_s": 85.18135476991284,
+      "ttft_median_s": 0.04264820006210357,
+      "decode_tokens_per_s": 27.351736375286986,
+      "policy_time_total_s": 0.10465250047855079,
+      "policy_time_per_step_ms": 0.19745754807273735,
+      "stop_rate": 0.8666666666666667,
+      "peak_allocated_mb_max": 3599.0693359375,
+      "peak_reserved_mb_max": 4064.0
+    }
+  }
+}
