@@ -10,6 +10,7 @@ Reads <results>/summary.csv (and <results>/*/metrics.json for the per-task table
 from __future__ import annotations
 
 import argparse
+import numpy as np
 import json
 import re
 from pathlib import Path
