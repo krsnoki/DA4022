@@ -1,0 +1,2 @@
+name, memory.total [MiB], driver_version
+NVIDIA GeForce RTX 3050 Laptop GPU, 4096 MiB, 610.91

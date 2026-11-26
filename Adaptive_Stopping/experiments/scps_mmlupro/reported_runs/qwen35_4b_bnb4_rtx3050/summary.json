@@ -1,0 +1,529 @@
+{
+  "experiment_id": "scps_mmlupro_qwen35_4b_bnb4_hf",
+  "num_questions": 256,
+  "budget": {
+    "max_rollouts": 16,
+    "max_new_tokens": 192,
+    "decode_token_limit": 3072,
+    "total_token_limit": 30000
+  },
+  "methods": {
+    "scps": {
+      "n": 256,
+      "pass_at_n": 0.87109375,
+      "pass_count": 223,
+      "majority_accuracy": 0.37109375,
+      "mean_total_tokens": 38.39453125,
+      "mean_decode_tokens": 33.39453125,
+      "mean_aux_tokens": 5.0,
+      "mean_prompt_tokens": 1365.796875,
+      "mean_rollouts": 14.82421875,
+      "mean_unique_answers": 4.96484375,
+      "mean_dup_token_frac": 0.6487047147203397,
+      "null_completions": 7,
+      "latency_median_ms": 15624.956799998472,
+      "latency_p95_ms": 65561.97907499882,
+      "latency_max_ms": 2901677.929999998,
+      "decode_tokens_per_s": 1.033888147028497,
+      "budget_violations": 0,
+      "stop_reasons": {
+        "answer_class_quota": 30,
+        "budget_exhausted": 188,
+        "max_rounds": 15,
+        "no_positive_action": 23
+      }
+    },
+    "self_consistency": {
+      "n": 256,
+      "pass_at_n": 0.6328125,
+      "pass_count": 162,
+      "majority_accuracy": 0.375,
+      "mean_total_tokens": 32.0,
+      "mean_decode_tokens": 32.0,
+      "mean_aux_tokens": 0.0,
+      "mean_prompt_tokens": 908.921875,
+      "mean_rollouts": 16.0,
+      "mean_unique_answers": 2.38671875,
+      "mean_dup_token_frac": 0.850830078125,
+      "null_completions": 0,
+      "latency_median_ms": 7221.73574999033,
+      "latency_p95_ms": 36998.6599249969,
+      "latency_max_ms": 229772.04070000153,
+      "decode_tokens_per_s": 2.557745415755907,
+      "budget_violations": 0,
+      "stop_reasons": {
+        "budget_exhausted": 256
+      }
+    },
+    "tree_prefix": {
+      "n": 256,
+      "pass_at_n": 0.64453125,
+      "pass_count": 165,
+      "majority_accuracy": 0.38671875,
+      "mean_total_tokens": 38.7890625,
+      "mean_decode_tokens": 33.71875,
+      "mean_aux_tokens": 5.0703125,
+      "mean_prompt_tokens": 1820.4296875,
+      "mean_rollouts": 16.0,
+      "mean_unique_answers": 2.35546875,
+      "mean_dup_token_frac": 0.8495307534427966,
+      "null_completions": 4,
+      "latency_median_ms": 11051.814799997373,
+      "latency_p95_ms": 16503.740675008885,
+      "latency_max_ms": 85589.16619999218,
+      "decode_tokens_per_s": 2.967273915940271,
+      "budget_violations": 0,
+      "stop_reasons": {
+        "budget_exhausted": 256
+      }
+    },
+    "semantic_pruning": {
+      "n": 256,
+      "pass_at_n": 0.61328125,
+      "pass_count": 157,
+      "majority_accuracy": 0.38671875,
+      "mean_total_tokens": 37.0,
+      "mean_decode_tokens": 32.0,
+      "mean_aux_tokens": 5.0,
+      "mean_prompt_tokens": 1817.84375,
+      "mean_rollouts": 16.0,
+      "mean_unique_answers": 2.3125,
+      "mean_dup_token_frac": 0.85546875,
+      "null_completions": 0,
+      "latency_median_ms": 10076.832099999592,
+      "latency_p95_ms": 21554.497624998476,
+      "latency_max_ms": 97192.94850000006,
+      "decode_tokens_per_s": 2.7270009238537107,
+      "budget_violations": 0,
+      "stop_reasons": {
+        "budget_exhausted": 256
+      }
+    },
+    "option_topk": {
+      "n": 256,
+      "pass_at_n": 0.98046875,
+      "pass_count": 251,
+      "majority_accuracy": 0.38671875,
+      "mean_total_tokens": 5.0,
+      "mean_decode_tokens": 0.0,
+      "mean_aux_tokens": 5.0,
+      "mean_prompt_tokens": 0.0,
+      "mean_rollouts": 0.0,
+      "mean_unique_answers": 7.78515625,
+      "mean_dup_token_frac": null,
+      "null_completions": 0,
+      "latency_median_ms": 509.97170000482583,
+      "latency_p95_ms": 887.9831250051211,
+      "latency_max_ms": 2847.138299999642,
+      "decode_tokens_per_s": 0.0,
+      "budget_violations": 0,
+      "stop_reasons": {
+        "done": 256
+      }
+    }
+  },
+  "run_meta": {
+    "scps": {
+      "method": "scps",
+      "method_config": {
+        "temperature": 0.6,
+        "max_rounds": 10,
+        "actions_per_round": 1,
+        "sample_sizes": [
+          1,
+          2,
+          4
+        ],
+        "root_proposal_batch": 16,
+        "distinct_source_target": 12,
+        "answer_class_quota": 8,
+        "horizon": null,
+        "discovery_weight": 1.0,
+        "overlap_penalty": 0.5,
+        "cost_weight": 1.0,
+        "seen_answer_penalty": 1.0,
+        "repeat_penalty": 0.25
+      },
+      "backbone": {
+        "id": "Qwen/Qwen3.5-4B",
+        "revision": null,
+        "dtype": "bfloat16",
+        "device": "cuda",
+        "num_parameters": 2590093824,
+        "backend": "transformers",
+        "quantization": "bnb-4bit",
+        "transformers_version": "5.24.1",
+        "torch_version": "2.11.0+cu128"
+      },
+      "model_load_s": 27.79441790000419,
+      "environment": {
+        "platform": "Windows-10-10.0.26200-SP0",
+        "python": "3.11.18",
+        "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+        "torch": "2.11.0+cu128",
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+        "cuda_runtime": "12.8"
+      },
+      "peak_memory": {
+        "process_peak_rss_mb": null,
+        "cuda_peak_allocated_mb": 4338.6953125
+      },
+      "commit": "531a0f6 (main run); 52e2f49 (metadata rerun)",
+      "finished_utc": "2026-11-26T22:59:45Z",
+      "source": "peak memory, environment and backbone metadata from a 32-question SCPS rerun (results/scps_memory_check, commit 52e2f49) that reproduced the main run's portfolios exactly on all 32 questions; the 256-question SCPS run itself was produced before per-method metadata existed (code at commit 531a0f6 in the PR branch)"
+    },
+    "self_consistency": {
+      "method": "self_consistency",
+      "method_config": {
+        "temperature": 0.6,
+        "samples_per_call": 4
+      },
+      "backbone": {
+        "id": "Qwen/Qwen3.5-4B",
+        "revision": null,
+        "dtype": "bfloat16",
+        "device": "cuda",
+        "num_parameters": 2590093824,
+        "backend": "transformers",
+        "quantization": "bnb-4bit",
+        "transformers_version": "5.24.1",
+        "torch_version": "2.11.0+cu128"
+      },
+      "model_load_s": 74.881037500003,
+      "environment": {
+        "platform": "Windows-10-10.0.26200-SP0",
+        "python": "3.11.18",
+        "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+        "torch": "2.11.0+cu128",
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+        "cuda_runtime": "12.8"
+      },
+      "peak_memory": {
+        "process_peak_rss_mb": null,
+        "cuda_peak_allocated_mb": 4769.982421875
+      },
+      "commit": "52e2f49",
+      "finished_utc": "2026-11-26T21:12:03Z"
+    },
+    "tree_prefix": {
+      "method": "tree_prefix",
+      "method_config": {
+        "temperature": 0.6,
+        "beam": 2,
+        "branch": 2,
+        "horizon": 64
+      },
+      "backbone": {
+        "id": "Qwen/Qwen3.5-4B",
+        "revision": null,
+        "dtype": "bfloat16",
+        "device": "cuda",
+        "num_parameters": 2590093824,
+        "backend": "transformers",
+        "quantization": "bnb-4bit",
+        "transformers_version": "5.24.1",
+        "torch_version": "2.11.0+cu128"
+      },
+      "model_load_s": 74.881037500003,
+      "environment": {
+        "platform": "Windows-10-10.0.26200-SP0",
+        "python": "3.11.18",
+        "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+        "torch": "2.11.0+cu128",
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+        "cuda_runtime": "12.8"
+      },
+      "peak_memory": {
+        "process_peak_rss_mb": null,
+        "cuda_peak_allocated_mb": 4079.54248046875
+      },
+      "commit": "52e2f49",
+      "finished_utc": "2026-11-26T22:00:43Z"
+    },
+    "semantic_pruning": {
+      "method": "semantic_pruning",
+      "method_config": {
+        "temperature": 0.6,
+        "beam": 2,
+        "branch": 2,
+        "horizon": 64,
+        "semantic_pruning": true,
+        "overlap_threshold": 0.75
+      },
+      "backbone": {
+        "id": "Qwen/Qwen3.5-4B",
+        "revision": null,
+        "dtype": "bfloat16",
+        "device": "cuda",
+        "num_parameters": 2590093824,
+        "backend": "transformers",
+        "quantization": "bnb-4bit",
+        "transformers_version": "5.24.1",
+        "torch_version": "2.11.0+cu128"
+      },
+      "model_load_s": 74.881037500003,
+      "environment": {
+        "platform": "Windows-10-10.0.26200-SP0",
+        "python": "3.11.18",
+        "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+        "torch": "2.11.0+cu128",
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+        "cuda_runtime": "12.8"
+      },
+      "peak_memory": {
+        "process_peak_rss_mb": null,
+        "cuda_peak_allocated_mb": 4079.54248046875
+      },
+      "commit": "52e2f49",
+      "finished_utc": "2026-11-26T22:50:55Z"
+    },
+    "option_topk": {
+      "method": "option_topk",
+      "method_config": {
+        "k": 8
+      },
+      "backbone": {
+        "id": "Qwen/Qwen3.5-4B",
+        "revision": null,
+        "dtype": "bfloat16",
+        "device": "cuda",
+        "num_parameters": 2590093824,
+        "backend": "transformers",
+        "quantization": "bnb-4bit",
+        "transformers_version": "5.24.1",
+        "torch_version": "2.11.0+cu128"
+      },
+      "model_load_s": 74.881037500003,
+      "environment": {
+        "platform": "Windows-10-10.0.26200-SP0",
+        "python": "3.11.18",
+        "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+        "torch": "2.11.0+cu128",
+        "cuda_available": true,
+        "device_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+        "cuda_runtime": "12.8"
+      },
+      "peak_memory": {
+        "process_peak_rss_mb": null,
+        "cuda_peak_allocated_mb": 3974.6328125
+      },
+      "commit": "52e2f49",
+      "finished_utc": "2026-11-26T20:18:32Z"
+    }
+  },
+  "complete_methods": [
+    "option_topk",
+    "scps",
+    "self_consistency",
+    "semantic_pruning",
+    "tree_prefix"
+  ],
+  "paired_vs_scps": {
+    "self_consistency": {
+      "n": 256,
+      "pass": {
+        "delta": 0.23828125,
+        "ci95": [
+          0.18359375,
+          0.296875
+        ],
+        "wins": 65,
+        "losses": 4
+      },
+      "majority": {
+        "delta": -0.00390625,
+        "ci95": [
+          -0.05078125,
+          0.04296875
+        ],
+        "wins": 17,
+        "losses": 18
+      }
+    },
+    "tree_prefix": {
+      "n": 256,
+      "pass": {
+        "delta": 0.2265625,
+        "ci95": [
+          0.171875,
+          0.28125
+        ],
+        "wins": 61,
+        "losses": 3
+      },
+      "majority": {
+        "delta": -0.015625,
+        "ci95": [
+          -0.0625,
+          0.03125
+        ],
+        "wins": 16,
+        "losses": 20
+      }
+    },
+    "semantic_pruning": {
+      "n": 256,
+      "pass": {
+        "delta": 0.2578125,
+        "ci95": [
+          0.19921875,
+          0.31640625
+        ],
+        "wins": 70,
+        "losses": 4
+      },
+      "majority": {
+        "delta": -0.015625,
+        "ci95": [
+          -0.05859375,
+          0.03125
+        ],
+        "wins": 15,
+        "losses": 19
+      }
+    }
+  },
+  "option_topk_control": {
+    "n": 256,
+    "gold_in_topk_curve": {
+      "1": 0.38671875,
+      "2": 0.5859375,
+      "3": 0.73046875,
+      "4": 0.81640625,
+      "5": 0.87109375,
+      "6": 0.91015625,
+      "7": 0.9609375,
+      "8": 0.9765625,
+      "9": 0.984375,
+      "10": 1.0
+    },
+    "matched_k_pass": 0.875,
+    "scps_vs_matched_k": {
+      "delta": -0.00390625,
+      "ci95": [
+        -0.0234375,
+        0.015625
+      ],
+      "wins": 3,
+      "losses": 4
+    }
+  },
+  "per_category_pass_counts": {
+    "biology": {
+      "n": 11,
+      "scps_pass": 11,
+      "self_consistency_pass": 10,
+      "tree_prefix_pass": 10,
+      "semantic_pruning_pass": 9,
+      "option_topk_pass": 11
+    },
+    "business": {
+      "n": 20,
+      "scps_pass": 20,
+      "self_consistency_pass": 12,
+      "tree_prefix_pass": 11,
+      "semantic_pruning_pass": 10,
+      "option_topk_pass": 20
+    },
+    "chemistry": {
+      "n": 26,
+      "scps_pass": 23,
+      "self_consistency_pass": 12,
+      "tree_prefix_pass": 16,
+      "semantic_pruning_pass": 14,
+      "option_topk_pass": 26
+    },
+    "computer science": {
+      "n": 8,
+      "scps_pass": 7,
+      "self_consistency_pass": 6,
+      "tree_prefix_pass": 5,
+      "semantic_pruning_pass": 5,
+      "option_topk_pass": 8
+    },
+    "economics": {
+      "n": 16,
+      "scps_pass": 14,
+      "self_consistency_pass": 12,
+      "tree_prefix_pass": 11,
+      "semantic_pruning_pass": 12,
+      "option_topk_pass": 16
+    },
+    "engineering": {
+      "n": 19,
+      "scps_pass": 16,
+      "self_consistency_pass": 15,
+      "tree_prefix_pass": 15,
+      "semantic_pruning_pass": 13,
+      "option_topk_pass": 17
+    },
+    "health": {
+      "n": 14,
+      "scps_pass": 13,
+      "self_consistency_pass": 10,
+      "tree_prefix_pass": 9,
+      "semantic_pruning_pass": 9,
+      "option_topk_pass": 13
+    },
+    "history": {
+      "n": 3,
+      "scps_pass": 2,
+      "self_consistency_pass": 2,
+      "tree_prefix_pass": 2,
+      "semantic_pruning_pass": 2,
+      "option_topk_pass": 3
+    },
+    "law": {
+      "n": 24,
+      "scps_pass": 18,
+      "self_consistency_pass": 14,
+      "tree_prefix_pass": 13,
+      "semantic_pruning_pass": 13,
+      "option_topk_pass": 24
+    },
+    "math": {
+      "n": 34,
+      "scps_pass": 29,
+      "self_consistency_pass": 20,
+      "tree_prefix_pass": 24,
+      "semantic_pruning_pass": 21,
+      "option_topk_pass": 33
+    },
+    "other": {
+      "n": 20,
+      "scps_pass": 17,
+      "self_consistency_pass": 14,
+      "tree_prefix_pass": 15,
+      "semantic_pruning_pass": 12,
+      "option_topk_pass": 20
+    },
+    "philosophy": {
+      "n": 7,
+      "scps_pass": 6,
+      "self_consistency_pass": 6,
+      "tree_prefix_pass": 5,
+      "semantic_pruning_pass": 5,
+      "option_topk_pass": 7
+    },
+    "physics": {
+      "n": 43,
+      "scps_pass": 36,
+      "self_consistency_pass": 22,
+      "tree_prefix_pass": 21,
+      "semantic_pruning_pass": 24,
+      "option_topk_pass": 42
+    },
+    "psychology": {
+      "n": 11,
+      "scps_pass": 11,
+      "self_consistency_pass": 7,
+      "tree_prefix_pass": 8,
+      "semantic_pruning_pass": 8,
+      "option_topk_pass": 11
+    }
+  }
+}

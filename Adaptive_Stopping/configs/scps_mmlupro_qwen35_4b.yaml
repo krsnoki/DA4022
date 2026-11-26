@@ -1,0 +1,65 @@
+# SCPS on MMLU-Pro with Qwen3.5-4B in bf16. Transformers backend.
+# Paper settings: Table 8 and Appendix H.2 of the SCPS paper.
+experiment_id: scps_mmlupro_qwen35_4b_hf
+paper_id: openreview.suD1tqogTd
+report_status: approximate      # plug-in surrogate replaces the unreleased learned bundle
+calibration_dataset: null       # training-free surrogate, no calibration split used
+warmup_questions: 1             # run once and discard before timing
+
+backbone:
+  type: hf
+  id: Qwen/Qwen3.5-4B
+  revision: null                # PIN a full commit hash before reporting results
+  dtype: bfloat16
+  device: cuda
+  kwargs:
+    model_class: AutoModelForMultimodalLM
+
+dataset:
+  id: text.mmlu_pro.test
+  split: test
+  revision: null                # PIN the dataset commit before reporting results
+  local_path: null              # or a local .jsonl/.parquet export of the test split
+  num_questions: 256
+  seed: 47
+  exclude_ids_file: null
+
+run_seed: 13
+
+budget:
+  max_rollouts: 16
+  max_new_tokens: 192
+  decode_token_limit: 3072
+  total_token_limit: 30000
+
+methods:
+  scps:
+    temperature: 0.6
+    max_rounds: 10
+    actions_per_round: 1
+    sample_sizes: [1, 2, 4]
+    root_proposal_batch: 16
+    distinct_source_target: 12
+    answer_class_quota: 8
+    horizon: null
+    discovery_weight: 1.0
+    overlap_penalty: 0.5
+    cost_weight: 1.0
+    seen_answer_penalty: 1.0
+    repeat_penalty: 0.25
+  self_consistency:
+    temperature: 0.6
+  tree_prefix:
+    temperature: 0.6
+    beam: 2
+    branch: 2
+    horizon: 64
+  semantic_pruning:
+    temperature: 0.6
+    beam: 2
+    branch: 2
+    horizon: 64
+    semantic_pruning: true
+    overlap_threshold: 0.75
+  option_topk:
+    k: 8

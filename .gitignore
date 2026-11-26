@@ -1,0 +1,7 @@
+# experiment outputs and caches
+results/
+*.jsonl.gz
+__pycache__/
+.pytest_cache/
+.venv/
+hf_cache/

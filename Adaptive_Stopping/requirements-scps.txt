@@ -1,0 +1,10 @@
+# SCPS (Adaptive_Stopping/methods/budget_policy/scps) dependencies.
+# The controller core and the mock smoke run need only the standard library + these two:
+pyyaml>=6.0
+pytest>=7.0
+# MMLU-Pro from the Hugging Face Hub (not needed with dataset.local_path):
+datasets>=2.18
+# Transformers backend (CPU or GPU). Install PyTorch first via https://pytorch.org/get-started/locally/
+transformers>=4.45
+# vLLM backend (paper serving stack, CUDA only). Install separately, matching your CUDA version:
+#   pip install vllm
