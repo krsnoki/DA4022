@@ -43,6 +43,7 @@ DIPA estimates instance difficulty using training-free signals derived directly 
 - **Output contract:** Batch-level `BudgetAllocator` interface returning `AllocationReport` (per-instance allocations `T_i` summing to `<= T`, coverage, solved/unsolved IDs, total tokens, total latency) plus a `StoppingPolicy`-compatible adapter (`reset`, `should_stop`, `report`) matching `Adaptive_Stopping/README_adaptiveStopping.md`.
 - **Determinism:** `DIPABudgetAllocator` is **stochastic** (probabilistic arm sampling plus `temperature=0.7` decoding) and reproducible under fixed random seeds (`42, 43, 44`). Baselines (`UniformAllocator`, `Easy2HardAllocator`, `Hard2EasyAllocator`) are deterministic given a fixed pool/seed.
 - **Configuration:** `Adaptive_Stopping/configs/dipa.yaml`
+- **Dependencies:** `python -m pip install -r Adaptive_Stopping/requirements.txt` (install PyTorch first via the official selector for your CUDA setup)
 - **Reproduction command:**
   ```bash
   python3 -m Adaptive_Stopping.experiments.run_dipa_benchmark \

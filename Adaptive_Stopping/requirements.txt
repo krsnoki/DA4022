@@ -1,0 +1,22 @@
+# DIPA (Adaptive_Stopping) dependencies, covering Adaptive_Stopping/,
+# Backbones/, Dataloaders/ and Performance_Metrics/ code added for issue #9.
+# Python >= 3.10. Lower bounds are versions the code was run/tested with.
+#
+#   python -m pip install -r Adaptive_Stopping/requirements.txt
+#
+# PyTorch is NOT listed: install it first using the official selector for
+# your OS / CUDA setup (https://pytorch.org/get-started/locally/), as the
+# repository README requires. Benchmark runs used torch 2.14.1+cu130.
+# Without torch, CPU unit tests still run (torch-only tests are skipped).
+
+# Core: allocator, proxies, metrics schema, benchmark runner
+numpy>=2.4
+PyYAML>=6.0
+sympy>=1.14            # algebraic-equivalence checks in the math verifier
+
+# Hugging Face mode (--mode hf): backbone loading and MATH-500 download
+transformers>=5.22
+datasets
+
+# Tests
+pytest>=9.0
