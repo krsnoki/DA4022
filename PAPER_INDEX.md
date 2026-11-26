@@ -12,7 +12,7 @@ This is an engineering-oriented shortlist from the [official AdaptFM accepted-pa
 - [Block-Level Recursion: Adaptive Test-Time Routing in Large Language Models](https://openreview.net/forum?id=hLFRcxXKxY) — dynamic depth/recursion.
 - [Fixed-Point Reasoners: Stable and Adaptive Deep Looped Models](https://openreview.net/forum?id=s66nL9PEw1) — adaptive depth/looped computation, not necessarily early exit.
 - [Learning Adaptive LLM Decoding](https://openreview.net/forum?id=14yhYy9m7S) — adaptive decoding policy.
-- [Resource-Adaptive Foundation Model Reasoning via Semantic Coverage](https://openreview.net/forum?id=suD1tqogTd) — input-adaptive reasoning budget.
+- [Resource-Adaptive Foundation Model Reasoning via Semantic Coverage](https://openreview.net/forum?id=suD1tqogTd) — input-adaptive reasoning budget; implemented in [`Adaptive_Stopping/methods/budget_policy/scps/`](Adaptive_Stopping/methods/budget_policy/scps/PAPER_CARD.md) (status: tested).
 
 ## Attention, context and token efficiency
 

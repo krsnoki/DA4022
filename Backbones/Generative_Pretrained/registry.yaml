@@ -1,0 +1,60 @@
+# Generative backbone registry entries (fields from Backbones/README_backbones.md).
+# Values are taken from the Hugging Face model cards; "unknown" means not verified.
+
+- id: text.qwen3_5_9b.post_trained
+  name: Qwen3.5-9B
+  modality: multimodal            # causal language model with a vision encoder; used text-only here
+  architecture: qwen3_5
+  pretraining_regime: mixed       # self-supervised pre-training + post-training (model card: "Pre-training & Post-training")
+  objective: next-token prediction pre-training followed by post-training (details: model card / Qwen3.5 blog)
+  weights_source: huggingface
+  weights_uri: https://huggingface.co/Qwen/Qwen3.5-9B
+  revision: unpinned              # latest commit seen on the Hub file page: c202236 (short hash); pin the full hash
+  license: apache-2.0
+  num_parameters: 9B (model card, rounded)
+  input_spec:
+    max_model_len_used: 16384     # SCPS paper Appendix H.6
+    dtype: bfloat16
+  preprocessing: tokenizer chat template, enable_thinking=False
+  parent_backbone: Qwen/Qwen3.5-9B-Base
+  fine_tuning_dataset: unknown
+  wrappers: [vllm_causal_lm.VLLMCausalLM, hf_causal_lm.HFCausalLM]
+  notes: Used by the SCPS paper. Hub pipeline tag is image-text-to-text; for the HF wrapper you may need model_class AutoModelForImageTextToText.
+
+- id: text.qwen2_5_0_5b_instruct.post_trained
+  name: Qwen2.5-0.5B-Instruct
+  modality: text
+  architecture: qwen2
+  pretraining_regime: mixed       # model card: "Pretraining & Post-training"
+  objective: next-token prediction pre-training followed by instruction post-training
+  weights_source: huggingface
+  weights_uri: https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct
+  revision: unpinned
+  license: apache-2.0
+  num_parameters: 0.49B total, 0.36B non-embedding (model card)
+  input_spec:
+    context_length: 32768
+    dtype: float32                # CPU run
+  preprocessing: tokenizer chat template
+  parent_backbone: Qwen/Qwen2.5-0.5B
+  fine_tuning_dataset: unknown
+  wrappers: [hf_causal_lm.HFCausalLM]
+  notes: CPU pipeline check for SCPS only; not the paper's model.
+
+- id: mock.mcq.latent_dist
+  name: Mock MCQ backbone
+  modality: text
+  architecture: none (sampler over a latent answer distribution)
+  pretraining_regime: unknown
+  objective: none
+  weights_source: none
+  weights_uri: null
+  revision: n/a
+  license: same as this repository
+  num_parameters: 0
+  input_spec: prompts built by Adaptive_Stopping/common/mcq.py
+  preprocessing: whitespace tokens
+  parent_backbone: null
+  fine_tuning_dataset: null
+  wrappers: [mock_mcq_lm.MockMCQBackbone]
+  notes: Tests and controller microbenchmarks only.

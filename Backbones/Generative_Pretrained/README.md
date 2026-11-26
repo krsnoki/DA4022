@@ -13,3 +13,15 @@ Model ID/revision, licence, modality, architecture, objective/regime, tokenizer 
 ## Integration rule
 
 Expose model loading and generation, but keep dataset prompts and batches in `Dataloaders/` and method-specific transformations in their owning module. Baseline generation settings must be pinned before comparing speculative decoding, KV policies, quantization, or stopping.
+
+## Available wrappers
+
+| File | Backend | Notes |
+|---|---|---|
+| `interface.py` | none | `GenerativeBackbone` / `OptionScoringBackbone` protocols and token-accounting conventions |
+| `hf_causal_lm.py` | Transformers | CPU or GPU; tested with a tiny random model in `Adaptive_Stopping/tests` |
+| `vllm_causal_lm.py` | vLLM | GPU; not run in CI |
+| `mock_mcq_lm.py` | none | synthetic sampler for tests |
+| `factory.py` | | builds a wrapper from an experiment config block |
+
+Registry entries: `registry.yaml`. Model card: `MODEL_CARD_qwen3_5_9b.md`.

@@ -4,7 +4,7 @@ Shared by SCPS and the baselines so that every method uses the same
 prompt rendering, canonicalizer, completion rule and token accounting.
 
 Completion rule: a sample is a completed artifact when it contains a
-parseable answer, ends on EOS/stop, or reaches ``max_new_tokens`` in total.
+parseable answer, ends on EOS/stop or reaches ``max_new_tokens`` in total.
 Otherwise it is an unfinished prefix that returns to the frontier and adds
 no portfolio value yet (paper Section 4).
 """

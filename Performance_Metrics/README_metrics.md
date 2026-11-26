@@ -51,6 +51,32 @@ experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,sp
 
 Unknown/not-measured quantities should be empty/null plus a `status` or notes entry—never `0` unless zero was actually measured.
 
+## Recorded results
+
+Rows appended by contributors, in the schema above. Empty cells are unmeasured, never zero.
+
+### SCPS: Resource-Adaptive Foundation Model Reasoning via Semantic Coverage
+
+Owner card: [`Adaptive_Stopping/methods/budget_policy/scps/PAPER_CARD.md`](../Adaptive_Stopping/methods/budget_policy/scps/PAPER_CARD.md). Paper-reported numbers are kept in the card, not here.
+
+Synthetic smoke run (mock backbone, CPU, 256 synthetic items). It checks controller logic and budget handling only; it is not a task-quality result. `self_consistency` is the unmodified full-compute baseline.
+
+```text
+experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,split,seed,device,framework_version,dtype,batch_size,input_length,output_length,quality_metric,quality_value,latency_median_ms,latency_p95_ms,throughput,peak_memory_mb,energy_j,status,notes
+scps_synthetic_mock_smoke,openreview.suD1tqogTd,scps,8711f63,mock.mcq.latent_dist,n/a,synthetic.mcq,synthetic,data=47;run=13,cpu,python=3.13.18,n/a,1,478.0,271.93,portfolio_pass@16,0.9336,1.99,3.008,133072.962,516.477,,not reproduced,n=256; mean_total_tokens=276.93 (decode+aux); unique=5.094; dup_tok=0.475; majority_acc=0.4141; latency=per-question wall clock; throughput=decode tok/s; memory=process_peak_rss for whole process (shared across methods); energy not_measured
+scps_synthetic_mock_smoke,openreview.suD1tqogTd,self_consistency,8711f63,mock.mcq.latent_dist,n/a,synthetic.mcq,synthetic,data=47;run=13,cpu,python=3.13.18,n/a,1,92.0,400.46,portfolio_pass@16,0.8125,0.269,0.309,1447516.384,516.477,,not reproduced,n=256; mean_total_tokens=400.46 (decode+aux); unique=3.375; dup_tok=0.74; majority_acc=0.4375; latency=per-question wall clock; throughput=decode tok/s; memory=process_peak_rss for whole process (shared across methods); energy not_measured
+scps_synthetic_mock_smoke,openreview.suD1tqogTd,tree_prefix,8711f63,mock.mcq.latent_dist,n/a,synthetic.mcq,synthetic,data=47;run=13,cpu,python=3.13.18,n/a,1,736.0,404.02,portfolio_pass@16,0.8242,0.412,0.476,963249.581,516.477,,not reproduced,n=256; mean_total_tokens=409.02 (decode+aux); unique=3.383; dup_tok=0.735; majority_acc=0.4297; latency=per-question wall clock; throughput=decode tok/s; memory=process_peak_rss for whole process (shared across methods); energy not_measured
+scps_synthetic_mock_smoke,openreview.suD1tqogTd,semantic_pruning,8711f63,mock.mcq.latent_dist,n/a,synthetic.mcq,synthetic,data=47;run=13,cpu,python=3.13.18,n/a,1,736.0,395.93,portfolio_pass@16,0.8164,0.422,0.476,926268.55,516.477,,not reproduced,n=256; mean_total_tokens=400.93 (decode+aux); unique=3.469; dup_tok=0.733; majority_acc=0.4141; latency=per-question wall clock; throughput=decode tok/s; memory=process_peak_rss for whole process (shared across methods); energy not_measured
+```
+
+MMLU-Pro run (paper setting), pending:
+
+```text
+experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,split,seed,device,framework_version,dtype,batch_size,input_length,output_length,quality_metric,quality_value,latency_median_ms,latency_p95_ms,throughput,peak_memory_mb,energy_j,status,notes
+scps_mmlupro_qwen35_9b_vllm,openreview.suD1tqogTd,scps,,Qwen/Qwen3.5-9B,,text.mmlu_pro.test,test,data=47;run=13,,,bfloat16,1,,,portfolio_pass@16,,,,,,,not reproduced,blocked: run not executed yet (no GPU or Hugging Face access where implemented); command in Adaptive_Stopping/methods/budget_policy/scps/PAPER_CARD.md
+scps_mmlupro_qwen35_9b_vllm,openreview.suD1tqogTd,self_consistency,,Qwen/Qwen3.5-9B,,text.mmlu_pro.test,test,data=47;run=13,,,bfloat16,1,,,portfolio_pass@16,,,,,,,not reproduced,unmodified full-compute baseline for the row above; blocked for the same reason
+```
+
 ## Recommended plots
 
 - quality vs. latency;

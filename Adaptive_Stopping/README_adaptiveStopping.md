@@ -39,6 +39,14 @@ Use one directory per method only once there is an owner. Avoid paper-specific c
 
 Browse all accepted work in the [official paper index](https://adaptfm.gitlab.io/accepted-papers). Paper assignment is based on subject matter and may be cross-listed.
 
+## Implemented methods
+
+| Method | Paper | Location | Status |
+|---|---|---|---|
+| SCPS (Semantic-Coverage Portfolio Search), exact-answer instance | [Resource-Adaptive Foundation Model Reasoning via Semantic Coverage](https://openreview.net/forum?id=suD1tqogTd) | `methods/budget_policy/scps/` ([paper card](methods/budget_policy/scps/PAPER_CARD.md)) | tested (no MMLU-Pro run yet) |
+
+Shared pieces: `common/` (the `StoppingPolicy` contract below, budgets and token ledger, rollout execution, portfolio metrics) and `baselines/` (self-consistency as the full-compute baseline, tree-prefix, semantic pruning as the threshold baseline). Tests: `python -m pytest -q Adaptive_Stopping/tests`.
+
 ## Shared method contract
 
 Every method should expose a comparable interface, for example:
