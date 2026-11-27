@@ -4,3 +4,10 @@ __pycache__/
 *.mat
 *.pth
 *.safetensors
+*.pt
+*.ckpt
+*.bin
+*.zip
+*.h5
+.venv/
+*:Zone.Identifier

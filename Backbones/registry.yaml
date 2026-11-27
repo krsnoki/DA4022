@@ -1,6 +1,6 @@
 # Backbone registry. Experiments refer to these IDs. Fields: README_backbones.md.
-# Anything not verified is written as `unknown`; fill revision after your first run
-# (run_ora_q.py prints it and writes it into results.csv).
+# Anything not verified is written as `unknown`. The revision matches
+# Quantization_and_Pruning/experiments/ora_q/results.csv.
 
 vision.depth-anything-v2-small:
   id: vision.depth-anything-v2-small
@@ -12,9 +12,9 @@ vision.depth-anything-v2-small:
   weights_source: huggingface
   weights_uri: https://huggingface.co/depth-anything/Depth-Anything-V2-Small-hf
   hf_path: depth-anything/Depth-Anything-V2-Small-hf
-  revision: <fill from results.csv backbone_revision>
-  license: <copy from the model card>
-  num_parameters: <printed by get_model_metadata>
+  revision: 5426e4f0f36572d16453bbda7a8389317b1bef99
+  license: apache-2.0  # model card at this revision
+  num_parameters: 24785089  # Hugging Face safetensors metadata at this revision (F32)
   input_spec: {resize: 518 short side, keep aspect, multiple of 14, channels: 3, dtype: float32}
   preprocessing: AutoImageProcessor from the same repository and revision
   parent_backbone: DINOv2 ViT-S/14 (self-supervised)

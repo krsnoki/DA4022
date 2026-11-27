@@ -153,3 +153,33 @@ def test_full_ora_q_pipeline(tmp_path):
     ora_q.calibrate(m, xs)
     out = m(pixel_values=torch.randn(1, 3, 84, 112)).predicted_depth   # a different size works too
     assert out.shape == (1, 84, 112) and torch.isfinite(out).all()
+
+
+# ---- save / load ---------------------------------------------------------
+
+def saved_quant_model(tmp_path):
+    fp, xs = tiny_model(), inputs()
+    cfg = ora_q.load_config(CONFIGS / "ora_q.yaml")
+    report = ora_q.diagnose(fp, xs, cfg)
+    m = ora_q.build_quant_model(fp, cfg, report)
+    ora_q.calibrate(m, xs)
+    torch.save(m.state_dict(), tmp_path / "quant.pt")
+    ref = m(pixel_values=xs[0]).predicted_depth
+    return fp, xs, cfg, report, ref
+
+
+def test_save_load_no_drift(tmp_path):
+    fp, xs, cfg, report, ref = saved_quant_model(tmp_path)
+    m = ora_q.build_quant_model(fp, cfg, report)
+    ora_q.calibrate(m, [3 * x + 1 for x in xs])        # creates the scale buffers, with other values
+    assert not torch.equal(m(pixel_values=xs[0]).predicted_depth, ref)
+    m.load_state_dict(torch.load(tmp_path / "quant.pt", weights_only=True))
+    assert torch.equal(m(pixel_values=xs[0]).predicted_depth, ref)
+
+
+@pytest.mark.xfail(strict=True, raises=RuntimeError,
+                   reason="scale buffers start as None, so an uncalibrated model rejects them")
+def test_load_into_uncalibrated_model(tmp_path):
+    fp, _, cfg, report, _ = saved_quant_model(tmp_path)
+    m = ora_q.build_quant_model(fp, cfg, report)
+    m.load_state_dict(torch.load(tmp_path / "quant.pt", weights_only=True))

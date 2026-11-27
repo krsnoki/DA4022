@@ -7,7 +7,7 @@ vision.nyuv2.test:
   task: monocular depth estimation (dense, metres)
   source_url: https://cs.nyu.edu/~fergus/datasets/nyu_depth_v2.html
   license: unknown
-  version: nyu_depth_v2_labeled.mat (sha256 <fill>), splits.mat (sha256 <fill>)
+  version: nyu_depth_v2_labeled.mat (sha256 2d724b0c0ab358aa1ce5df855e5bd14a2279ab7202efe22f32a30d612dcb86aa), splits.mat (sha256 6e081404491a8bfba2f066beaa9713ef6046f9007aa5f799f2a350506a580cee); hashed from copies downloaded again on 2026-11-27, after the reported run
   role: evaluation
   split: test (testNdxs in splits.mat)
   num_examples: 654

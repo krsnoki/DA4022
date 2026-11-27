@@ -1,0 +1,87 @@
+{
+  "tau": 0.15,
+  "operators": {
+    "matmul1": {
+      "S": 0.0788,
+      "granularity": {
+        "type": "group",
+        "g": 1,
+        "per_head": true
+      },
+      "clip_score": 0.0602,
+      "role": "clip-tolerant",
+      "calibrator": "percentile",
+      "mode": "static"
+    },
+    "fc2": {
+      "S": 0.1123,
+      "granularity": {
+        "type": "group",
+        "g": 64
+      },
+      "clip_score": 0.2718,
+      "role": "clip-sensitive",
+      "calibrator": "minmax",
+      "mode": "static"
+    },
+    "proj": {
+      "S": 0.1014,
+      "granularity": {
+        "type": "group",
+        "g": 32
+      },
+      "clip_score": 0.0353,
+      "role": "clip-tolerant",
+      "calibrator": "percentile",
+      "mode": "static"
+    },
+    "conv": {
+      "S": 0.1489,
+      "granularity": {
+        "type": "group",
+        "g": 8
+      },
+      "clip_score": 0.2187,
+      "role": "clip-sensitive",
+      "calibrator": "minmax",
+      "mode": "static"
+    },
+    "matmul2": {
+      "S": 0.4816,
+      "granularity": {
+        "type": "group",
+        "g": 2,
+        "per_head": true
+      },
+      "clip_score": null,
+      "role": "input-dependent",
+      "calibrator": "minmax",
+      "mode": "dynamic"
+    }
+  },
+  "backbone_id": "vision.depth-anything-v2-small",
+  "revision": "5426e4f0f36572d16453bbda7a8389317b1bef99",
+  "calibration": {
+    "dataset_id": "vision.nyuv2.calibration",
+    "split": "train",
+    "indices": [
+      22,
+      66,
+      105,
+      241,
+      352,
+      402,
+      683,
+      684,
+      862,
+      881,
+      897,
+      999,
+      1112,
+      1171,
+      1311,
+      1391
+    ],
+    "seed": 0
+  }
+}

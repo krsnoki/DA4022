@@ -62,7 +62,7 @@ This is an engineering-oriented shortlist from the [official AdaptFM accepted-pa
 - [SFPruner: Single-Forward Visual Token Subset Selection for Resource-Efficient Multimodal Foundation Model Inference](https://openreview.net/forum?id=d9H5uBnHeL) — visual token pruning.
 - [Modality-Aware Block Rotation for Vision-Language-Action Model Quantization](https://openreview.net/forum?id=07e99XvHxF) — VLA quantization.
 - [QJL is 1-bit Compressive Sensing: An Equivalence and Its Consequences for KV Cache Compression in LLMs](https://openreview.net/forum?id=B0N2TDGiOl) — KV-cache compression; cross-listed with Attention.
-- [Structural Outlier-Aware Post-Training Quantization for Monocular Depth Estimation (ORA-Q)](https://openreview.net/forum?id=oqacjavnry) — operator-role-aware 4-bit PTQ for Depth Anything; moved here from MoE (it is PTQ, not MoE). Implemented: `Quantization_and_Pruning/ORA_Q_PAPER_CARD.md`.
+- [Structural Outlier-Aware Post-Training Quantization for Monocular Depth Estimation (ORA-Q)](https://openreview.net/forum?id=oqacjavnry): operator-role-aware 4-bit PTQ for Depth Anything; moved here from MoE (it is PTQ, not MoE). Implemented: `Quantization_and_Pruning/ORA_Q_PAPER_CARD.md`.
 
 ## KV cache and long-context memory
 

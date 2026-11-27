@@ -136,7 +136,7 @@ def main():
             "throughput": round(runtime["throughput"], 2) if runtime else None,
             "peak_memory_mb": round(runtime["peak_memory_mb"], 1) if runtime and runtime["peak_memory_mb"] else None,
             "energy_j": None, "calib_seconds": round(calib_s, 1) if method != "fp32" else None,
-            "status": "measured", "notes": notes,
+            "status": "partial", "notes": notes,
         }
         new = not os.path.exists(args.out)
         with open(args.out, "a", newline="") as f:

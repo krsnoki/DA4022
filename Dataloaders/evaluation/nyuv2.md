@@ -1,7 +1,10 @@
 # Dataset card: NYU Depth V2 (labeled) with the Eigen split
 
 - **Dataset IDs:** `vision.nyuv2.test`, `vision.nyuv2.calibration`
-- **Source URL / version:** https://cs.nyu.edu/~fergus/datasets/nyu_depth_v2.html; `nyu_depth_v2_labeled.mat` and the Eigen `splits.mat`. SHA-256: `<fill with sha256sum>`
+- **Source URL / version:** https://cs.nyu.edu/~fergus/datasets/nyu_depth_v2.html; `nyu_depth_v2_labeled.mat` and the Eigen `splits.mat`. SHA-256:
+  - `nyu_depth_v2_labeled.mat` (2972037809 bytes): `2d724b0c0ab358aa1ce5df855e5bd14a2279ab7202efe22f32a30d612dcb86aa`
+  - `splits.mat` (2626 bytes): `6e081404491a8bfba2f066beaa9713ef6046f9007aa5f799f2a350506a580cee`
+  - Computed on copies downloaded again on 2026-11-27, after the reported run. The files used in that run were not hashed.
 - **License/access terms:** unknown (check the dataset page before redistributing; nothing is committed here)
 - **Modality/task:** RGB-D, monocular depth evaluation
 - **Role:** test (654 Eigen test frames) and calibration (16 Eigen train frames)
