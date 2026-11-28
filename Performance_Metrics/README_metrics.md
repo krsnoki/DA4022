@@ -51,6 +51,24 @@ experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,sp
 
 Unknown/not-measured quantities should be empty/null plus a `status` or notes entry—never `0` unless zero was actually measured.
 
+## Reported results
+
+### ORA-Q ([OpenReview](https://openreview.net/forum?id=oqacjavnry), `Quantization_and_Pruning/`)
+
+Status `partial`: DAv2-Small, NYUv2 Eigen test (654 images), Tesla T4. The delta1 order matches the paper, but ORA-Q reaches 0.6606 against 0.8507 reported. The first row is the unmodified FP32 baseline. Quantized rows use fake quantization.
+delta1 change from FP32: MinMax -0.4984, Percentile -0.4889, ORA-Q -0.2951.
+Not recorded for these rows: preprocessing time, accelerator memory, driver, CUDA, Python and transformers versions. Dataset preprocessing ID: `dav2.hf_processor`. Saved sizes were measured separately on CPU: [model_size.csv](../Quantization_and_Pruning/experiments/ora_q/model_size.csv).
+A separate [CPU ablation](../Quantization_and_Pruning/experiments/ora_q/results_ablation_fc2_percentile_cpu.csv) sets fc2 to percentile by hand: delta1 0.7701, against 0.6551 for the CPU control. These are not part of the rows below.
+Details: [paper card](../Quantization_and_Pruning/ORA_Q_PAPER_CARD.md), [results.csv](../Quantization_and_Pruning/experiments/ora_q/results.csv), [role report](../Quantization_and_Pruning/experiments/ora_q/role_report.json), [conv g=16 ablation](../Quantization_and_Pruning/experiments/ora_q/results_ablation_conv_g16.csv).
+
+```text
+experiment_id,paper_id,method,commit,backbone_id,backbone_revision,dataset_id,split,seed,device,framework_version,dtype,batch_size,input_length,output_length,quality_metric,quality_value,latency_median_ms,latency_p95_ms,throughput,peak_memory_mb,energy_j,status,notes
+oraq-nyuv2-fp32-s0,ora-q,fp32,26518ab,vision.depth-anything-v2-small,5426e4f0f36572d16453bbda7a8389317b1bef99,vision.nyuv2.test,eigen_test[:654],0,Tesla T4,torch 2.11.0+cu130,float32,1,518x686,480x640,delta1,0.9557,77.28,78.15,12.94,310.0,,partial,unmodified checkpoint; abs_rel=0.0617; throughput in images/s; latency is model forward only; energy not measured
+oraq-nyuv2-minmax-w4a4-s0,ora-q,minmax,26518ab,vision.depth-anything-v2-small,5426e4f0f36572d16453bbda7a8389317b1bef99,vision.nyuv2.test,eigen_test[:654],0,Tesla T4,torch 2.11.0+cu130,fake-quant W4A4 (float32 compute),1,518x686,480x640,delta1,0.4573,165.33,166.29,6.05,698.3,,partial,fake quantization; config minmax.yaml; abs_rel=0.2962; calib_seconds=1.9; throughput in images/s; latency is model forward only; energy not measured
+oraq-nyuv2-percentile-w4a4-s0,ora-q,percentile,26518ab,vision.depth-anything-v2-small,5426e4f0f36572d16453bbda7a8389317b1bef99,vision.nyuv2.test,eigen_test[:654],0,Tesla T4,torch 2.11.0+cu130,fake-quant W4A4 (float32 compute),1,518x686,480x640,delta1,0.4668,166.58,167.81,6.0,697.0,,partial,fake quantization; config percentile.yaml; abs_rel=0.2915; calib_seconds=27.9; throughput in images/s; latency is model forward only; energy not measured
+oraq-nyuv2-ora_q-w4a4-s0,ora-q,ora_q,26518ab,vision.depth-anything-v2-small,5426e4f0f36572d16453bbda7a8389317b1bef99,vision.nyuv2.test,eigen_test[:654],0,Tesla T4,torch 2.11.0+cu130,fake-quant W4A4 (float32 compute),1,518x686,480x640,delta1,0.6606,187.4,189.28,5.34,698.1,,partial,fake quantization; config ora_q.yaml; abs_rel=0.2002; calib_seconds=28.6; throughput in images/s; latency is model forward only; energy not measured
+```
+
 ## Recommended plots
 
 - quality vs. latency;

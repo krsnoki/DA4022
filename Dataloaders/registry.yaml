@@ -1,0 +1,34 @@
+# Dataset registry. Fields: README_dataloader.md. Unverified values are `unknown`.
+
+vision.nyuv2.test:
+  id: vision.nyuv2.test
+  name: NYU Depth V2 labeled, Eigen test split
+  modality: vision
+  task: monocular depth estimation (dense, metres)
+  source_url: https://cs.nyu.edu/~fergus/datasets/nyu_depth_v2.html
+  license: unknown
+  version: nyu_depth_v2_labeled.mat (sha256 2d724b0c0ab358aa1ce5df855e5bd14a2279ab7202efe22f32a30d612dcb86aa), splits.mat (sha256 6e081404491a8bfba2f066beaa9713ef6046f9007aa5f799f2a350506a580cee); hashed from copies downloaded again on 2026-11-27, after the reported run
+  role: evaluation
+  split: test (testNdxs in splits.mat)
+  num_examples: 654
+  preprocessing_id: dav2.hf_processor; eval crop rows 45:471 cols 41:601; depth (0.001, 10] m
+  seed: null
+  labels_available: true
+  loader: Dataloaders.evaluation.nyuv2.load_nyu
+  card: Dataloaders/evaluation/nyuv2.md
+
+vision.nyuv2.calibration:
+  id: vision.nyuv2.calibration
+  name: NYU Depth V2 labeled, 16 calibration images from the Eigen train split
+  modality: vision
+  task: calibration (labels not used)
+  source_url: https://cs.nyu.edu/~fergus/datasets/nyu_depth_v2.html
+  license: unknown
+  role: calibration
+  split: train (trainNdxs in splits.mat), never test
+  num_examples: 16
+  sampling: numpy default_rng(seed).choice(train indices, 16, replace=False), sorted
+  seed: 0
+  labels_available: false
+  loader: Dataloaders.evaluation.nyuv2.sample_calibration + load_nyu
+  card: Dataloaders/evaluation/nyuv2.md

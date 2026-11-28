@@ -1,0 +1,45 @@
+# Backbone registry. Experiments refer to these IDs. Fields: README_backbones.md.
+# Anything not verified is written as `unknown`. The revision matches
+# Quantization_and_Pruning/experiments/ora_q/results.csv.
+
+vision.depth-anything-v2-small:
+  id: vision.depth-anything-v2-small
+  name: Depth Anything V2 Small (HF transformers port)
+  modality: vision
+  architecture: DPT head on a DINOv2 ViT-S/14 encoder (12 blocks, hidden 384, 6 heads)
+  pretraining_regime: mixed
+  objective: relative (affine-invariant) monocular depth; synthetic labeled plus pseudo-labeled real images (model card, paper abstract)
+  weights_source: huggingface
+  weights_uri: https://huggingface.co/depth-anything/Depth-Anything-V2-Small-hf
+  hf_path: depth-anything/Depth-Anything-V2-Small-hf
+  revision: 5426e4f0f36572d16453bbda7a8389317b1bef99
+  license: apache-2.0  # model card at this revision
+  num_parameters: 24785089  # Hugging Face safetensors metadata at this revision (F32)
+  input_spec: {resize: 518 short side, keep aspect, multiple of 14, channels: 3, dtype: float32}
+  preprocessing: AutoImageProcessor from the same repository and revision
+  parent_backbone: vision.dinov2-vits14
+  fine_tuning_dataset: 595K synthetic labeled and 62M+ real unlabeled images (model card); exact datasets not verified here
+  fine_tuning_split: unknown
+  method: unknown
+  checkpoint_uri: https://huggingface.co/depth-anything/Depth-Anything-V2-Small-hf
+  loader: Backbones.Task_Finetuned.depth_anything_v2.load
+  card: Backbones/Task_Finetuned/depth_anything_v2_small.md
+  notes: Used by ORA-Q. Weights never modified; quantized variants are in-memory copies.
+
+vision.dinov2-vits14:
+  id: vision.dinov2-vits14
+  name: DINOv2 ViT-S/14 (parent of Depth Anything V2 Small)
+  modality: vision
+  architecture: ViT-S/14
+  pretraining_regime: self_supervised
+  objective: unknown
+  weights_source: huggingface
+  weights_uri: https://huggingface.co/facebook/dinov2-small
+  revision: unknown  # the revision Depth Anything V2 started from is not verified
+  license: apache-2.0  # current Hugging Face repository metadata, checked 2026-11-28
+  num_parameters: 22056576  # current Hugging Face safetensors metadata (F32), checked 2026-11-28
+  input_spec: unknown
+  preprocessing: unknown
+  parent_backbone: null
+  fine_tuning_dataset: null
+  notes: Reference entry only. Not loaded or evaluated here.
