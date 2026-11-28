@@ -45,7 +45,7 @@ def evaluate(predict_fn, samples, log_every=50):
 
 @torch.no_grad()
 def latency_and_memory(model, pixel_values, warmup=10, iters=50):
-    """Model forward only (no preprocessing), batch 1. Median / p95 ms and peak MB."""
+    """Model forward only (no preprocessing), batch 1. Median / p95 ms, peak MB and raw samples."""
     cuda = pixel_values.is_cuda
     if cuda:
         torch.cuda.empty_cache()
@@ -65,4 +65,4 @@ def latency_and_memory(model, pixel_values, warmup=10, iters=50):
     return {"latency_median_ms": float(np.median(times)),
             "latency_p95_ms": float(np.percentile(times, 95)),
             "throughput": 1000.0 / float(np.median(times)),
-            "peak_memory_mb": peak}
+            "peak_memory_mb": peak, "samples_ms": times}

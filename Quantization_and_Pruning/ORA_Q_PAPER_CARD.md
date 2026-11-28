@@ -112,8 +112,56 @@ Calibration train indices: 22, 66, 105, 241, 352, 402, 683, 684, 862, 881, 897, 
 | matmul2 | input-dependent, dynamic | same |
 
 - Table 2 reports DAv1-B on KITTI. Appendix B.2 says the automatic and manual strategies also match for DAv2-S on NYUv2, which is our setup.
-- Changing tau alone cannot give the paper's roles with our scores: fc2 (0.2718) is above conv (0.2187), and the paper has fc2 tolerant and conv sensitive.
+- Changing tau alone cannot give the paper's roles with the scores from our method: fc2 (0.2718) is above conv (0.2187), and the paper has fc2 tolerant and conv sensitive.
 - In Table 4 (DAv2-B), switching only fc2 to min-max lowers NYUv2 delta1 from 0.8641 to 0.7710.
+
+### Diagnosis check: other ways to clip
+
+To look for the cause, we ran our clip test and six variants of it with `experiments/ora_q/diag_fc2_variants.py`. The variant list was fixed before the run. It used only the 16 train-split calibration images, on CPU (one run, code at commit `bc2ee3d`, torch 2.15.0+cpu, transformers 5.24.1, Python 3.14.4). The script was added to the repo after the run; only its docstring changed.
+
+| Variant | What is clipped |
+|---|---|
+| baseline | our method: operator input, top side, per layer and image, all layers of one operator at once |
+| two_sided | like baseline, but also the bottom 0.5% |
+| magnitude | absolute value, at its 99.5th percentile |
+| per_group | top side, one threshold per ORA-Q group |
+| pooled_images | top side, one threshold per layer from all 16 images |
+| one_layer | like baseline, but one layer at a time; scores are averaged |
+| output | operator output, top side; not run for matmul1 |
+
+Clip score (below tau = 0.15 means clip-tolerant). The paper has matmul1, fc2 and proj below it and conv not below it.
+
+| Variant | matmul1 | fc2 | proj | conv | Roles that differ from the paper |
+|---|---:|---:|---:|---:|---|
+| baseline | 0.0602 | 0.2713 | 0.0353 | 0.2187 | fc2 |
+| two_sided | 0.1622 | 0.2717 | 0.0512 | 0.2943 | matmul1, fc2 |
+| magnitude | 0.1304 | 0.2713 | 0.0323 | 0.2033 | fc2 |
+| per_group | 0.0657 | 0.3125 | 0.0266 | 0.0675 | fc2, conv |
+| pooled_images | 0.0597 | 0.2782 | 0.0363 | 0.1745 | fc2 |
+| one_layer | 0.0096 | 0.0387 | 0.0111 | 0.0100 | conv |
+| output | n/a | 0.1587 | 0.0808 | 0.1813 | fc2 |
+
+Change in delta1 on the same 16 images when clipped (FP32 is 0.9313):
+
+| Variant | matmul1 | fc2 | proj | conv |
+|---|---:|---:|---:|---:|
+| Paper, Table 2 (DAv1-B, KITTI) | -0.001 | -0.001 | -0.002 | -0.116 |
+| baseline | -0.0078 | -0.0276 | -0.0020 | -0.0758 |
+| two_sided | -0.0127 | -0.0277 | -0.0086 | -0.1292 |
+| magnitude | -0.0125 | -0.0276 | -0.0041 | -0.0850 |
+| per_group | -0.0122 | -0.0194 | -0.0006 | -0.0220 |
+| pooled_images | -0.0080 | -0.0287 | -0.0018 | -0.0466 |
+| one_layer | +0.0001 | -0.0009 | -0.0004 | -0.0020 |
+| output | n/a | +0.0005 | -0.0123 | -0.0704 |
+
+- No variant gives all the paper's roles at tau = 0.15. The cause of the mismatch is still unknown.
+- The baseline rerun is close to the role report (fc2 0.2713 and 0.2718). With clipping off, the wrapped model's largest output difference from the original was 7.86e-05.
+- one_layer makes fc2 clip-tolerant, but conv too.
+- With another threshold, two_sided could give all four roles (between 0.2717 and 0.2943), and output could give the three it tests (between 0.1587 and 0.1813). The paper fixes tau at 0.15. We did not pick a new value after seeing the scores.
+- In the baseline, clipping fc2 also lowers delta1 (-0.0276). The paper's row uses another model and dataset, and 16 images is a small check.
+- We changed one thing at a time and did not test combinations. This does not show what the authors did.
+
+Scores are in `experiments/ora_q/fc2_diagnosis_variants.csv`, with per-layer one_layer scores in `fc2_diagnosis_layers.csv`. To rerun, see the script's docstring.
 
 ### Ablation: fc2 percentile by hand (CPU)
 
