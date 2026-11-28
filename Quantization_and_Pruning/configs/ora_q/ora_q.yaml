@@ -3,7 +3,7 @@
 # diagnosis writes (clip score vs tau, matmul2 input-dependent by architecture).
 method: ora_q
 bits: {weight: 4, act: 4}
-calibration: {dataset_id: vision.nyuv2.calibration, num_images: 16, seed: 0}
+calibration: {dataset_id: vision.nyuv2.calibration, split: train, preprocessing_id: dav2.hf_processor, num_images: 16, seed: 0}
 tau: 0.15
 ops:
   # not diagnosed by the paper: per-tensor percentile, as in the Table 5 base

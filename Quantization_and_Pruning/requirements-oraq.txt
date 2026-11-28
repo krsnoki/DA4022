@@ -1,5 +1,6 @@
 # ORA-Q reimplementation (Quantization_and_Pruning/quantization/ptq/ora_q).
 # Tested with these versions. Install PyTorch first from https://pytorch.org for your CUDA setup.
+# Install torchvision together with PyTorch (used by the Hugging Face image processor).
 # transformers must be 5.x: the code relies on the 5.x Dinov2Attention layer names
 # (q_proj, k_proj, v_proj, o_proj) and AttentionInterface.
 torch>=2.6
@@ -10,3 +11,4 @@ scipy
 numpy
 PyYAML
 pytest
+pillow

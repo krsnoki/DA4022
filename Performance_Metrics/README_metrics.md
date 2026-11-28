@@ -56,6 +56,9 @@ Unknown/not-measured quantities should be empty/null plus a `status` or notes en
 ### ORA-Q ([OpenReview](https://openreview.net/forum?id=oqacjavnry), `Quantization_and_Pruning/`)
 
 Status `partial`: DAv2-Small, NYUv2 Eigen test (654 images), Tesla T4. The delta1 order matches the paper, but ORA-Q reaches 0.6606 against 0.8507 reported. The first row is the unmodified FP32 baseline. Quantized rows use fake quantization.
+delta1 change from FP32: MinMax -0.4984, Percentile -0.4889, ORA-Q -0.2951.
+Not recorded for these rows: preprocessing time, accelerator memory, driver, CUDA, Python and transformers versions. Dataset preprocessing ID: `dav2.hf_processor`. Saved sizes were measured separately on CPU: [model_size.csv](../Quantization_and_Pruning/experiments/ora_q/model_size.csv).
+A separate [CPU ablation](../Quantization_and_Pruning/experiments/ora_q/results_ablation_fc2_percentile_cpu.csv) sets fc2 to percentile by hand: delta1 0.7701, against 0.6551 for the CPU control. These are not part of the rows below.
 Details: [paper card](../Quantization_and_Pruning/ORA_Q_PAPER_CARD.md), [results.csv](../Quantization_and_Pruning/experiments/ora_q/results.csv), [role report](../Quantization_and_Pruning/experiments/ora_q/role_report.json), [conv g=16 ablation](../Quantization_and_Pruning/experiments/ora_q/results_ablation_conv_g16.csv).
 
 ```text

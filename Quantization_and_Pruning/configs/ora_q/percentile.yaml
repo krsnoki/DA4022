@@ -2,7 +2,7 @@
 # Per-tensor, best of p in {0.999, 0.9999, 0.99999} by MSE, two-sided over the 16 calibration images, static.
 method: percentile
 bits: {weight: 4, act: 4}          # weights: per output channel, min-max (all methods)
-calibration: {dataset_id: vision.nyuv2.calibration, num_images: 16, seed: 0}
+calibration: {dataset_id: vision.nyuv2.calibration, split: train, preprocessing_id: dav2.hf_processor, num_images: 16, seed: 0}
 ops:
   qkv:     {g: null, calib: percentile, mode: static}
   matmul1: {g: null, calib: percentile, mode: static}

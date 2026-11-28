@@ -12,12 +12,15 @@ import torch.nn.functional as F
 from transformers import AutoImageProcessor, AutoModelForDepthEstimation
 
 MODEL_ID = "depth-anything/Depth-Anything-V2-Small-hf"
+REVISION = "5426e4f0f36572d16453bbda7a8389317b1bef99"   # same as Backbones/registry.yaml
 
 
 def resolve_revision(model_id=MODEL_ID, revision=None):
-    """Exact commit hash of the checkpoint, so results can be pinned."""
+    """Exact commit hash of the checkpoint. The default model is always pinned."""
     if revision:
         return revision
+    if model_id == MODEL_ID:
+        return REVISION
     try:
         from huggingface_hub import model_info
         return model_info(model_id).sha

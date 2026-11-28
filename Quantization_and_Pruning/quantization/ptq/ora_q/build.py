@@ -6,10 +6,44 @@ import yaml
 
 from .qmodules import quantize_model
 
+OPS = {"qkv", "matmul1", "matmul2", "proj", "fc1", "fc2", "conv"}
+
+
+def _is_int(v, low, high=None):
+    return type(v) is int and v >= low and (high is None or v <= high)
+
+
+def validate_config(cfg):
+    """Raise ValueError on a config that would be misread or silently ignored."""
+    def check(ok, msg):
+        if not ok:
+            raise ValueError(f"bad config: {msg}")
+
+    check(isinstance(cfg, dict), "not a mapping")
+    for key in ("method", "bits", "calibration", "ops"):
+        check(key in cfg, f"missing '{key}'")
+    for key in ("weight", "act"):
+        check(_is_int(cfg["bits"].get(key), 2, 16), f"bits.{key} must be an integer from 2 to 16")
+    cal = cfg["calibration"]
+    for key in ("dataset_id", "split", "preprocessing_id", "num_images", "seed"):
+        check(key in cal, f"missing calibration.{key}")
+    check(cal["split"] == "train", "calibration.split must be 'train', never the test split")
+    check(_is_int(cal["num_images"], 1), "calibration.num_images must be a positive integer")
+    check(_is_int(cal["seed"], 0), "calibration.seed must be a non-negative integer")
+    check(isinstance(cfg["ops"], dict) and cfg["ops"], "ops must be a non-empty mapping")
+    for op, c in cfg["ops"].items():
+        check(op in OPS, f"unknown operator '{op}'")
+        check(c.get("g") is None or _is_int(c["g"], 1), f"{op}.g must be null or a positive integer")
+        check(c.get("calib", "minmax") in ("minmax", "percentile"), f"{op}.calib is unknown")
+        check(c.get("mode", "static") in ("static", "dynamic"), f"{op}.mode is unknown")
+        if c.get("diagnose"):
+            check(isinstance(cfg.get("tau"), float), "tau is required for diagnosed operators")
+    return cfg
+
 
 def load_config(path):
     with open(path) as f:
-        return yaml.safe_load(f)
+        return validate_config(yaml.safe_load(f))
 
 
 def op_configs(cfg, role_report=None):

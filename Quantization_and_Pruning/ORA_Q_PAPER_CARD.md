@@ -7,6 +7,7 @@
 - **Issue:** https://github.com/krsnoki/DA4022/issues/3
 - **Status:** partial-reproduction (result rows: `partial`). See "Status and comparison with the paper".
 - **Upstream code / licence:** none found (checked the paper and GitHub on 2026-11-20). Reimplemented from the paper.
+- **Paper version checked:** an 11-page PDF of the paper (PDF creation date 2026-06-11). The paper values quoted here match its Table 3. The PDF text gives no code link.
 - **Backbone IDs:** `vision.depth-anything-v2-small`
 - **Dataset IDs and split:** `vision.nyuv2.test` (654 Eigen test images), `vision.nyuv2.calibration` (16 Eigen train images, seed 0)
 - **Hardware assumptions:** one CUDA GPU (results measured on a Kaggle Tesla T4, torch 2.11.0+cu130). All unit tests run on CPU.
@@ -42,9 +43,11 @@ ORA-Q diagnoses each operator from 16 unlabeled calibration images, then gives i
 | Config + role report -> quantized model | `quantization/ptq/ora_q/build.py` |
 | Configs | `configs/ora_q/{minmax,percentile,ora_q}.yaml` |
 | Experiment script, results, role report | `experiments/ora_q/` |
-| Tests | `tests/test_ora_q.py` |
+| Tests | `tests/test_ora_q.py`, `tests/test_nyuv2_and_config.py` |
 
 - **Input contract:** FP32 Depth Anything V2 Small (HF transformers 5.x), 16 calibration images, bit-widths (W4A4).
+- **Configuration:** `configs/ora_q/{minmax,percentile,ora_q}.yaml`. `load_config` rejects unknown operators and values, and any calibration split other than `train`. The runner takes the seed and number of calibration images from its command line (defaults 0 and 16).
+- **Quantization details:** weights W4, activations A4. Uniform asymmetric: scale = (max - min) / (2^b - 1), clamped to at least 1e-8; zero point = round(-min / scale); q = clip(round(x / scale) + zero point, 0, 2^b - 1). Rounding is `torch.round` (ties go to even). Group sizes, calibrators and quantized operators are listed in the configs and the table below. No low-bit kernels: values are dequantized and computed in float32.
 - **Output contract:** `role_report.json` (per-operator S, clip score, role, granularity, calibrator, mode), a fake-quantized model in memory, delta1 / AbsRel, latency and peak memory rows in `results.csv`.
 - **Reproduction command** (from the repo root, with `MAT` and `SPLITS` set to your copies of `nyu_depth_v2_labeled.mat` and `splits.mat`):
 
@@ -53,7 +56,7 @@ ORA-Q diagnoses each operator from 16 unlabeled calibration images, then gives i
   ```
 
   The last three options keep a new run from reusing the committed role report or appending to the committed CSV. The committed results were produced at commit `26518ab`, where the runner wrote `status=measured`.
-- **Tests:** `python -m pytest -q Quantization_and_Pruning/tests/test_ora_q.py` (CPU, tiny random model, no download). Last local run: 17 passed, 1 expected failure (Python 3.14.4, torch 2.15.0+cpu, transformers 5.24.1).
+- **Tests:** `python -m pytest -q Quantization_and_Pruning/tests` (CPU, tiny random model and synthetic data, no download). Last local run: 44 passed, 1 expected failure (Python 3.14.4, torch 2.15.0+cpu, transformers 5.24.1).
 
 ## Results
 
@@ -77,10 +80,12 @@ The repo lists status labels but does not define them, so the label is our own c
 
 - The delta1 order MinMax < Percentile < ORA-Q < FP32 holds.
 - ORA-Q is 0.6606 against 0.8507 in the paper, 0.1901 lower. The headline number is not reproduced.
+- delta1 change from our FP32 baseline: MinMax -0.4984, Percentile -0.4889, ORA-Q -0.2951.
 - ORA-Q is 0.1938 above our Percentile baseline. In the paper the difference is 0.1832.
 - Percentile is 0.4668 against 0.6675 in the paper. MinMax is 0.4573 against 0.4873. Our MinMax and Percentile differ by only 0.0095.
 - FP32 is 0.9557 against 0.9736 in the paper, so part of the setup differs even without quantization.
-- We have not found the cause of these gaps. Evaluation protocol, preprocessing, checkpoint and the unstated choices below are untested candidates.
+- Our automatic diagnosis differs from the paper on fc2 (see below). A manual CPU test shows that this choice has a large effect, but it does not close the gap.
+- We have not found why the diagnosis differs, or the cause of the remaining gaps. Evaluation protocol, preprocessing, checkpoint and the unstated choices below are untested candidates.
 
 ### Local role report
 
@@ -95,6 +100,52 @@ From `experiments/ora_q/role_report.json` (tau = 0.15, conv g = 8):
 | matmul2 | 0.4816 | n/a | input-dependent | minmax | dynamic |
 
 Calibration train indices: 22, 66, 105, 241, 352, 402, 683, 684, 862, 881, 897, 999, 1112, 1171, 1311, 1391.
+
+### Role mismatch: fc2
+
+| Operator | Paper (Table 2) | Our automatic diagnosis |
+|---|---|---|
+| matmul1 | clip-tolerant, percentile | same |
+| fc2 | clip-tolerant, percentile | **clip-sensitive, min-max** (clip score 0.2718) |
+| proj | clip-tolerant, percentile | same |
+| conv | clip-sensitive, min-max | same |
+| matmul2 | input-dependent, dynamic | same |
+
+- Table 2 reports DAv1-B on KITTI. Appendix B.2 says the automatic and manual strategies also match for DAv2-S on NYUv2, which is our setup.
+- Changing tau alone cannot give the paper's roles with our scores: fc2 (0.2718) is above conv (0.2187), and the paper has fc2 tolerant and conv sensitive.
+- In Table 4 (DAv2-B), switching only fc2 to min-max lowers NYUv2 delta1 from 0.8641 to 0.7710.
+
+### Ablation: fc2 percentile by hand (CPU)
+
+We set only the fc2 calibrator to percentile (`experiments/ora_q/role_report_fc2_override.json`) and compared it with a control run on the same CPU (`experiments/ora_q/results_ablation_fc2_percentile_cpu.csv`).
+
+| fc2 calibrator | delta1 | AbsRel |
+|---|---:|---:|
+| min-max (automatic diagnosis, CPU control) | 0.6551 | 0.2017 |
+| percentile (manual override) | 0.7701 | 0.1551 |
+
+- Both runs: 654 test images, same 16 calibration images, seed 0, commit `92c9f15`, torch 2.15.0+cpu, transformers 5.24.1, Python 3.14.4. One run each. Latency and memory were not measured.
+- The override is +0.1150 in delta1 and still 0.0806 below the paper's 0.8507 (a different setup).
+- The choice follows the paper, not our diagnosis, so the headline ORA-Q result stays 0.6606.
+- The CPU control (0.6551) differs from the T4 run (0.6606). Do not mix CPU and T4 numbers.
+- The override report keeps the old role and clip score. The CSV's experiment_id and notes were edited after the run to label it; the measured values are unchanged.
+
+To rerun, use the reproduction command with `--methods ora_q`, drop `--rediagnose`, add `--no-latency`, point `--role-report` at the override file and use a new `--out` path.
+
+### Model size and reload drift
+
+Measured on CPU with `experiments/ora_q/measure_size.py` (`model_size.csv`; torch 2.15.0+cpu, transformers 5.24.1). All models have 24785089 parameters. Sizes are `torch.save(state_dict)` files.
+
+| Model | Saved bytes | Static scale and zero-point bytes | Max output difference after reload |
+|---|---:|---:|---:|
+| FP32 | 99229943 | 0 | not tested |
+| MinMax | 99341255 | 1200 | 0.0 |
+| Percentile | 99341255 | 1200 | 0.0 |
+| ORA-Q | 99398919 | 81488 | 0.0 |
+
+Fake-quantized weights are saved as float32, so there is no size saving. This is not the size of a packed 4-bit model. The paper reports 11.4 KB of scales and zero points for ViT-S; we did not match its storage format. Reload drift was checked on the first test image, after calibrating the second model with other inputs.
+
+To rerun, from the repo root: `python Quantization_and_Pruning/experiments/ora_q/measure_size.py --mat "$MAT" --splits "$SPLITS" --out /tmp/ora_q_model_size.csv`
 
 ### Ablation: conv g = 16
 
@@ -131,19 +182,20 @@ Choices the paper does not state, and what we did:
 
 Other limitations:
 - Fake quantization only: integer kernels are not used. In our run every quantized model had higher latency and higher peak memory than FP32, so these numbers show no runtime speed or memory benefit.
-- Model size was not measured. The repo asks for it in quantization reports.
+- Saved sizes show no compression, because fake quantization keeps float32 storage.
+- The reported run excluded preprocessing from latency and did not time it separately. Transfer and model setup costs were not reported, and raw latency samples were not saved.
 - One seed and one full run per configuration. The seed is set once per script call, and percentile calibration samples at random, so results can depend on which methods ran earlier.
-- Save/load: a saved `state_dict` reloads with no output drift only into a model that was built with the same config and role report and then calibrated, which creates the scale buffers. Loading into an uncalibrated model fails. This is recorded as an expected-failure test. Both tests use the tiny model.
+- Save/load: a saved `state_dict` reloads with no output drift only into a model that was built with the same config and role report and then calibrated, which creates the scale buffers. Loading into an uncalibrated model fails. This is recorded as an expected-failure test with the tiny model. The calibrate-then-load path was also checked on the real checkpoint (above).
 - Not recorded for the Kaggle run: Python, transformers, driver and CUDA runtime versions, and accelerator memory.
 - NYUv2 checksums (in the dataset card) come from copies downloaded again on 2026-11-27. The files used in the reported run were not hashed. With the new `splits.mat`, seed 0 gives the same 16 calibration indices as the role report.
 - Only DAv2-Small on NYUv2. KITTI, the other Depth Anything variants and the cross-dataset / cross-model cosine checks (Table 2, Fig. 1) are not reproduced.
-- Paper Table 3 lists identical numbers for RepQ-ViT on NYUv2 and KITTI; likely a copy error in the paper.
+- Paper Table 3 lists identical RepQ-ViT numbers on NYUv2 and KITTI for three of the four models (DAv1-B, DAv2-S, DAv2-B), not DAv1-S. This looks like a copy error in the paper.
 
 ## Reproduction checklist
 
-- [x] Exact paper link verified (title and URL match the official AdaptFM accepted-paper list)
+- [x] Exact paper link and version checked (title and URL match the official AdaptFM list; PDF version noted above)
 - [x] Base model revision and dataset checksums pinned (checksums taken after the run, see limitations)
 - [x] Baselines run on the same setup (same weights quantizer, images, seed, metric)
 - [x] Tests and seed handling added (see the seed and save/load limitations)
-- [ ] Resource and quality metrics reported (model size and energy not measured)
+- [ ] Resource and quality metrics reported (energy and preprocessing time not measured; some run metadata missing)
 - [ ] Licence/data terms checked (model: apache-2.0; NYUv2: no licence text found on the dataset page)
